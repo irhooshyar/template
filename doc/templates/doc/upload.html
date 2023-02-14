@@ -1,0 +1,189 @@
+{% block content %}
+    <!DOCTYPE html>
+    <html>
+
+    <head>
+        <meta charset="utf-8">
+        <title>File uploader</title>
+
+        <script src="../../static/js/jquery_351/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+        <link rel="stylesheet" type="text/css" href="../../static/library/bootstrap.min-4.5.2.css">
+
+        <link rel="stylesheet" href="../../static/styles/index.css">
+        <!-- Latest compiled JavaScript -->
+
+
+        <style>
+            .img-thumbnail {
+                background: transparent;
+                border: unset;
+                width: 40px;
+                height: auto;
+                margin-right: 15px;
+            }
+
+            .file-upload-wrapper {
+                margin-bottom: 30px !important;
+                margin: auto;
+                width: 90%;
+                display: flex;
+                z-index: 999;
+                flex-wrap: wrap;
+                align-content: stretch;
+                justify-content: left;
+                align-items: center;
+            }
+        </style>
+    </head>
+
+    <body class="px-3">
+
+
+    <form action="{% url 'zip' %}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        <p>{{ form.non_field_errors }}</p>
+        <p>{{ form.docfile.label_tag }} {{ form.docfile.help_text }}</p>
+        <p>
+            {{ form.docfile.errors }} {{ form.docfile }}
+        </p>
+        <p>enter <b>file name:</b> <input type="text" id="file_name" name="file_name"></p>
+        <p>enter <b>language:</b> <input type="text" id="language" name="language"></p>
+        <p><input type="submit" value="Upload"/></p>
+        <b style="color:{{ color }};">{{ status }}</b>
+
+        <div class="file-upload-wrapper">
+            <h3>Uploaded files</h3>
+
+            <a href="{% url 'zip' %}">
+                <img src="../../static/image/refresh.png" class="img-thumbnail">
+            </a>
+        </div>
+
+
+    </form>
+
+    {% for file in files %}
+        <form method="POST">
+            {% csrf_token %}
+            <p>{{ file.name }} ({{ file.status }})
+                {# <input type="submit" name="delete_items" value="delete {{ file.pk }}" id="{{ file.pk }}">#}
+                {# <input type="submit" name="update_items" value="update {{ file.pk }}" id="{{ file.pk }}" content="{{ file.pk }}">#}
+                <a href="{% url 'update' file.pk file.language %}">Update</a>
+                <a href="{% url 'delete' file.pk  file.language %}">Delete</a>
+
+                {##---------------- temporary option , will be removed after level detection bug is fixed ----------------##}
+                <a href="{% url 'detect_level' file.pk %}">level</a>
+                <a href="{% url 'static_data_import_db'  file.pk 'English' %}">en-static-data</a>
+
+          
+                <span class="bold"> | </span>
+                <a href="{% url 'rahbari_labels_to_db' file.pk %}">rahbari_labels_to_db</a>
+
+                <span class="bold"> | </span>
+
+                <a href="{% url 'rahbari_labels_time_series_extractor' file.pk %}">rahbari_labels_time_series_extractor</a>
+
+
+                <span class="bold"> | </span>
+                <a  href="{% url 'RahabriCoLabelsGraph' file.pk %}">RahabriCoLabelsGraph</a>
+
+                <span class="bold"> | </span>
+                <a  href="{% url 'RahbariGraphUpload' file.pk %}">RahbariGraph</a>
+
+                <span class="bold"> | </span>
+                <a  href="{% url 'RahbariTypeExtractor' file.pk %}">RahbariTypeExtractor</a>
+
+                <span class="bold"> | </span>
+                <a  href="{% url 'rahbari_correlated_labels_extractor' file.pk %}">rahbari_correlated_labels_extractor</a>
+
+                <span class="bold"> | </span>
+                <a  href="{% url 'insert_docs_to_rahbari_table' file.pk %}">insert_docs_to_rahbari_table</a>
+
+                <span class="bold"> | </span>
+                <a href="{% url 'rahbari_search_parameters_to_db' file.pk %}">rahbari_search_parameters_to_db</a>
+
+                
+                
+            </p>
+
+        </form>
+
+
+
+        <form class="ml-2 border-3 border-left pl-2" method="POST">
+            {% csrf_token %}
+            <p>Ingestions({{ file.name }}) </br>
+
+                <a href="{% url 'ingest_documents_to_index' file.pk file.language %}">Ingest-Documents</a>
+                <span class="bold"> | </span>
+
+                <a href="{% url 'ingest_paragraphs_to_index' file.pk file.language 1 %}">Ingest-Paragraphs</a>
+                <span class="bold"> | </span>
+
+                <a href="{% url 'ingest_document_actor_to_index' file.pk file.language %}">Ingest-Document-actor</a>
+                <span class="bold"> | </span>
+
+                <a href="{% url 'ingest_actor_supervisor_to_index' file.pk file.language %}">Ingest-Actor-Supervisor</a>
+                <span class="bold"> | </span>
+
+
+                <a href="{% url 'ingest_standard_documents_to_index' file.pk file.language %}">Ingest-Standard-Documents</a>
+                <span class="bold"> | </span>
+
+
+                <a href="{% url 'ingest_standard_documents_to_sim_index' file.pk file.language %}">Ingest-Similarity-Documents</a>
+                <span class="bold"> | </span>
+
+                <a href="{% url 'ingest_judgments_to_index' file.pk file.language %}">Ingest-Judgments-To-Index</a>
+                <span class="bold"> | </span>
+
+                <a href="{% url 'ingest_terminology_to_index' file.pk file.language %}">Ingest-Terminology-To-Index</a>
+                <span class="bold"> | </span>
+
+                <a href="{% url 'ingest_rahbari_to_index' file.pk %}">Ingest-Rahbari-To-Index</a>
+                <span class="bold"> | </span>
+
+                <a href="{% url 'ingest_rahbari_to_sim_index' file.pk %}">Ingest-Rahbari-To-Similarity-Index</a>
+                <span class="bold"> | </span>
+
+                <a href="{% url 'ingest_document_collective_members_to_index' file.pk %}">Ingest-DocumentCollectiveMembers-To-Index</a>
+                <span class="bold"> | </span>
+
+                <a href="{% url 'rahbari_similarity_calculation' file.pk %}">rahbari_similarity_calculation</a>
+                <span class="bold"> | </span>
+
+                <a href="{% url 'paragraphs_similarity_calculation' file.pk %}">paragraphs_similarity_calculation</a>
+                <span class="bold"> | </span>
+
+
+
+
+                <a href="{% url 'ingest_clustering_paragraphs_to_index' file.pk file.language %}">ingest-clustering-paragraphs</a>
+                <span class="bold"> | </span>
+
+                 <a href="{% url 'ingest_full_profile_analysis_to_elastic' file.pk %}">Ingest-rahbari-full-profile</a>
+                <span class="bold"> | </span>
+
+                <a href="{% url 'ingest_paragraphs_to_index' file.pk file.language 0 %}">Ingest-Paragraphs-ForSimilarity</a>
+                <span class="bold"> | </span>
+
+
+
+                <a href="{% url 'ingest_userlogs_to_index' file.pk file.language %}">Ingest-UserLogs</a>
+                <span class="bold"> | </span>
+
+
+            </p>
+
+        </form>
+
+        <hr>
+    {% endfor %}
+
+
+    </body>
+
+    </html>
+{% endblock %}

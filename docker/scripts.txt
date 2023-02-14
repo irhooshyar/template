@@ -1,0 +1,47 @@
+cd /mnt/Data1/version4_docker/abdal
+sudo git pull
+sudo docker compose -f docker-compose.production.yml up
+
+
+""" backup and restore mysql """
+sudo su
+mysqldump -u dbadmin -p123456789 CyberMapDB_En_v1 > en_db_dump.sql
+cd /etc/mysql/backup
+mysql -u dbadmin -p123456789 prod_fa < db_dump.sql --force --wait --reconnect
+
+
+# prone every unnecessary thing there is
+sudo docker system prune -a -f
+
+
+# dump elasticsearch
+elasticdump --input=http://192.168.50.8:9200/fava_binesh_documentparagraphs_graph --output=http://localhost:7085/fava_binesh_documentparagraphs_graph --limit 5000
+
+
+# show storage usage
+sudo du -h --max-depth=1 /mnt/Data1/version4_docker
+
+
+""" Portainer cert """
+admin
+123456789@abcd
+
+
+
+""" bypass docker sanctions """
+""" fix storage problem """
+sudo nano /etc/docker/daemon.json
+{
+        "data-root":"/mnt/Data1/version4_docker/docker_data/docker",
+        "registry-mirrors": ["http://docker.bardia.tech:8080/", "https://docker.iranserver.com"],
+        "max-concurrent-downloads": 1
+}
+sudo systemctl daemon-reload
+sudo systemctl restart docker
+
+
+# duplicate volume
+docker container run --rm -it \
+           -v abdal_mysql_volume:/from \
+           -v abdal_mysql_dev_volume:/to \
+           alpine ash -c "cd /from ; cp -av . /to"

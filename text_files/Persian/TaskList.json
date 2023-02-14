@@ -1,0 +1,36 @@
+{
+    "فارسی": {
+        "استاندارسازی نام فایل": ["renameFilesToStandard", 0],
+        "واردکردن اطلاعات ثابت": ["StaticDataImportDB", 0],
+        "پیش پردازش": ["Preprocess", 0],
+        "استخراج کلمات مهم TFIDF": ["DocsTFIDFExtractor", 0],
+        "استخراج عبارات 2-کلمه ای": ["Docs2gramExtractor", 0],
+        "استخراج عبارات 3-کلمه ای": ["Docs3gramExtractor", 0],
+        "استخراج اطلاعات آماری": ["DocFeaturesExtractor", 0],
+        "استخراج نوع سند": ["DocsTypeExtractor", 0],
+        "استخراج سطح سند": ["DocsLevelExtractor", 0],
+        "استخراج بخش تعاریف کلی": ["DocsGeneralDefinitionsExtractor", 0],
+        "استخراج موضوعات سند": ["DocsSubjectExtractor2", 0],
+        "تزریق اسناد در الستیک": ["IngestDocumentsToElastic", 0],
+        "تزریق احکام در الستیک": ["IngestParagraphsToElastic", 0],
+        "استخراج ارجاعات میان اسناد": ["DocsReferencesExtractor", 0],
+        "استخراج بخش تعاریف و اصطلاحات": ["DocsDefinitionsExtractor", 0],
+        "خوشه بندی احکام": ["DocsParagraphsClustering", 0],
+        "کیوب جدول خوشه‌بندی":["DocsParagraphsClusteringCubeData",0],
+        "استخراج کیوب لیست اسناد": ["DocsCreateDocumentsListCubeData", 0],
+        "استخراج کیوب  تحلیل موضوعی": ["DocsCreateSubjectCubeData", 0],
+        "تحلیل شعار رهبری": ["DocsAnalysisLeadershipSlogan", 0],
+        "کیوب تحلیل گرافی": ["DocsGraphCubeData", 0],
+        "مشابهت یابی معنایی": ["AIDocSimilarity", 0],
+        "دسته بندی احکام براساس LDA": ["AIParagraphTopicLDA", 0],
+        "استخراج موضوعات احکام": ["SubjectParagraphExtractor", 0],
+        "گراف‌های خوشه‌بندی": ["ClusteringGraphData", 0],
+        "گراف‌های LDA":["LDAGraphData" , 0],
+
+        "استخراج نوع اسناد رهبری": ["RahbariTypeExtraction", 0],
+        "استخراج نوع اسناد برای گراف": ["RahabriCoLabelsGraph", 0],
+        "تحلیل روند روی اسناد": ["RahabriCorrelatedTimeSeriesExtractor", 0],
+        "ساخت گراف رهبری": ["RahabriGraph", 0],
+        "تحلیل روند اسناد براساس نوع برچسب": ["RahbariLabelsTimeSeriesExtractor", 0]
+    }
+}
