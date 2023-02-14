@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+{% load static %}
+<!-- searchable -->
+
+<link href="../../../static/styles/select2.css" rel="stylesheet"/>
+<link rel="stylesheet" href="../../../static/library/fontawesome-5.10.0.all.css"/>
+<link rel="stylesheet" href="../../../static/library/font-awesome.min-4.7.0.css">
+
+
+<script src="../../../static/library/select2.min-4.1.0.js"></script>
+<script>
+    $(document).ready(async function () {
+        $('.searchable').select2({
+            dir: 'rtl',
+        });
+
+        $('.multisel').select2({
+            dir: 'rtl',
+            multiple: true,
+            placeholder: "انتخاب نمایید"
+        })
+    });
+</script>
+<script src="../../../static/js/hide_header_panel.js"></script>
+<script src="../../../static/js/signout_function.js"></script>
+<style>
+    ::-webkit-scrollbar {
+        height: 15px;
+        width: 15px;
+        background: #000;
+    }
+
+    ::-webkit-scrollbar-thumb:vertical:hover {
+        background-color: rgba(14, 63, 139, 0.13);
+    }
+
+    ::-webkit-scrollbar-thumb {
+        background: #dee2e6;
+        /*-webkit-border-radius: 1ex;*/
+        -webkit-box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.75);
+    }
+
+    ::-webkit-scrollbar-corner {
+        background: #000;
+    }
+</style>
+<div class="container-fluid pr-0 mx-0">
+    <a class="navbar-brand mr-0 px-1" href="{% url 'index' %}" id="brand_name" style="margin-left:25px">
+        <img width="50px" style="" src="{% static 'image/rahbar_profile1.png' %}" alt="">
+        رهنمود
+    </a>
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+
+    <div dir="rtl" class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav pr-0 mx-auto mb-2 mb-lg-0">
+
+            <li class="nav-item" id="document_profile" style="display: none;">
+                <a class="nav-link" id="Rahbari_profile_link" role="button"
+                   href="{% url 'information' %}" aria-expanded="false">
+                    پروفایل اسناد
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" id="rahbari_search" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                   href="{% url 'es_search' %}" style="display: none;">
+                    جست‌وجو پیشرفته
+                </a>
+            </li>
+
+            <li class="nav-item">
+                <a class="nav-link" id="rahbari_search" data-bs-toggle="tooltip" data-bs-placement="bottom"
+                   href="{% url 'es_search' %}" style="display: none;">
+
+                </a>
+            </li>
+
+            <li class="nav-item dropdown" id="AI_analysis" style="display: none;">
+            <a class="nav-link dropdown-toggle" href="#" id="AIDropdown" role="button" data-bs-toggle="dropdown"
+                aria-expanded="false">
+                تحلیل هوشمند
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="GraphDropdown">
+                <li>
+                    <a id="AI_topics" class="dropdown-item text-right" href="{% url 'AI_topics' %}"
+                        style="display: none;">
+                        دسته‌بندی موضوعی (LDA)
+                    </a>
+                </li>
+                <li>
+                    <a id="paragraph_clustering" class="dropdown-item text-right"
+                        href="{% url 'paragrraph_clustering' %}" style="display: none;">خوشه‌بندی احکام</a>
+                </li>
+
+                <li>
+                    <a id="ManualClustering" class="dropdown-item text-right"
+                        href="{% url 'ManualClustering' %}">خوشه‌بندی
+                        سفارشی</a>
+                </li>
+                <li>
+                    <a id="knowledgeGraph" class="dropdown-item text-right" href="{% url 'knowledgeGraph' %}">گراف
+                        دانش</a>
+                </li>
+            </ul>
+        </li>
+
+            <li class="nav-item dropdown" id="UserProfile_panels">
+            <a class="nav-link dropdown-toggle" href="#" id="UserProfileDropdown" role="button"
+                data-bs-toggle="dropdown" aria-expanded="false">
+                تعاملات و یادداشت‌ها
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="UserProfileDropdown">
+                <li><a id="following_document_comments" class="dropdown-item text-right"
+                        href="{% url 'following_document_comments' %}">
+                        نظرات تحلیلی دنبال‌شوندگان</a>
+                </li>
+                <li><a id="notes" class="dropdown-item text-right" href="{% url 'notes' %}">
+                        یادداشت‌های شخصی </a>
+                </li>
+            </ul>
+        </li>
+
+        </ul>
+
+
+        </ul>
+        <!-- vertical line -->
+        <div class="vr" style="color: white; margin-left: 10px; padding:1px"></div>
+
+        <ul class="navbar-nav pr-0 mb-2 mb-lg-0">
+            <li class="nav-item p-1" style="margin-left: -5px">
+                <a class="nav-link" id="help_link" onclick="showTour()" data-bs-toggle="tooltip"
+                   data-bs-placement="bottom" title="راهنما" href="#">
+                    <i id="help_icon" class="bi bi-question-circle"></i>
+                </a>
+            </li>
+
+            <li class="nav-item dropdown p-1" id="admin_panels" style="margin-left: -5px; display: none;">
+                <a class="nav-link" href="#" id="AdminDropdown" role="button" data-bs-toggle="dropdown"
+                   data-bs-toggle="tooltip" data-bs-placement="bottom" title="پنل ادمین" aria-expanded="false">
+                    <i class="fas fa-user-cog" style="font-size: 15px; text-align: center; margin-top:5px" ;></i>
+
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="AdminDropdown">
+                    <li><a id="manage_users_tab" class="dropdown-item text-right" href="{% url 'manage_users_tab' %}"
+                           style="display: none;">
+                        مدیریت کاربران</a>
+                    </li>
+                    <li><a id="admin_waiting_user" class="dropdown-item text-right"
+                           href="{% url 'admin_waiting_user' %}" style="display: none;">
+                        تایید کاربران</a>
+                    </li>
+                    <li><a id="admin_accepted_user" class="dropdown-item text-right"
+                           href="{% url 'admin_accepted_user' %}" style="display: none;">
+                        کاربران تایید شده</a>
+                    </li>
+                    <li><a id="admin_upload" class="dropdown-item text-right" href="{% url 'admin_upload' %}"
+                           style="display: none;">
+                        آپلود فایل</a>
+                    </li>
+                    <li><a id="admin_user_recommendation" class="dropdown-item text-right"
+                           href="{% url 'admin_user_recommendation' %}" style="display: none;">
+                        مشاهده نظرات کاربران</a>
+                    </li>
+                    <li><a id="admin_user_report_bug" class="dropdown-item text-right"
+                           href="{% url 'admin_user_report_bug' %}" style="display: none;">
+                        مشاهده گزارشات خطاها</a>
+                    </li>
+                    <li><a id="admin_accept_user_comments" class="dropdown-item text-right"
+                           href="{% url 'admin_accept_user_comments' %}" style="display: none;">
+                        تایید نظرات تحلیل اسناد</a>
+                    </li>
+                    <li><a id="super_admin_user_log" class="dropdown-item text-right"
+                           href="{% url 'super_admin_user_log' %}" style="display: none;">
+                        لاگ کاربران</a>
+                    </li>
+                </ul>
+            </li>
+
+            <li class="nav-item dropdown p-1" id="Profile_panels" style="margin-left: -5px;">
+                <a class="nav-link dropdown-toggle h-100" href="#" id="ProfileDropdown" role="button"
+                   data-bs-toggle="dropdown" aria-expanded="false" style="padding-top: 13px">
+                    
+                </a>
+                <ul class="dropdown-menu dropdown-menu-start" aria-labelledby="ProfileDropdown"
+                    style="min-width: 210px;">
+                    <li>
+                        <a class="dropdown-item text-right" id="user_profile" href="{% url 'ShowMyUserProfile' %}">
+                            <i class="bi bi-person-circle"
+                            style="font-size: 15px;position: relative; top: -5px;font-weight: bold;"></i>
+                            <span class="mr-1">پروفایل</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a onclick="sign_out_function()" class="dropdown-item text-right" id="logout_link" href="#">
+                            <i class="fa fa-sign-out"></i>
+                            <span class="mr-1">خروج</span>
+
+                        </a>
+                    </li>
+                    <li>
+                        <a id="recommendation" class="dropdown-item text-right" href="{% url 'recommendation' %}">
+                            <i class="fa fa-lightbulb"></i>
+                            <span class="mr-1">انتقادات و پیشنهادات</span>
+                        </a>
+                    </li>
+
+                    <li>
+                        <a id="report_bug" class="dropdown-item text-right" href="{% url 'report_bug' %}">
+                            <i class="fa fa-bug"></i>
+                            <span class="mr-1">گزارش خطا</span>
+                        </a>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</div>
+<script>
+    (async function() {
+        let request_link = 'http://' + location.host + "/account/self/";
+        let response = await fetch(request_link).then(response => response.json());
+        let name = response["name"]
+        document.getElementById("ProfileDropdown").innerText = name
+    })()
+</script>

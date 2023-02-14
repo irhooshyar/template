@@ -241,7 +241,7 @@ def seeAllComment(request):
              "agreed_count": agreed_count, "disagreed_count": disagreed_count, "document_name": c.document.name,
              "is_accept": c.is_accept, "time": c.time})
 
-    return render(request, 'doc/admin_accept_user_comments.html', {'comments': result})
+    return render(request, 'doc/admin_templates/admin_accept_user_comments.html', {'comments': result})
 
 
 def seeAllComment2(request):
@@ -257,73 +257,73 @@ def seeAllComment2(request):
              "agreed_count": agreed_count, "disagreed_count": disagreed_count, "document_name": c.document.name,
              "is_accept": c.is_accept})
 
-    return render(request, 'doc/admin_accept_user_comments2.html', {'comments': result})
+    return render(request, 'doc/admin_templates/admin_accept_user_comments2.html', {'comments': result})
 
 
 @allowed_users('admin_accepted_user')
 def seeAcceptedUser(request):
     activated_user = User.objects.all().filter(is_active=1)
-    return render(request, 'doc/admin_accepted_user.html', {'activated_user': activated_user})
+    return render(request, 'doc/admin_templates/admin_accepted_user.html', {'activated_user': activated_user})
 
 
 @allowed_users('admin_upload')
 def admin_upload(request):
-    return render(request, 'doc/admin_upload.html')
+    return render(request, 'doc/admin_templates/admin_upload.html')
 
 
 @allowed_users('super_admin_user_log')
 def showUserLogs(request):
     users = User.objects.all().filter(is_active=1)
-    return render(request, 'doc/admin_user_log.html', {'users': users})
+    return render(request, 'doc/admin_templates/admin_user_log.html', {'users': users})
 
 
 @allowed_users('admin_user_recommendation')
 def get_user_recommendation(request):
     recommendation = Recommendation.objects.all()
-    return render(request, 'doc/admin_user_recommendation.html', {'recommendation': recommendation})
+    return render(request, 'doc/admin_templates/admin_user_recommendation.html', {'recommendation': recommendation})
 
 
 @allowed_users('admin_user_report_bug')
 def get_user_report_bug(request):
     reports = Report_Bug2.objects.order_by('checked', 'date')
-    return render(request, 'doc/admin_user_report_bug.html', {'report_bug': reports})
+    return render(request, 'doc/admin_templates/admin_user_report_bug.html', {'report_bug': reports})
 
 
 @allowed_users('admin_waiting_user')
 def getRegisteredUser(request):
     data = User.objects.all().filter(enable=1, is_active=0)
-    return render(request, 'doc/admin_waiting_user.html', {'data': data})
+    return render(request, 'doc/admin_templates/admin_waiting_user.html', {'data': data})
 
 
 def getRegisteredUser2(request):
     data = User.objects.all().filter(enable=1, is_active=0)
-    return render(request, 'doc/admin_waiting_user2.html', {'data': data})
+    return render(request, 'doc/admin_templates/admin_waiting_user2.html', {'data': data})
 
 
 @allowed_users('AI_topics')
 def AI_topics(request):
     country_list = Country.objects.all()
     country_map = get_country_maps(country_list)
-    return render(request, 'doc/AI_topics.html', {'countries': country_map})
+    return render(request, 'doc/main_templates/AI_topics.html', {'countries': country_map})
 
 
 # @allowed_users('AI_topics')
 def paragrraph_clustering(request):
     country_list = Country.objects.all()
     country_map = get_country_maps(country_list)
-    return render(request, 'doc/paragraph_clustering2.html', {'countries': country_map})
+    return render(request, 'doc/main_templates/paragraph_clustering2.html', {'countries': country_map})
 
 
 def comparison(request):
-    return render(request, 'doc/comparison2.html')
+    return render(request, 'doc/main_templates/comparison2.html')
 
 
 def recommendation(request):
-    return render(request, 'doc/recommendation.html')
+    return render(request, 'doc/user_templates/recommendation.html')
 
 
 def report_bug(request):
-    return render(request, 'doc/report_bug.html')
+    return render(request, 'doc/user_templates/report_bug.html')
 
 
 # @allowed_users('AI_topics')
@@ -337,21 +337,21 @@ def decision_tree(request, country_id, clustering_algorithm_id):
               "clustering_algorithm_id": clustering_algorithm_id
               }
 
-    return render(request, 'doc/decision_tree.html', {"country_info": result})
+    return render(request, 'doc/main_templates/decision_tree.html', {"country_info": result})
 
 
 @allowed_users('advanced_graph')
 def graph2(request):
     country_list = Country.objects.all()
     country_map = get_country_maps(country_list)
-    return render(request, 'doc/graph3.html', {'countries': country_map})
+    return render(request, 'doc/main_templates/graph3.html', {'countries': country_map})
 
 
 @allowed_users('es_search')
 def es_search(request):
     country_list = Country.objects.all()
     country_map = get_country_maps(country_list)
-    return render(request, 'doc/ES_Search3.html', {'countries': country_map})
+    return render(request, 'doc/main_templates/ES_Search3.html', {'countries': country_map})
 
 
 def dendrogram(request, country_id, ngram_type):
@@ -359,72 +359,72 @@ def dendrogram(request, country_id, ngram_type):
     folder = str(country.file.name.split("/")[-1].split(".")[0])
     file_path = "dendrogram_plots/" + folder + "_" + str(ngram_type) + '_dendrogram.png'
 
-    return render(request, 'doc/dendrogram.html', {"file_path": file_path})
+    return render(request, 'doc/main_templates/dendrogram.html', {"file_path": file_path})
 
 def showDeployLogs(request):
-    return render(request, 'doc/Deploy_server_time.html')
+    return render(request, 'doc/user_templates/Deploy_server_time.html')
 
 
 def index(request):
     country_list = Country.objects.all()
     country_map = get_country_maps(country_list)
-    return render(request, 'doc/index.html', {'countries': country_map})
+    return render(request, 'doc/main_templates/index.html', {'countries': country_map})
 
 
 def information(request):
     country_list = Country.objects.all()
     country_map = get_country_maps(country_list)
-    return render(request, 'doc/information2.html', {'countries': country_map})
+    return render(request, 'doc/main_templates/information2.html', {'countries': country_map})
 
 
 def knowledgeGraph(request):
     country_list = Country.objects.all()
     country_map = get_country_maps(country_list)
-    return render(request, 'doc/KnowledgeGraph.html', {'countries': country_map})
+    return render(request, 'doc/main_templates/KnowledgeGraph.html', {'countries': country_map})
 
 
 def following_document_comments(request):
-    return render(request, 'doc/following_document_comments.html')
+    return render(request, 'doc/user_templates/following_document_comments.html')
 
 
 def notes(request):
     country_list = Country.objects.all()
     country_map = get_country_maps(country_list)
-    return render(request, 'doc/notes.html', {'countries': country_map})
+    return render(request, 'doc/user_templates/notes.html', {'countries': country_map})
 
 
 @unathenticated_user
 def signup(request):
-    return render(request, "doc/signup.html")
+    return render(request, "doc/user_templates/signup.html")
 
 
 @unathenticated_user
 def login(request):
-    return render(request, "doc/login.html")
+    return render(request, "doc/user_templates/login.html")
 
 
 @allowed_users()
 def ManageUsersTab(request):
-    return render(request, 'doc/manage_admins.html')
+    return render(request, 'doc/admin_templates/manage_admins.html')
 
 
 @allowed_users('ManualClustering')
 def ManualClustering(request):
     country_list = Country.objects.all()
     country_map = get_country_maps(country_list)
-    return render(request, 'doc/manual_clustering.html', {'countries': country_map})
+    return render(request, 'doc/main_templates/manual_clustering.html', {'countries': country_map})
 
 
 def ShowMyUserProfile(request):
-    return render(request, "doc/myprofile.html", {})
+    return render(request, "doc/user_templates/myprofile.html", {})
 
 
 def ShowUserProfile(request):
-    return render(request, "doc/userprofile.html", {})
+    return render(request, "doc/user_templates/userprofile.html", {})
 
 
 def sentiment_analysis_panel(request):
-    return render(request, 'doc/sentiment_analysis.html')
+    return render(request, 'doc/main_templates/sentiment_analysis.html')
 
 
 def upload_zip_file(request):
@@ -440,7 +440,7 @@ def upload_zip_file(request):
     file_name = request.POST.get('file_name')
     language = request.POST.get('language')
     if Country.objects.filter(name=file_name):
-        return render(request, 'doc/upload.html',
+        return render(request, 'doc/admin_templates/upload.html',
                       {'status': 'File with this name exists', 'color': 'red', 'form': ZipFileForm(),
                        'files': documents})
     if request.method == 'POST':
@@ -455,7 +455,7 @@ def upload_zip_file(request):
             query_set2 = ''
 
             documents = chain(query_set1, query_set2)
-            return render(request, 'doc/upload.html',
+            return render(request, 'doc/admin_templates/upload.html',
                           {'status': 'File deleted successfully', 'color': 'green', 'form': ZipFileForm(),
                            'files': documents})
         elif request.POST.get('update_items') is not None:
@@ -476,17 +476,17 @@ def upload_zip_file(request):
             # query_set2 = en_model.Country.objects.filter()
 
             documents = Country.objects.filter()
-            return render(request, 'doc/upload.html',
+            return render(request, 'doc/admin_templates/upload.html',
                           {'status': 'File updated successfully', 'form': ZipFileForm(), 'files': documents})
         else:
             cur_user = request.user
             cur_file = request.FILES['docfile']
             if '.rar' in str(cur_file):
-                return render(request, 'doc/upload.html',
+                return render(request, 'doc/admin_templates/upload.html',
                               {'status': 'You can\'t choose rar files', 'form': ZipFileForm(), 'files': documents})
             founded_file = Country.objects.filter(name=file_name)
             if len(str(file_name)) == 0:
-                return render(request, 'doc/upload.html',
+                return render(request, 'doc/admin_templates/upload.html',
                               {'status': 'No named entered', 'form': ZipFileForm(), 'files': documents})
             if len(founded_file) != 0:
                 founded_file = Country.objects.get(name=file_name)
@@ -498,12 +498,12 @@ def upload_zip_file(request):
             newdoc.save()
             # zip_extractor.extractor(newdoc)
             extractor.after_response(newdoc, newdoc)
-            return render(request, 'doc/upload.html',
+            return render(request, 'doc/admin_templates/upload.html',
                           {'status': 'File uploaded successfully', 'form': ZipFileForm(), 'files': documents})
     else:
         pass
 
-    return render(request, 'doc/upload.html', {'form': ZipFileForm(), 'files': documents})
+    return render(request, 'doc/admin_templates/upload.html', {'form': ZipFileForm(), 'files': documents})
 
 
 # upload page link
@@ -1422,7 +1422,7 @@ def BoostingSearchParagraph_ES(request, country_id, curr_page, result_size):
 
 
 def forgot_password(request):
-    return render(request, 'doc/forgot_password.html')
+    return render(request, 'doc/user_templates/forgot_password.html')
 
 
 def forgot_password_by_email(request, email):
@@ -1462,7 +1462,7 @@ def reset_password_check(request, user_id, token):
     except:
         user_id = ""
 
-    return render(request, 'doc/reset_password.html',
+    return render(request, 'doc/user_templates/reset_password.html',
                   {"url_is_valid": url_is_valid, "user_id": user_id, "token": token})
 
 
@@ -3231,7 +3231,7 @@ def confirm_email(user):
     send_mail(subject='کد تایید ایمیل', message=template, from_email=settings.EMAIL_HOST_USER,recipient_list=[user.email])
     
 def resend_email(request):
-    return render(request, 'doc/Resend-Email.html')
+    return render(request, 'doc/user_templates/Resend-Email.html')
 
 def resend_email_code(request, email):
     users = User.objects.filter(email=email)
@@ -3249,7 +3249,7 @@ def email_check(request, user_id, token):
     except:
         user_id = ""
 
-    return render(request, 'doc/Confirm-Email.html', { "url_is_valid": url_is_valid, "user_id": user_id, "token": token })
+    return render(request, 'doc/user_templates/Confirm-Email.html', {"url_is_valid": url_is_valid, "user_id": user_id, "token": token})
 
 def user_activation(request, user_id, token, code):
     user = User.objects.get(pk=user_id)

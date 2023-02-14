@@ -37,10 +37,10 @@ def allowed_users(*allowed_panels):
                 for panel in panels:
                     if panel.panel.panel_english_name in allowed_panels:
                         return view_func(request, *args, **kwargs)
-                return render(request, 'doc/notfound.html')
+                return render(request, 'doc/user_templates/notfound.html')
 
             except: # if user not exist
-                return render(request, 'doc/notfound.html')
+                return render(request, 'doc/user_templates/notfound.html')
 
         return wrapper_func
     return decorators
