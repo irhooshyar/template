@@ -314,18 +314,6 @@ def paragrraph_clustering(request):
     return render(request, 'doc/paragraph_clustering2.html', {'countries': country_map})
 
 
-@allowed_users('approvals_adaptation')
-def approvals_adaptation(request):
-    country_list = Country.objects.all()
-    country_map = get_country_maps(country_list)
-    return render(request, 'doc/approvals_adaptation.html', {'countries': country_map})
-
-
-@allowed_users('rahbari_graph')
-def rahbari_graph(request):
-    return render(request, 'doc/rahbari_graph.html')
-
-
 def comparison(request):
     return render(request, 'doc/comparison2.html')
 
@@ -373,107 +361,8 @@ def dendrogram(request, country_id, ngram_type):
 
     return render(request, 'doc/dendrogram.html', {"file_path": file_path})
 
-
-@allowed_users('rahbari_search')
-def rahbari_search(request):
-    country_list = Country.objects.all()
-    country_map = get_country_maps(country_list)
-    return render(request, 'doc/rahbari_search.html', {'countries': country_map})
-
-
-@allowed_users('rahbari_paraghraph')
-def rahbari_paraghraph(request):
-    country_list = Country.objects.all()
-    country_map = get_country_maps(country_list)
-    return render(request, 'doc/rahbari_paraghraph.html', {'countries': country_map})
-
-
-@allowed_users('rahbari_subject')
-def rahbari_subject(request):
-    country_list = Country.objects.all()
-    country_map = get_country_maps(country_list)
-    return render(request, 'doc/rahbari_subject.html', {'countries': country_map})
-
-
-@allowed_users('rahbari_organization')
-def rahbari_organization(request):
-    country_list = Country.objects.all()
-    country_map = get_country_maps(country_list)
-    return render(request, 'doc/rahbari_organization.html', {'countries': country_map})
-
-
-@allowed_users('rahbari_problem_system')
-def rahbari_problem_system(request):
-    country_list = Country.objects.all()
-    country_map = get_country_maps(country_list)
-    return render(request, 'doc/rahbari_problem_system.html', {'countries': country_map})
-
-
-@allowed_users('rahbari_topic')
-def rahbari_topic(request):
-    country_list = Country.objects.all()
-    country_map = get_country_maps(country_list)
-    return render(request, 'doc/rahbari_topic.html', {'countries': country_map})
-
-
-@allowed_users('rahbari_search')
-def rahbari_labels(request):
-    country_list = Country.objects.all()
-    country_map = get_country_maps(country_list)
-    return render(request, 'doc/rahbari_labels.html', {'countries': country_map})
-
-
-@allowed_users('leadership_slogan')
-def leadership_slogan(request):  ###
-    country_list = Country.objects.all()
-    slogan_list = Slogan.objects.all()
-    slogan_synonymous_words_list = SloganSynonymousWords.objects.all()
-    country_map = get_country_maps(country_list)  # داتیک ، ایران کامل
-    slogan_map = {i.year: f"{i.year} - {i.content}" for i in slogan_list}  # 1383 - پاسخگویی
-    slogan_map_keyword = {i.year: i.keywords for i in slogan_list}  # پاسخگویی-پاسخگو
-    slogan_map_synonymous_words = {i.year: i.words for i in slogan_synonymous_words_list}
-
-    slogan_year_doc_id = {"1380": "204230",
-                          "1381": "202297",
-                          "1382": "202358",
-                          "1383": "203684",
-                          "1384": "202789",
-                          "1385": "202311",
-                          "1386": "204092",
-                          "1387": "202778",
-                          "1388": "202812",
-                          "1389": "202243",
-                          "1390": "203920",
-                          "1391": "204062",
-                          "1392": "203023",
-                          "1393": "203900",
-                          "1394": "203598",
-                          "1395": "202303",
-                          "1396": "203430",
-                          "1397": "204076",
-                          "1398": "204072",
-                          "1399": "202232",
-                          "1400": "202769",
-                          "1401": "202478",
-                          }
-    return render(request, 'doc/leadership_slogan.html',
-                  {'countries': country_map, 'slogans': slogan_map, 'slogan_keyword': slogan_map_keyword,
-                   'slogan_synonymous_words': slogan_map_synonymous_words, "year_document_id": slogan_year_doc_id})
-
-
-@allowed_users('document_profile')
-def document_profile(request):
-    country_list = Country.objects.all().filter(name="اسناد رهبری")
-    country_map = get_country_maps(country_list)
-    return render(request, 'doc/rahbari_doc_profile.html', {'countries': country_map})
-
-
 def showDeployLogs(request):
     return render(request, 'doc/Deploy_server_time.html')
-
-
-def DownloadUnknownDocuments(request):
-    return render(request, 'doc/download_unknown_documents.html')
 
 
 def index(request):
@@ -627,14 +516,8 @@ def detect_level(request, id):
 
 def static_data_import_db(request, id, language):
     file = get_object_or_404(Country, id=id)
-
-    if language == 'English':
-        from scripts.English import StaticDataImportDB
-        StaticDataImportDB.apply(None, file)
-    elif language == 'Persian':
-        from scripts.Persian import StaticDataImportDB
-        StaticDataImportDB.apply(None, file)
-
+    from scripts.Persian import StaticDataImportDB
+    StaticDataImportDB.apply(None, file)
     return redirect('zip')
 
 
