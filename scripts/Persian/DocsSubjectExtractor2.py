@@ -12,6 +12,7 @@ classificationSentencePipeline = pipeline('text-classification', model=classific
 
 
 def concat_dictionary(dict_list):
+    print(1)
     result_dict = {}
     for dict_data in dict_list:
         for key, value in dict_data.items():
