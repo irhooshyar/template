@@ -144,7 +144,6 @@ class Country(models.Model):
 class Subject(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(null=True, max_length=500)
-    language = models.CharField(null=True, max_length=500)
 
     class Meta:
         app_label = 'doc'
@@ -199,30 +198,6 @@ class Document(models.Model):
         return f'ID: {self.id}, Name: {self.name}, Country_ID: {self.country_id}'
 
 
-class DocumentSubject(models.Model):
-    id = models.AutoField(primary_key=True)
-    document_id = models.ForeignKey(Document, null=True, on_delete=models.CASCADE)
-    subject_id = models.ForeignKey(Subject, null=True, on_delete=models.CASCADE)
-    weight = models.FloatField(default=0)
-
-    class Meta:
-        app_label = 'doc'
-
-    def __str__(self):
-        return f'ID: {self.id}, Document_ID: {self.document_id}, Subject_ID: {self.subject_id}, Measure_ID: {self.measure_id}, Weight: {self.weight}'
-
-
-class SubjectsVersion(models.Model):
-    id = models.AutoField(primary_key=True)
-    name = models.CharField(null=True, max_length=200)
-
-
-class SubjectList(models.Model):
-    id = models.AutoField(primary_key=True)
-    name = models.CharField(null=True, max_length=500)
-    version = models.ForeignKey(SubjectsVersion, null=True, on_delete=models.CASCADE)
-    color = models.CharField(null=True, max_length=200)
-
 
 class DocumentParagraphs(models.Model):
     id = models.AutoField(primary_key=True)
@@ -237,27 +212,36 @@ class DocumentParagraphs(models.Model):
         return f'ID: {self.id}, Document_ID: {self.document_id}, Number: {self.number}'
 
 
+class DocumentSubject(models.Model):
+    id = models.AutoField(primary_key=True)
+    document_id = models.ForeignKey(Document, null=True, on_delete=models.CASCADE)
+    subject_id = models.ForeignKey(Subject, null=True, on_delete=models.CASCADE)
+    weight = models.FloatField(default=0)
+
+    class Meta:
+        app_label = 'doc'
+
+    def __str__(self):
+        return f'ID: {self.id}, Document_ID: {self.document_id}, Subject_ID: {self.subject_id}, Measure_ID: {self.measure_id}, Weight: {self.weight}'
+
+
 class ParagraphsSubject(models.Model):
     id = models.AutoField(primary_key=True)
     country = models.ForeignKey(Country, null=True, on_delete=models.CASCADE)
     document = models.ForeignKey(Document, null=True, on_delete=models.CASCADE)
     paragraph = models.ForeignKey(DocumentParagraphs, null=True, on_delete=models.CASCADE)
-    version = models.ForeignKey(SubjectsVersion, null=True, on_delete=models.CASCADE)
 
-    subject1 = models.ForeignKey(SubjectList, null=True, on_delete=models.CASCADE, related_name='subject1')
+    subject1 = models.ForeignKey(Subject, null=True, on_delete=models.CASCADE, related_name='subject1')
     subject1_score = models.FloatField(null=True, default=0)
     subject1_name = models.CharField(null=True, max_length=500)
-    subject1_keywords = models.JSONField(null=True)
 
-    subject2 = models.ForeignKey(SubjectList, null=True, on_delete=models.CASCADE, related_name='subject2')
+    subject2 = models.ForeignKey(Subject, null=True, on_delete=models.CASCADE, related_name='subject2')
     subject2_score = models.FloatField(null=True, default=0)
     subject2_name = models.CharField(null=True, max_length=500)
-    subject2_keywords = models.JSONField(null=True)
 
-    subject3 = models.ForeignKey(SubjectList, null=True, on_delete=models.CASCADE, related_name='subject3')
+    subject3 = models.ForeignKey(Subject, null=True, on_delete=models.CASCADE, related_name='subject3')
     subject3_score = models.FloatField(null=True, default=0)
     subject3_name = models.CharField(null=True, max_length=500)
-    subject3_keywords = models.JSONField(null=True)
 
 
 class CUBE_DocumentJsonList(models.Model):

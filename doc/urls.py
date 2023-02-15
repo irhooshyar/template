@@ -6,6 +6,8 @@ urlpatterns = [
     path('upload/', views.upload_zip_file, name='zip'),
     path('update/<int:id>/<str:language>/', views.update_doc, name='update'),
     path('delete/<int:id>/<str:language>/', views.delete_doc, name='delete'),
+    path('fullProfileAnalysis/<int:id>/', views.fullProfileAnalysis, name='fullProfileAnalysis'),
+
 
     path('get_task_list/', views.get_task_list, name='get_task_list'),
     path('static_data_import_db/<int:id>/<str:language>/', views.static_data_import_db, name='static_data_import_db'),
