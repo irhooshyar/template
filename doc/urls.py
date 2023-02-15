@@ -363,6 +363,8 @@ urlpatterns = [
 
 
     path('GetSearchParameters/<int:country_id>/', views.GetSearchParameters, name='GetSearchParameters'),
+    path('GetSimilarParagraphs_ByParagraphID/<int:paragraph_id>/', views.GetSimilarParagraphs_ByParagraphID, name='GetSimilarParagraphs_ByParagraphID'),
 
+    path('GetSemanticSimilarParagraphs_ByParagraphID/<int:paragraph_id>/', views.GetSemanticSimilarParagraphs_ByParagraphID, name='GetSemanticSimilarParagraphs_ByParagraphID'),
 
 ]

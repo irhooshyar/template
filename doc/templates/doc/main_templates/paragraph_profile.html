@@ -192,7 +192,14 @@
         <li class="nav-item" role="presentation">
             <button id="similarity_tab" class="nav-link" data-bs-toggle="pill"
                     data-bs-target="#similarity_pane" type="button" role="tab" aria-controls="subject_keyword_pane"
-                    aria-selected="true">  مشابهت‌یابی (نسخه‌ آزمایشی)
+                    aria-selected="true">  مشابهت‌یابی ظاهری
+            </button>
+        </li>
+
+        <li class="nav-item" role="presentation">
+            <button id="semantic_similarity_tab" class="nav-link" data-bs-toggle="pill"
+                    data-bs-target="#semantic_similarity_pane" type="button" role="tab" aria-controls="semantic_similarity_pane"
+                    aria-selected="true">  مشابهت‌یابی معنایی
             </button>
         </li>
 
@@ -213,6 +220,13 @@
              aria-labelledby="similarity_tab">
 
             <div id="SimilarParagraphsContainer" dir="rtl"  class="text-justify pt-5" >
+            </div>
+        </div>
+
+        <div id="semantic_similarity_pane" class="tab-pane bg-white w-100 fade" role="tabpanel"
+             aria-labelledby="semantic_similarity_tab">
+
+            <div id="SemanticSimilarParagraphsContainer" dir="rtl"  class="text-justify pt-5" >
             </div>
         </div>
 
@@ -271,6 +285,7 @@
 
     </div>
 </div>
+
 
 <!-- -------------------------------------- -->
 

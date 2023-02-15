@@ -33,12 +33,7 @@ class ParagraphVectorIndex(ES_Index):
             paragraph_id = para['para_id']
             document_id = para['doc_id']
             document_name = para['doc_name']
-            type_name = para['type_name']
 
-            approval_reference_name = para['approval_reference_name'] if para['approval_reference_name'] != None else 'نامشخص'
-            level_name =  para['level_name'] if para['level_name'] != None else 'نامشخص'
-            approval_year = para['approval_year'] if para['approval_year'] != None else 0
-            
             para_text = para['para_text']
 
             vector_value = list(para['vector_value']['data'])
@@ -53,12 +48,6 @@ class ParagraphVectorIndex(ES_Index):
                 "wikitriplet_vector":vector_value,
                 "document_id": document_id,
                 "document_name": document_name,
-                "type_name":type_name,
-                'approval_reference_name':approval_reference_name,
-                'level_name':level_name,
-                'approval_year':approval_year,
-                "clause_type": "نامشخص",
-                "clause_number": 0,
                 "data": base64_file
             }
 
@@ -104,15 +93,10 @@ def apply(folder, Country,is_for_ref):
                 para_id = F('paragraph_id')).annotate(
                 doc_id = F('paragraph__document_id__id')).annotate(
                 doc_name = F('paragraph__document_id__name'), 
-                type_name = F('paragraph__document_id__type_name'),
-                approval_reference_name = F('paragraph__document_id__approval_reference_name'),
-                approval_year=Cast(Substr('paragraph__document_id__approval_date', 1, 4), IntegerField()),
-                level_name = F('paragraph__document_id__level_name')).annotate(
                 para_text = F('paragraph__text')).values(
 
         'para_id','doc_id','doc_name',
-        'para_text','type_name','approval_reference_name', 
-        'approval_year', 'level_name','vector_value'
+        'para_text','vector_value'
     )
     print(len(paragraphs))
     new_index = ParagraphVectorIndex(index_name, settings, mappings)

@@ -7,7 +7,7 @@ from scripts.Persian import DocsParagraphsClustering
 from scripts.Persian import SubjectParagraphExtractor
 from scripts.Persian import DocsSubjectExtractor2
 from scripts.Persian import DocsParagraphsClusteringCubeData,LDAGraphData 
-from scripts.Persian import DocProvisionsFullProfileAnalysis
+from scripts.Persian import DocProvisionsFullProfileAnalysis,DocsParagraphVectorExtractor
 from datetime import datetime
 
 from abdal.settings import LOCAL_SETTING
@@ -146,6 +146,14 @@ def persian_apply(folder_name, Country, tasks_list, host_url):
 
     #     print("28. DocProvisionsFullProfileAnalysis.")
     #     DocProvisionsFullProfileAnalysis.apply(Country)
+
+
+    if "DocsParagraphVectorExtractor" in tasks_list: ####
+        Country.status = "DocsParagraphVectorExtractor"
+        Country.save()
+
+        print("4. DocsParagraphVectorExtractor")
+        DocsParagraphVectorExtractor.apply(folder_name, Country)
 
     print("finished at: ", datetime.now().strftime("%H:%M:%S"))
 

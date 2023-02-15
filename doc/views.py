@@ -108,13 +108,13 @@ def update_doc(request, id, language, ):
         StratAutomating.apply.after_response(folder_name, file, "DocsAreaGraphCubeData", host_url)
     else:
 
-        # StratAutomating.apply.after_response(folder_name, file,
-        #                                      "DocsParagraphsClustering_AIParagraphTopicLDA_LDAGraphData",
-        #                                      host_url)  # AdvanceARIMAExtractor_ ActorTimeSeriesPrediction _DocsSubjectExtractor_DocsLevelExtractor_DocsReferencesExtractor_DocsActorsTimeSeriesDataExtractor_DocsCreateDocumentsListCubeData_DocsCreateSubjectCubeData_DocsCreateVotesCubeData_DocsCreateSubjectStatisticsCubeData_DocsCreateTemplatePanelsCubeData_DocsAnalysisLeadershipSlogan_DocsCreatePrinciplesCubeData_DocCreateBusinessAdvisorCubeData_DocsCreateRegularityLifeCycleCubeData_DocsExecutiveParagraphsExtractor_DocsClauseExtractor_DocsGraphCubeData_DocsCreateMandatoryRegulationsCubeData_DocsExecutiveClausesExtractor_DocsCreateActorInformationStackChartCubeData
+        StratAutomating.apply.after_response(folder_name, file,
+                                             "DocsParagraphVectorExtractor",
+                                             host_url)  # AdvanceARIMAExtractor_ ActorTimeSeriesPrediction _DocsSubjectExtractor_DocsLevelExtractor_DocsReferencesExtractor_DocsActorsTimeSeriesDataExtractor_DocsCreateDocumentsListCubeData_DocsCreateSubjectCubeData_DocsCreateVotesCubeData_DocsCreateSubjectStatisticsCubeData_DocsCreateTemplatePanelsCubeData_DocsAnalysisLeadershipSlogan_DocsCreatePrinciplesCubeData_DocCreateBusinessAdvisorCubeData_DocsCreateRegularityLifeCycleCubeData_DocsExecutiveParagraphsExtractor_DocsClauseExtractor_DocsGraphCubeData_DocsCreateMandatoryRegulationsCubeData_DocsExecutiveClausesExtractor_DocsCreateActorInformationStackChartCubeData
 
 
-        from scripts.Persian import DocsParagraphVectorExtractor
-        DocsParagraphVectorExtractor.apply(folder_name, file)
+        # from scripts.Persian import DocsParagraphVectorExtractor
+        # DocsParagraphVectorExtractor.apply(folder_name, file)
 
 
 
@@ -6403,4 +6403,101 @@ def userlogs_to_index(request, id, language):
 
     IngestUserLogToElastic.apply(folder_name, file, machine_user_name)
     return redirect('zip')
+
+def GetSimilarParagraphs_ByParagraphID(request, paragraph_id):
+    similar_paragraphs = []
+    para_obj = DocumentParagraphs.objects.get(id=paragraph_id)
+    document_id = para_obj.document_id.id
+    country_obj = para_obj.document_id.country_id
+    index_name = standardIndexName(country_obj, DocumentParagraphs.__name__)
+    # index_name = "doticfull_documentparagraphs"
+
+    sim_query = {
+        "bool": {
+            "filter": [
+                {
+                    "more_like_this": {
+                        "analyzer": "persian_custom_analyzer",
+                        "fields": [
+                            "attachment.content"
+                        ],
+                        "like": [
+                            {
+                                "_index": index_name,
+                                "_id": str(paragraph_id)
+                            }
+                        ],
+                        "min_term_freq": 2,
+                        "max_query_terms": 400,
+                        "min_word_length": 4,
+                        "min_doc_freq": 2,
+                        "minimum_should_match": "55%"
+                    }
+                }
+            ]
+        }
+    }
+
+    response = client.search(index=index_name,
+                             _source_includes=['document_id', 'document_name', 'attachment.content'],
+                             request_timeout=40,
+                             query=sim_query
+                             )
+
+    similar_paragraphs = response['hits']['hits']
+
+    return JsonResponse({'similar_paragraphs': similar_paragraphs})
+
+
+def GetSemanticSimilarParagraphs_ByParagraphID(request, paragraph_id):
+    
+    # get paragraph vector
+    vector_query = {
+        'term':{
+            'paragraph_id':paragraph_id
+        }
+    }
+    country_obj = DocumentParagraphs.objects.get(id=paragraph_id).document_id.country_id
+    index_name = standardIndexName(country_obj, DocumentParagraphs.__name__ + "_vectors")
+
+    response = client.search(index=index_name,
+                            _source_includes=['wikitriplet_vector'],
+                            request_timeout=40,
+                            query=vector_query
+                            )
+
+    para_vector = list(response['hits']['hits'][0]['_source']['wikitriplet_vector'])
+    # create knn query
+    knn_qeury = {
+        "script_score": {
+            "query" : {
+                "bool":{
+                    "must_not":{
+                        "term":{
+                            "paragraph_id":paragraph_id
+                        }
+                    }
+                }
+            },
+            "script": {
+                "source": "cosineSimilarity(params.query_vector, 'wikitriplet_vector') + 1.0", 
+                "params": {
+                "query_vector": para_vector
+                }
+            }
+        }
+    }
+
+    # search and get result
+    response = client.search(index=index_name,
+                            _source_includes=['document_id', 'document_name', 'attachment.content'],
+                            request_timeout=40,
+                            size = 10,
+                            query=knn_qeury
+                            )
+
+    
+    similar_paragraphs = response['hits']['hits']
+
+    return JsonResponse({'similar_paragraphs': similar_paragraphs})
 
