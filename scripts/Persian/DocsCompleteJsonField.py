@@ -30,60 +30,31 @@ def apply(folder_name, Country):
         print(i/doc_list.__len__())
         i +=1
 
-        document_actors = {}
 
-        motevalian_dict = GetActorsByDocumentIdActorType(document.id, 'متولی اجرا')
-        hamkaran_dict = GetActorsByDocumentIdActorType(document.id, 'همکار')
-        salahiat_dict = GetActorsByDocumentIdActorType(document.id, 'دارای صلاحیت اختیاری')
+        date = "نامشخص"
+        year = "نامشخص"
+        if document.date is not None:
+            date = document.date
+            year = date[0:4]
 
-        document_actors['motevalian'] = motevalian_dict
-        document_actors['hamkaran'] = hamkaran_dict
-        document_actors['salahiat'] = salahiat_dict
-
-        approval_ref = "نامشخص"
-        if document.approval_reference_id != None:
-            approval_ref = document.approval_reference_name
-
-        approval_date = "نامشخص"
-        approval_year = "نامشخص"
-        if document.approval_date != None:
-            approval_date = document.approval_date
-            approval_year = approval_date[0:4]
-
-        communicated_date = "نامشخص"
-        if document.communicated_date != None:
-            communicated_date = document.communicated_date
-
-        type_name = "سایر"
-        if document.type_id != None:
-            type_name = document.type_name
-
-        level_name = "نامشخص"
-        if document.level_id != None:
-            level_name = document.level_name
+        category = "نامشخص"
+        if document.category_name is not None:
+            category = document.category_name
 
         subject_name = "نامشخص"
-        if document.subject_id != None:
+        if document.subject_name is not None:
             subject_name = document.subject_name
 
         result = {"id": document.id,
                   "name": document.name,
                   "country_id": document.country_id_id,
                   "country": document.country_id.name,
-                  "level_id": document.level_id_id,
-                  "level": level_name,
                   "subject_id": document.subject_id_id,
                   "subject": subject_name,
-                  "type_id": document.type_id_id,
-                  "type": type_name,
-                  "approval_reference_id": document.approval_reference_id_id,
-                  "approval_reference": approval_ref,
-                  "approval_date": approval_date,
-                  "approval_year": approval_year,
-                  "communicated_date": communicated_date,
-                  "word_count": document.word_count,
-                  "distinct_word_count": document.distinct_word_count,
-                  "stopword_count": document.stopword_count
+                  "category_id": document.category_id_id,
+                  "category": category,
+                  "date": date,
+                  "year": year,
                   }
 
         Document.objects.filter(id=document.id).update(json_text=result)

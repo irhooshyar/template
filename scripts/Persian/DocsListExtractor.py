@@ -66,7 +66,7 @@ def DataFrame2Dict(df, key_field, values_field):
         data_list = {}
         for field in values_field:
             data_list[field] = row[field]
-        result_dict[row[key_field]] = data_list
+        result_dict[str(row[key_field])] = data_list
 
     return result_dict
 
@@ -74,13 +74,11 @@ def apply(folder_name, Country):
     t = time.time()
 
     # excelFile = str(Path(config.PERSIAN_PATH, 'DoticFull_with_limited_title.xlsx'))
-    excelFile = str(Path(config.PERSIAN_PATH, 'Rahbari_Full_Excel.xlsx'))
+    excelFile = str(Path(config.PERSIAN_PATH, 'data.xlsx'))
     df = pd.read_excel(excelFile)
     df['title'] = df['title'].apply(lambda x: standardFileName(x))
-    df['limited_title'] = df['limited_title'].apply(lambda x: standardFileName(x))
-    df = df.drop_duplicates(subset=['limited_title'])
 
-    dataframe_dictionary = DataFrame2Dict(df, "limited_title", ["title"])
+    dataframe_dictionary = DataFrame2Dict(df, "id", ["title"])
 
     dataPath = str(Path(config.DATA_PATH, folder_name))
     all_files = Preprocessing.readFiles(dataPath, readContent=False)
@@ -128,6 +126,7 @@ def Docs_List_Extractor(docs_list, Country, dataframe_dictionary, Result_Create_
     idx = 0
     for file in docs_list:
         idx += 1
+        file = str(file)
         if file in dataframe_dictionary:
             document_name = dataframe_dictionary[file]['title']
             doc_obj = Document(name=document_name, file_name=file, country_id=Country)

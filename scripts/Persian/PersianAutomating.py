@@ -50,14 +50,6 @@ def persian_apply(folder_name, Country, tasks_list, host_url):
         DocsParagraphsExtractor.apply(folder_name, Country)
 
 
-    # if "StaticDataImportDB" in tasks_list: ####
-    #     Country.status = "StaticDataImportDB"
-    #     Country.save()
-
-    #     print("4. StaticDataImportDB")
-    #     StaticDataImportDB.apply(folder_name, Country)
-
-
     # Edit By HuggingFace
     if "DocsSubjectExtractor2" in tasks_list:
         Country.status = "DocsSubjectExtractor2"
@@ -73,6 +65,13 @@ def persian_apply(folder_name, Country, tasks_list, host_url):
         print("26. SubjectParagraphExtractor.")
         SubjectParagraphExtractor.apply(folder_name, Country)
 
+
+    if "StaticDataImportDB" in tasks_list: ####
+        Country.status = "StaticDataImportDB"
+        Country.save()
+
+        print("4. StaticDataImportDB")
+        StaticDataImportDB.apply(folder_name, Country)
 
     # --- Ingest Documents
     if "IngestDocumentsToElastic" in tasks_list:

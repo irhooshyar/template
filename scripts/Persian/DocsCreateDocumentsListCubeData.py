@@ -23,7 +23,7 @@ def apply(folder_name, Country):
 
     CUBE_DocumentJsonList.objects.filter(country_id=Country).delete()
 
-    filesList = Document.objects.filter(country_id=Country).order_by('-approval_date')
+    filesList = Document.objects.filter(country_id=Country).order_by('-date')
 
     Thread_Count = config.Thread_Count
     Result_Create_List = [None] * Thread_Count
@@ -61,22 +61,25 @@ def ExtractList_CUBE(filesList,  Result_Create_List, thread_number, Country):
         name = doc.name
 
         subject = "نامشخص"
-        if doc.subject_id != None:
+        if doc.subject_id is not None:
             subject = doc.subject_name
 
-        approval_reference = "نامشخص"
-        if doc.approval_reference_id != None:
-            approval_reference = doc.approval_reference_name
 
-        approval_date = "نامشخص"
-        if doc.approval_date != None:
-            approval_date = doc.approval_date
+
+        date = "نامشخص"
+        year = "نامشخص"
+        if doc.date is not None:
+            date = doc.date
+            year = date[0:4]
+
+        category = "نامشخص"
+        if doc.category_name is not None:
+            category = doc.category_name
 
         function = "SelectDocumentFunction(" + str(id) + ")"
         tag = f'<button type="button" class="btn modal_btn" data-bs-toggle="modal" onclick="{function}">انتخاب</button>'
 
-        json_value = {"id": "", "subject": subject, "document_name": name, "approval_reference": approval_reference,
-             "approval_date": approval_date, "tag": tag}
+        json_value = {"id": "", "subject": subject, "document_name": name, "category": category, "date": date, "tag": tag}
 
         country_doc_json_obj = CUBE_DocumentJsonList(country_id=Country, document_id=doc, json_text=json_value)
         Create_List.append(country_doc_json_obj)
