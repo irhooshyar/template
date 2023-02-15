@@ -76,7 +76,7 @@
     <script src="../../../static/js/chart.js"></script>
 
 
-    <title> جست‌وجوی مصوبات</title>
+    <title> جست‌وجوی اسناد</title>
     {% include "doc/base_templates/title_icon.html" %}
 
 </head>
@@ -146,15 +146,6 @@
                         placeholder="متن جست‌وجو ..." type="text" required="" name="SearchBox" id="SearchBox" value="">
                 </div>
 
-                <!-- Validation input -->
-                <div class="col-md-6 pt-3 col-12 col-lg-2 bg-light" dir="rtl">
-
-                    <label class=" text-right bg-light float-right" style="direction: rtl;;">اعتبار سند:</label>
-                    <select id="ValidationSelect" class="form-select text-right float-right searchable-select"
-                        style="direction: rtl;">
-                    </select>
-                </div>
-
                 <!--  Buttons -->
                 <div class="col-lg-4 col-md-6 pt-5 col-12">
                     <button id="advanced_search" type="button" class="btn float-right" data-bs-toggle="collapse"
@@ -174,18 +165,9 @@
             <!-- Advanced Fields in Second Row -->
             <div id="advanced_fields" class="collapse show row flex-row-reverse mx-auto mt-4">
 
-                <!-- document level input -->
-                <div class="col-md-6 pt-3 col-12 col-lg-3 bg-light" dir="rtl">
-
-                    <label class=" text-right bg-light float-right" style="direction: rtl;;">سطح سند:</label>
-                    <select id="LevelSelect" class="form-select text-right float-right searchable-select"
-                        style="direction: rtl;">
-                    </select>
-
-                </div>
 
                 <!-- document subject input -->
-                <div class="col-md-6 pt-3 col-12 col-lg-3 bg-light" dir="rtl">
+                <div class="col-md-6 pt-3 col-12 col-lg-4 bg-light" dir="rtl">
 
                     <label class=" text-right bg-light float-right" style="direction: rtl;;"> موضوع سند:</label>
                     <select id="SubjectSelect" class="form-select text-right float-right searchable-select"
@@ -194,10 +176,10 @@
 
                 </div>
 
-                <!-- search type input -->
-                <div class="col-md-6 pt-3 col-12 col-lg-3 bg-light" dir="rtl">
+                <!-- doc type input -->
+                <div class="col-md-6 pt-3 col-12 col-lg-4 bg-light" dir="rtl">
 
-                    <label class=" text-right bg-light float-right" style="direction: rtl;;"> نوع سند:</label>
+                    <label class=" text-right bg-light float-right" style="direction: rtl;;"> دسته سند:</label>
 
                     <select id="TypeSelect" class="form-select text-right float-right searchable-select"
                         style="direction: rtl;">
@@ -205,41 +187,9 @@
 
                 </div>
 
-                <!-- Approval References -->
-                <div class="col-md-6 pt-3 col-12 col-lg-3 bg-light" dir="rtl">
 
-                    <label class=" text-right bg-light float-right" style="direction: rtl;;"> مرجع تصویب:</label>
-
-                    <select id="ApprovalReferences" class="form-select text-right float-right searchable-select"
-                        autocomplete="off" placeholder="انتخاب نمایید"></select>
-
-
-                </div>
-
-                <!-- From Year input -->
-                <div class="col-md-6 pt-3 col-12 col-lg-3 mt-1 bg-light" dir="rtl">
-
-                    <label class=" text-right bg-light float-right" style="direction: rtl;;"> سال تصویب از:</label>
-
-                    <select id="YearFrom" class="form-select text-right float-right searchable-select"
-                        style="direction: rtl;">
-                    </select>
-
-                </div>
-
-                <!-- To Year input -->
-                <div class="col-md-6 pt-3 col-12 col-lg-3 mt-1 bg-light" dir="rtl">
-
-                    <label class="text-right bg-light float-right" style="direction: rtl;;"> سال تصویب تا:</label>
-
-                    <select id="YearTo" class="form-select text-right float-right searchable-select"
-                        style="direction: rtl;">
-                    </select>
-
-                </div>
-
-                <!-- Document Type -->
-                <div class="col-md-6 pt-3 col-12 col-lg-3 mt-1 bg-light" dir="rtl">
+                <!-- Place Type -->
+                <div class="col-md-6 pt-3 col-12 col-lg-4 bg-light" dir="rtl">
 
                     <label class=" text-right bg-light float-right" style="direction: rtl;;">در:</label>
 
@@ -254,8 +204,31 @@
 
                 </div>
 
+                <!-- From Year input -->
+                <div class="col-md-6 pt-3 col-12 col-lg-4 mt-1 bg-light" dir="rtl">
+
+                    <label class=" text-right bg-light float-right" style="direction: rtl;;"> سال سند از:</label>
+
+                    <select id="YearFrom" class="form-select text-right float-right searchable-select"
+                        style="direction: rtl;">
+                    </select>
+
+                </div>
+
+                <!-- To Year input -->
+                <div class="col-md-6 pt-3 col-12 col-lg-4 mt-1 bg-light" dir="rtl">
+
+                    <label class="text-right bg-light float-right" style="direction: rtl;;"> سال سند تا:</label>
+
+                    <select id="YearTo" class="form-select text-right float-right searchable-select"
+                        style="direction: rtl;">
+                    </select>
+
+                </div>
+
+
                 <!-- Match Type -->
-                <div class="col-md-6 pt-3 col-12 col-lg-3 mt-1 bg-light" dir="rtl">
+                <div class="col-md-6 pt-3 col-12 col-lg-4 mt-1 bg-light" dir="rtl">
 
                     <label class=" text-right bg-light float-right" style="direction: rtl;;"> نوع جستجو:</label>
 
@@ -281,30 +254,12 @@
                         data-bs-target="#search_result_pane" type="button" role="tab" aria-controls="search_result_pane"
                         aria-selected="true">نتایج جست‌وجو</button>
                 </li>
-                <!--
-                <li class="nav-item float-right" role="presentation">
-                    <button id="terms_graph_tab" class="nav-link" data-bs-toggle="pill" data-bs-target="#terms_graph_pane" type="button" role="tab" aria-controls="terms_graph_pane" aria-selected="false">گراف کلمات</button>
-                </li>
-                -->
+
                 <li class="nav-item float-right" role="presentation">
                     <button id="bar_chart_info_tab" class="nav-link" data-bs-toggle="pill"
                         data-bs-target="#bar_chart_info_pane" type="button" role="tab"
                         aria-controls="bar_chart_info_pane" aria-selected="false">داشبورد آماری</button>
                 </li>
-
-                <li class="nav-item float-right" role="presentation">
-                    <button id="references_graph_tab" class="nav-link" data-bs-toggle="pill"
-                        data-bs-target="#references_graph_pane" type="button" role="tab"
-                        aria-controls="references_graph_pane" aria-selected="false">گراف ارجاعات</button>
-                </li>
-
-                <li class="nav-item float-right definition_keywords_class" role="presentation">
-                    <button id="definition_keywords_graph_tab" class="nav-link" data-bs-toggle="pill"
-                        data-bs-target="#definition_keywords_graph_pane" type="button" role="tab"
-                        aria-controls="definition_keywords_graph_pane" aria-selected="false">گراف کلیدواژگان
-                        تعاریف</button>
-                </li>
-
 
                 <!-- Result Count -->
                 <p id="SearchResultLable" class="text-left float-left text-secondary pl-2"></p>
@@ -409,183 +364,12 @@
                     </div>
                 </div>
 
-                <!--  Document Graph Pane -->
-                <div id="references_graph_pane" class="tab-pane w-100 fade float-right" role="tabpanel"
-                    aria-labelledby="references_graph_tab">
-
-                    <div class="row mt-4 w-100 flex-row-reverse  mx-auto pb-5 px-4">
-
-                        <!-- doc colors -->
-                        <div dir="rtl" id="ColorBox" class="w-100 text-right flex-wrap" style="display: inline-flex">
-                        </div>
-
-                        <div id="references_constraints_container"
-                            class="collapse show constraints_container row flex-row-reverse pt-0 mb-0 mt-0 mx-auto">
-
-                            <div id="references_DegreeDiv" class="col-md-3 p-1 col-12 col-lg-6 mt-1">
-                                <div class="source_header bg-white row mx-auto p-1">
-                                    <label class="text-center my-0" style="direction: rtl;">فیلتر درجه</label>
-                                </div>
-                                <div class="source_container pb-2 row mx-auto">
-                                    <div dir="rtl" class="wrapper mt-5 mb-1" id="references_DegreeSlider"
-                                        style="visibility: hidden;">
-                                        <div class="container" style="display: flex; justify-content: center;">
-                                            <div class="slider-wrapper">
-                                                <div dir="ltr" id="slider-range"></div>
-                                                <div dir="rtl"
-                                                    style="display:flex; width: 300px; justify-content: center"
-                                                    class="range-wrapper">
-                                                    <div dir="ltr" class="range mt-1"></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div id="references_WeightDiv" class="col-md-3 p-1 col-12 col-lg-6 mt-1">
-                                <div class="source_header bg-white row mx-auto p-1">
-                                    <label class="text-center my-0" style="direction: rtl;">فیلتر وزن</label>
-                                </div>
-                                <div class="source_container pb-2 row mx-auto">
-                                    <div dir="rtl" class="wrapper mt-5 mb-1" id="references_WeightSlider"
-                                        style="visibility: hidden;">
-                                        <div class="container" style="display: flex; justify-content: center;">
-                                            <div class="slider-wrapper">
-                                                <div dir="ltr" id="slider-range"></div>
-                                                <div dir="rtl"
-                                                    style="display:flex; width: 300px; justify-content: center"
-                                                    class="range-wrapper">
-                                                    <div dir="ltr" class="range mt-1"></div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                        </div>
-
-                        <div class="d-flex">
-                            <div class="col-md-6 p-1 col-12 col-lg-6 mt-3">
-                                <div class="source_header bg-white row mx-auto p-1">
-                                    <label class="text-center my-0" style="direction: rtl;">نحوه نمایش</label>
-                                </div>
-                                <div class="source_container p-4 row mx-auto">
-                                    <select id="references_ChangeLayout" name="references_ChangeLayout"
-                                        class="form-select text-right float-right searchable-select"
-                                        style="direction: rtl;">
-                                        <option value="grid">مربعی</option>
-                                        <option value="circular"> دایره ای </option>
-                                        <option value="force">ساده</option>
-                                        <option value="dagre">بالا به پایین</option>
-                                        <option value="radial">شعاعی</option>
-                                        <option value="concentric">متحدالمرکز</option>
-                                        <option value="comboForce">خوشه ای</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="col-md-6 p-1 col-12 col-lg-6 mt-3">
-                                <div class="source_header bg-white row mx-auto p-1">
-                                    <label class="text-center my-0" style="direction: rtl;">جستجو در نام گره</label>
-                                </div>
-                                <div class="source_container p-4 d-flex">
-                                    <input style="direction: rtl;" class="form-control text-right"
-                                        placeholder="جستجو در نام گره ها ..." type="text" required=""
-                                        name="references_SearchBox" id="references_SearchBox" value="">
-                                    <button type="button" id="references_SearchBtn"
-                                        class="btn modal_btn mr-2">جست‌وجو</button>
-                                </div>
-                            </div>
-
-
-                            <div class="col-md-6 p-1 col-12 col-lg-6 mt-1 d-flex">
-
-                            </div>
-                        </div>
-
-                        <div dir="ltr">
-                            <img style="width: 4%; cursor: pointer; margin-top: 20px;"
-                                id="references_SelectNeighbourImg" src="../../../static/image/neighbourhood.png">
-                            <img style="width: 3%; cursor: pointer; margin-top: 20px;" id="references_ShowHideImg"
-                                src="../../../static/image/hide_nodes.png">
-                        </div>
-
-                        <div id="references_graph_container" class="border mt-1 position-static"
-                            style="height:500px; overflow: hidden;">
-                        </div>
-
-                        <div dir="rtl" style="display: flex; margin-bottom: 50px;">
-                            <div class="col-md-6 px-0 col-12 col-lg-5 pt-1">
-                                <h6 class="table_header text-center  p-2  mb-0">
-                                    گره های انتخاب شده
-                                </h6>
-                                <table id="references_selected_node_table" class="table table-striped PopUpTable"
-                                    style="width: 95%;margin: auto;">
-
-                                </table>
-                            </div>
-
-                            <div class="col-md-6 px-0 col-12 col-lg-7 pt-1">
-                                <h6 class="table_header text-center  p-2  mb-0">
-                                    یال های انتخاب شده
-                                </h6>
-                                <table id="references_selected_edge_table" class="table table-striped PopUpTable"
-                                    style="width: 95%;margin: auto;">
-
-                                </table>
-                            </div>
-                        </div>
-
-                    </div>
-
-                </div>
-
-
-                <!--  Definition Keywords Graph Pane -->
-                <div class="tab-pane fade show float-right w-100" id="definition_keywords_graph_pane" role="tabpanel"
-                    aria-labelledby="definition_keywords_graph_tab">
-                    <!-- keyword graph container -->
-                    <div class="row mt-4 w-100 flex-row mx-0 px-4 pb-5">
-
-                        <div id="definition_keywords_graph_container" class="w-100 border" style="height: 500px;">
-                        </div>
-                    </div>
-                </div>
-
 
             </div>
 
         </div>
 
 
-    </div>
-
-    <!-- EdgeModal Container -->
-    <button type="button" id="EdgeModalBtn" class="btn d-none modal_btn" data-bs-toggle="modal"
-        data-bs-target="#EdgeModal"></button>
-    <div class="modal fade" id="EdgeModal">
-        <div class="modal-dialog modal-dialog-scrollable modal-lg">
-            <div class="modal-content">
-
-                <!-- Modal Header -->
-                <div style="direction: rtl !important;" class="modal-header">
-                    <h5 id="EdgeModalHeader" class="modal-title"></h5>
-                    <button type="button" class="btn-close m-0" data-bs-dismiss="modal"></button>
-                </div>
-
-                <!-- Modal body -->
-                <div id="EdgeModalText" class="modal-body text-justify">
-                </div>
-
-                <!-- Modal footer -->
-                <div dir="rtl" class="modal-footer">
-
-                </div>
-
-            </div>
-        </div>
     </div>
 
 
@@ -654,48 +438,7 @@
         </div>
     </div>
 
-    <!-- ActorChartModal Container -->
-    <button type="button" id="actors_modal_btn" class="btn d-none modal_btn" data-bs-toggle="modal"
-        data-bs-target="#actors_modal"></button>
-    <div class="modal fade" id="actors_modal">
-        <div class="modal-dialog modal-dialog-scrollable modal-xl">
-            <div class="modal-content">
 
-                <!-- Modal Header -->
-                <div style="direction: rtl !important;" class="modal-header">
-                    <h5 id="actor_modal_header" class="modal-title">عنوان</h5>
-                    <button type="button" class="btn-close m-0" data-bs-dismiss="modal"></button>
-                </div>
-                <!-- Modal body -->
-
-                <div class="bg-light modal-body text-justify">
-                    <div class="highlight_options mt-0 p-0 float-left" style="z-index: 13;">
-                        <button onclick="showOtherActors()" data-bs-toggle="tooltip" data-bs-placement="right"
-                            title="نمایش سایر کنشگران" class="btn border float-left m-0  px-1"><i
-                                style="font-size: 24px;" class="bi text-primary bi-people-fill"></i></button>
-                        <!-- <button class="btn float-left m-0  px-1"><i style="font-size: 24px;" class="bi text-success bi-hourglass-split"></i></button> -->
-                    </div>
-                    <br>
-                    <div class="bg-light text-justify">
-                        <ul id="actor_modal_body">
-
-                        </ul>
-                        <button id="LoadMoreDocumentsChart" class="btn btn-white w-100 mb-1 float-left"
-                            style="color: #0e3f8b"><i class="fa fa-plus pl-2"
-                                style="position:relative;top:3px;"></i>نمایش بیش‌تر</button>
-                        <br />
-                        <br />
-                    </div>
-                </div>
-                <!-- Modal footer -->
-                <div id="modal_footer" class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">بستن
-                    </button>
-                </div>
-
-            </div>
-        </div>
-    </div>
 
     <!-- Scrollbar -->
     <button id="scroll_btn" class="p-0" title="بالای صفحه" onclick="topFunction()">
@@ -814,7 +557,7 @@
 
         initSearchableSelects();
         append_column(COLUMNS)
-        init()
+        // init()
 
         SearchResultValue = []
         ES_SearchResult = []
