@@ -12,7 +12,8 @@
         "دسته بندی احکام براساس LDA": ["AIParagraphTopicLDA", 0],
         "گراف‌های خوشه‌بندی": ["ClusteringGraphData", 0],
         "گراف‌های LDA":["LDAGraphData" , 0],
-        "استخراج پروفایل احکام":["DocProvisionsFullProfileAnalysis" , 0]
+        "استخراج پروفایل احکام":["DocProvisionsFullProfileAnalysis" , 0],
+        "استخراج بردار معنایی پاراگراف‌ها":["DocsParagraphVectorExtractor" , 0]
 
     }
 }

@@ -32,7 +32,7 @@ async function GetTextSummary(text) {
   })
     .done(
       await function (res) {
-        document.getElementById("summary_text").innerHTML = res["text_summary"].replaceAll(" ّ ", "");
+        document.getElementById("summary_text").innerHTML = res["text_summary"];
       }
     )
     .fail(
@@ -62,13 +62,16 @@ async function init() {
 
 
     if (COUNTRY_NAME == "اسناد رهبری") $("#sentiment_result_tab").hide();
+    // if (COUNTRY_NAME != "فاوا") $("#semantic_similarity_tab").hide();
 
-    await showKeywordSubjectTab(paragraph_id);
+    // await showKeywordSubjectTab(paragraph_id);
 
     await showResult();
 
     
     await getSimilarParagraphs(paragraph_id);
+    // if (COUNTRY_NAME == "فاوا")
+    await getSemanticSimilarParagraphs(paragraph_id)
 
     startBlockUI('summary_text');
     await GetTextSummary(paragraph_text);
@@ -79,6 +82,7 @@ async function init() {
   } else {
     $("#subject_keyword_tab").hide();
     $("#similarity_tab").hide();
+    $("#semantic_similarity_tab").hide();
     $("#subject_keyword_tab").removeClass("active");
     $("#subject_keyword_pane").removeClass("active");
 
@@ -98,7 +102,7 @@ async function getSimilarParagraphs(paragraph_id) {
     "/";
   response = await fetch(request_link).then((response) => response.json());
   similar_paragraphs = response["similar_paragraphs"];
-  console.log(similar_paragraphs)
+
   let body_content = "";
 
   if (similar_paragraphs.length == 0) {
@@ -123,9 +127,9 @@ async function getSimilarParagraphs(paragraph_id) {
     }
 
     const doc_link =
-      "http://" + location.host + "/document_profile/?id=" + document_id;
+      "http://" + location.host + "/information/?id=" + document_id;
     const doc_tag =
-      "<a title='پروفایل سند' class='bold text-primary' target='_blank' href='" +
+      "<a title='پروفایل سند' class='bold text-primary' target='blank' href='" +
       doc_link +
       "'>" +
       document_name +
@@ -151,6 +155,75 @@ async function getSimilarParagraphs(paragraph_id) {
 
   result_content = "<ol start='" + "1" + "'>" + body_content + "</ol>";
   document.getElementById("SimilarParagraphsContainer").innerHTML =
+    result_content;
+}
+
+
+async function getSemanticSimilarParagraphs(paragraph_id) {
+  request_link =
+    "http://" +
+    location.host +
+    "/GetSemanticSimilarParagraphs_ByParagraphID/" +
+    paragraph_id +
+    "/";
+  response = await fetch(request_link).then((response) => response.json());
+  similar_paragraphs = response["similar_paragraphs"];
+  console.log(similar_paragraphs)
+  let body_content = "";
+
+  if (similar_paragraphs.length == 0) {
+    body_content = "پاراگرافی یافت نشد.";
+  }
+
+  for (let para of similar_paragraphs) {
+    const document_id = para["_source"]["document_id"];
+    const similarity_score = para["_score"]
+    let document_name = "";
+
+    if ("document_name" in para["_source"]) {
+      document_name = para["_source"]["document_name"];
+    } else {
+      document_name = para["_source"]["name"];
+    }
+
+    let text = "";
+    try {
+      text = para["highlight"]["attachment.content"][0];
+    } catch (error) {
+      text = para["_source"]["attachment"]["content"];
+    }
+
+    const doc_link =
+      "http://" + location.host + "/information/?id=" + document_id;
+    const doc_tag =
+      "<a title='پروفایل سند' class='bold text-primary' target='blank' href='" +
+      doc_link +
+      "'>" +
+      document_name +
+      "</a>";
+
+    const paragraph_link =
+      "http://" + location.host + "/sentiment_analysis/?id=" + paragraph_id;
+
+    const paragraph_tag =
+      "<a class='' title = 'پروفایل حکم' target='blank' href='" +
+      paragraph_link +
+      "'>" +
+      text +
+      "</a>";
+
+    const score_tag = '<span class="text-secondary d-block"> امتیاز: ' + ((Math.round(similarity_score*100)/100)/2)*100 + ' درصد</span>'
+    const tag =
+      "<li class='mb-3 lh-lg shadow border rounded px-4'>" +
+      doc_tag +
+      paragraph_tag +
+      score_tag+
+      "</li>";
+    body_content += tag;
+  }
+
+  result_content = "<ol start='" + "1" + "'>" + body_content + "</ol>";
+  document.getElementById("SemanticSimilarParagraphsContainer").innerHTML =
     result_content;
 }
 
@@ -180,7 +253,7 @@ async function showKeywordSubjectTab(paragraph_id) {
     "</div>";
 
   const doc_link =
-    "http://" + location.host + "/document_profile/?id=" + document_id;
+    "http://" + location.host + "/information/?id=" + document_id;
   let doc_tag =
     "<a style = 'text-decoration:none;' title = 'پروفایل سند' class='bold text-right text-secondary' target='blank' href='" +
     doc_link +
@@ -398,7 +471,7 @@ function getEntityAndColor(entity) {
       entityWord = "محصول";
       break;
     case "B-event":
-      color = "#9900ff";
+      color = "#14B8A6";
       entityWord = "رویداد";
       break;
     default:

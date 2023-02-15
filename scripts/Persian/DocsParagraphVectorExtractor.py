@@ -67,7 +67,7 @@ def apply(folder_name, Country):
     t = time.time()
     print('started...')
 
-    corpus_embeddings = embedder.encode(corpus,batch_size = 128, convert_to_tensor=False, show_progress_bar=True)
+    corpus_embeddings = embedder.encode(corpus,batch_size = 32, convert_to_tensor=False, show_progress_bar=True)
     
     print("time ", time.time() - t)
 
