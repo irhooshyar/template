@@ -107,12 +107,12 @@ def apply(folder_name, Country):
             paragraph_id = paragraph.id
 
             paragraph_text = paragraph.text
-            classification_result = text_classifications_analysis(paragraph_text)["result"]
-
+            classification_result = text_classifications_analysis(paragraph_text)
+            print(classification_result)
             classification_result_dict = {}
             for item in classification_result:
                 classification_result_dict[item['label']] = item['score']
-
+            print(classification_result_dict)
             document_subject.append(classification_result)
 
 
