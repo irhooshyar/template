@@ -229,7 +229,7 @@ def get_similarity_maps(graph_objects):
 
 @allowed_users('admin_accept_user_comments')
 def seeAllComment(request):
-    comments = DocumentComment2.objects.all().order_by('is_accept')
+    comments = DocumentComment.objects.all().order_by('is_accept')
 
     result = []
     for c in comments:
@@ -245,7 +245,7 @@ def seeAllComment(request):
 
 
 def seeAllComment2(request):
-    comments = DocumentComment2.objects.all()
+    comments = DocumentComment.objects.all()
 
     result = []
     for c in comments:
@@ -285,7 +285,7 @@ def get_user_recommendation(request):
 
 @allowed_users('admin_user_report_bug')
 def get_user_report_bug(request):
-    reports = Report_Bug2.objects.order_by('checked', 'date')
+    reports = ReportBug.objects.order_by('checked', 'date')
     return render(request, 'doc/admin_templates/admin_user_report_bug.html', {'report_bug': reports})
 
 
@@ -1549,7 +1549,7 @@ def CreateReportBug(request, username, report_bug_text, panel_id, branch_id):
     user = User.objects.get(username=username)
     main_panel = MainPanels.objects.all().get(id=panel_id)
     panel = Panels.objects.all().get(id=branch_id)
-    Report_Bug2.objects.create(
+    ReportBug.objects.create(
         user=user,
         panel_id=main_panel,
         branch_id=panel,
@@ -2247,7 +2247,7 @@ def GetNotesInTimeRangeFilterLabelHashtag(request, username, time_start, time_en
 def GetParagraph_Clusters(request, country_id, algorithm_name, vector_type, cluster_count, ngram_type, username):
     clusters_data = {}
 
-    algorithm_id = ClusteringAlorithm.objects.get(
+    algorithm_id = ClusteringAlgorithm.objects.get(
         name=algorithm_name,
         input_vector_type=vector_type,
         cluster_count=cluster_count,
@@ -3947,7 +3947,7 @@ def GetDocumentCommentVoters(request, document_comment_id, agreed):
 
 @allowed_users('admin_accept_user_comments')
 def changeCommentState(request, comment_id, state):
-    comment = DocumentComment2.objects.get(pk=comment_id)
+    comment = DocumentComment.objects.get(pk=comment_id)
 
     if state == "accepted":
         comment.is_accept = 1
@@ -4224,7 +4224,7 @@ def getUserLogs(request, user_id, time_start, time_end):
 
 @allowed_users('admin_user_report_bug')
 def ChangeReportBugCheckStatus(request, report_bug_id):
-    report_bug = Report_Bug2.objects.get(id=report_bug_id)
+    report_bug = ReportBug.objects.get(id=report_bug_id)
     if report_bug.checked == False:
         report_bug.checked = True
     else:
@@ -4240,7 +4240,7 @@ def GetReportBugByFilter(request, panel_id, branch_id, status):
         status = True
     elif status == "F":
         status = False
-    reports = Report_Bug2.objects.all().order_by('checked', 'date')
+    reports = ReportBug.objects.all().order_by('checked', 'date')
     if panel_id != "all":
         panel_id = int(panel_id)
         reports = reports.filter(panel_id=panel_id)
@@ -6220,13 +6220,13 @@ def GetUserComments(request, user_id, hashtag_id):
     if hashtag_id == 0:
         follow = UserFollow.objects.get(follower__username=username, following__id=user_id)
         if follow.accepted:
-            comments = DocumentComment2.objects.filter(is_accept=1, show_info=True, user__id=user_id)
+            comments = DocumentComment.objects.filter(is_accept=1, show_info=True, user__id=user_id)
     elif user_id == 0:
-        comments = DocumentComment2.objects.filter(is_accept=1, show_info=True, hash_tags__id=hashtag_id)
+        comments = DocumentComment.objects.filter(is_accept=1, show_info=True, hash_tags__id=hashtag_id)
     else:
         follow = UserFollow.objects.get(follower__username=username, following__id=user_id)
         if follow.accepted:
-            comments = DocumentComment2.objects.filter(is_accept=1, show_info=True, user__id=user_id,
+            comments = DocumentComment.objects.filter(is_accept=1, show_info=True, user__id=user_id,
                                                        hash_tags__id=hashtag_id)
 
     for c in comments:
@@ -6856,7 +6856,7 @@ def CreateDocumentComment(request, document, comment, username, comment_show_inf
     show_info = False
     if comment_show_info == 'true':
         show_info = True
-    comment = DocumentComment2.objects.create(document=doc, comment=comment, user=user, show_info=show_info,
+    comment = DocumentComment.objects.create(document=doc, comment=comment, user=user, show_info=show_info,
                                               time=str(jdatetime.strftime(jdatetime.now(), "%H:%M:%S %Y-%m-%d")))
 
     return JsonResponse({"comment_id": comment.id})
@@ -6872,7 +6872,7 @@ def CreateHashTagForDocumentComment(request, comment_id, hash_tag):
 
     # createdDocumentComment.hash_tags.add(ht)
     # createdDocumentComment.save()
-    DocumentComment2.objects.filter(id=comment_id).update(hash_tags=ht)
+    DocumentComment.objects.filter(id=comment_id).update(hash_tags=ht)
 
     return JsonResponse({"hash_tags": ht.hash_tag})
 
@@ -6908,8 +6908,8 @@ def GetDocumentComments(request, document, username):
         else:
             follows[f.following.id] = -1
 
-    user_comments = DocumentComment2.objects.filter(document=document, user__username=username)
-    other_user_comments = DocumentComment2.objects.filter(document=document, is_accept=1).exclude(
+    user_comments = DocumentComment.objects.filter(document=document, user__username=username)
+    other_user_comments = DocumentComment.objects.filter(document=document, is_accept=1).exclude(
         user__username=username)
     result = []
     for c in other_user_comments:
@@ -6960,7 +6960,7 @@ def changeVoteState(request, username, document_comment, state):
         vote.save()
     except:
         user = User.objects.filter(username=username).first()
-        document_comment = DocumentComment2.objects.filter(id=document_comment).first()
+        document_comment = DocumentComment.objects.filter(id=document_comment).first()
         DocumentCommentVote.objects.create(user=user,
                                            document_comment=document_comment,
                                            agreed=agreed)
@@ -7399,7 +7399,7 @@ def Get_Clustering_Vocabulary(request, country_id, vector_type, ngram_type):
 
 
 def Get_ClusterCenters_ChartData(request, country_id, algorithm_name, vector_type, cluster_count, ngram_type):
-    algorithm_id = ClusteringAlorithm.objects.get(
+    algorithm_id = ClusteringAlgorithm.objects.get(
         name=algorithm_name,
         input_vector_type=vector_type,
         cluster_count=cluster_count,
@@ -7430,7 +7430,7 @@ def Get_ClusterCenters_ChartData(request, country_id, algorithm_name, vector_typ
 
 def Get_ClusteringAlgorithm_DiscriminatWords_ChartData(request, country_id, algorithm_name, vector_type, cluster_count,
                                                        ngram_type):
-    algorithm_id = ClusteringAlorithm.objects.get(
+    algorithm_id = ClusteringAlgorithm.objects.get(
         name=algorithm_name,
         input_vector_type=vector_type,
         cluster_count=cluster_count,
@@ -7737,7 +7737,7 @@ def Get_Topic_TagCloud_ChartData(request, country_id, topic_id):
 
 
 def GetClusteringGraphData(request, country_id, algorithm_name, algorithm_vector_type, cluster_size, ngram_type):
-    algorithm = ClusteringAlorithm.objects.get(name=algorithm_name, input_vector_type=algorithm_vector_type,
+    algorithm = ClusteringAlgorithm.objects.get(name=algorithm_name, input_vector_type=algorithm_vector_type,
                                                cluster_count=cluster_size, ngram_type=ngram_type)
 
     try:
@@ -7751,7 +7751,7 @@ def GetClusteringGraphData(request, country_id, algorithm_name, algorithm_vector
 
 
 def GetClusterKeywordGraphData(request, country_id, algorithm_name, algorithm_vector_type, cluster_size, ngram_type):
-    algorithm = ClusteringAlorithm.objects.get(name=algorithm_name, input_vector_type=algorithm_vector_type,
+    algorithm = ClusteringAlgorithm.objects.get(name=algorithm_name, input_vector_type=algorithm_vector_type,
                                                cluster_count=cluster_size, ngram_type=ngram_type)
 
     try:
@@ -7763,7 +7763,7 @@ def GetClusterKeywordGraphData(request, country_id, algorithm_name, algorithm_ve
 
 
 def GetKeywordClustersData(request, country_id, algorithm_name, algorithm_vector_type, cluster_size, keyword):
-    algorithm_id = ClusteringAlorithm.objects.get(
+    algorithm_id = ClusteringAlgorithm.objects.get(
         name=algorithm_name,
         input_vector_type=algorithm_vector_type,
         cluster_count=cluster_size
