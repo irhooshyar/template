@@ -89,7 +89,7 @@ def apply(folder_name, Country):
     Country.status = "Docs_Subject_Extractor"
     Country.save()
 
-    document_list = Document.objects.filter(country=Country).all()
+    document_list = Document.objects.filter(country_id=Country).all()
 
     first = True
     i = 1
