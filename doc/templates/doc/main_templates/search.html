@@ -2139,7 +2139,7 @@
 
             for (const document of file_name_list) {
                 const document_name = document["_source"]["raw_file_name"] + extension
-                const path = 'http://' + location.host + '/media_cdn/data/' + country_folder + '\\' + document_name;
+                const path = 'http://' + location.host + '/media/data/' + country_folder + '\\' + document_name;
 
                 await fetch(path)
                     .then(res => res.arrayBuffer())
