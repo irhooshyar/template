@@ -242,52 +242,14 @@ class Document(models.Model):
 
     country_id = models.ForeignKey(Country, null=True, on_delete=models.CASCADE)
 
-    level_id = models.ForeignKey(Level, null=True, on_delete=models.CASCADE)
-    level_name = models.CharField(null=True, max_length=500)
-
     subject_id = models.ForeignKey(Subject, null=True, on_delete=models.CASCADE)
     subject_name = models.CharField(null=True, max_length=500)
     subject_weight = models.FloatField(default=0)
 
-    subject_area_name = models.TextField(null=True)
-    subject_sub_area_name = models.TextField(null=True)
-    subject_sub_area_weight = models.FloatField(default=0)
-    subject_sub_area_entropy = models.FloatField(default=0)
-
-    type_id = models.ForeignKey(Type, null=True, on_delete=models.CASCADE)
-    type_name = models.CharField(null=True, max_length=500)
-
-    approval_reference_id = models.ForeignKey(ApprovalReference, null=True, on_delete=models.CASCADE)
-    approval_reference_name = models.CharField(null=True, max_length=500)
-
-    approval_date = models.CharField(null=True, max_length=500)
-    communicated_date = models.CharField(null=True, max_length=500)
-
-    motevalian = models.CharField(null=True, max_length=2000)
-    hamkaran = models.CharField(null=True, max_length=2000)
-    salahiat = models.CharField(null=True, max_length=2000)
-    supervisors = models.CharField(null=True, max_length=2000)
-
-    actors_chart_data = models.JSONField(null=True)
-
-    word_count = models.IntegerField(null=True)
-    distinct_word_count = models.IntegerField(null=True)
-    stopword_count = models.IntegerField(null=True)
+    date = models.CharField(null=True, max_length=500)
+    time = models.CharField(null=True, max_length=500)
 
     json_text = models.JSONField(null=True)
-
-    # Advisory Opinions
-    advisory_opinion_count = models.IntegerField(null=True, default=0)
-
-    # Interpretation Rules
-    interpretation_rules_count = models.IntegerField(null=True, default=0)
-
-    revoked_type_name = models.TextField(null=True, default='معتبر')
-    revoked_sub_type = models.TextField(null=True)
-    revoked_size = models.TextField(default='کل مصوبه')
-    revoked_clauses = models.TextField(null=True, default='کل مصوبه')
-
-    organization_name = models.TextField(null=True)
 
     class Meta:
         app_label = 'doc'
