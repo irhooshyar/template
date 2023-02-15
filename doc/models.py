@@ -26,22 +26,22 @@ class UserRole(models.Model):
 
 class User(models.Model):
     id = models.AutoField(primary_key=True)
-    first_name = models.CharField(max_length=500)
-    last_name = models.CharField(max_length=500)
-    email = models.CharField(max_length=500)
-    mobile = models.CharField(null=True, max_length=500)
-    username = models.CharField(max_length=500)
-    password = models.CharField(max_length=500)
+    first_name = models.CharField(max_length=100)
+    last_name = models.CharField(max_length=100)
+    email = models.CharField(max_length=200)
+    mobile = models.CharField(null=True, max_length=100)
+    username = models.CharField(max_length=100)
+    password = models.CharField(max_length=100)
     role = models.ForeignKey(UserRole, null=True, on_delete=models.CASCADE)
     avatar = models.TextField(null=True)
-    last_login = models.CharField(max_length=500)
+    last_login = models.CharField(max_length=50)
     is_super_user = models.IntegerField(default=0)
     is_active = models.IntegerField(default=0)
     enable = models.IntegerField(default=0)
-    account_activation_token = models.CharField(null=True, max_length=500)
+    account_activation_token = models.CharField(null=True, max_length=100)
     account_acctivation_expire_time = models.DateTimeField(default=datetime.utcnow, blank=True)
-    email_confirm_code = models.CharField(null=True, max_length=500)
-    reset_password_token = models.CharField(null=True, max_length=500)
+    email_confirm_code = models.CharField(null=True, max_length=100)
+    reset_password_token = models.CharField(null=True, max_length=100)
     reset_password_expire_time = models.DateTimeField(default=datetime.utcnow, blank=True)
 
     class Meta:
@@ -58,7 +58,7 @@ class MainPanels(models.Model):
 
     class Meta:
         app_label = 'doc'
-        unique_together = ('panel_persian_name', 'panel_english_name',)
+        unique_together = ('panel_persian_name', 'panel_english_name')
 
     def __str__(self):
         return f'ID: {self.id}, panel_name: {self.panel_persian_name}'
@@ -175,7 +175,7 @@ class Label(models.Model):
 
 class Document(models.Model):
     id = models.AutoField(primary_key=True)
-    name = models.CharField(null=True, max_length=3000)
+    name = models.TextField(null=True)
     file_name = models.TextField(null=True)
 
     country_id = models.ForeignKey(Country, null=True, on_delete=models.CASCADE)
@@ -187,7 +187,7 @@ class Document(models.Model):
     subject_name = models.CharField(null=True, max_length=500)
     subject_weight = models.FloatField(default=0)
 
-    labels = models.CharField(null=True, max_length=1000)#concate by comma
+    labels = models.TextField(null=True) #concate by comma
 
     date = models.CharField(null=True, max_length=500)
     time = models.CharField(null=True, max_length=500)
@@ -427,16 +427,6 @@ class DocumentCommentVote(models.Model):
     def __str__(self):
         return f'ID: {self.id}'
 
-
-class NoteHashTag(models.Model):
-    hash_tag = models.CharField(max_length=500, primary_key=True)
-    class Meta:
-        app_label = 'doc'
-
-    def __str__(self):
-        return f'ID: {self.id}'
-
-
 class DocumentNote(models.Model):
     id = models.AutoField(primary_key=True)
     document = models.ForeignKey(Document, null=True, on_delete=models.CASCADE)
@@ -445,14 +435,18 @@ class DocumentNote(models.Model):
     time = models.CharField(null=True, max_length=1000)
     starred = models.BooleanField(default=False)
     docLabel = models.TextField(null=True, default='بدون برچسب')
-    # Add a m2m with HashTags
-    hash_tags = models.ManyToManyField(NoteHashTag)
 
     class Meta:
         app_label = 'doc'
 
     def __str__(self):
         return f'ID: {self.id}'
+
+
+class DocumentNoteHashTag(models.Model):
+    id = models.AutoField(primary_key=True)
+    document_note = models.ForeignKey(DocumentNote, null=True, on_delete=models.CASCADE)
+    hash_tag = models.CharField(max_length=500)
 
 
 class UserFollow(models.Model):

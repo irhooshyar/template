@@ -1,10 +1,6 @@
-import operator
-from functools import reduce
-import heapq
 from jdatetime import datetime as jdatetime
 from django.shortcuts import redirect, get_object_or_404
 import os
-import re
 from random import randint
 from hazm import *
 from django.core.mail import send_mail
@@ -14,38 +10,23 @@ from django.utils.crypto import get_random_string
 from django.forms import FileField
 from doc.forms import ZipFileForm
 from doc.models import *
-from django.db.models import Avg
-from es_scripts.persian_automate import ExecutiveClausesExtractor
-from es_scripts.util.Clause import get_clause_by_paragraph, get_paragraphs_by_clause, get_document_paragraphs
 from scripts import ZipFileExtractor, StratAutomating
 from abdal import es_config
 import shutil
 import after_response
-from django.http import JsonResponse, HttpResponse
-from scripts.Persian import Preprocessing
 from django.db.models import Max, Min, F, IntegerField, Count, Q
 from django.db.models.functions import Substr, Cast, Length
-from django.core.files.storage import FileSystemStorage
-import docx2txt
 import datetime
 from django.shortcuts import render
 from django.contrib.auth.hashers import make_password, check_password
-import pdfplumber
-from zipfile import ZipFile
 from abdal import config
 from pathlib import Path
 import json
-from multilingual_pdf2text.pdf2text import PDF2Text
-from multilingual_pdf2text.models.document_model.document import Document as PDF_Document
 import math
 from urllib.parse import urlparse
 from itertools import chain, groupby
 from collections import Counter
 import numpy as np
-from operator import itemgetter
-from numpy import dot
-from numpy.linalg import norm
-from statsmodels.tsa.arima.model import ARIMA
 import pandas as pd
 from .decorators import allowed_users, unathenticated_user, is_login
 from .const import *
@@ -54,8 +35,7 @@ from elasticsearch import Elasticsearch
 from sklearn.metrics.pairwise import cosine_similarity
 import string
 from scripts.Persian.Preprocessing import standardIndexName
-from transformers import MT5ForConditionalGeneration, MT5Tokenizer, AutoTokenizer, AutoModelForTokenClassification, \
-    pipeline, AutoModelForSequenceClassification, AutoModelForSeq2SeqLM
+
 
 # ---------- elastic configs -------------------
 es_url = es_config.ES_URL
@@ -3264,79 +3244,6 @@ def GetDocumentById(request, id):
     return JsonResponse({'document_information': [result]})
 
 
-def GetReferences2Doc(request, document1_id, document2_id):
-    doc1_name = Document.objects.get(id=document1_id).name
-    doc2_name = Document.objects.get(id=document2_id).name
-
-    query_ref_form_doc1 = {
-        "bool": {
-            "filter": {
-                "term": {
-                    "document_id": document1_id
-                }
-            },
-            "must": {"match_phrase": {"attachment.content": doc2_name}}
-        }
-    }
-    query_ref_form_doc2 = {
-        "bool": {
-            "filter": {
-                "term": {
-                    "document_id": document2_id
-                }
-            },
-            "must": {"match_phrase": {"attachment.content": doc1_name}}
-        }
-    }
-
-    index_name = standardIndexName(Document.objects.get(id=document1_id).country_id,
-                                   DocumentParagraphs.__name__) + "_graph"
-
-    response_ref_form_doc1 = client.search(index=index_name,
-                                           _source_includes=['document_id', 'paragraph_id', 'attachment.content'],
-                                           request_timeout=40,
-                                           query=query_ref_form_doc1,
-                                           size=5000,
-                                           highlight={
-                                               "order": "score",
-                                               "fields": {
-                                                   "attachment.content":
-                                                       {"pre_tags": ["<em>"], "post_tags": ["</em>"],
-                                                        "number_of_fragments": 0
-                                                        }
-                                               }}
-                                           )['hits']['hits']
-
-    response_ref_form_doc2 = client.search(index=index_name,
-                                           _source_includes=['document_id', 'paragraph_id', 'attachment.content'],
-                                           request_timeout=40,
-                                           query=query_ref_form_doc2,
-                                           size=5000,
-                                           highlight={
-                                               "order": "score",
-                                               "fields": {
-                                                   "attachment.content":
-                                                       {"pre_tags": ["<em>"], "post_tags": ["</em>"],
-                                                        "number_of_fragments": 0
-                                                        }
-                                               }}
-                                           )['hits']['hits']
-
-    result_text1 = ""
-    for row in response_ref_form_doc1:
-        print(row)
-        if 'highlight' in row:
-            result_text1 += row["highlight"]["attachment.content"][0] + "\n"
-
-    result_text2 = ""
-    for row in response_ref_form_doc2:
-        if 'highlight' in row:
-            result_text2 += row["highlight"]["attachment.content"][0] + "\n"
-
-    return JsonResponse({'references_from_doc1': result_text1, 'references_from_doc2': result_text2})
-
-
-
 def getUserDeployLogs(request):
     user_logs = DeployServer.objects.all().order_by("-deploy_time")
 
@@ -6532,66 +6439,6 @@ def getUserLogs_ES(request, user_id, time_start, time_end, curr_page, page_size)
         }
     )
 
-
-def getUserLogs(request, user_id, time_start, time_end):
-    if user_id == 0:
-        if time_start != "0" and time_end != "0":
-            user_logs = UserLogs.objects.all().filter(visit_time__range=(
-                time_start, time_end)).order_by("-visit_time")
-
-        elif time_start == "0" and time_end != "0":
-            user_logs = UserLogs.objects.all().filter(visit_time__lte=time_end).order_by("-visit_time")
-
-        elif time_start != "0" and time_end == "0":
-            user_logs = UserLogs.objects.all().filter(visit_time__gte=time_start).order_by("-visit_time")
-
-        else:
-            user_logs = UserLogs.objects.all().order_by("-visit_time")
-    else:
-        if time_start != "0" and time_end != "0":
-            user_logs = UserLogs.objects.all().filter(visit_time__range=(
-                time_start, time_end), user_id=user_id).order_by("-visit_time")
-
-        elif time_start == "0" and time_end != "0":
-            user_logs = UserLogs.objects.all().filter(visit_time__lte=time_end,
-                                                      user_id=user_id).order_by("-visit_time")
-
-        elif time_start != "0" and time_end == "0":
-            user_logs = UserLogs.objects.all().filter(visit_time__gte=time_start,
-                                                      user_id=user_id).order_by("-visit_time")
-
-        else:
-            user_logs = UserLogs.objects.all().filter(
-                user_id=user_id).order_by("-visit_time")
-
-    user_logs = user_logs.filter(user_id__isnull=False).order_by("-visit_time")[:100]
-
-    result = []
-    for log in user_logs:
-        id = log.id
-        name = log.user_id.first_name + ' ' + log.user_id.last_name
-        url = log.page_url
-        if url == None:
-            url = 'home'
-        time = log.visit_time
-        year = int(time[0:4])
-        month = int(time[5:7])
-        day = int(time[8:10])
-        hours = time[11:19]
-        jalali = gregorian_to_jalali(year, month, day)
-        Date = str(jalali[0]) + '/' + str(jalali[1]) + '/' + str(jalali[2]) + ' ' + hours
-
-        detail = log.detail_json
-
-        result.append({
-            "id": id,
-            "name": name,
-            'url': url,
-            'time': Date,
-            'detail': detail
-        })
-
-    return JsonResponse({'user_logs': result})
 
 
 def getTableUserLogs_ES(request, user_id, time_start, time_end):
