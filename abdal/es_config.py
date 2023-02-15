@@ -3765,7 +3765,7 @@ FullProfileAnalysis_Mappings = {
                 }
             },
         },
-        "rahbari_date": {
+        "Document_date": {
             "type": "text",
             "fields": {
                 "keyword": {
@@ -3774,10 +3774,16 @@ FullProfileAnalysis_Mappings = {
                 }
             }
         },
-        "rahbari_year": {
-            "type": "integer"
+        "Document_time": {
+            "type": "text",
+            "fields": {
+                "keyword": {
+                    "type": "keyword",
+                    "ignore_above": 256
+                }
+            }
         },
-        "labels": {
+        "Document_labels": {
             "type": "text",
             "analyzer": "persian_custom_analyzer",
             "fields": {
@@ -3788,7 +3794,17 @@ FullProfileAnalysis_Mappings = {
             }
         },
 
-        "type": {
+        "Document_category_name": {
+            "type": "text",
+            "analyzer": "persian_custom_analyzer",
+            "fields": {
+                "keyword": {
+                    "type": "keyword",
+                    "ignore_above": 1024
+                }
+            }
+        },
+        "Document_subject_name": {
             "type": "text",
             "analyzer": "persian_custom_analyzer",
             "fields": {

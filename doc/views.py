@@ -181,6 +181,12 @@ def get_book_maps(country_objects):
             dataset_map[id] = name
     return dataset_map
 
+def fullProfileAnalysis(request, id):
+    file = get_object_or_404(Country, id=id)
+    from scripts.Persian import DocProvisionsFullProfileAnalysis
+    DocProvisionsFullProfileAnalysis.apply(None, file)
+    return redirect('zip')
+
 
 def get_standard_maps(country_objects):
     dataset_map = {}
