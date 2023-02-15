@@ -191,7 +191,7 @@ class Document(models.Model):
 
     date = models.CharField(null=True, max_length=500)
     time = models.CharField(null=True, max_length=500)
-
+    json_text = models.JSONField(null=True)
     class Meta:
         app_label = 'doc'
 
