@@ -43,29 +43,11 @@ class DocumentIndex(ES_Index):
 
             doc_subject = doc['subject_name'] if doc['subject_name'] != None else 'نامشخص'
             doc_subject_weight = doc['subject_weight'] if doc['subject_weight'] != None else 'نامشخص'
-            doc_level = doc['level_name'] if doc['level_name'] != None else 'نامشخص'
-            doc_type = doc['type_name'] if doc['type_name'] != None else 'نامشخص'
-            doc_advisory_opinion_count = doc['advisory_opinion_count'] if doc['advisory_opinion_count'] != None else 0
-            doc_interpretation_rules_count = doc['interpretation_rules_count'] if doc['interpretation_rules_count'] != None else 0
-            doc_approval_reference = doc['approval_reference_name'] if doc['approval_reference_name'] != None else 'نامشخص'
+            doc_category = doc['category_name'] if doc['category_name'] != None else 'نامشخص'
 
-            doc_approval_year = doc['approval_year'] if doc['approval_year'] != None else 0
-            doc_approval_date = doc['approval_date'] if doc['approval_date'] != None else 'نامشخص'
-            doc_communicated_date = doc['communicated_date'] if doc['communicated_date'] != None else 'نامشخص'
-            doc_communicated_year = doc['communicated_year'] if doc['communicated_year'] != None else 0
-            doc_revoked_type_name = doc['revoked_type_name']
-
-            doc_revoked_sub_type = doc['revoked_sub_type'] if doc['revoked_sub_type'] != None else 'نامشخص'
-            doc_revoked_size = doc['revoked_size'] if doc['revoked_size'] != None else 'نامشخص'
-            doc_revoked_clauses = doc['revoked_clauses'] if doc['revoked_clauses'] != None else 'نامشخص' 
-
-            subject_area_name = doc['subject_area_name'] if doc['subject_area_name'] != None else 'نامشخص'
-            subject_sub_area_name = doc['subject_sub_area_name'] if doc['subject_sub_area_name'] != None else 'نامشخص'
-            subject_sub_area_weight = doc['subject_sub_area_weight'] if doc['subject_sub_area_weight'] != None else 0
-            subject_sub_area_entropy = doc['subject_sub_area_entropy']
-      
-
-            doc_organization_type_name = doc['organization_name'].split('-') if doc['organization_name'] != None else 'نامشخص'
+            doc_year = doc['year'] if doc['year'] != None else 0
+            doc_date = doc['date'] if doc['date'] != None else 'نامشخص'
+            doc_time = doc['time'] if doc['time'] != None else 'نامشخص'
 
             if doc_file_name in files_dict:
                 base64_file = files_dict[doc_file_name]
@@ -73,27 +55,13 @@ class DocumentIndex(ES_Index):
                 new_doc = {
                     "document_id": doc_id,
                     "name": doc_name,
-                    "approval_reference_name": doc_approval_reference,
-                    "approval_date": doc_approval_date,
-                    "approval_year": doc_approval_year,
-                    "communicated_date": doc_communicated_date,
-                    "communicated_year": doc_communicated_year,
+                    "date": doc_date,
+                    "year": doc_year,
+                    "time": doc_time,
                     "raw_file_name": doc_file_name,
-                    "level_name": doc_level,
+                    "category_name": doc_category,
                     "subject_name": doc_subject,
-                    "subject_weight": doc_subject_weight,
-                    "type_name": doc_type,
-                    "revoked_type_name":doc_revoked_type_name,
-                    "revoked_sub_type":doc_revoked_sub_type,
-                    "revoked_size":doc_revoked_size,
-                    "revoked_clauses":doc_revoked_clauses,
-                    "organization_type_name":doc_organization_type_name,
-                    "advisory_opinion_count": doc_advisory_opinion_count,
-                    "interpretation_rules_count": doc_interpretation_rules_count,
-                    "subject_area_name": subject_area_name,
-                    "subject_sub_area_name": subject_sub_area_name,
-                    "subject_sub_area_weight": subject_sub_area_weight,
-                    "subject_sub_area_entropy": subject_sub_area_entropy,
+                    "subject_weight": doc_subject_weight,  
                     "data": base64_file
                 }
 
@@ -125,10 +93,13 @@ def apply(folder, Country):
 
 
     documents = Document_Model.objects.filter(country_id__id=Country.id).annotate(
-        approval_year=Cast(Substr('approval_date', 1, 4), IntegerField())).annotate(communicated_year=Cast(Substr('communicated_date', 1, 4), IntegerField())).values()
+        year=Cast(Substr('date', 1, 4), IntegerField())).values()
 
 
-
+    # If index exists -> delete it.
+    if ES_Index.CLIENT.indices.exists(index=index_name):
+        ES_Index.CLIENT.indices.delete(index=index_name, ignore=[400, 404])
+        print(f"{index_name} deleted!")
 
     new_index.create()
     new_index.bulk_insert_documents(folder,documents,do_parallel=True)

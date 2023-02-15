@@ -50,12 +50,12 @@ def persian_apply(folder_name, Country, tasks_list, host_url):
         DocsParagraphsExtractor.apply(folder_name, Country)
 
 
-    if "StaticDataImportDB" in tasks_list: ####
-        Country.status = "StaticDataImportDB"
-        Country.save()
+    # if "StaticDataImportDB" in tasks_list: ####
+    #     Country.status = "StaticDataImportDB"
+    #     Country.save()
 
-        print("4. StaticDataImportDB")
-        StaticDataImportDB.apply(folder_name, Country)
+    #     print("4. StaticDataImportDB")
+    #     StaticDataImportDB.apply(folder_name, Country)
 
 
     # Edit By HuggingFace

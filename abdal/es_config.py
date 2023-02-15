@@ -151,7 +151,7 @@ Paragraphs_Mappings = {
             "type": "text",
             "analyzer": "persian_custom_analyzer"
         },
-        "type_name": {
+        "category_name": {
             "type": "text",
             "analyzer": "persian_custom_analyzer",
             "fields": {
@@ -162,46 +162,11 @@ Paragraphs_Mappings = {
             }
         },
 
-        "approval_reference_name": {
-            "type": "text",
-            "analyzer": "persian_custom_analyzer",
-            "fields": {
-                "keyword": {
-                    "type": "keyword",
-                    "ignore_above": 1024
-                }
-            }
-        },
 
-        "approval_year": {
+        "year": {
             "type": "integer"
         },
 
-        "level_name": {
-            "type": "text",
-            "analyzer": "persian_custom_analyzer",
-            "fields": {
-                "keyword": {
-                    "type": "keyword",
-                    "ignore_above": 256
-                }
-            }
-        },
-
-        "clause_type": {
-            "type": "text",
-            "analyzer": "persian_custom_analyzer",
-            "fields": {
-                "keyword": {
-                    "type": "keyword",
-                    "ignore_above": 256
-                }
-            }
-        },
-
-        "clause_number": {
-            "type": "integer"
-        },
 
         "paragraph_id": {
             "type": "integer"
@@ -1460,31 +1425,28 @@ FA_Settings = {
 
 FA_Mappings = {
     "properties": {
-        "approval_date": {
+    
+        "document_date": {
             "type": "text"
         },
-        "approval_year": {
-            "type": "integer"
-        },
-        "communicated_date": {
-            "type": "text"
-        },
-        "communicated_year": {
-            "type": "integer"
-        },
-        "document_id": {
-            "type": "integer"
-        },
-        "advisory_opinion_count": {
-            "type": "integer"
-        },
-        "interpretation_rules_count": {
+        "document_year": {
             "type": "integer"
         },
 
-        "approval_reference_name": {
+        "document_time": {
+            "type": "text"
+        },
+
+
+        "document_id": {
+            "type": "integer"
+        },
+
+
+        "document_name": {
             "type": "text",
             "analyzer": "persian_custom_analyzer",
+            "term_vector": "with_positions_offsets",
             "fields": {
                 "keyword": {
                     "type": "keyword",
@@ -1501,50 +1463,7 @@ FA_Mappings = {
             "type": "text",
             "analyzer": "persian_custom_analyzer"
         },
-        "level_name": {
-            "type": "text",
-            "analyzer": "persian_custom_analyzer",
-            "fields": {
-                "keyword": {
-                    "type": "keyword",
-                    "ignore_above": 256
-                }
-            }
-        },
 
-        "revoked_type_name": {
-            "type": "text",
-            "analyzer": "persian_custom_analyzer",
-            "fields": {
-                "keyword": {
-                    "type": "keyword",
-                    "ignore_above": 256
-                }
-            }
-        },
-
-        "organization_type_name": {
-            "type": "text",
-            "analyzer": "persian_custom_analyzer",
-            "fields": {
-                "keyword": {
-                    "type": "keyword",
-                    "ignore_above": 512
-                }
-            }
-        },
-
-        "name": {
-            "type": "text",
-            "analyzer": "persian_custom_analyzer",
-            "term_vector": "with_positions_offsets",
-            "fields": {
-                "keyword": {
-                    "type": "keyword",
-                    "ignore_above": 1024
-                }
-            }
-        },
         "subject_name": {
             "type": "text",
             "analyzer": "persian_custom_analyzer",
@@ -1560,7 +1479,7 @@ FA_Mappings = {
             "type": "text"
         },
 
-        "type_name": {
+        "category_name": {
             "type": "text",
             "analyzer": "persian_custom_analyzer",
             "fields": {
@@ -1571,68 +1490,6 @@ FA_Mappings = {
             }
         },
 
-        "subject_area": {
-            "type": "text",
-            "analyzer": "persian_custom_analyzer",
-            "fields": {
-                "keyword": {
-                    "type": "keyword",
-                    "ignore_above": 256
-                }
-            }
-        },
-
-        "subject_sub_area": {
-            "type": "text",
-            "analyzer": "persian_custom_analyzer",
-            "fields": {
-                "keyword": {
-                    "type": "keyword",
-                    "ignore_above": 256
-                }
-            }
-        },
-
-        "subject_sub_area_weight": {
-            "type": "text"
-        },
-
-        "subject_sub_area_entropy": {
-            "type": "text"
-        },
-
-        "revoked_sub_type": {
-            "type": "text",
-            "analyzer": "persian_custom_analyzer",
-            "fields": {
-                "keyword": {
-                    "type": "keyword",
-                    "ignore_above": 256
-                }
-            }
-        },
-
-        "revoked_size": {
-            "type": "text",
-            "analyzer": "persian_custom_analyzer",
-            "fields": {
-                "keyword": {
-                    "type": "keyword",
-                    "ignore_above": 256
-                }
-            }
-        },
-
-        "revoked_clauses": {
-            "type": "text",
-            "analyzer": "persian_custom_analyzer",
-            "fields": {
-                "keyword": {
-                    "type": "keyword",
-                    "ignore_above": 256
-                }
-            }
-        },
 
         "data": {
             "type": "text"
@@ -1651,6 +1508,7 @@ FA_Mappings = {
                 "content": {
                     "type": "text",
                     "analyzer": "persian_custom_analyzer",
+                    # "term_vector": "with_positions_offsets",
                     "fields": {
                         "keyword": {
                             "type": "keyword",

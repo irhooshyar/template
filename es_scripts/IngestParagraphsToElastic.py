@@ -34,11 +34,8 @@ class ParagraphIndex(ES_Index):
             paragraph_id = para['para_id']
             document_id = para['doc_id']
             document_name = para['doc_name']
-            type_name = para['type_name']
-
-            approval_reference_name = para['approval_reference_name'] if para['approval_reference_name'] != None else 'نامشخص'
-            level_name =  para['level_name'] if para['level_name'] != None else 'نامشخص'
-            approval_year = para['approval_year'] if para['approval_year'] != None else 0
+            category_name = para['category_name'] if para['category_name'] is not None else 'نامشخص'
+            year = para['year'] if para['year'] != None else 0
             
             para_text = para['para_text']
 
@@ -51,12 +48,8 @@ class ParagraphIndex(ES_Index):
                 "paragraph_id": paragraph_id,
                 "document_id": document_id,
                 "document_name": document_name,
-                "type_name":type_name,
-                'approval_reference_name':approval_reference_name,
-                'level_name':level_name,
-                'approval_year':approval_year,
-                "clause_type": "نامشخص",
-                "clause_number": 0,
+                "category_name":category_name,
+                'year':year,
                 "data": base64_file
             }
 
@@ -98,18 +91,22 @@ def apply(folder, Country,is_for_ref):
             para_id = F('id')).annotate(
                 doc_id = F('document_id__id')).annotate(
                 doc_name = F('document_id__name'), 
-                type_name = F('document_id__type_name'),
-                approval_reference_name = F('document_id__approval_reference_name'),
-                approval_year=Cast(Substr('document_id__approval_date', 1, 4), IntegerField()),
-                level_name = F('document_id__level_name')).annotate(
+                category_name = F('document_id__category_name'),
+                year=Cast(Substr('document_id__date', 1, 4), IntegerField())).annotate(
                 para_text = F('text')).values(
 
         'para_id','doc_id','doc_name',
-        'para_text','type_name','approval_reference_name', 
-        'approval_year', 'level_name'
+        'para_text', 
+        'year', 'category_name'
     )
     print(len(paragraphs))
     new_index = ParagraphIndex(index_name, settings, mappings)
+
+    # If index exists -> delete it.
+    if ES_Index.CLIENT.indices.exists(index=index_name):
+        ES_Index.CLIENT.indices.delete(index=index_name, ignore=[400, 404])
+        print(f"{index_name} deleted!")
+
     new_index.create()
     new_index.bulk_insert_documents(folder, paragraphs,do_parallel=True)
 
