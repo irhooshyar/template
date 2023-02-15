@@ -76,7 +76,7 @@
     <script src="../../../static/js/chart.js"></script>
 
 
-    <title> جست‌وجوی اسناد</title>
+    <title> جست‌وجوی اخبار</title>
     {% include "doc/base_templates/title_icon.html" %}
 
 </head>
@@ -127,7 +127,7 @@
                 <!-- Country Input -->
                 <div class="col-md-6 pt-3 col-12 col-lg-2 bg-light" dir="rtl">
 
-                    <label class=" text-right bg-light float-right" style="direction: rtl;;">مجموعه سند:</label>
+                    <label class=" text-right bg-light float-right" style="direction: rtl;;">مجموعه خبر:</label>
                     <select dir="rtl" id="country" name="country"
                         class="form-select text-right float-right searchable-select" style="direction: rtl;"
                         onchange="CountryChanged()">
@@ -169,7 +169,7 @@
                 <!-- document subject input -->
                 <div class="col-md-6 pt-3 col-12 col-lg-4 bg-light" dir="rtl">
 
-                    <label class=" text-right bg-light float-right" style="direction: rtl;;"> موضوع سند:</label>
+                    <label class=" text-right bg-light float-right" style="direction: rtl;;"> موضوع خبر:</label>
                     <select id="SubjectSelect" class="form-select text-right float-right searchable-select"
                         style="direction: rtl;">
                     </select>
@@ -179,9 +179,9 @@
                 <!-- doc type input -->
                 <div class="col-md-6 pt-3 col-12 col-lg-4 bg-light" dir="rtl">
 
-                    <label class=" text-right bg-light float-right" style="direction: rtl;;"> دسته سند:</label>
+                    <label class=" text-right bg-light float-right" style="direction: rtl;;"> دسته خبر:</label>
 
-                    <select id="TypeSelect" class="form-select text-right float-right searchable-select"
+                    <select id="CategorySelect" class="form-select text-right float-right searchable-select"
                         style="direction: rtl;">
                     </select>
 
@@ -207,7 +207,7 @@
                 <!-- From Year input -->
                 <div class="col-md-6 pt-3 col-12 col-lg-4 mt-1 bg-light" dir="rtl">
 
-                    <label class=" text-right bg-light float-right" style="direction: rtl;;"> سال سند از:</label>
+                    <label class=" text-right bg-light float-right" style="direction: rtl;;"> سال خبر از:</label>
 
                     <select id="YearFrom" class="form-select text-right float-right searchable-select"
                         style="direction: rtl;">
@@ -218,7 +218,7 @@
                 <!-- To Year input -->
                 <div class="col-md-6 pt-3 col-12 col-lg-4 mt-1 bg-light" dir="rtl">
 
-                    <label class="text-right bg-light float-right" style="direction: rtl;;"> سال سند تا:</label>
+                    <label class="text-right bg-light float-right" style="direction: rtl;;"> سال خبر تا:</label>
 
                     <select id="YearTo" class="form-select text-right float-right searchable-select"
                         style="direction: rtl;">
@@ -295,7 +295,7 @@
 
                         <div class="float-left">
                             <!-- Download Buttons -->
-                            <button type="button" data-bs-toggle="tooltip" data-bs-placement="top" title="دانلود اسناد"
+                            <button type="button" data-bs-toggle="tooltip" data-bs-placement="top" title="دانلود اخبار"
                                     class="btn float-left p-0 px-1 mt-2" id="DownloadBtn"
                                     onclick="DownloadSerachResultFunction()"
                                     type="button">
@@ -344,21 +344,9 @@
                     <div class="row mt-4 w-100 flex-row-reverse justify-content-around mx-0 px-0">
                         <div id="subject_container" chart-height="350px" class="half">
                         </div>
-                        <div id="level_container" chart-height="350px" class="half">
+                        <div id="category_container" chart-height="350px" class="half">
                         </div>
-                        <div id="year_container" chart-height="800px" class="full"></div>
-                         <!-- actors segment -->
-{#                            <div class="row flex-row-reverse mt-4 w-100 mx-0 px-4">#}
-{#                                <label id="chart_parallelism" class="text-center bg-light"#}
-{#                                    style="direction: rtl;">#}
-{#                                </label>#}
-{#                            </div>#}
-                        <div id="approval_container" class="half"></div>
-                        <div id="subject_stacked_container" class="half">
-                        </div>
-                        <div id="actors_chart_container" class="full"  chart-height="1700px">
-                        </div>
-
+                        <div id="year_container" chart-height="350px" class="full"></div>
 
 
                     </div>
@@ -428,7 +416,7 @@
                         class="form-select text-right float-right d-none">
 
                     <button id="DownloadDocuments" class="btn btn-primary"><i class="fa fa-download"></i> دانلود
-                        اسناد</button>
+                        اخبار</button>
 
                     <button id="ExportExcel2" class="btn btn-primary"><i class="fa fa-download"></i> خروجی اکسل
                     </button>
@@ -494,32 +482,24 @@
         let show_hide_state = "show"
 
         const COLUMNS = {
-            "subject_name": 'موضوع سند',
-            "approval_reference_name": 'مرجع تصویب',
-            "approval_date": 'تاریخ تصویب',
-            "revoked_type_name": 'اعتبار'
+            "subject_name": 'موضوع خبر',
+            "category_name": 'دسته خبر',
+            "document_date": 'تاریخ خبر',
         }
 
         const CHART_FIELD_DICT = {
             "subject_container": "subject_name",
-            "level_container": "level_name",
-            "year_container": "approval_year",
-            "approval_container": "approval_reference_name",
-            "subject_stacked_container": "subject_stacked_name"
+            "category_container": "category_name",
+            "year_container": "document_year",
         }
 
         let UserSearchParameters = {
 
             country_id: "",
-            level_name: "",
             subject_name: "",
-            type_name: "",
-            approval_reference_name: "",
+            category_name: "",
             from_year: "",
             to_year: "",
-            from_advisory_opinion_count: 0,
-            from_interpretation_rules_count: 0,
-            revoked_type_name: "",
             place: "",
             text: "",
             search_type: "",
@@ -530,13 +510,11 @@
 
 
                 this.country_id = document.getElementById("country").value;
-                this.level_name = $("#LevelSelect option:selected").text();
                 this.subject_name = $("#SubjectSelect option:selected").text();
-                this.type_name = $("#TypeSelect option:selected").text();
+                this.category_name = $("#CategorySelect option:selected").text();
                 this.approval_reference_name = $("#ApprovalReferences option:selected").text();
                 this.from_year = $("#YearFrom option:selected").text();
                 this.to_year = $("#YearTo option:selected").text();
-                this.revoked_type_name = $("#ValidationSelect option:selected").text();
                 this.place = document.getElementById("WhereSelect").value;
                 user_text = document.getElementById("SearchBox").value;
 
@@ -557,7 +535,7 @@
 
         initSearchableSelects();
         append_column(COLUMNS)
-        // init()
+        init()
 
         SearchResultValue = []
         ES_SearchResult = []
@@ -567,8 +545,7 @@
 
         ENTROPY_DETAILS_TAG = ''
 
-        container_id_list = ['SearchResultLable', 'SearchTable',
-            'references_graph_container', 'definition_keywords_graph_container']
+        container_id_list = ['SearchResultLable', 'SearchTable']
 
         function clearPrevResults(container_id_list) {
 
@@ -586,13 +563,7 @@
             let response = await fetch(request_link).then(response => response.json());
             response = response["parameters_result"]
 
-            /****************** Validation Type List ****************************/
-            document.getElementById("ValidationSelect").innerHTML = "<option value=" + 0 + " >" + "همه" + "</option>" +
-                response['ValidationType'];
 
-            /****************** Level List ****************************/
-            document.getElementById("LevelSelect").innerHTML = "<option value=" + 0 + " >" + "همه" + "</option>" +
-                response['level'];
 
             /****************** Subject List ****************************/
 
@@ -600,14 +571,8 @@
                 response['subject'];
 
             /****************** Type List ****************************/
-            document.getElementById("TypeSelect").innerHTML = "<option value=" + 0 + " >" + "همه" + "</option>" +
-                response['type'];
-
-
-            /****************** ApprovalReferences List ****************************/
-
-            document.getElementById("ApprovalReferences").innerHTML = "<option value=" + 0 + " >" + "همه" + "</option>" +
-                response['approval_reference'];
+            document.getElementById("CategorySelect").innerHTML = "<option value=" + 0 + " >" + "همه" + "</option>" +
+                response['category'];
 
             /****************** ApprovalReferences List ****************************/
 
@@ -616,32 +581,12 @@
             document.getElementById("YearTo").innerHTML = "<option value=" + 0 + " >" + "همه" + "</option>" +
                 response['ToYear'];
 
-
             /****************** Update User Search Parameters ****************************/
 
             UserSearchParameters.update_parameters();
 
 
-
-            /******************************** Get Type Color *****************************************/
-
-            request_link = 'http://' + location.host + "/GetTypeByCountryId/" + country_id + "/";
-            response = await fetch(request_link).then(response => response.json());
-            response = response["documents_type_list"]
-            document.getElementById("ColorBox").innerHTML = "";
-            for (var i = 0; i < response.length; i++) {
-                const type_id = response[i]["id"]
-                const type_name = response[i]["type"]
-                const type_color = response[i]["color"]
-
-
-                let tag1 = "<div style='width: 20px; height: 20px; border-radius: 50%;color: " + type_color + "; background-color: " + type_color + "'></div>"
-                let tag2 = "<p style='margin-right: 10px;'>" + type_name + "</p>"
-                const html_value = "<div class='col-2' style='display: inline-flex;'>" + tag1 + tag2 + "</div>"
-
-
-                document.getElementById("ColorBox").innerHTML += html_value
-            }
+            
 
 
             syncAllSelectsWithResetExceptions(["country"]);
@@ -656,6 +601,7 @@
             stopFullPageBlockUI('مقداردهی اولیه')
 
         }
+        
 
         function CountryChanged() {
             init()
@@ -668,7 +614,7 @@
             SearchResultValue_Count = SearchResultValue.length
             const search_text = document.getElementById("SearchBox").value;
 
-            document.getElementById("SearchResultLable").innerText = "تعداد کل نتایج: " + total_hits + " سند"
+            document.getElementById("SearchResultLable").innerText = "تعداد کل نتایج: " + total_hits + " خبر"
             let index = (curr_page - 1) * SEARCH_RESULT_SIZE + 1;
             let document_result = []
 
@@ -676,14 +622,10 @@
             for (let doc of documents_information_result) {
                 const es_id = doc["_id"]
                 const id = doc["_source"]["document_id"]
-                const name = doc["_source"]["name"]
-                const level = doc["_source"]["level_name"]
+                const name = doc["_source"]["document_name"]
+                const category_name = doc["_source"]["category_name"]
                 const subject = doc["_source"]["subject_name"]
-                const type = doc["_source"]["type_name"]
-                const approval_reference = doc["_source"]["approval_reference_name"]
-                const approval_date = doc["_source"]["approval_date"]
-                const communicated_date = doc["_source"]["communicated_date"]
-                const revoked_type_name = doc["_source"]["revoked_type_name"]
+                const date = doc["_source"]["document_date"]
                 let score = Math.round((doc['_score'] / max_score) * 100)
 
                 let button_disable = ""
@@ -700,8 +642,8 @@
 
                 const row = {
                     "id": index, "name": doc_name, "subject_name": subject,
-                    "approval_reference_name": approval_reference, "approval_date": approval_date,
-                    "count": score, "revoked_type_name": revoked_type_name, "detail": detail
+                     "date": date,"category_name":category_name,
+                    "count": score, "detail": detail
                 }
 
                 document_result.push(row)
@@ -723,20 +665,17 @@
                 "type": "number",
             }, {
                 "name": "name",
-                "title": "نام سند",
+                "title": "عنوان خبر",
             }, {
                 "name": "subject_name",
-                "title": "موضوع سند",
+                "title": "موضوع خبر",
             }, {
-                "name": "approval_reference_name",
-                "title": "مرجع تصویب",
-            }, {
-                "name": "approval_date",
-                "title": "تاریخ تصویب",
-            }, {
-                "name": "revoked_type_name",
-                "title": "اعتبار",
-            }, {
+                "name": "category_name",
+                "title": "دسته خبر",
+            },  {
+                "name": "date",
+                "title": "تاریخ خبر",
+            },{
                 "name": "count",
                 "title": "درصد امتیاز",
             }, {
@@ -778,8 +717,8 @@
             }
         }
 
-        async function GetDocumentsInformation(country_id, level_id, subject_id, type_id, approval_reference_id,
-            from_year, to_year, revoked_type_id, place, text, search_type, curr_page) {
+        async function GetDocumentsInformation(country_id, category_id, subject_id,
+            from_year, to_year, place, text, search_type, curr_page) {
 
             let request_link = '';
             notyf.dismissAll();
@@ -789,9 +728,8 @@
 
             const from_advisory_opinion_count = 0
             const from_interpretation_rules_count = 0
-            request_link = 'http://' + location.host + "/SearchDocument_ES/" + country_id + "/" + level_id + "/" + subject_id + "/" + type_id + "/" +
-                approval_reference_id + "/" + from_year + "/" + to_year + "/" + from_advisory_opinion_count + "/" + from_interpretation_rules_count + "/" +
-                revoked_type_id + "/" + place + "/" + text + "/" + search_type + "/" +
+            request_link = 'http://' + location.host + "/SearchDocument_ES/" + country_id + "/" + category_id + "/" + subject_id +  "/" + from_year + "/" + to_year + "/" 
+                 + place + "/" + text + "/" + search_type + "/" +
                 curr_page + "/"
 
 
@@ -809,27 +747,10 @@
             showDocumentInformation(ES_SearchResult, search_type, place, total_hits, curr_page, text, max_score)
             stopBlockUI('SearchTable', 'نتایج جست‌وجو');
 
-            request_link = 'http://' + location.host + "/GetActorsChartData_ES_2/" + country_id + "/" + level_id + "/" + subject_id + "/" + type_id + "/" +
-                approval_reference_id + "/" + from_year + "/" + to_year + "/" + from_advisory_opinion_count + "/" + from_interpretation_rules_count + "/" +
-                revoked_type_id + "/" + place + "/" + text + "/" + search_type + "/"
-            let actorChartData = await fetch(request_link).then(response => response.json());
-
-            GetChartData_Es(actorChartData, ES_Aggregations, ES_SearchResult,
-                country_id, level_id,
-                subject_id, type_id, approval_reference_id, from_year, to_year,
-                from_advisory_opinion_count, from_interpretation_rules_count,
-                revoked_type_id, place, text, search_type);
-
-
-            /* Show References Graph */
-            startBlockUI('references_graph_container');
-            // await showReferencesGraph(ES_SearchResult)
-
-            await showReferencesGraph_v2(country_id, level_id, subject_id, type_id, approval_reference_id,
-                from_year, to_year, revoked_type_id, place, text, search_type, curr_page)
-
-            stopBlockUI('references_graph_container', 'گراف ارجاعات');
-
+            GetChartData_Es( ES_Aggregations, ES_SearchResult,
+                country_id, category_id,
+                subject_id, from_year, to_year
+                , place, text, search_type);
         }
 
         async function update_table_pagination_input(curr_page, total_hits) {
@@ -877,98 +798,24 @@
         }
 
 
-        async function GetChartData_Es(actorChartData, ES_Aggregations, documents_information_result,
-            country_id, level_id,
-            subject_id, type_id, approval_reference_id, from_year, to_year,
-            from_advisory_opinion_count, from_interpretation_rules_count,
-            revoked_type_id, place, text, search_type) {
+        async function GetChartData_Es(ES_Aggregations, documents_information_result,
+            country_id, category_id,
+            subject_id, from_year, to_year,
+            
+            place, text, search_type) {
 
             startBlockUI('bar_chart_info_pane');
 
             subject_data = ES_Aggregations['subject-agg']['buckets']
-            approval_references_data = ES_Aggregations['approval-ref-agg']['buckets']
-            level_data = ES_Aggregations['level-agg']['buckets']
-            approval_year_data = ES_Aggregations['approval-year-agg']['buckets']
-            type_data = ES_Aggregations['type-agg']['buckets']
-            subject_appr_data = ES_Aggregations['appr-agg']['buckets']
+            category_data = ES_Aggregations['category-agg']['buckets']
+            year_data = ES_Aggregations['year-agg']['buckets']
 
 
             /* Show Chart  */
 
-            showChartData(subject_data, "subject_container", documents_information_result, false, "موضوع سند", "توزیع موضوعی اسناد")
-            showStackedChart(subject_appr_data, "subject_stacked_container", documents_information_result, false)
-            showChartData(level_data, "level_container", documents_information_result, false, "سطح سند","توزیع اسناد براساس سطح اسناد")
-            showChartData(approval_year_data, "year_container", documents_information_result, true, "سال تصویب سند","توزیع اسناد براساس سال تصویب")
-            showHistogramChart(approval_references_data, "approval_container", documents_information_result, false, "مرجع تصویب سند","توزیع مراجع تصویب در اسناد")
-
-
-
-            // createKeywordsGraphData(response['keywords_information']);            // const actors_chart_data = response["actors_chart_data"]
-            console.log("***************")
-            actors_chart_data = actorChartData['actors_chart_data']
-
-            let entropy_dict = actorChartData['entropy_dict'];
-            let normal_entropy_dict = actorChartData['normal_entropy_dict'];
-            let mean_dict = actorChartData['mean_dict'];
-            let std_dict = actorChartData['std_dict'];
-            let parallelism_dict = actorChartData['parallelism_dict'];
-
-            {#document.getElementById('chart_parallelism').innerHTML = '<span class="text-secondary bold">' + "احتمال موازی‌کاری: " + '</span>'#}
-            {#    + '<span class="bold" style="color: purple">' + parallelism_dict["sum_columns"] + ' </span>'#}
-            {#    + '(<span  style="color: rgb(0, 123, 255)">' + parallelism_dict["column_1"] + '، </span>'#}
-            {#    + '<span  style="color: rgb(40, 167, 69)">' + parallelism_dict["column_2"] + '، </span>'#}
-            {#    + '<span  style="color: rgb(255, 193, 7)">' + parallelism_dict["column_3"] + '</span>)'#}
-            {#    + '<span onclick="showEntropyDetails()" class="p-2 fw-bold" '#}
-            {#    + 'data-bs-toggle="tooltip" data-bs-placement="left" title="جزئیات بیش‌تر"'#}
-            {#    + 'style="position:relative;top:-6px;cursor:pointer;font-size:20px;">'#}
-            {#    + '<i class="bi bi-info-circle text-secondary fw-bold"></i>'#}
-            {#    + '</span>'#}
-
-
-                chart_entropy = '<p class="fw-bold">' 
-                + '<span class="text-secondary">' + "آنتروپی: " + '</span>'
-                + '<span style="color: purple">' + entropy_dict["sum_columns"] + ' </span>'
-                + '(<span  style="color: rgb(0, 123, 255)">' + entropy_dict["column_1"] + '، </span>'
-                + '<span  style="color: rgb(40, 167, 69)">' + entropy_dict["column_2"] + '، </span>'
-                + '<span  style="color: rgb(255, 193, 7)">' + entropy_dict["column_3"] + '</span>)'
-                + '</p>'
-                + '<p>'
-                + '<span class="text-secondary">' + " آنتروپی نرمال: " + '</span>'
-                + '<span style="color: purple">' + normal_entropy_dict["sum_columns"] + ' </span>'
-                + '(<span  style="color: rgb(0, 123, 255)">' + normal_entropy_dict['column_1'] + '، </span>'
-                + '<span  style="color: rgb(40, 167, 69)">' + normal_entropy_dict['column_2'] + '، </span>'
-                + '<span  style="color:rgb(255, 193, 7)">' + normal_entropy_dict['column_3'] + '</span>)';
-                + '</p>'
-                
-                chart_stats = '<p>' 
-                + '<span class="text-secondary">' + "میانگین تعداد وظایف: " + '</span>'
-                + '<span style="color: purple">' + mean_dict["sum_columns"] + ' </span>'
-                + '(<span  style="color: rgb(0, 123, 255)">' + mean_dict["column_1"] + '، </span>'
-                + '<span  style="color: rgb(40, 167, 69)">' + mean_dict["column_2"] + '، </span>'
-                + '<span  style="color: rgb(255, 193, 7)">' + mean_dict["column_3"] + '</span>)'
-                + '</p>'
-                + '<p>'
-                + '<span class="text-secondary">' + " انحراف معیار: " + '</span>'
-                + '<span style="color: purple">' + std_dict["sum_columns"] + ' </span>'
-                + '(<span  style="color: rgb(0, 123, 255)">' + std_dict['column_1'] + '، </span>'
-                + '<span  style="color: rgb(40, 167, 69)">' + std_dict['column_2'] + '، </span>'
-                + '<span  style="color:rgb(255, 193, 7)">' + std_dict['column_3'] + '</span>)'
-                +'</p>';
-
-                ENTROPY_DETAILS_TAG = ""
-                ENTROPY_DETAILS_TAG += chart_entropy+ chart_stats
-
-            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
-            var tooltipList = tooltipTriggerList.map(function (tooltipTriggerEl) {
-                return new bootstrap.Tooltip(tooltipTriggerEl)
-            })
-
-            await showActorsChart('actors_chart_container', actors_chart_data,
-                country_id, level_id,
-                subject_id, type_id, approval_reference_id, from_year, to_year,
-                from_advisory_opinion_count, from_interpretation_rules_count,
-                revoked_type_id, place, text, search_type)
-
+            showChartData(subject_data, "subject_container", documents_information_result, false, "موضوع خبر", "توزیع موضوعی اخبار")
+            showChartData(category_data, "category_container", documents_information_result, false, "دسته خبر","توزیع اخبار براساس دسته اخبار")
+            showChartData(year_data, "year_container", documents_information_result, true, "سال خبر","توزیع اخبار براساس سال خبر")
 
             stopBlockUI('bar_chart_info_pane', 'داشبورد آماری');
 
@@ -1002,13 +849,10 @@
             await SpinnerModeFunction("Active");
 
             const country_id = document.getElementById("country").value;
-            const level_id = document.getElementById("LevelSelect").value;
             const subject_id = document.getElementById("SubjectSelect").value;
-            const type_id = document.getElementById("TypeSelect").value;
-            const approval_reference_id = document.getElementById("ApprovalReferences").value;
+            const category_id = document.getElementById("CategorySelect").value;
             const from_year = document.getElementById("YearFrom").value;
             const to_year = document.getElementById("YearTo").value;
-            const revoked_type_id = document.getElementById("ValidationSelect").value;
             const curr_page = document.getElementById('TablePaginationInput').value
 
 
@@ -1022,13 +866,13 @@
                 text = text.replaceAll('/', '>')
                 text = text.replaceAll('\\', '<')
 
-                GetDocumentsInformation(country_id, level_id,
-                    subject_id, type_id, approval_reference_id, from_year, to_year, revoked_type_id, place, text, search_type, curr_page);
+                GetDocumentsInformation(country_id, category_id,
+                    subject_id, from_year, to_year, place, text, search_type, curr_page);
 
             } else {
 
-                GetDocumentsInformation(country_id, level_id,
-                    subject_id, type_id, approval_reference_id, from_year, to_year, revoked_type_id, place, "empty", 'All', curr_page);
+                GetDocumentsInformation(country_id, category_id,
+                    subject_id , from_year, to_year, place, "empty", 'All', curr_page);
 
             }
             if (place == 'تعاریف') {
@@ -1114,9 +958,9 @@
             const options = {
                             data: subjectsDict,
                             sortKeys: true,
-                            xAxisTitle: 'سال سند',
-                            title: 'توزیع موضوعی اسناد براساس سال تصویب',
-                            yAxisTitle: "تعداد سند",
+                            xAxisTitle: 'سال خبر',
+                            title: 'توزیع موضوعی اخبار براساس سال',
+                            yAxisTitle: "تعداد خبر",
                             onClick: async function (event, data) {
                                 const click_tag = event.domTarget.tag;
                                 console.log(click_tag)
@@ -1193,7 +1037,7 @@
                 xAxisTitle,
                 title,
                 showLabels: true,
-                yAxisTitle: "تعداد سند",
+                yAxisTitle: "تعداد خبر",
                 onClick: async function (event, data) {
                     const text = data[0];
                     const best_result_count = documents_information_result.length
@@ -1217,7 +1061,7 @@
                 sortKeys,
                 xAxisTitle,
                 title,
-                yAxisTitle: "تعداد سند",
+                yAxisTitle: "تعداد خبر",
                 onClick: async function (event, data) {
                     const click_tag = event.domTarget.tag;
                     const index = click_tag["index"]
@@ -1251,7 +1095,28 @@
                 }
 
                 newDoughnutChart(container, options);
-            } else {
+            }else if (container === "year_container"){
+
+                options.onClick = async function (event, data) {
+                    const click_tag_index = event.domTarget.tag;
+                    console.log(data)
+                    console.log(click_tag_index)
+                    const text = data['mc'][click_tag_index][0];
+                    console.log(text)
+                    const best_result_count = documents_information_result.length
+
+                    let filtered_result = []
+                    let header = ""
+                    let save_file_name = document.getElementById("SearchBox").value;
+
+                    await GetClickedColumnDocuments(container, text)
+
+                    $("#ChartModalBtn").click();
+                }
+
+                newLineChart(container, options)
+            }
+             else {
                 newBarChart(container, options)
             }
         }
@@ -1337,10 +1202,9 @@
 
 
             subject_name = UserSearchParameters.subject_name
-            level_name = UserSearchParameters.level_name
+            category_name = UserSearchParameters.category_name
             from_year = UserSearchParameters.from_year
             to_year = UserSearchParameters.to_year
-            approval_reference_name = UserSearchParameters.approval_reference_name
 
             header = ""
             let save_file_name = document.getElementById("SearchBox").value;
@@ -1349,19 +1213,19 @@
 
                 header = "موضوع: " + column_value
                 subject_name = column_value
-                save_file_name += " (مجموعه سند {1} و موضوع {2})".replace("1", "هوش‌یار").replace("2", column_value)
+                save_file_name += " (مجموعه خبر {1} و موضوع {2})".replace("1", "هوش‌یار").replace("2", column_value)
 
-            } else if (Doc_Field == 'level_name') {
+            } else if (Doc_Field == 'category_name') {
 
-                header = "سطح سند: " + column_value
-                level_name = column_value
-                save_file_name += " (مجموعه سند {1} و سطح سند {2})".replace("1", "هوش‌یار").replace("2", column_value)
+                header = "سطح خبر: " + column_value
+                category_name = column_value
+                save_file_name += " (مجموعه خبر {1} و سطح خبر {2})".replace("1", "هوش‌یار").replace("2", column_value)
 
             }
-            else if (Doc_Field == 'approval_year') {
+            else if (Doc_Field == 'document_year') {
 
-                header = "سال تصویب: " + column_value
-                save_file_name += " (مجموعه سند {1} و سال تصویب {2})".replace("1", "هوش‌یار").replace("2", column_value)
+                header = "سال خبر: " + column_value
+                save_file_name += " (مجموعه خبر {1} و سال خبر {2})".replace("1", "هوش‌یار").replace("2", column_value)
 
                 if (column_value == 'نامشخص') {
                     from_year = "0"
@@ -1375,40 +1239,15 @@
 
 
             }
-            else if (Doc_Field == 'approval_reference_name') {
-                header = "مرجع تصویب: " + column_value
-                approval_reference_name = column_value
-                save_file_name += " (مجموعه سند {1} و مرجع تصویب {2})".replace("1", "هوش‌یار").replace("2", column_value)
-
-            }
-            else if (Doc_Field == 'subject_stacked_name'){
-                header = "موضوع:" + column_value[0] + " و سال تصویب:" + column_value[1]
-                subject_name = column_value[0]
-                save_file_name += " (مجموعه سند {1} و موضوع اسناد {2} سال تصویب {3})".replace("1", "هوش‌یار").replace("2", column_value[0]).replace("3", column_value[1])
-
-                if (column_value[1] == 'نامشخص') {
-                    from_year = "0"
-                    to_year = "0"
-                }
-
-                else {
-                    from_year = to_year = column_value[1]
-                }
-            }
+          
 
 
             request_link = 'http://' + location.host + "/SearchDocuments_Column_ES/"
                 + UserSearchParameters.country_id + "/"
-
-                + level_name + "/"
                 + subject_name + "/"
-                + UserSearchParameters.type_name + "/"
-                + approval_reference_name + "/"
+                + category_name + "/"
                 + from_year + "/"
                 + to_year + "/"
-                + UserSearchParameters.from_advisory_opinion_count + "/"
-                + UserSearchParameters.from_interpretation_rules_count + "/" +
-                UserSearchParameters.revoked_type_name + "/"
                 + UserSearchParameters.place + "/"
                 + UserSearchParameters.text + "/"
                 + UserSearchParameters.search_type + "/"
@@ -1433,12 +1272,12 @@
                 var csv = "";
 
                 sep = ","
-                let Csv = "نام سند" + sep + "سطح سند" + sep +
-                    "موضوع سند" + sep + "نوع سند" + sep + "مرجع تصویب" + sep + "تاریخ تصویب" + "\n"
+                let Csv = "نام خبر" + sep + 
+                    "موضوع خبر" + sep + "دسته خبر" + sep + "تاریخ خبر" + "\n"
 
                 for (const document of RESULT_DOCUMENTS) {
-                    Csv += document['_source']["name"].replaceAll(',', '-') + sep + document['_source']["level_name"].replaceAll(',', '-') + sep + document['_source']["subject_name"].replaceAll(',', '-') + sep +
-                        document['_source']["type_name"].replaceAll(',', '-') + sep + document['_source']["approval_reference_name"].replaceAll(',', '-') + sep + document['_source']["approval_date"].replaceAll(',', '-') + "\n"
+                    Csv += document['_source']["document_name"].replaceAll(',', '-') + sep + document['_source']["subject_name"].replaceAll(',', '-') + sep +
+                        document['_source']["category_name"].replaceAll(',', '-')  + sep + document['_source']["document_date"].replaceAll(',', '-') + "\n"
 
                 }
 
@@ -1456,7 +1295,7 @@
             max_page = parseInt(document.getElementById("ColumnModalPaginationInput").max)
 
             document.getElementById("ChartModalHeader").innerText = header
-            document.getElementById("DocsCount").innerText = total_hits + " سند:"
+            document.getElementById("DocsCount").innerText = total_hits + " خبر:"
 
             await show_modal_documents(result_documents, position, column_value, curr_page, max_page, RESULT_DOCUMENTS);
 
@@ -1472,7 +1311,7 @@
 
             for (const doc of result_documents) {
                 const link = 'http://' + location.host + "/document_profile/?id=" + doc["_source"]["document_id"]
-                let tag = "<li class='mt-3' id=" + doc["_source"]["document_id"] + "><a target='blank' href='" + link + "'>" + doc["_source"]["name"] + "</a></li>"
+                let tag = "<li class='mt-3' id=" + doc["_source"]["document_id"] + "><a target='blank' href='" + link + "'>" + doc["_source"]["document_name"] + "</a></li>"
                 filtered_result_tag += tag
                 list_of_docId += doc["document_id"] + "_"
             }
@@ -1526,7 +1365,7 @@
             const options = {
                 data: chart_data,
                 xAxisTitle: 'کنشگر',
-                title: 'توزیع کنشگران اسناد',
+                title: 'توزیع کنشگران اخبار',
                 yAxisTitle: "تعداد پاراگراف",
                 bars: [
                     {
@@ -2253,7 +2092,7 @@
                 }
 
                 if (body_tag == ""){
-                    body_tag = "<h5 class='mt-5 text-center text-secondary'>عبارت موردنظر در متن سند یافت نشد.</h5>"
+                    body_tag = "<h5 class='mt-5 text-center text-secondary'>عبارت موردنظر در متن خبر یافت نشد.</h5>"
                 }
 
                 document.getElementById("DetailText").innerHTML += "<ul>" + body_tag + "</ul>"
@@ -2287,7 +2126,7 @@
             const country_folder = response["folder"];
             const country_name = response["name"];
 
-            save_file_name += " مجموعه سند {" + country_name + "}"
+            save_file_name += " مجموعه خبر {" + country_name + "}"
 
 
             let extension = ".txt"
@@ -2312,7 +2151,7 @@
                     // see FileSaver.js
                     saveAs(content, save_file_name + ".zip");
                 });
-            stopFullPageBlockUI('دانلود اسناد');
+            stopFullPageBlockUI('دانلود اخبار');
         }
 
 
@@ -2325,8 +2164,8 @@
         async function ExportExcelSerachResultFunction() {
             var selected_columns = []
             selected_columns = find_selected_column(selected_columns)
-            main_columns = ['نام سند']
-            rows = ['name']
+            main_columns = ['نام خبر']
+            rows = ['document_name']
             for (const column in COLUMNS) {
                 if (selected_columns.includes(column) || selected_columns.includes('all')) {
                     main_columns.push(COLUMNS[column])
@@ -2350,7 +2189,7 @@
             }
 
             let save_file_name = "نتیجه جستجو {" + document.getElementById("SearchBox").value + "}"
-            save_file_name += " مجموعه سند {" + document.getElementById("country").innerText + "}"
+            save_file_name += " مجموعه خبر {" + document.getElementById("country").innerText + "}"
 
             let csvContent = "data:text/csv;charset=utf-8,%EF%BB%BF" + encodeURI(Csv);
             var link = document.createElement("a");
@@ -2457,7 +2296,7 @@
             }
 
             chart.nodes().tooltip().format("{%name}");
-            chart.edges().tooltip().format(" سند:  {%from_name} \n کلیدواژه:  {%to}");
+            chart.edges().tooltip().format(" خبر:  {%from_name} \n کلیدواژه:  {%to}");
             chart.edges().tooltip().fontFamily('vazir');
             chart.nodes().tooltip().fontFamily('vazir');
 

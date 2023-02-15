@@ -3328,9 +3328,8 @@ def GetSearchParameters(request, country_id):
     #         subject_area[str(sub_area['subject_area_id__id']) + "#" + sub_area['subject_area_id__name']] = [
     #             (sub_area['id'], sub_area['name'])]
 
-    parameters_result['revoked_size'] = "<option value='جزئی' >جزئی</option>" + "<option value='کلی' >کلی</option>"
 
-    return JsonResponse({"parameters_result": parameters_result, 'subject_area': "subject_area"}, )
+    return JsonResponse({"parameters_result": parameters_result}, )
 
 
 
@@ -3347,9 +3346,8 @@ def Local_preprocessing(text):
     return text
 
 
-def filter_doc_fields(res_query, level_id, subject_id, type_id, approval_reference_id,
-                      from_year, to_year, from_advisory_opinion_count, from_interpretation_rules_count,
-                      revoked_type_id, organization_type_id):
+def filter_doc_fields(res_query, category_id, subject_id,
+                      from_year, to_year):
 
 
     # ---------------------------------------------------------
@@ -3362,16 +3360,18 @@ def filter_doc_fields(res_query, level_id, subject_id, type_id, approval_referen
         }
         res_query['bool']['filter'].append(subject_query)
 
-
-    # ---------------------------------------------------------
-    if organization_type_id != '0':
-        organization_type_name = organization_type_id
-        organization_type_name_query = {
-            "match_phrase": {
-                "organization_type_name": organization_type_name
+    if category_id != 0:
+        category_name = Category.objects.get(id=category_id).name
+        subject_query = {
+            "term": {
+                "category_name.keyword": category_name
             }
         }
-        res_query['bool']['filter'].append(organization_type_name_query)
+        res_query['bool']['filter'].append(subject_query)
+
+
+
+    # ----
 
     # ----------------------------------------------------------
 
@@ -3384,7 +3384,7 @@ def filter_doc_fields(res_query, level_id, subject_id, type_id, approval_referen
 
         year_query = {
             "range": {
-                "approval_year": {
+                "document_year": {
                     "gte": from_year,
                     "lte": to_year,
                 }
@@ -3395,40 +3395,14 @@ def filter_doc_fields(res_query, level_id, subject_id, type_id, approval_referen
 
     # ----------------------------------------------------------
 
-    if from_advisory_opinion_count != 0:
-        advisory_opinion_count_query = {
-            "range": {
-                "advisory_opinion_count": {
-                    "gte": from_advisory_opinion_count,
-                }
-            }
-        }
-
-        res_query['bool']['filter'].append(advisory_opinion_count_query)
-
-    # ----------------------------------------------------------
-
-    if from_interpretation_rules_count != 0:
-        interpretation_rules_count_query = {
-            "range": {
-                "interpretation_rules_count": {
-                    "gte": from_interpretation_rules_count,
-                }
-            }
-        }
-
-        res_query['bool']['filter'].append(interpretation_rules_count_query)
-
     return res_query
 
 
-def SearchDocument_ES(request, country_id, level_id, subject_id, type_id, approval_reference_id, from_year, to_year,
-                      from_advisory_opinion_count,
-                      from_interpretation_rules_count, revoked_type_id, place, text, search_type, curr_page):
-    organization_type_id = '0'
+def SearchDocument_ES(request, country_id, category_id, subject_id, from_year, to_year,
+                      
+                    place, text, search_type, curr_page):
 
-    fields = [level_id, subject_id, type_id, approval_reference_id, from_year, to_year,
-              from_advisory_opinion_count, from_interpretation_rules_count, revoked_type_id, organization_type_id]
+    fields = [category_id, subject_id, from_year, to_year]
 
     res_query = {
         "bool": {}
@@ -3439,9 +3413,8 @@ def SearchDocument_ES(request, country_id, level_id, subject_id, type_id, approv
     if not all(field == 0 for field in fields):
         ALL_FIELDS = False
         res_query['bool']['filter'] = []
-        res_query = filter_doc_fields(res_query, level_id, subject_id, type_id, approval_reference_id, from_year,
-                                      to_year, from_advisory_opinion_count, from_interpretation_rules_count,
-                                      revoked_type_id, organization_type_id)
+        res_query = filter_doc_fields(res_query, category_id, subject_id, from_year,
+                                      to_year)
 
     if text != "empty":
         res_query["bool"]["must"] = []
@@ -3460,56 +3433,34 @@ def SearchDocument_ES(request, country_id, level_id, subject_id, type_id, approv
 
     # ---------------------- Get Chart Data -------------------------
     res_agg = {
-        "approval-ref-agg": {
-            "terms": {
-                "field": "approval_reference_name.keyword",
-                "size": bucket_size
-            }
-        },
         "subject-agg": {
             "terms": {
                 "field": "subject_name.keyword",
                 "size": bucket_size
             }
         },
-        "level-agg": {
+        "category-agg": {
             "terms": {
-                "field": "level_name.keyword",
+                "field": "category_name.keyword",
                 "size": bucket_size
             }
         },
-        "type-agg": {
+
+        "year-agg": {
             "terms": {
-                "field": "type_name.keyword",
+                "field": "document_year",
                 "size": bucket_size
             }
         },
-        "approval-year-agg": {
-            "terms": {
-                "field": "approval_year",
-                "size": bucket_size
-            }
-        },
-        "appr-agg": {
-            "multi_terms": {
-                "terms": [{
-                    "field": "approval_year"
-                }, {
-                    "field": "subject_name.keyword"
-                }]
-            }
-        }
+
     }
 
     from_value = (curr_page - 1) * search_result_size
 
     response = client.search(index=index_name,
-                             _source_includes=['document_id', 'name', 'approval_reference_name', 'approval_date',
-                                               'subject_name',
-                                               "level_name", 'type_name', 'approval_year', 'communicated_date',
-                                               'raw_file_name',
-                                               'advisory_opinion_count', 'interpretation_rules_count',
-                                               'revoked_type_name'],
+                             _source_includes=['document_id', 'document_name', 'document_date',
+                                               'subject_name', 'category_name', 'document_year',
+                                               'raw_file_name'],
                              request_timeout=40,
                              query=res_query,
                              aggregations=res_agg,
@@ -3912,23 +3863,14 @@ def GetActorsChartData_ES_2(request, country_id, level_id, subject_id, type_id, 
 
 
 
-def filter_doc_fields_COLUMN(res_query, level_name, subject_name, type_name, approval_reference_name,
-                             from_year, to_year, from_advisory_opinion_count, from_interpretation_rules_count,
-                             revoked_type_name, organization_type_name):
-    if approval_reference_name != "همه":
-        approval_reference_name = arabic_preprocessing(approval_reference_name)
-        approval_ref_query = {
-            "term": {
-                "approval_reference_name.keyword": approval_reference_name
-            }
-        }
-        res_query['bool']['filter'].append(approval_ref_query)
+def filter_doc_fields_COLUMN(res_query, category_name, subject_name,
+                             from_year, to_year):
 
     # ---------------------------------------------------------
-    if level_name != "همه":
+    if category_name != "همه":
         level_query = {
             "term": {
-                "level_name.keyword": level_name
+                "category_name.keyword": category_name
             }
         }
         res_query['bool']['filter'].append(level_query)
@@ -3943,35 +3885,6 @@ def filter_doc_fields_COLUMN(res_query, level_name, subject_name, type_name, app
         res_query['bool']['filter'].append(subject_query)
 
     # ---------------------------------------------------------
-    if type_name != "همه":
-        type_name = Local_preprocessing(type_name)
-
-        type_query = {
-            "term": {
-                "type_name.keyword": type_name
-            }
-        }
-        res_query['bool']['filter'].append(type_query)
-
-    # ---------------------------------------------------------
-    if revoked_type_name != "همه":
-        revoked_type_name_query = {
-            "term": {
-                "revoked_type_name.keyword": revoked_type_name
-            }
-        }
-        res_query['bool']['filter'].append(revoked_type_name_query)
-
-    # ---------------------------------------------------------
-    if organization_type_name != 'همه':
-        organization_type_name_query = {
-            "match_phrase": {
-                "organization_type_name": organization_type_name
-            }
-        }
-        res_query['bool']['filter'].append(organization_type_name_query)
-
-    # ----------------------------------------------------------
 
     First_Year = 1000
     Last_Year = 1403
@@ -3982,7 +3895,7 @@ def filter_doc_fields_COLUMN(res_query, level_name, subject_name, type_name, app
 
         year_query = {
             "range": {
-                "approval_year": {
+                "document_year": {
                     "gte": from_year,
                     "lte": to_year,
                 }
@@ -3991,39 +3904,12 @@ def filter_doc_fields_COLUMN(res_query, level_name, subject_name, type_name, app
 
         res_query['bool']['filter'].append(year_query)
 
-    # ----------------------------------------------------------
-
-    if from_advisory_opinion_count != 0:
-        advisory_opinion_count_query = {
-            "range": {
-                "advisory_opinion_count": {
-                    "gte": from_advisory_opinion_count,
-                }
-            }
-        }
-
-        res_query['bool']['filter'].append(advisory_opinion_count_query)
-
-    # ----------------------------------------------------------
-
-    if from_interpretation_rules_count != 0:
-        interpretation_rules_count_query = {
-            "range": {
-                "interpretation_rules_count": {
-                    "gte": from_interpretation_rules_count,
-                }
-            }
-        }
-
-        res_query['bool']['filter'].append(interpretation_rules_count_query)
-
     return res_query
 
 
-def SearchDocuments_Column_ES(request, country_id, level_name, subject_name, type_name, approval_reference_name,
-                              from_year, to_year, from_advisory_opinion_count,
-                              from_interpretation_rules_count, revoked_type_name, place, text, search_type, curr_page):
-    organization_type_name = 'همه'
+def SearchDocuments_Column_ES(request, country_id, category_name, subject_name,
+                              from_year, to_year
+                              , place, text, search_type, curr_page):
 
     res_query = {
         "bool": {}
@@ -4032,9 +3918,8 @@ def SearchDocuments_Column_ES(request, country_id, level_name, subject_name, typ
     ALL_FIELDS = False
 
     res_query['bool']['filter'] = []
-    res_query = filter_doc_fields_COLUMN(res_query, level_name, subject_name, type_name, approval_reference_name,
-                                         from_year, to_year, from_advisory_opinion_count,
-                                         from_interpretation_rules_count, revoked_type_name, organization_type_name)
+    res_query = filter_doc_fields_COLUMN(res_query, category_name, subject_name,
+                                         from_year, to_year)
 
     if text != "empty":
         res_query["bool"]["must"] = []
@@ -4050,9 +3935,9 @@ def SearchDocuments_Column_ES(request, country_id, level_name, subject_name, typ
     from_value = (curr_page - 1) * search_result_size
 
     response = client.search(index=index_name,
-                             _source_includes=['document_id', 'name', 'approval_reference_name', 'approval_date',
+                             _source_includes=['document_id', 'document_name', 'document_date',
                                                'subject_name',
-                                               "level_name", 'type_name', 'raw_file_name'],
+                                               "category_name", 'raw_file_name'],
                              request_timeout=40,
                              query=res_query,
                              from_=from_value,
@@ -6518,3 +6403,4 @@ def userlogs_to_index(request, id, language):
 
     IngestUserLogToElastic.apply(folder_name, file, machine_user_name)
     return redirect('zip')
+
