@@ -107,16 +107,21 @@ def apply(folder_name, Country):
             paragraph_id = paragraph.id
 
             paragraph_text = paragraph.text
-            classification_result = text_classifications_analysis(paragraph_text)
+            classification_result = text_classifications_analysis(paragraph_text)["result"]
+
+            classification_result_dict = {}
+            for item in classification_result:
+                classification_result_dict[item['label']] = item['score']
+
             document_subject.append(classification_result)
 
 
             if first:
                 first = False
-                for subject in classification_result.keys():
+                for subject in classification_result_dict.keys():
                     Subject.objects.create(name=subject)
 
-            top_3_items = dict(heapq.nlargest(3, classification_result.items(), key=itemgetter(1)))
+            top_3_items = dict(heapq.nlargest(3, classification_result_dict.items(), key=itemgetter(1)))
 
 
             result = []
