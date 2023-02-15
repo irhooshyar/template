@@ -12,7 +12,6 @@ classificationSentencePipeline = pipeline('text-classification', model=classific
 
 
 def concat_dictionary(dict_list):
-    print(1)
     result_dict = {}
     for dict_data in dict_list:
         for key, value in dict_data.items():
@@ -107,7 +106,7 @@ def apply(folder_name, Country):
             paragraph_id = paragraph.id
 
             paragraph_text = paragraph.text
-            classification_result = text_classifications_analysis(paragraph_text)
+            classification_result = text_classifications_analysis(paragraph_text)['result'][0]
             print(classification_result)
             classification_result_dict = {}
             for item in classification_result:
