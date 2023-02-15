@@ -58,12 +58,12 @@ def persian_apply(folder_name, Country, tasks_list, host_url):
         print("8. DocsSubjectExtractor2")
         DocsSubjectExtractor2.apply(folder_name, Country) #update paragraphs and document
 
-    if "SubjectParagraphExtractor" in tasks_list:
-        Country.status = "SubjectParagraphExtractor"
-        Country.save()
-
-        print("26. SubjectParagraphExtractor.")
-        SubjectParagraphExtractor.apply(folder_name, Country)
+    # if "SubjectParagraphExtractor" in tasks_list:
+    #     Country.status = "SubjectParagraphExtractor"
+    #     Country.save()
+    #
+    #     print("26. SubjectParagraphExtractor.")
+    #     SubjectParagraphExtractor.apply(folder_name, Country)
 
 
     if "StaticDataImportDB" in tasks_list: ####
