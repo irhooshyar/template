@@ -122,11 +122,16 @@ def Update_Docs_fromExcel(Country):
             try:
                 category_id = Category.objects.get(name=category_name).id
             except Exception as e:
-                category = Category.objects.create(name=category_name)
+                category = create_category_news(category_name)
                 category_id = category.id
 
             Document.objects.filter(id=document_id).update(date=date, category_id=category_id, category_name=category_name)
 
+def create_category_news(category_name):
+    category_name = category_name.replace("»", "/")
+    category_name = category_name.replace("صفحه نخست/", "")
+
+    return Category.objects.create(name=category_name)
 
 def ActorRolePatternKeywords_Insert():
     ActorRolePatternKeywordsFile = str(Path(config.PERSIAN_PATH, 'ActorRolePatternKeywords.json'))
