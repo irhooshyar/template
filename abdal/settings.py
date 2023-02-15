@@ -103,7 +103,7 @@ DATABASES = {
     'Fa_DataBase': {
         'ENGINE': 'django.db.backends.mysql',
         'CONN_MAX_AGE': 60,
-        'NAME': 'RahnamudDB' if os.environ.get('DB_FA_NAME') is None else os.environ.get('DB_FA_NAME'),
+        'NAME': 'TemplateDB' if os.environ.get('DB_FA_NAME') is None else os.environ.get('DB_FA_NAME'),
         # 'NAME': 'StandardDB_v1',
         'USER': 'dbadmin',
         'PASSWORD': '123456789',

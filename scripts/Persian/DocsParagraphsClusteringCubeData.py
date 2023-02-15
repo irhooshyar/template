@@ -6,7 +6,7 @@ from abdal import config
 from django.db.models import Count
 
 from doc.models import Document,DocumentParagraphs,\
-    ClusterTopic,ParagraphsTopic,ClusteringAlorithm,ClusteringResults, \
+    ClusterTopic,ParagraphsTopic,ClusteringAlgorithm,ClusteringResults, \
     FeatureSelectionAlgorithm, FeatureSelectionResults,\
     TopicDiscriminantWords,ParagraphsSubject,CUBE_Clustering_TableData
 
@@ -358,7 +358,7 @@ def save_topics_to_db(Country,dfs,k):
         topic_id = str(Country.id) + "-KMS-" + str(k) + "-T-"+str(i)
         topic_id_list.append(topic_id)
 
-        algorithm_obj = ClusteringAlorithm.objects.get(name = "K-Means",
+        algorithm_obj = ClusteringAlgorithm.objects.get(name = "K-Means",
         input_vector_type = "TF-IDF",cluster_count = k)
 
 

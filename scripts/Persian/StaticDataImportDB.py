@@ -24,7 +24,7 @@ from doc.models import Regulator,RegularityArea,RegularityTools
 from doc.models import Actor,ActorCategory,ActorType,ActorGraphType
 from doc.models import CollectiveActor,SearchParameters, RahbariSearchParameters
 from doc.models import Template_Panels_Info,RevokedType
-from doc.models import Operator,ClusteringAlorithm,FeatureSelectionAlgorithm
+from doc.models import Operator,ClusteringAlgorithm,FeatureSelectionAlgorithm
 from doc.models import RahbariLabel
 from django.shortcuts import get_object_or_404
 from pathlib import Path
@@ -1588,7 +1588,7 @@ def clustering_algorithms_to_db(Country):
     max_k = 100
     step = 1
 
-    ClusteringAlorithm.objects.all().delete()
+    ClusteringAlgorithm.objects.all().delete()
 
     ClusteringAlgorithmsFile = str(Path(config.PERSIAN_PATH, 'ClusteringAlgorithms.txt'))
     DocumentVectorTypesFile = str(Path(config.PERSIAN_PATH, 'DocumentVectorTypes.txt'))
@@ -1614,7 +1614,7 @@ def clustering_algorithms_to_db(Country):
 
                     for ngram in ngram_types:
                         ngram = str(ngram)
-                        result_count = ClusteringAlorithm.objects.filter(
+                        result_count = ClusteringAlgorithm.objects.filter(
                         name=c_name,
                         ngram_type = ngram,
                         input_vector_type = vector_name,
@@ -1627,15 +1627,15 @@ def clustering_algorithms_to_db(Country):
 
 
                         if result_count == 0:
-                            ClusteringAlorithm_obj = ClusteringAlorithm(name=c_name,
+                            ClusteringAlgorithm_obj = ClusteringAlgorithm(name=c_name,
                             input_vector_type = vector_name,
                             cluster_count = cluster_count,
                             ngram_type = ngram,
                             abbreviation = res_abbreviation)
-                            CreateList.append(ClusteringAlorithm_obj)
+                            CreateList.append(ClusteringAlgorithm_obj)
                         else:
 
-                            ClusteringAlorithm.objects.filter(
+                            ClusteringAlgorithm.objects.filter(
                             name=c_name,
                             ngram_type = ngram,
                             input_vector_type = vector_name,
@@ -1648,7 +1648,7 @@ def clustering_algorithms_to_db(Country):
 
 
 
-    ClusteringAlorithm.objects.bulk_create(CreateList)
+    ClusteringAlgorithm.objects.bulk_create(CreateList)
 
     feature_selection_algorithms_to_db(Country)
 

@@ -1,4 +1,4 @@
-from doc.models import ClusteringAlorithm, ClusteringResults, ClusterTopic, ClusteringGraphData
+from doc.models import ClusteringAlgorithm, ClusteringResults, ClusterTopic, ClusteringGraphData
 from doc.models import AILDAResults,AIParagraphLDATopic,LDAGraphData
 
 def apply(Country):

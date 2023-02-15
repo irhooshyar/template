@@ -6,7 +6,7 @@ from abdal import config
 from django.db.models import Count
 
 from doc.models import Document,DocumentParagraphs,\
-    ClusterTopic,ParagraphsTopic,ClusteringAlorithm,ClusteringResults, \
+    ClusterTopic,ParagraphsTopic,ClusteringAlgorithm,ClusteringResults, \
     FeatureSelectionAlgorithm, FeatureSelectionResults,\
     TopicDiscriminantWords,ParagraphsSubject,ClusteringEvaluationResults, \
         UserTopicLabel,ParagraphsFeatures
@@ -710,7 +710,7 @@ def agglomerative_clustering(folder_name,Country):
             SIZE_TO_ID[k] = {}
             for ngram in ngram_types:
 
-                algorithm_obj= ClusteringAlorithm.objects.get(name = "Agglomerative",
+                algorithm_obj= ClusteringAlgorithm.objects.get(name = "Agglomerative",
                 input_vector_type = "TF-IDF",cluster_count = k,ngram_type = str(ngram))
 
                 SIZE_TO_ID[k][ngram] = algorithm_obj
@@ -872,7 +872,7 @@ def kmeans_clustering(folder_name, Country):
             SIZE_TO_ID[k] = {}
             for ngram in ngram_types:
 
-                algorithm_obj= ClusteringAlorithm.objects.get(name = "K-Means",
+                algorithm_obj= ClusteringAlgorithm.objects.get(name = "K-Means",
                 input_vector_type = "TF-IDF",cluster_count = k,ngram_type = str(ngram))
 
                 SIZE_TO_ID[k][ngram] = algorithm_obj
