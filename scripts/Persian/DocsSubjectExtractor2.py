@@ -14,7 +14,6 @@ classificationSentencePipeline = pipeline('text-classification', model=classific
 def concat_dictionary(dict_list):
     result_dict = {}
     for dict_data in dict_list:
-        print(dict_data)
         for key, value in dict_data.items():
             if key not in result_dict:
                 result_dict[key] = value
@@ -155,6 +154,9 @@ def apply(folder_name, Country):
                                              subject3_name=subject3_name)
 
         document_subject = concat_dictionary(document_subject)
+
+        print(document_subject)
+
         document_subject = normalize_dictionary(document_subject)
 
         top_1_items = dict(heapq.nlargest(1, document_subject.items(), key=itemgetter(1)))
