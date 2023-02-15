@@ -165,7 +165,7 @@ def apply(folder_name, Country):
         print(2)
         main_subject_weight = top_1_items[main_subject_name]
         print(3)
-        main_subject = Subject.objects.get(main_subject_name)
+        main_subject = Subject.objects.get(name=main_subject_name)
         print(4)
         Document.objects.filter(id=document.id).update(subject_id=main_subject, subject_name=main_subject_name,
                                                        subject_weight=main_subject_weight)
