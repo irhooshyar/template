@@ -304,18 +304,18 @@ def getRegisteredUser2(request):
 def AI_topics(request):
     country_list = Country.objects.all()
     country_map = get_country_maps(country_list)
-    return render(request, 'doc/main_templates/AI_topics.html', {'countries': country_map})
+    return render(request, 'doc/main_templates/lda_clustering.html', {'countries': country_map})
 
 
 # @allowed_users('AI_topics')
 def paragrraph_clustering(request):
     country_list = Country.objects.all()
     country_map = get_country_maps(country_list)
-    return render(request, 'doc/main_templates/paragraph_clustering2.html', {'countries': country_map})
+    return render(request, 'doc/main_templates/paragraph_clustering.html', {'countries': country_map})
 
 
 def comparison(request):
-    return render(request, 'doc/main_templates/comparison2.html')
+    return render(request, 'doc/main_templates/references_comparison.html')
 
 
 def recommendation(request):
@@ -344,14 +344,14 @@ def decision_tree(request, country_id, clustering_algorithm_id):
 def graph2(request):
     country_list = Country.objects.all()
     country_map = get_country_maps(country_list)
-    return render(request, 'doc/main_templates/graph3.html', {'countries': country_map})
+    return render(request, 'doc/main_templates/graph.html', {'countries': country_map})
 
 
 @allowed_users('es_search')
 def es_search(request):
     country_list = Country.objects.all()
     country_map = get_country_maps(country_list)
-    return render(request, 'doc/main_templates/ES_Search3.html', {'countries': country_map})
+    return render(request, 'doc/main_templates/search.html', {'countries': country_map})
 
 
 def dendrogram(request, country_id, ngram_type):
@@ -362,7 +362,7 @@ def dendrogram(request, country_id, ngram_type):
     return render(request, 'doc/main_templates/dendrogram.html', {"file_path": file_path})
 
 def showDeployLogs(request):
-    return render(request, 'doc/user_templates/Deploy_server_time.html')
+    return render(request, 'doc/user_templates/deploy_server_time.html')
 
 
 def index(request):
@@ -374,13 +374,13 @@ def index(request):
 def information(request):
     country_list = Country.objects.all()
     country_map = get_country_maps(country_list)
-    return render(request, 'doc/main_templates/information2.html', {'countries': country_map})
+    return render(request, 'doc/main_templates/document_profile.html', {'countries': country_map})
 
 
 def knowledgeGraph(request):
     country_list = Country.objects.all()
     country_map = get_country_maps(country_list)
-    return render(request, 'doc/main_templates/KnowledgeGraph.html', {'countries': country_map})
+    return render(request, 'doc/main_templates/knowledge_graph.html', {'countries': country_map})
 
 
 def following_document_comments(request):
@@ -424,7 +424,7 @@ def ShowUserProfile(request):
 
 
 def sentiment_analysis_panel(request):
-    return render(request, 'doc/main_templates/sentiment_analysis.html')
+    return render(request, 'doc/main_templates/paragraph_profile.html')
 
 
 def upload_zip_file(request):
@@ -507,12 +507,6 @@ def upload_zip_file(request):
 
 
 # upload page link
-def detect_level(request, id):
-    file = get_object_or_404(Country, id=id)
-    from scripts.Persian import DocsLevelExtractor
-    DocsLevelExtractor.apply(None, file)
-    return redirect('zip')
-
 
 def static_data_import_db(request, id, language):
     file = get_object_or_404(Country, id=id)
@@ -527,35 +521,6 @@ def insert_docs_to_rahbari_table(request, id):
     from scripts.Persian import StaticDataImportDB
     StaticDataImportDB.Rahbari_Insert_fromExcel(file)
 
-    return redirect('zip')
-
-
-def slogan_key_synonymous_words(request, language):
-    if language == 'English':
-        from scripts.English import StaticDataImportDB
-        # StaticDataImportDB.apply(None, file)
-    elif language == 'Persian':
-        from scripts.Persian import StaticDataImportDB
-        StaticDataImportDB.Slogan_Key_And_Synonymous_Words_Insert()
-
-    return redirect('zip')
-
-
-def leadership_slogan_analysis(request, id):
-    file = get_object_or_404(Country, id=id)
-
-    from scripts.Persian import DocsAnalysisLeadershipSlogan
-    DocsAnalysisLeadershipSlogan.apply(None, file)
-
-    return redirect('zip')
-
-
-
-
-def template_panels_data_import_db(request, id):
-    file = get_object_or_404(Country, id=id)
-    from scripts.Persian import StaticDataImportDB
-    StaticDataImportDB.template_panels_to_db()
     return redirect('zip')
 
 
@@ -603,24 +568,7 @@ def document_json_list(request, id):
     return redirect('zip')
 
 
-def docs_general_definitions_extractor(request, id):
-    file = get_object_or_404(Country, id=id)
-    from scripts.Persian import DocsGeneralDefinitionsExtractor
-    DocsGeneralDefinitionsExtractor.apply(None, file)
-    return redirect('zip')
 
-
-
-
-
-
-
-
-def operators_static_data_to_db(request, id):
-    file = get_object_or_404(Country, id=id)
-    from scripts.Persian import StaticDataImportDB
-    StaticDataImportDB.operators_to_db()
-    return redirect('zip')
 
 
 def actors_static_data_to_db(request, id):
@@ -714,12 +662,6 @@ def regulators_static_import_db(request, id):
     StaticDataImportDB.Regulators_Insert()
     return redirect('zip')
 
-
-def rahbari_labels_time_series_extractor(request, id):
-    file = get_object_or_404(Country, id=id)
-    from scripts.Persian import RahbariLabelsTimeSeriesExtractor
-    RahbariLabelsTimeSeriesExtractor.apply(None, file)
-    return redirect('zip')
 
 
 
@@ -948,50 +890,6 @@ def paragraphs_similarity_calculation(request, id):
 
 
 
-
-def RahabriCoLabelsGraph(request, id):
-    file = get_object_or_404(Country, id=id)
-    from scripts.Persian import RahabriCoLabelsGraph
-    RahabriCoLabelsGraph.apply.after_response(None, file)
-    return redirect('zip')
-
-
-def RahbariTypeExtractor(request, id):
-    file = get_object_or_404(Country, id=id)
-    from scripts.Persian import RahbariTypeExtraction
-    RahbariTypeExtraction.apply.after_response(file)
-    return redirect('zip')
-
-
-def rahbari_correlated_labels_extractor(request, id):
-    file = get_object_or_404(Country, id=id)
-    from scripts.Persian import RahabriCorrelatedTimeSeriesExtractor
-    RahabriCorrelatedTimeSeriesExtractor.apply(file)
-    return redirect('zip')
-
-
-def RahbariGraphUpload(request, id):
-    file = get_object_or_404(Country, id=id)
-    from scripts.Persian import RahabriGraph
-    RahabriGraph.apply.after_response()
-    return redirect('zip')
-
-
-def getRahbariCoLabelsGraphMinMaxWeight(request):
-    weight_data_list = list(RahbariLabelsGraph.objects.all().values_list("common_document_count", flat=True))
-    max_weight = max(weight_data_list)
-    weight_list = []
-    histogram_list = []
-    step = 10
-    for i in range(1, max_weight, step):
-        inc = i if i == 1 else i - 1
-        weight_list.append(inc)
-        histogram_count = list(filter(lambda x: x >= inc, weight_data_list)).__len__()
-        histogram_list.append({"key": inc, "edge_count": histogram_count})
-
-    return JsonResponse({"weight_list": weight_list, "histogram_list": histogram_list})
-
-
 def rahbari_paragraphs_similarity_calculation(request, id):
     file = get_object_or_404(Country, id=id)
     from es_scripts import RahbariParagraphSimilarity
@@ -1005,20 +903,6 @@ def collective_static_data_to_db(request, id):
     from scripts.Persian import StaticDataImportDB
     StaticDataImportDB.Collective_Actors_Insert()
     return redirect('zip')
-
-
-
-def create_CUBE_Subject(request, id):
-    host_url = request.get_host()
-
-    file = get_object_or_404(Country, id=id)
-    from scripts.Persian import DocsCreateSubjectCubeData
-    DocsCreateSubjectCubeData.apply(None, file, host_url)
-    return redirect('zip')
-
-
-
-
 
 
 
@@ -1957,43 +1841,6 @@ def Get_Topic_Paragraphs_ES(request, country_id, topic_id, result_size, curr_pag
     return JsonResponse(response_dict)
 
 
-def GetAffinityLabels_ByLabelName(request, label_name):
-    result_labels = RahbariLabelsGraph.objects.filter(
-        Q(source_label=label_name) | Q(target_label=label_name)).order_by('-common_document_count').values()
-    index = 1
-    table_data = []
-
-    for row in result_labels:
-        source_label = row['source_label']
-        target_label = row['target_label']
-        common_document_count = row['common_document_count']
-
-        other_label = ''
-
-        if source_label != label_name:
-            other_label = source_label
-        else:
-            other_label = target_label
-
-        function = "AffinityFunction('" + other_label + "')"
-
-        detail_btn = '<button ' \
-                     'type="button" ' \
-                     'class="btn modal_btn" ' \
-                     'data-bs-toggle="modal" ' \
-                     'data-bs-target="#detailModal" ' \
-                     'onclick="' + function + '"' \
-                                              '>' + 'جزئیات' + '</button>'
-
-        table_row = {"index": index,
-                     "label_name": other_label,
-                     "common_document_count": common_document_count,
-                     "detail": detail_btn}
-        index += 1
-        table_data.append(table_row)
-
-    return JsonResponse({"table_data": table_data})
-
 
 def GetAllNotesInTimeRange(request, username, time_start, time_end):
     user_notes = DocumentNote.objects.all().filter(user__username=username)
@@ -2038,67 +1885,6 @@ def GetAllNotesInTimeRange(request, username, time_start, time_end):
     #     chart_data_list.append(column)
     # return JsonResponse({'user_chart_data_list': chart_data_list})
 
-
-def GetCorrelatedLabels_ByLabelName(request, label_name):
-    label_id = RahbariLabel.objects.get(name=label_name).id
-
-    result_labels = RahbariLabelsTimeSeriesGraph.objects.filter(
-        Q(source_label__id=label_id) | Q(target_label__id=label_id)).annotate(
-        source_label_name=F('source_label__name'), target_label_name=F('target_label__name')).order_by(
-        '-correlation_score').values()
-
-    index = 1
-    table_data = []
-
-    for row in result_labels:
-        source_label = row['source_label_name']
-        target_label = row['target_label_name']
-        correlation_score = row['correlation_score']
-
-        other_label = ''
-
-        if source_label != label_name:
-            other_label = source_label
-        else:
-            other_label = target_label
-
-        function = "ComparisonFunction('" + other_label + "')"
-
-        detail_btn = '<button ' \
-                     'type="button" ' \
-                     'class="btn modal_btn" ' \
-                     'data-bs-toggle="modal" ' \
-                     'data-bs-target="#Correlation_Comparison_Modal" ' \
-                     'onclick="' + function + '"' \
-                                              '>' + 'جزئیات' + '</button>'
-
-        table_row = {"index": index, "label_name": other_label,
-                     "correlation_score": correlation_score,
-                     "detail": detail_btn}
-        index += 1
-        table_data.append(table_row)
-
-    return JsonResponse({"table_data": table_data})
-
-
-def GetCorrelatedLabels_TimeSeries_ChartData(request, source_label_name, dest_label_name):
-    source_label_id = RahbariLabel.objects.get(name=source_label_name).id
-    source_time_series_data = RahbariLabelsTimeSeries.objects.get(rahbari_label__id=source_label_id).time_series_data
-
-    dest_label_id = RahbariLabel.objects.get(name=dest_label_name).id
-    dest_time_series_data = RahbariLabelsTimeSeries.objects.get(rahbari_label__id=dest_label_id).time_series_data
-
-    comaparison_chart_data = []
-    for year, src_count in source_time_series_data.items():
-        dest_count = dest_time_series_data[year]
-        comaparison_chart_data.append([year, src_count, dest_count])
-
-    year_vector_1 = pd.Series(list(source_time_series_data.values()))
-    year_vector_2 = pd.Series(list(dest_time_series_data.values()))
-    correlation_value = round(year_vector_1.corr(year_vector_2), 2)
-
-    return JsonResponse({"comaparison_chart_data": comaparison_chart_data,
-                         "correlation_value": correlation_value})
 
 
 def GetCountryById(request, id):
@@ -2156,14 +1942,6 @@ def GetKeywordLDAData(request, country_id, cluster_size, username, keyword):
     return JsonResponse({'lda_topics': lda_topics, 'all_para_count': all_para_count})
 
 
-def GetLabelTimeSeries_ChartData(request, label_name):
-    label_id = RahbariLabel.objects.get(name=label_name).id
-    time_series_data = RahbariLabelsTimeSeries.objects.get(rahbari_label__id=label_id).time_series_data
-    chart_data = []
-    for year, count in time_series_data.items():
-        chart_data.append([year, count])
-
-    return JsonResponse({"chart_data": chart_data})
 
 
 def GetLDAGraphData(request, country_id, number_of_topic):
@@ -2292,16 +2070,6 @@ def GetParagraph_Clusters(request, country_id, algorithm_name, vector_type, clus
     })
 
 
-def getRahbariDocumentsList(request):
-    RahbariList = Rahbari.objects.all()
-    rahbari_result = [{"value": 0, "text": "همه"}]
-    for row in RahbariList:
-        approval_date = row.document_id.approval_date if row.document_id.approval_date is not None else "نامشخص"
-        res = {"value": row.document_id_id, "text": row.document_name + " (تاریخ: " + approval_date + ")"}
-        rahbari_result.append(res)
-
-    return JsonResponse({"document_list": rahbari_result})
-
 
 def getNeighbourforNode(node_id, edge_data, node_parents, edge_count_limit):
     edge_list = list(filter(lambda x: (x["source"] == node_id or x["target"] == node_id) and
@@ -2314,216 +2082,6 @@ def getNeighbourforNode(node_id, edge_data, node_parents, edge_count_limit):
     else:
         return []
 
-
-def getRahbariGraphData(request, type_id, limit_neighbour_count, label_id, document_id, level):
-    graph_data_object = RahbariGraph.objects.get(type_id=type_id)
-
-    node_list = []
-
-    print(label_id, document_id)
-
-    if label_id != '0':
-        label_id = label_id.split("__")
-        label_id = ["label_" + label for label in label_id]
-        node_list += list(filter(lambda x: x["id"] in label_id, graph_data_object.nodes_data))
-
-    if document_id != '0':
-        document_id = document_id.split("__")
-        document_id = ["document_" + doc for doc in document_id]
-        node_list += list(filter(lambda x: x["id"] in document_id, graph_data_object.nodes_data))
-
-    edges_result = []
-    node_id_list = []
-    seen_node = []
-    if node_list.__len__() > 0:
-        for node in node_list:
-            node_id_list.append([node["id"], ['0']])
-            seen_node.append(node["id"])
-
-    for i in range(level):
-        temp_node_id_list = {}
-        for node in node_id_list:
-            node_id = node[0]
-            node_parent = node[1]
-            edge_list = getNeighbourforNode(node_id, graph_data_object.edges_data, node_parent, limit_neighbour_count)
-            for row in edge_list:
-                if row["source"] == node_id:
-                    temp_node_id = row["target"]
-                else:
-                    temp_node_id = row["source"]
-
-                if temp_node_id not in temp_node_id_list:
-                    temp_node_id_list[temp_node_id] = [node_id]
-                else:
-                    temp_node_id_list[temp_node_id].append(node_id)
-            edges_result += edge_list
-
-        node_id_list = []
-        for node, parent_list in temp_node_id_list.items():
-            node_id_list.append([node, parent_list])
-            seen_node.append(node)
-
-    edges_data = []
-    seen_edge = []
-    for edge in edges_result:
-        if edge["id"] not in seen_edge:
-            edges_data.append(edge)
-            seen_edge.append(edge["id"])
-
-    nodes_data = list(filter(lambda x: x["id"] in seen_node, graph_data_object.nodes_data))
-
-    return JsonResponse({"Nodes_data": nodes_data, "Edges_data": edges_data})
-
-
-def GetRahbariTypes(request):
-    rahbari_types = RahbariType.objects.all()
-    result = []
-    for type in rahbari_types:
-        res = {"id": type.id, "name": type.name}
-        result.append(res)
-    return JsonResponse({"type_list": result})
-
-
-def GetRahbariLabels(request):
-    rahbari_labels = RahbariLabel.objects.all()
-    result = []
-    for label in rahbari_labels:
-        res = {"id": label.id, "name": label.name}
-        result.append(res)
-    return JsonResponse({"label_list": result})
-
-
-def getRahbariGraphType(request):
-    rahbari_graph_types = RahbariGraphType.objects.all()
-    result = []
-    for row in rahbari_graph_types:
-        res = {"id": row.id, "name": row.name, "en_name": row.en_name, "max_weight": row.max_weight,
-               "weight_list": row.weight_list, "histogram_data": row.histogram_data,
-               "histogram_title": row.histogram_title,
-               "is_label": row.is_label, "is_document": row.is_document}
-        result.append(res)
-    return JsonResponse({"type_list": result})
-
-
-def getRahbariLabelsList(request):
-    LabelsList = RahbariLabel.objects.all()
-    labels_result = [{"value": 0, "text": "همه"}]
-    for row in LabelsList:
-        res = {"value": row.id, "text": row.name}
-        labels_result.append(res)
-
-    return JsonResponse({"labels_list": labels_result})
-
-
-def GetRahbariSearchParameters(request, country_id):
-    search_parameters = RahbariSearchParameters.objects.filter(country__id=country_id)
-    parameters_result = {}
-
-    for param in search_parameters:
-        para_name = param.parameter_name
-        options = param.parameter_values["options"]
-        parameters_result[para_name] = options
-
-    return JsonResponse({"parameters_result": parameters_result})
-
-
-def GetRahbariTypeDetails_ES(request, document_id, rahbari_type_id):
-    document = Document.objects.get(id=document_id)
-    country = Country.objects.get(id=document.country_id.id)
-
-    local_index = standardIndexName(country, DocumentParagraphs.__name__) + "_graph"
-
-    result_text = ''
-    place = 'متن'
-
-    res_query = {
-        "bool": {
-            "filter": {
-                "term": {
-                    "document_id": document_id
-                }
-            },
-            "should": [],
-        }
-    }
-
-    keywords_list = RahbariTypeKeyword.objects.filter(type_id=rahbari_type_id)
-    should_query = []
-    for key in keywords_list:
-        res = {
-            "match_phrase": {
-                "attachment.content": key.keyword
-            }
-        }
-        should_query.append(res)
-    res_query['bool']['should'] = should_query
-    res_query['bool']['minimum_should_match'] = 0
-
-    response = client.search(index=local_index,
-                             _source_includes=['document_id', 'paragraph_id', 'document_name', 'attachment.content'],
-                             request_timeout=40,
-                             query=res_query,
-                             highlight={
-                                 "order": "score",
-                                 "fields": {
-                                     "attachment.content":
-                                         {
-                                             "pre_tags": ["<span class='text-primary fw-bold'>"],
-                                             "post_tags": ["</span>"],
-                                             "number_of_fragments": 0,
-                                             # "highlight_query": h_query1
-                                         },
-                                 },
-                             }
-                             )
-    result = response['hits']['hits']
-    return JsonResponse({"result": result})
-
-
-def GetRahbariTypeDetail(request, document_id):
-    rahbari_document_keywords = RahbariDocumentKeywords.objects.filter(document_id=document_id) \
-        .order_by("-title_count", "-text_count")
-    res = {}
-    for document_keyword in rahbari_document_keywords:
-        rahbari_type_id = document_keyword.type.id
-        rahbari_type_name = document_keyword.type.name
-        rahbari_type_score = RahbariDocumentType.objects.get(document_id=document_id, type=document_keyword.type).score
-
-        if rahbari_type_id not in res:
-            res[rahbari_type_id] = {"name": rahbari_type_name, "score": rahbari_type_score, "keywords": {}}
-
-        keyword = document_keyword.keyword.keyword
-        title_count = document_keyword.title_count
-        text_count = document_keyword.text_count
-
-        keyword_data = {"title_count": title_count, "text_count": text_count}
-        res[rahbari_type_id]["keywords"][keyword] = keyword_data
-
-    result = []
-    chart_data = []
-    type_list = RahbariType.objects.all()
-    for rahbari_type in type_list:
-        if rahbari_type.id in res:
-            value = res[rahbari_type.id]
-            temp = {
-                "rahbari_type_id": rahbari_type.id,
-                "rahbari_type_name": value["name"],
-                "rahbari_type_score": value["score"],
-                "keywords": value["keywords"]
-            }
-            result.append(temp)
-            chart_data.append({"key": value["name"], "doc_count": value["score"]})
-        else:
-            temp = {
-                "rahbari_type_id": rahbari_type.id,
-                "rahbari_type_name": rahbari_type.name,
-                "rahbari_type_score": 0,
-                "keywords": {}
-            }
-            result.append(temp)
-            chart_data.append({"key": rahbari_type.name, "doc_count": 0})
-
-    return JsonResponse({"rahbari_type_data": result, "rahbari_type_chart_data": chart_data})
 
 
 def exact_search_text(res_query, place, text, ALL_FIELDS):
@@ -2757,70 +2315,6 @@ def boolean_search_text(res_query, place, text, operator, ALL_FIELDS):
     return res_query
 
 
-def GetSearchDetails_ES_Rahbari_2(request, document_id, search_type, text, isRule):
-    document = Document.objects.get(id=document_id)
-    country = Country.objects.get(id=document.country_id.id)
-
-    local_index = standardIndexName(country, DocumentParagraphs.__name__) + "_graph"
-    # local_index = "doticfull_documentparagraphs_graph"
-
-    result_text = ''
-    place = 'عنوان و متن'
-
-    res_query = {
-        "bool": {
-            "filter": {
-                "term": {
-                    "document_id": document_id
-                }
-            },
-            "should": [],
-        }
-    }
-
-    if text != "empty":
-        res_query["bool"]["must"] = []
-
-        if search_type == 'exact':
-            res_query = exact_search_text(res_query, place, text, False)
-        else:
-            if search_type == 'and':
-                search_type = 'or'
-            res_query = boolean_search_text(res_query, place, text, search_type, False)
-
-
-    if isRule:
-        keywords_list = RahbariTypeKeyword.objects.all()
-        for key in keywords_list:
-            should_query = {
-                "match_phrase": {
-                    "attachment.content": key.keyword
-                }
-            }
-            res_query['bool']["must"][0]["bool"]['should'].append(should_query)
-
-    response = client.search(index=local_index,
-                             _source_includes=['document_id', 'paragraph_id', 'document_name', 'attachment.content'],
-                             request_timeout=40,
-                             query=res_query,
-                             highlight={
-                                 "order": "score",
-                                 "fields": {
-                                     "attachment.content":
-                                         {
-                                             "pre_tags": ["<span class='text-primary fw-bold'>"],
-                                             "post_tags": ["</span>"],
-                                             "number_of_fragments": 0,
-                                             # "highlight_query": h_query1
-                                         },
-                                 },
-                             }
-                             )
-
-    result = response['hits']['hits']
-
-    return JsonResponse({"result": result})
-
 
 def GetUserExpertise(request):
     expertise = UserExpertise.objects.all()
@@ -2937,247 +2431,6 @@ def save_lda_topic_label(request, topic_id, username, label):
     })
 
 
-def slogan_get_chart(request, slogan_year):
-    slogan = Slogan.objects.get(year=slogan_year)
-    keywords = slogan.keywords
-    synonymous = ""
-
-    try:
-        synonymous = SloganSynonymousWords.objects.get(slogan_id__id=slogan.id).words
-    except:
-        print("no synonymous")
-
-    index_name = doctic_doc_index
-    res_query = {
-        "range": {
-            "approval_year": {
-                "gte": 1375
-            }
-        }
-    }
-    res_agg = {
-        "approval-year-agg": {
-            "terms": {
-                "field": "approval_year",
-                "size": bucket_size
-            }
-        },
-    }
-
-    response = client.search(index=index_name,
-                             _source_includes=["attachment.content"],
-                             request_timeout=40,
-                             query=res_query,
-                             aggregations=res_agg,
-                             )
-
-    result = response['hits']['hits']
-    aggregations = response['aggregations']
-
-    word_array = []
-    if synonymous:
-        word_array.extend(synonymous.split("-"))
-    word_array.extend(keywords.split("-"))
-
-    should_query = []
-    for word in word_array:
-        new_q = {"match_phrase": {"attachment.content": word}}
-        should_query.append(new_q)
-
-    res_query2 = {
-        "bool": {
-            "must": [{"range": {"approval_year": {"gte": 1375}}}],
-            "should": should_query,
-            "minimum_should_match": 1
-        }
-    }
-
-    res_agg2 = {
-        "approval-year-content-agg": {
-            "terms": {
-                "field": "approval_year",
-                "size": bucket_size
-            }
-        }
-    }
-
-    response2 = client.search(index=index_name,
-                              _source_includes=["attachment.content"],
-                              request_timeout=40,
-                              query=res_query2,
-                              aggregations=res_agg2,
-                              )
-
-    aggregations2 = response2['aggregations']
-    total_hit_2 = response2['hits']['total']['value']
-    print(total_hit_2)
-
-    keywords_repeat = {}
-    for word in keywords.split("-"):
-        res_query3 = {
-            "bool": {
-                "must": [
-                    {"range": {"approval_year": {"gte": 1375}}},
-                    {"match_phrase": {"attachment.content": word}}
-                ]
-            }
-        }
-
-        response3 = client.search(index=index_name,
-                                  _source_includes=[],
-                                  request_timeout=40,
-                                  query=res_query3,
-                                  )
-        total_hits = response3['hits']['total']['value']
-        keywords_repeat[word] = total_hits
-
-    return JsonResponse({
-        "year_agg": aggregations,
-        "with_word_year_agg": aggregations2,
-        "keyword_repeat": keywords_repeat,
-
-    })
-
-    # total_hits = response['hits']['total']['value']
-
-    # if total_hits == 10000:
-    #     total_hits = client.count(body={
-    #         "query": res_query
-    #     }, index=index_name, doc_type='_doc')['count']
-
-
-def slogan_stackBased_get_information(request, key, slogan_year, selected_year, curr_page, result_size):
-    slogan = Slogan.objects.get(year=slogan_year)
-    keywords = slogan.keywords
-    synonymous = ""
-
-    try:
-        synonymous = SloganSynonymousWords.objects.get(slogan_id__id=slogan.id).words
-    except:
-        print("no synonymous")
-
-    index_name = doctic_doc_index
-
-    word_array = []
-    if synonymous:
-        word_array.extend(synonymous.split("-"))
-    word_array.extend(keywords.split("-"))
-
-    should_query = []
-    for word in word_array:
-        new_q = {"match_phrase": {"attachment.content": word}}
-        should_query.append(new_q)
-
-    res_query = {}
-    if key == 1:
-        res_query = {
-            "bool": {
-                "must": [{"term": {"approval_year": {"value": selected_year}}}],
-                "should": should_query,
-                "minimum_should_match": 1
-            }
-        }
-    else:
-        res_query = {
-            "bool": {
-                "must": [{"term": {"approval_year": {"value": selected_year}}}],
-                "must_not": should_query,
-            }
-        }
-
-    from_value = (curr_page - 1) * result_size
-    response = client.search(index=index_name,
-                             _source_includes=["document_id", "name"],
-                             request_timeout=40,
-                             query=res_query,
-                             from_=from_value,
-                             size=result_size,
-                             )
-    result = response['hits']['hits']
-    total_hits = response['hits']['total']['value']
-
-    if total_hits == 10000:
-        total_hits = client.count(body={
-            "query": res_query
-        }, index=index_name)['count']
-
-    response_dict = {
-        'total_hits': total_hits,
-        "curr_page": curr_page,
-        "result": result
-    }
-    return JsonResponse(response_dict)
-
-
-def slogan_stackBased_information_export(request, key, slogan_year, selected_year, curr_page, result_size):
-    slogan = Slogan.objects.get(year=slogan_year)
-    keywords = slogan.keywords
-    synonymous = ""
-
-    try:
-        synonymous = SloganSynonymousWords.objects.get(slogan_id__id=slogan.id).words
-    except:
-        print("no synonymous")
-
-    index_name = doctic_doc_index
-
-    word_array = []
-    if synonymous:
-        word_array.extend(synonymous.split("-"))
-    word_array.extend(keywords.split("-"))
-
-    should_query = []
-    for word in word_array:
-        new_q = {"match_phrase": {"attachment.content": word}}
-        should_query.append(new_q)
-
-    res_query = {}
-    if key == 1:
-        res_query = {
-            "bool": {
-                "must": [{"term": {"approval_year": {"value": selected_year}}}],
-                "should": should_query,
-                "minimum_should_match": 1
-            }
-        }
-    else:
-        res_query = {
-            "bool": {
-                "must": [{"term": {"approval_year": {"value": selected_year}}}],
-                "must_not": should_query,
-            }
-        }
-
-    from_value = (curr_page - 1) * result_size
-    response = client.search(index=index_name,
-                             _source_includes=['document_id', 'name'],
-                             request_timeout=40,
-                             query=res_query,
-                             from_=from_value,
-                             size=result_size,
-                             )
-
-    result = response['hits']['hits']
-
-    result_range = str(from_value) + " تا " + str(from_value + len(result))
-
-    paragraph_list = [doc['_source']['name'] for doc in result]
-
-    file_dataframe = pd.DataFrame(paragraph_list, columns=["نام سند"])
-    file_dec = ""
-    if key == 1:
-        file_dec = "دارای حداقل واژه"
-    else:
-        file_dec = "بدون واژه"
-    file_name = "اسناد " + file_dec + " مربوط به شعار سال " + str(slogan_year) + " در سال " + str(
-        selected_year) + " از " + result_range + " " + ".xlsx"
-
-    file_path = os.path.join(config.MEDIA_PATH, file_name)
-    file_dataframe.to_excel(file_path, index=False)
-
-    return JsonResponse({"file_name": file_name})
-
-
 def save_topic_label(request, topic_id, username, label):
     result_response = ""
 
@@ -3231,7 +2484,7 @@ def confirm_email(user):
     send_mail(subject='کد تایید ایمیل', message=template, from_email=settings.EMAIL_HOST_USER,recipient_list=[user.email])
     
 def resend_email(request):
-    return render(request, 'doc/user_templates/Resend-Email.html')
+    return render(request, 'doc/user_templates/resend_email.html')
 
 def resend_email_code(request, email):
     users = User.objects.filter(email=email)
@@ -3249,7 +2502,7 @@ def email_check(request, user_id, token):
     except:
         user_id = ""
 
-    return render(request, 'doc/user_templates/Confirm-Email.html', {"url_is_valid": url_is_valid, "user_id": user_id, "token": token})
+    return render(request, 'doc/user_templates/confirm_email.html', {"url_is_valid": url_is_valid, "user_id": user_id, "token": token})
 
 def user_activation(request, user_id, token, code):
     user = User.objects.get(pk=user_id)
@@ -3290,465 +2543,6 @@ def SaveUser(request, firstname, lastname,email, phonenumber, role, username, pa
         confirm_email(user)
 
     return JsonResponse({"status": "OK"})
-
-
-def filter_rahbari_fields_COLUMN(res_query, type_name, label_name_list,
-                                 from_year, to_year, rahbari_type):
-    if type_name != "همه":
-        type_name = arabic_preprocessing(type_name)
-        type_name_query = {
-            "term": {
-                "type.keyword": type_name
-            }
-        }
-        res_query['bool']['filter'].append(type_name_query)
-
-    # ---------------------------------------------------------
-    print(label_name_list)
-
-    label_name_list = label_name_list.replace(",", "__")
-    if label_name_list.replace("__OR", "") != 'همه' and label_name_list.replace("__OR", "") != "0":
-        label_name_list = label_name_list.split("__")
-        if label_name_list[-1] == "OR":
-            label_name_list = label_name_list[:-1]
-            my_query = {
-                "bool": {
-                    "should": []
-                }
-            }
-            for label in label_name_list:
-                query = {
-                    "term": {
-                        "labels.keyword": label
-                    }
-                }
-                my_query['bool']['should'].append(query)
-
-            res_query['bool']['filter'].append(my_query)
-        else:
-            for label in label_name_list:
-                if label != "همه":
-                    query = {
-                        "term": {
-                            "labels.keyword": label
-                        }
-                    }
-                    res_query['bool']['filter'].append(query)
-
-    # ----------------------------------------------------------
-    First_Year = 1000
-    Last_Year = 1403
-
-    if from_year != "همه" or to_year != "همه":
-        from_year = int(from_year) if from_year != "همه" else First_Year
-        to_year = int(to_year) if to_year != "همه" else Last_Year
-
-        year_query = {
-            "range": {
-                "rahbari_year": {
-                    "gte": from_year,
-                    "lte": to_year,
-                }
-            }
-        }
-
-        res_query['bool']['filter'].append(year_query)
-
-    # ----------------------------------------------------------
-    if rahbari_type.replace("__OR", "") != '0':
-        rahbari_type_list = rahbari_type.split("__")
-
-        if rahbari_type_list[-1] == "OR":
-            rahbari_type_list = rahbari_type_list[:-1]
-            my_query = {
-                "bool": {
-                    "should": []
-                }
-            }
-            for type_id in rahbari_type_list:
-                type_name = RahbariType.objects.get(id=type_id).name
-                query = {
-                    "term": {
-                        "rahbari_type.keyword": type_name
-                    }
-                }
-                my_query['bool']['should'].append(query)
-
-            res_query['bool']['filter'].append(my_query)
-        else:
-            for type_id in rahbari_type_list:
-                type_name = RahbariType.objects.get(id=type_id).name
-                label_name_query = {
-                    "term": {
-                        "labels.keyword": type_name
-                    },
-                }
-                res_query['bool']['filter'].append(label_name_query)
-
-    # print(res_query)
-    return res_query
-
-
-def Search_Rahbari_Column_ES(request, country_id, type_name, label_name_list,
-                             from_year, to_year, rahbari_type, place, text, search_type, curr_page, page_size):
-    res_query = {
-        "bool": {}
-    }
-
-    ALL_FIELDS = False
-
-    res_query['bool']['filter'] = []
-
-    res_query = filter_rahbari_fields_COLUMN(res_query, type_name, label_name_list,
-                                             from_year, to_year, rahbari_type)
-
-    if text != "empty":
-        res_query["bool"]["must"] = []
-
-        if search_type == 'exact':
-            res_query = exact_search_text(res_query, place, text, ALL_FIELDS)
-        else:
-            res_query = boolean_search_text(res_query, place, text, search_type, ALL_FIELDS)
-
-    country_obj = Country.objects.get(id=country_id)
-    index_name = standardIndexName(country_obj, Document.__name__)
-
-    from_value = (curr_page - 1) * page_size
-
-    response = client.search(index=index_name,
-                             _source_includes=['document_id', 'name', 'raw_file_name',
-                                               'rahbari_date', 'rahbari_year',
-                                               'labels', 'type'],
-                             request_timeout=40,
-                             query=res_query,
-                             from_=from_value,
-                             size=page_size
-
-                             )
-
-    result = response['hits']['hits']
-
-    total_hits = response['hits']['total']['value']
-
-    if total_hits == 10000:
-        total_hits = client.count(body={
-            "query": res_query
-        }, index=index_name, doc_type='_doc')['count']
-
-    return JsonResponse({
-        "result": result,
-        'total_hits': total_hits,
-        "curr_page": curr_page})
-
-
-def Search_Rahbari_Paragraph_Column_ES(request, country_id, type_name, label_name_list,
-                                       from_year, to_year, place, text, search_type, field_name, field_value, sentiment,
-                                       curr_page,
-                                       result_size):
-    res_query = {
-        "bool": {}
-    }
-
-    res_agg = {
-        "rahbari-sentiment-agg": {
-            "terms": {
-                "field": "sentiment.keyword",
-                "size": bucket_size
-            }
-        },
-    }
-
-    ALL_FIELDS = False
-
-    res_query['bool']['filter'] = [{
-        "term": {
-            field_name: field_value
-        }
-    }]
-
-    if sentiment != "empty":
-        res_query['bool']['filter'].append({
-            "term": {
-                "sentiment.keyword": sentiment
-            }
-        })
-
-    label_name_list = label_name_list.split(',')
-    res_query = filter_rahbari_fields_COLUMN(res_query, type_name, label_name_list,
-                                             from_year, to_year)
-
-    if text != "empty":
-        res_query["bool"]["must"] = []
-
-        if search_type == 'exact':
-            res_query = exact_search_text(res_query, place, text, ALL_FIELDS)
-        else:
-            res_query = boolean_search_text(res_query, place, text, search_type, ALL_FIELDS)
-
-    print(res_query)
-
-    country_obj = Country.objects.get(id=country_id)
-    index_name = standardIndexName(country_obj, FullProfileAnalysis.__name__)
-
-    from_value = (curr_page - 1) * result_size
-    response = client.search(index=index_name,
-                             _source_includes=['sentiment', 'document_id', 'paragraph_id', 'document_name',
-                                               'attachment.content'],
-                             request_timeout=40,
-                             query=res_query,
-                             from_=from_value,
-                             size=result_size,
-                             aggregations=res_agg,
-                             highlight={
-                                 "order": "score",
-                                 "fields": {
-                                     "attachment.content":
-                                         {"pre_tags": ["<span class='text-primary fw-bold'>"], "post_tags": ["</span>"],
-                                          "number_of_fragments": 0
-                                          }
-                                 }}
-                             )
-
-    result = response['hits']['hits']
-
-    total_hits = response['hits']['total']['value']
-    aggregations = response['aggregations']
-
-    if total_hits == 10000:
-        total_hits = client.count(body={
-            "query": res_query
-        }, index=index_name, doc_type='_doc')['count']
-
-    return JsonResponse({
-        "result": result,
-        'total_hits': total_hits,
-        "curr_page": curr_page,
-        "aggregations": aggregations})
-
-
-def filter_rahbari_fields(res_query, type_id, label_name, from_year, to_year, rahbari_type, document_ids):
-    if type_id != 0:
-        type_name = Type.objects.get(id=type_id).name
-        type_name = arabic_preprocessing(type_name)
-        type_name_query = {
-            "term": {
-                "type.keyword": type_name
-            }
-        }
-        res_query['bool']['filter'].append(type_name_query)
-    # ---------------------------------------------------------
-
-    if label_name.replace("__OR", "") != '0':
-        label_list = label_name.split("__")
-
-        if label_list[-1] == "OR":
-            label_list = label_list[:-1]
-            my_query = {
-                "bool": {
-                    "should": []
-                }
-            }
-            for label_name in label_list:
-                query = {
-                    "term": {
-                        "labels.keyword": label_name
-                    }
-                }
-                my_query['bool']['should'].append(query)
-
-            res_query['bool']['filter'].append(my_query)
-        else:
-            for label_name in label_list:
-                label_name_query = {
-                    "term": {
-                        "labels.keyword": label_name
-                    },
-                }
-                res_query['bool']['filter'].append(label_name_query)
-    # ----------------------------------------------------------
-    First_Year = 1000
-    Last_Year = 1403
-
-    if from_year != 0 or to_year != 0:
-        from_year = from_year if from_year != 0 else First_Year
-        to_year = to_year if to_year != 0 else Last_Year
-
-        year_query = {
-            "range": {
-                "rahbari_year": {
-                    "gte": from_year,
-                    "lte": to_year,
-                }
-            }
-        }
-
-        res_query['bool']['filter'].append(year_query)
-
-    # ----------------------------------------------------------
-    if rahbari_type.replace("__OR", "") != '0':
-        rahbari_type_list = rahbari_type.split("__")
-
-        if rahbari_type_list[-1] == "OR":
-            rahbari_type_list = rahbari_type_list[:-1]
-            my_query = {
-                "bool": {
-                    "should": []
-                }
-            }
-            for type_id in rahbari_type_list:
-                type_name = RahbariType.objects.get(id=type_id).name
-                query = {
-                    "term": {
-                        "rahbari_type.keyword": type_name
-                    }
-                }
-                my_query['bool']['should'].append(query)
-
-            res_query['bool']['filter'].append(my_query)
-        else:
-            for type_id in rahbari_type_list:
-                type_name = RahbariType.objects.get(id=type_id).name
-                label_name_query = {
-                    "term": {
-                        "labels.keyword": type_name
-                    },
-                }
-                res_query['bool']['filter'].append(label_name_query)
-
-    if document_ids != '0':
-        document_ids = document_ids.split("__")
-        my_query = {
-            "bool": {
-                "should": []
-            }
-        }
-        for document_id in document_ids:
-            query = {
-                "term": {
-                    "document_id": document_id
-                }
-            }
-            my_query['bool']['should'].append(query)
-
-        res_query['bool']['filter'].append(my_query)
-
-    return res_query
-
-
-def SearchRahbari_ES(request, country_id, type_id, label_name, from_year, to_year, rahbari_type, document_ids, place,
-                     text, search_type, with_rahbari_type, curr_page, page_size):
-    fields = [type_id, label_name, from_year, to_year, rahbari_type, document_ids]
-
-    res_query = {
-        "bool": {}
-    }
-
-    ALL_FIELDS = True
-
-    if not all(field == 0 for field in fields):
-        ALL_FIELDS = False
-        res_query['bool']['filter'] = []
-        res_query = filter_rahbari_fields(res_query, type_id, label_name, from_year, to_year, rahbari_type,
-                                          document_ids)
-
-    if text != "empty":
-        res_query["bool"]["must"] = []
-
-        if search_type == 'exact':
-            res_query = exact_search_text(res_query, place, text, ALL_FIELDS)
-        else:
-            res_query = boolean_search_text(res_query, place, text, search_type, ALL_FIELDS)
-
-
-    country_obj = Country.objects.get(id=country_id)
-    index_name = standardIndexName(country_obj, Document.__name__)
-
-
-    if with_rahbari_type == 1:
-        keywords_list = RahbariTypeKeyword.objects.all()
-        should_query = {
-            'bool': {
-                'should': []
-            }
-        }
-        for key in keywords_list:
-            res = {
-                "match_phrase": {
-                    "attachment.content": key.keyword
-                }
-            }
-            should_query["bool"]["should"].append(res)
-        should_query["bool"]["minimum_should_match"] = 1
-        res_query['bool']["must"].append(should_query)
-
-    # index_name = "rahbari_document"
-
-    # ---------------------- Get Chart Data -------------------------
-    res_agg = {
-        "rahbari-type-agg": {
-            "terms": {
-                "field": "type.keyword",
-                "size": bucket_size
-            }
-        },
-        "rahbari-year-agg": {
-            "terms": {
-                "field": "rahbari_year",
-                "size": bucket_size
-            }
-        },
-        "rahbari-labels-agg": {
-            "terms": {
-                "field": "labels.keyword",
-                "size": bucket_size
-            }
-        },
-        "rahbari-rahbari_type-agg": {
-            "terms": {
-                "field": "rahbari_type.keyword",
-                "size": bucket_size
-            }
-        }
-    }
-
-    from_value = (curr_page - 1) * page_size
-
-    response = client.search(index=index_name,
-                             _source_includes=['document_id', 'name', 'raw_file_name',
-                                               'rahbari_date', 'rahbari_year',
-                                               'labels', 'type', 'rahbari_type'],
-                             request_timeout=40,
-                             query=res_query,
-                             aggregations=res_agg,
-                             from_=from_value,
-                             size=page_size
-                             )
-
-    result = response['hits']['hits']
-
-    total_hits = response['hits']['total']['value']
-
-    aggregations = response['aggregations']
-
-    if total_hits == 10000:
-        total_hits = client.count(body={
-            "query": res_query
-        }, index=index_name, doc_type='_doc')['count']
-
-    response = client.search(index=index_name,
-                             request_timeout=40,
-                             query=res_query
-                             )
-    max_score = response['hits']['hits'][0]['_score'] if total_hits > 0 else 1
-    max_score = max_score if max_score > 0 else 1
-
-    return JsonResponse({
-        "result": result,
-        'total_hits': total_hits,
-        'max_score': max_score,
-        "curr_page": curr_page,
-        'aggregations': aggregations})
-
 
 def SetMyUserProfile(request):
     if request.method != 'POST':
@@ -4336,61 +3130,6 @@ def AILDASubjectChartTopic(request, topic_id):
                          'correlation_score': correlation_score})
 
 
-def GetLDAForDocByID(request, document_id):
-    doc = Document.objects.get(id=document_id)
-    language = Country.objects.get(id=doc.country_id.id).language
-    topics = AILDATopic.objects.filter(country__id=doc.country_id.id)
-    topic_documents = []
-
-    for i in range(len(topics)):
-        temp = AILDADocToTopic.objects.filter(topic__id=topics[i].id, document__id=document_id)
-        if len(temp) > 0:
-            topic_words = ""
-            for j in topics[i].words.items():
-                topic_words += j[0] + "، "
-
-            topic_documents.append({
-                "topic_id": topics[i].id,
-                "topic_words": topic_words[:-2],
-                "score": temp[0].score
-            })
-            # else:
-            #     topic_documents.append({
-            #         "topic_id": topics[i].id,
-            #         "topic_words": topics[i].words,
-            #         "score": 0
-            #     })
-
-            others_doc_with_this_topic = []
-
-            sub_temp = AILDADocToTopic.objects.filter(topic__id=topics[i].id)
-            for j in range(len(sub_temp)):
-                if sub_temp[j].document.id != document_id:
-                    others_doc_with_this_topic.append({
-                        "document_id": sub_temp[j].document.id,
-                        "document_name": sub_temp[j].document.name,
-                        "score": sub_temp[j].score
-                    })
-
-            others_doc_with_this_topic = sorted(others_doc_with_this_topic, key=lambda k: k['score'], reverse=True)
-            topic_documents[-1]['others_doc_with_this_topic'] = others_doc_with_this_topic
-
-    topic_documents = sorted(topic_documents, key=lambda k: k['score'], reverse=True)
-
-    for i in range(len(topic_documents)):
-        topic_documents[i]['topic_name'] = 'موضوع ' + str(i + 1)
-
-    _id = None
-    _name = None
-    return JsonResponse({
-        "document_id": doc.id,
-        "document_name": doc.name,
-        "_id": _id,
-        "_name": _name,
-        'topic_documents': topic_documents
-    })
-
-
 def get_stopword_list(file_name):
     stop_words = []
 
@@ -4404,25 +3143,6 @@ def get_stopword_list(file_name):
     return stop_words
 
 
-def GetDoticSimDocument(request, document_id):
-    sim_doc_list = list(
-        RahbariSimilarity.objects.filter(doc1__id=document_id).values_list('doc2__id', 'doc2__name').annotate(
-            Avg('similarity'))[:10])
-
-    result_similar_docs = []
-
-    for i in range(len(sim_doc_list)):
-        doc2_id = sim_doc_list[i][0]
-        res_para_count = RahbariParagraphSimilarity.objects.filter(para1__document_id__id=document_id,
-                                                                   para2__document_id__id=doc2_id).count()
-
-        if res_para_count > 0:
-            temp_list = list(sim_doc_list[i])
-            temp_list.append(res_para_count)
-            result_similar_docs.append(temp_list)
-
-    print(result_similar_docs)
-    return JsonResponse({'result_similar_docs': result_similar_docs})
 
 
 def GetDoticSimDocument_ByTitle(request, document_name):
@@ -4483,177 +3203,6 @@ def GetDoticSimDocument_ByTitle(request, document_name):
         result_doc_list.append([doc_id, doc_name, doc_score])
 
     return JsonResponse({'result_doc_list': result_doc_list})
-
-
-def GetDoticSimDocument_ByLabels(request, document_id):
-    labels = Rahbari.objects.get(document_id__id=document_id).labels
-
-    if labels[-1] == "؛":
-        labels = labels[:-1]
-    label_list = labels.split("؛")
-
-    if '' in label_list:
-        label_list.remove('')
-
-    res_query = {
-        'bool': {
-            'filter': [
-                {
-                    'terms':
-                        {
-                            'level_name.keyword': ['اسناد بالادستی', 'قانون']
-                        }
-                }
-            ],
-            'must': {
-                'bool': {
-                    'should': []
-                }
-            }
-        }
-    }
-    result_doc_list = []
-
-    if labels != 'نامشخص':
-        for label in label_list:
-            if label.strip() != '':
-                attachment_content_query = {
-                    'match_phrase': {
-                        "attachment.content": label.strip()
-                    }
-                }
-                res_query['bool']['must']['bool']['should'].append(attachment_content_query)
-
-        response = client.search(index=doctic_doc_index,
-                                 _source_includes=['name'],
-                                 request_timeout=40,
-                                 query=res_query,
-                                 size=10
-                                 )
-
-        result_doc = response['hits']['hits']
-
-        for doc in result_doc:
-            doc_id = doc['_id']
-            doc_name = doc['_source']['name']
-            doc_score = doc['_score']
-            result_doc_list.append([doc_id, doc_name, doc_score])
-
-    return JsonResponse({'result_doc_list': result_doc_list,
-                         'labels': labels})
-
-
-def GetDetail_DoticSimDocument_ByLabels(request, src_document_id, dest_document_id):
-    labels = Rahbari.objects.get(document_id__id=src_document_id).labels
-
-    if labels[-1] == "؛":
-        labels = labels[:-1]
-    label_list = labels.split("؛")
-
-    res_query = {
-        'bool': {
-            'filter': [
-                {
-                    'term':
-                        {
-                            'document_id': dest_document_id
-                        }
-                }
-            ],
-            'must': {
-                'bool': {
-                    'should': []
-                }
-            }
-        }
-    }
-
-    if labels != 'نامشخص':
-        for label in label_list:
-            if label.strip() != '':
-                attachment_content_query = {
-                    'match_phrase': {
-                        "attachment.content": label.strip()
-                    }
-                }
-                res_query['bool']['must']['bool']['should'].append(attachment_content_query)
-
-        print(res_query)
-        response = client.search(index=doctic_para_index,
-                                 request_timeout=40,
-                                 query=res_query,
-                                 size=100,
-                                 highlight={
-                                     "order": "score",
-                                     "fields": {
-                                         "attachment.content":
-                                             {"pre_tags": ["<span class='text-primary fw-bold'>"],
-                                              "post_tags": ["</span>"],
-                                              "number_of_fragments": 0
-                                              }
-                                     }
-                                 }
-
-                                 )
-
-        result_para = response['hits']['hits']
-
-    return JsonResponse({'result_para': result_para})
-
-
-def GetParaSimilarity(request, doc1_id, doc2_id):
-    result = []
-    res_para = RahbariParagraphSimilarity.objects.filter(para1__document_id__id=doc1_id,
-                                                         para2__document_id__id=doc2_id).order_by("-similarity")[:10]
-
-    for row in res_para:
-        src_para = row.para1.text
-        src_doc_id = row.para1.document_id.id
-        src_doc_name = row.para1.document_id.name
-
-        dest_doc_id = row.para2.document_id.id
-        dest_doc_name = row.para2.document_id.name
-
-        dest_para = row.highlighted_text.replace(
-            '<em>', '<span class="text-primary bold" >').replace(
-            '</em>', '</span>') if row.highlighted_text != None else row.para2.text
-
-        if row.highlighted_text != None:
-            highlighted_text = row.highlighted_text.split('<em>')[1:]
-            for i in range(len(highlighted_text)):
-                highlighted_text[i] = highlighted_text[i].split('</em>')[0]
-
-            highlighted_text = set(highlighted_text)
-
-            for term in highlighted_text:
-                h_term = '<span class="text-primary bold"> ' + term + '</span>'
-                src_para = src_para.replace(term, '' + h_term)
-
-        score = row.similarity
-        res = {
-            "src_para": src_para,
-            "src_doc_id": src_doc_id,
-            "src_doc_name": src_doc_name,
-            "dest_para": dest_para,
-            "dest_doc_id": dest_doc_id,
-            "dest_doc_name": dest_doc_name,
-            "score": score,
-        }
-        result.append(res)
-
-    return JsonResponse({'result': result})
-
-
-def GetKeywordsGeneralDefinitionByDocumentId(request, document_id, word):
-    keyword_result = DocumentGeneralDefinition.objects.get(keyword=word, document_id=document_id)
-    keyword_information = {}
-
-    keyword_information['doc_id'] = keyword_result.document_id.id
-    keyword_information['doc_name'] = keyword_result.document_id.name
-
-    keyword_information['croped_text'] = keyword_result.keyword + ': ' + keyword_result.text
-
-    return JsonResponse({'keyword_information': keyword_information})
 
 
 def GetDocumentById(request, id):
@@ -4853,38 +3402,23 @@ def GetSearchParameters(request, country_id):
         parameters_result[para_name] = options
 
     country = Country.objects.get(id=country_id)
-    sub_areas = SubjectSubArea.objects.filter(subject_area_id__language=country.language).values('id', 'name',
-                                                                                                 'subject_area_id__id',
-                                                                                                 'subject_area_id__name')
-
-    subject_area = {}
-    for sub_area in sub_areas:
-        if str(sub_area['subject_area_id__id']) + "#" + sub_area['subject_area_id__name'] in subject_area.keys():
-            subject_area[str(sub_area['subject_area_id__id']) + "#" + sub_area['subject_area_id__name']]. \
-                append((sub_area['id'], sub_area['name']))
-        else:
-            subject_area[str(sub_area['subject_area_id__id']) + "#" + sub_area['subject_area_id__name']] = [
-                (sub_area['id'], sub_area['name'])]
+    # sub_areas = SubjectSubArea.objects.filter(subject_area_id__language=country.language).values('id', 'name',
+    #                                                                                              'subject_area_id__id',
+    #                                                                                              'subject_area_id__name')
+    #
+    # subject_area = {}
+    # for sub_area in sub_areas:
+    #     if str(sub_area['subject_area_id__id']) + "#" + sub_area['subject_area_id__name'] in subject_area.keys():
+    #         subject_area[str(sub_area['subject_area_id__id']) + "#" + sub_area['subject_area_id__name']]. \
+    #             append((sub_area['id'], sub_area['name']))
+    #     else:
+    #         subject_area[str(sub_area['subject_area_id__id']) + "#" + sub_area['subject_area_id__name']] = [
+    #             (sub_area['id'], sub_area['name'])]
 
     parameters_result['revoked_size'] = "<option value='جزئی' >جزئی</option>" + "<option value='کلی' >کلی</option>"
 
-    return JsonResponse({"parameters_result": parameters_result, 'subject_area': subject_area}, )
+    return JsonResponse({"parameters_result": parameters_result, 'subject_area': "subject_area"}, )
 
-
-def GetTypeByCountryId(request, country_id):
-    type_list = Type.objects.all().order_by("id")
-    result = []
-    for row in type_list:
-        type_id = row.id
-        type_name = row.name
-        type_color = row.color
-        res = {
-            "id": type_id,
-            "type": type_name,
-            "color": type_color.replace("\n", "")
-        }
-        result.append(res)
-    return JsonResponse({'documents_type_list': result})
 
 
 def Local_preprocessing(text):
@@ -4903,25 +3437,7 @@ def Local_preprocessing(text):
 def filter_doc_fields(res_query, level_id, subject_id, type_id, approval_reference_id,
                       from_year, to_year, from_advisory_opinion_count, from_interpretation_rules_count,
                       revoked_type_id, organization_type_id):
-    if approval_reference_id != 0:
-        approval_reference_name = ApprovalReference.objects.get(id=approval_reference_id).name
-        approval_reference_name = arabic_preprocessing(approval_reference_name)
-        approval_ref_query = {
-            "term": {
-                "approval_reference_name.keyword": approval_reference_name
-            }
-        }
-        res_query['bool']['filter'].append(approval_ref_query)
 
-    # ---------------------------------------------------------
-    if level_id != 0:
-        level_name = Level.objects.get(id=level_id).name
-        level_query = {
-            "term": {
-                "level_name.keyword": level_name
-            }
-        }
-        res_query['bool']['filter'].append(level_query)
 
     # ---------------------------------------------------------
     if subject_id != 0:
@@ -4932,21 +3448,6 @@ def filter_doc_fields(res_query, level_id, subject_id, type_id, approval_referen
             }
         }
         res_query['bool']['filter'].append(subject_query)
-
-    # ---------------------------------------------------------
-    if type_id != 0:
-        type_name = Type.objects.get(id=type_id).name
-
-        type_name = Local_preprocessing(type_name)
-
-        type_query = {
-            "term": {
-                "type_name.keyword": type_name
-            }
-        }
-        res_query['bool']['filter'].append(type_query)
-
-    # ---------------------------------------------------------
 
 
     # ---------------------------------------------------------
@@ -5133,25 +3634,6 @@ def SearchDocument_ES(request, country_id, level_id, subject_id, type_id, approv
 def filter_doc_actor_fields(res_query, level_id, subject_id, type_id, approval_reference_id,
                             from_year, to_year, from_advisory_opinion_count, from_interpretation_rules_count,
                             revoked_type_id, organization_type_id):
-    if approval_reference_id != 0:
-        approval_reference_name = ApprovalReference.objects.get(id=approval_reference_id).name
-        approval_reference_name = arabic_preprocessing(approval_reference_name)
-        approval_ref_query = {
-            "term": {
-                "document_approval_reference_name.keyword": approval_reference_name
-            }
-        }
-        res_query['bool']['filter'].append(approval_ref_query)
-
-    # ---------------------------------------------------------
-    if level_id != 0:
-        level_name = Level.objects.get(id=level_id).name
-        level_query = {
-            "term": {
-                "document_level_name.keyword": level_name
-            }
-        }
-        res_query['bool']['filter'].append(level_query)
 
     # ---------------------------------------------------------
     if subject_id != 0:
@@ -5162,19 +3644,6 @@ def filter_doc_actor_fields(res_query, level_id, subject_id, type_id, approval_r
             }
         }
         res_query['bool']['filter'].append(subject_query)
-
-    # ---------------------------------------------------------
-    if type_id != 0:
-        type_name = Type.objects.get(id=type_id).name
-
-        type_name = Local_preprocessing(type_name)
-
-        type_query = {
-            "term": {
-                "document_type_name.keyword": type_name
-            }
-        }
-        res_query['bool']['filter'].append(type_query)
 
     # ---------------------------------------------------------
     if organization_type_id != '0':
@@ -5527,122 +3996,7 @@ def GetActorsChartData_ES_2(request, country_id, level_id, subject_id, type_id, 
                          })
 
 
-def SearchGeneralDocumentsDefinition(request, country_id, mode, text):
-    words = arabic_preprocessing(text).split(" ")
-    if mode.lower() == 'or':
-        document_definitions = DocumentGeneralDefinition.objects.filter(
-            reduce(operator.or_, (Q(keyword__icontains=word) for word in words)),
-            document_id__country_id__id=country_id)
 
-    elif mode.lower() == 'and':
-        document_definitions = DocumentGeneralDefinition.objects.filter(
-            reduce(operator.and_, (Q(keyword__icontains=word) for word in words)),
-            document_id__country_id__id=country_id)
-    else:
-        document_definitions = DocumentGeneralDefinition.objects.filter(keyword__icontains=text,
-                                                                        document_id__country_id__id=country_id)
-
-    keywords_information = {}
-
-    for d in document_definitions:
-        keyword = d.keyword
-        doc_id = d.document_id.id
-        doc_name = d.document_id.name
-        doc_info = {'id': doc_id, 'name': doc_name}
-
-        if keyword not in keywords_information:
-            keywords_information[keyword] = [doc_info]
-        else:
-            document_list = keywords_information[keyword]
-            document_list.append(doc_info)
-            keywords_information[keyword] = document_list
-    return JsonResponse({'keywords_information': keywords_information})
-
-
-def Get_Documents_RefGraph_ES(request, country_id, level_id, subject_id, type_id, approval_reference_id, from_year,
-                              to_year, from_advisory_opinion_count,
-                              from_interpretation_rules_count, revoked_type_id, place, text, search_type, curr_page):
-    organization_type_id = '0'
-
-    fields = [level_id, subject_id, type_id, approval_reference_id, from_year, to_year,
-              from_advisory_opinion_count, from_interpretation_rules_count, revoked_type_id, organization_type_id]
-
-    res_query = {
-        "bool": {}
-    }
-
-    ALL_FIELDS = True
-
-    if not all(field == 0 for field in fields):
-        ALL_FIELDS = False
-        res_query['bool']['filter'] = []
-        res_query = filter_doc_fields(res_query, level_id, subject_id, type_id, approval_reference_id, from_year,
-                                      to_year, from_advisory_opinion_count, from_interpretation_rules_count,
-                                      revoked_type_id, organization_type_id)
-
-    if text != "empty":
-        res_query["bool"]["must"] = []
-
-        if search_type == 'exact':
-            res_query = exact_search_text(res_query, place, text, ALL_FIELDS)
-        else:
-            res_query = boolean_search_text(res_query, place, text, search_type, ALL_FIELDS)
-
-    country_obj = Country.objects.get(id=country_id)
-    index_name = standardIndexName(country_obj, Document.__name__)
-
-    response = client.search(index=index_name,
-                             _source_includes=['document_id'],
-                             request_timeout=40,
-                             query=res_query,
-                             size=500
-
-                             )
-
-    documents_id_list = [row['_id'] for row in response['hits']['hits']]
-
-    graph_edge_list = Graph.objects.filter(
-        src_document_id__id__in=documents_id_list, dest_document_id__id__in=documents_id_list)
-
-    nodes_list = []
-    added_node = []
-    edges_list = []
-    added_edge = []
-
-    for edge in graph_edge_list:
-
-        src_id = str(edge.src_document_id_id)
-        src_name = edge.src_document_id.name
-        src_color = str(edge.src_document_id.type_id.color) if edge.src_document_id.type_id is not None else "#000000"
-
-        src_node = {"id": src_id, "name": src_name, "style": {"fill": src_color}}
-
-        dest_id = str(edge.dest_document_id_id)
-        dest_name = edge.dest_document_id.name
-        dest_color = str(
-            edge.dest_document_id.type_id.color) if edge.dest_document_id.type_id is not None else "#000000"
-
-        dest_node = {"id": dest_id, "name": dest_name, "style": {"fill": dest_color}}
-
-        weight = edge.weight
-
-        if src_id not in added_node:
-            nodes_list.append(src_node)
-            added_node.append(src_id)
-
-        if dest_id not in added_node:
-            nodes_list.append(dest_node)
-            added_node.append(dest_id)
-
-        edge_obj = {"source": src_id, "source_name": src_name,
-                    "target": dest_id, "target_name": dest_name,
-                    "weight": weight}
-
-        if [dest_id, src_id] not in added_edge and src_id != dest_id:
-            edges_list.append(edge_obj)
-            added_edge.append([src_id, dest_id])
-
-    return JsonResponse({"Nodes_data": nodes_list, "Edges_data": edges_list})
 
 
 def filter_doc_fields_COLUMN(res_query, level_name, subject_name, type_name, approval_reference_name,
@@ -6268,25 +4622,6 @@ def self(request):
     return JsonResponse({"name": user.first_name + ' ' + user.last_name + ' '})
 
 
-def GetGraphSimilarityMeasureByCountry(request, country_id):
-    graph_list = Graph_Cube.objects.filter(country_id_id=country_id).values('measure_id').distinct()
-    result = []
-    for row in graph_list:
-        measure_id = row["measure_id"]
-        measure_name = Measure.objects.get(id=measure_id).persian_name
-        res = {"id": measure_id, "name": measure_name}
-        result.append(res)
-    return JsonResponse({'measure_list': result})
-
-
-def GetGraphDistribution(request, country_id, measure_id):
-    graph_cube = Graph_Distribution_Cube.objects.filter(country_id_id=country_id, measure_id_id=measure_id)
-    result = []
-    for row in graph_cube:
-        res = {"similarity": row.threshold, "count": row.edge_count}
-        result.append(res)
-
-    return JsonResponse({'graph_distribution': result})
 
 
 def GetSubjectsByCountryId(request, country_id):
@@ -6304,16 +4639,6 @@ def GetSubjectsByCountryId(request, country_id):
     return JsonResponse({'documents_subject_list': result})
 
 
-def GetGraphNodesEdges(request, country_id, measure_id, minimum_weight):
-    Graph_Cube_OBJ = Graph_Cube.objects.get(country_id_id=country_id, measure_id__id=measure_id,
-                                            threshold=float(minimum_weight))
-
-    Nodes_data = Graph_Cube_OBJ.nodes_data
-    Edges_data = Graph_Cube_OBJ.edges_data
-
-    return JsonResponse({'Nodes_data': Nodes_data, "Edges_data": Edges_data})
-
-
 def GetDocumentsByCountryId_Modal(request, country_id=None, start_index=None, end_index=None):
     data = list(CUBE_DocumentJsonList.objects.filter(country_id__id=country_id)
                 .values_list('json_text', flat=True))
@@ -6322,44 +4647,6 @@ def GetDocumentsByCountryId_Modal(request, country_id=None, start_index=None, en
         data = data[start_index: end_index]
 
     return JsonResponse({'documentsList': data, 'document_count': doc_count})
-
-
-def GetPersianDefinitionByDocumentId(request,
-                                     document_id):  #######################  بخش تعاریف و اصطلاحات - کلید واژه‌های نهایی
-    document_definition = DocumentDefinition.objects.get(
-        document_id_id=document_id)
-    definition_text = document_definition.text
-    definition_keywords = ""
-    if definition_text != None:
-        keyword_list = ExtractedKeywords.objects.filter(
-            definition_id=document_definition)
-        for keyword in keyword_list:
-            definition_keywords += keyword.word + " - "
-        definition_keywords = definition_keywords[:-3]
-    else:
-        definition_text = "بخش تعاریف و اصطلاحات برای این سند توسط سامانه پیدا نشد."
-
-    if definition_keywords == "":
-        definition_keywords = "هیچ کلمه کلیدی برای این سند توسط سامانه پیدا نشد."
-
-    result = {"id": document_definition.id,
-              "text": definition_text,
-              "keywords": definition_keywords
-              }
-    return JsonResponse({'documents_definition': [result]})
-
-
-def GetGeneralDefinition(request, document_id):  ######################  بخش تعاریف کلی
-    general_definitions = DocumentGeneralDefinition.objects.filter(document_id=document_id)
-    result = []
-    for general_definition in general_definitions:
-        word = general_definition.keyword
-        definition = general_definition.text
-        is_abbreviation = general_definition.is_abbreviation
-        result.append({'word': word, 'definition': definition, 'is_abbreviation': is_abbreviation})
-
-    return JsonResponse({'result': result})
-
 
 def GetGeneralDefinition2(request, document_id):
     result = []
@@ -6388,129 +4675,6 @@ def GetGeneralDefinition2(request, document_id):
                 result.append({'word': word, 'definition': definition})
 
     return JsonResponse({'result': result})
-
-
-def GetTFIDFByDocumentId(request, document_id):
-    documents_tfidf_list = DocumentTFIDF.objects.filter(
-        document_id_id=document_id).order_by('-weight')[:50]
-    result = []
-    for row in documents_tfidf_list:
-        res = {"id": row.id,
-               "word": row.word,
-               "count": row.count,
-               "weight": row.weight,
-               }
-        result.append(res)
-    return JsonResponse({'documents_tfidf_list': result})
-
-
-def GetNGramByDocumentId(request, document_id, gram):
-    document_ngram_list = DocumentNgram.objects.filter(
-        document_id_id=document_id, gram=gram).order_by('-score', '-count')[:50]
-    result = []
-    for row in document_ngram_list:
-        res = {"id": row.id,
-               "text": row.text,
-               "count": row.count,
-               "score": row.score,
-               }
-        result.append(res)
-    return JsonResponse({'document_ngram_list': result})
-
-
-def GetReferencesByDocumentId(request, document_id, type):
-    if type == 1:
-        document_refrences_list = Graph.objects.filter(src_document_id_id=document_id, measure_id_id=2).order_by(
-            '-weight')
-        result = []
-        for row in document_refrences_list:
-            Type = "-"
-            if row.dest_document_id.type_id:
-                Type = row.dest_document_id.type_id.name
-            res = {"id": row.id,
-                   "doc_id": row.dest_document_id_id,
-                   "doc_name": row.dest_document_id.name,
-                   "weight": row.weight,
-                   "doc_level": row.dest_document_id.level_name,
-                   "doc_type_name": Type,
-                   "doc_approval_date": row.dest_document_id.approval_date,
-                   "doc_approval_reference_name": row.dest_document_id.approval_reference_name
-                   }
-            result.append(res)
-    else:  # type == 2
-        document_citation_list = Graph.objects.filter(dest_document_id_id=document_id, measure_id_id=2).order_by(
-            '-weight')
-        result = []
-        for row in document_citation_list:
-            Type = "-"
-            # if row.dest_document_id.type_id:
-            #     Type = row.dest_document_id.type_id.name
-            if row.src_document_id.type_id:
-                Type = row.src_document_id.type_id.name
-            res = {"id": row.id,
-                   "doc_id": row.src_document_id_id,
-                   "doc_name": row.src_document_id.name,
-                   "weight": row.weight,
-                   # "doc_level": row.dest_document_id.level_name,
-                   "doc_level": row.src_document_id.level_name,
-                   "doc_type_name": Type,
-                   # "doc_approval_date": row.dest_document_id.approval_date,
-                   "doc_approval_date": row.src_document_id.approval_date,
-                   # "doc_approval_reference_name": row.dest_document_id.approval_reference_name
-                   "doc_approval_reference_name": row.src_document_id.approval_reference_name
-                   }
-            result.append(res)
-
-    return JsonResponse({'document_references_list': result})
-
-
-def GetSubjectByDocumentId(request, document_id, measure_id):
-    result = []
-    document_name = Document.objects.get(id=document_id).name
-
-    document_subject_list = DocumentSubject.objects.filter(document_id_id=document_id,
-                                                           measure_id_id=measure_id).order_by('-weight')
-    for row in document_subject_list:
-        subject_keywords = DocumentSubjectKeywords.objects.filter(document_id=row.document_id,
-                                                                  subject_keyword_id__subject_id=row.subject_id).order_by(
-            '-count')
-        keywords_text = ""
-        keywords_title = ""
-        special_references = ""
-
-        for key in subject_keywords:
-            keyword = key.subject_keyword_id.word
-            if key.place == "متن":
-                if keyword not in keywords_text:
-                    keywords_text += keyword + \
-                                     " ( " + str(key.count) + " ) " + " - "
-            elif key.place == "عنوان":
-                if keyword not in keywords_title:
-                    keywords_title += keyword + \
-                                      " ( " + str(key.count) + " ) " + " - "
-            elif keyword not in special_references:
-                special_references += keyword + " - "
-
-        weight = row.id
-        if special_references == "":
-            weight = min(weight, 1)
-        else:
-            weight = min(weight, 2)
-
-        keywords_text = keywords_text[:-3]
-        keywords_title = keywords_title[:-3]
-        special_references = special_references[:-3]
-
-        res = {"id": row.id,
-               "subject": row.subject_id.name,
-               "weight": row.weight,
-               "keywords_text": keywords_text,
-               "keywords_title": keywords_title,
-               "special_references": special_references,
-               }
-        result.append(res)
-
-    return JsonResponse({'document_subject_list': result, 'document_name': document_name})
 
 
 def GetActorsPararaphsByDocumentId(request, document_id):
@@ -6677,35 +4841,6 @@ def GetDocActorParagraphs_Column_Modal(request, document_id, actor_name, role_na
     return JsonResponse({"actor_paragraphs": actor_paragraphs})
 
 
-def UpdateNgramScore(request, document_id, gram, gram_ids):
-    DocumentNgram.objects.filter(
-        document_id_id=document_id, gram=gram, score=1).update(score=0)
-
-    if gram_ids != "-1":
-        gram_ids = gram_ids.split("__")
-        for gram_id in gram_ids:
-            DocumentNgram.objects.filter(id=gram_id).update(score=1)
-
-    return JsonResponse({"status": "OK"})
-
-
-def InsertNgram(request, document_id, gram, texts):
-    texts = texts.split("__")
-    for txt in texts:
-        ngram = DocumentNgram.objects.filter(
-            document_id_id=document_id, text=txt, gram=gram)
-        if ngram.count() > 0:
-            count = ngram.update(score=2)
-        else:
-            DocumentNgram.objects.create(
-                document_id_id=document_id, text=txt, gram=gram, score=2, count=0)
-
-    return JsonResponse({"status": "OK"})
-
-
-def DeleteNgram(request, gram_id):
-    DocumentNgram.objects.filter(id=gram_id).update(score=-1)
-    return JsonResponse({"status": "OK"})
 
 
 def GetDocumentContent(request, document_id):
@@ -6976,44 +5111,6 @@ def GetFollowings(request, follower_username):
     return JsonResponse({"follows": list(follows.values())})
 
 
-def GetGraphEdgesForDocument(request, measure_id, document_id):
-    graph_edge_list = Graph.objects.filter(Q(src_document_id=document_id) | Q(dest_document_id=document_id),
-                                           measure_id__id=measure_id)
-
-    result = []
-    for edge in graph_edge_list:
-
-        src_id = edge.src_document_id_id
-        src_name = edge.src_document_id.name
-        src_color = "#0"
-        if edge.src_document_id.type_id != None:
-            src_color = edge.src_document_id.type_id.color
-
-        dest_id = edge.dest_document_id_id
-        dest_name = edge.dest_document_id.name
-        dest_color = "#0"
-        if edge.dest_document_id.type_id != None:
-            dest_color = edge.dest_document_id.type_id.color
-
-        weight = edge.weight
-
-        res = {
-            "src_id": src_id,
-            "src_name": src_name,
-            "src_color": src_color,
-            "dest_id": dest_id,
-            "dest_name": dest_name,
-            "dest_color": dest_color,
-            "weight": weight,
-        }
-
-        result.append(res)
-
-    graph_type = Measure.objects.get(id=measure_id).type
-
-    return JsonResponse({'graph_edge_list': result, "graph_type": graph_type})
-
-
 def GetAllKnowledgeGraphList(request, username):
     KnowledgeGraphVersionList = KnowledgeGraphVersion.objects.filter(Q(username=username) | Q(username="default"))
     result = []
@@ -7224,43 +5321,6 @@ def BoostingSearchKnowledgeGraph_ES(request, country_id, field_name, field_value
     }
     return JsonResponse(response_dict)
 
-
-def GetChartSloganAnalysis(request, country_id, slogan_year):
-    slogan_map = SloganAnalysis.objects.filter(country_id_id=country_id, sloganYear=slogan_year).order_by('docYear')
-    res1 = []
-    res2 = []
-    for s in slogan_map:
-        res1.append([s.docYear, s.number_per_doc])
-        res2.append([s.docYear, s.number_per_len])
-    # return JsonResponse({"slogan_analysis1": res1, "slogan_analysis2":res2})
-    slogan_map_synonym = SloganAnalysisUsingSynonymousWords.objects.filter(country_id_id=country_id,
-                                                                           sloganYear=slogan_year).order_by('docYear')
-    res3 = []
-    for s in slogan_map_synonym:
-        res3.append([s.docYear, s.number_per_doc])
-    return JsonResponse({"slogan_analysis1": res1, "slogan_analysis2": res2, "slogan_analysis3": res3})
-
-
-def GetInfoChartSloganAnalysis(request, country_id, slogan_year):
-    result_data = CUBE_SloganAnalysis_ChartData.objects.filter(country_id__id=country_id, sloganYear=slogan_year) \
-        .values('subject_chart_data', 'level_chart_data', 'approval_reference_chart_data')
-
-    if result_data.exists():
-        for res in result_data:
-            subject_chart_data = res['subject_chart_data']['data']
-            approval_reference_chart_data = res['approval_reference_chart_data']['data']
-            level_chart_data = res['level_chart_data']['data']
-    else:
-        subject_chart_data = []
-        approval_reference_chart_data = []
-        level_chart_data = []
-
-    return JsonResponse({'subject_chart_data': subject_chart_data,
-                         'approval_references_chart_data': approval_reference_chart_data,
-                         'level_chart_data': level_chart_data,
-                         })
-
-
 def GetActorsByDocumentIdActorType(document_id, actor_type_name):
     actor_dict = {}
 
@@ -7339,44 +5399,6 @@ def GetDocumentById_Local(id):
               "actors": document_actors
               }
     return result
-
-
-def GetDetailChartSloganAnalysis(request, country_id, slogan_year, chart_type, column_name):
-    document_result = CUBE_SloganAnalysis_FullData.objects.filter(country_id__id=country_id, sloganYear=slogan_year)
-
-    document_list = []
-
-    if chart_type == 'subject_chart_data':
-        document_result = document_result.filter(subject_name=column_name)
-
-    if chart_type == 'level_chart_data':
-        document_result = document_result.filter(level_name=column_name)
-
-    if chart_type == 'approval_reference_chart_data':
-        document_result = document_result.filter(approval_reference_name=column_name)
-
-    if chart_type == 'chart_container':
-        result = SloganAnalysis.objects.filter(country_id__id=country_id, sloganYear=slogan_year,
-                                               docYear=column_name).values('doc_ids')
-        for ids in result:
-            document_result = ids['doc_ids'].strip('][').split(', ')
-
-    for res in document_result:
-        if chart_type == 'chart_container':
-            doc = GetDocumentById_Local(res)
-            print(doc)
-            doc_info = {'document_id': res, 'document_name': doc['name'],
-                        'subject_name': doc['subject'],
-                        'level_name': doc['level'], 'approval_reference_name': doc['approval_reference'],
-                        'approval_date': doc['approval_date']}
-        else:
-            doc_info = {'document_id': res.document_id.id, 'document_name': res.document_name,
-                        'subject_name': res.subject_name,
-                        'level_name': res.level_name, 'approval_reference_name': res.approval_reference_name,
-                        'approval_date': res.approval_date}
-        document_list.append(doc_info)
-
-    return JsonResponse({'document_list': document_list})
 
 
 def Get_Clustering_Vocabulary(request, country_id, vector_type, ngram_type):
@@ -7782,73 +5804,6 @@ def GetKeywordClustersData(request, country_id, algorithm_name, algorithm_vector
     })
 
 
-def Export_Rahbari_Paragraph_Column_ES(request, country_id, type_name, label_name_list,
-                                       from_year, to_year, place, text, search_type, field_name, field_value, sentiment,
-                                       curr_page,
-                                       result_size):
-    res_query = {
-        "bool": {}
-    }
-
-    ALL_FIELDS = False
-
-    res_query['bool']['filter'] = [{
-        "term": {
-            field_name: field_value
-        }
-    }]
-
-    if sentiment != "empty":
-        res_query['bool']['filter'].append({
-            "term": {
-                "sentiment.keyword": sentiment
-            }
-        })
-
-    label_name_list = label_name_list.split(',')
-    res_query = filter_rahbari_fields_COLUMN(res_query, type_name, label_name_list,
-                                             from_year, to_year)
-
-    if text != "empty":
-        res_query["bool"]["must"] = []
-
-        if search_type == 'exact':
-            res_query = exact_search_text(res_query, place, text, ALL_FIELDS)
-        else:
-            res_query = boolean_search_text(res_query, place, text, search_type, ALL_FIELDS)
-
-    country_obj = Country.objects.get(id=country_id)
-    index_name = standardIndexName(country_obj, FullProfileAnalysis.__name__)
-
-    from_value = (curr_page - 1) * result_size
-    response = client.search(index=index_name,
-                             _source_includes=['document_id', 'paragraph_id', 'document_name', 'attachment.content'],
-                             request_timeout=40,
-                             query=res_query,
-                             from_=from_value,
-                             size=result_size
-
-                             )
-
-    result = response['hits']['hits']
-
-    result_range = str(from_value) + " تا " + str(from_value + len(result))
-
-    paragraph_list = [
-        [doc['_source']['document_name']
-            , doc['_source']['attachment']['content']] for doc in result]
-
-    file_dataframe = pd.DataFrame(paragraph_list, columns=["نام سند", "متن پاراگراف"])
-
-    file_name = country_obj.name + " - " + field_name.replace(".keyword",
-                                                              "") + " : " + field_value + " - " + sentiment + " - " + result_range + ".xlsx"
-
-    file_path = os.path.join(config.MEDIA_PATH, file_name)
-    file_dataframe.to_excel(file_path, index=False)
-
-    return JsonResponse({"file_name": file_name})
-
-
 def GetRahbariDocumentById(request, country_id, document_id):
     country_obj = Country.objects.get(id=country_id)
     index_name = standardIndexName(country_obj, FullProfileAnalysis.__name__)
@@ -8229,78 +6184,6 @@ def GetSearchDetails_ES(request, document_id, search_type, text):
         "result": result_text})
 
 
-def SearchRahbariRule_ES(request, country_id, type_id, label_name, from_year, to_year, rahbari_type, place, text,
-                         search_type,
-                         curr_page):
-    fields = [type_id, label_name, from_year, to_year]
-
-    res_query = {
-        "bool": {
-            "should": [
-                {
-                    "match_phrase": {
-                        "attachment.content": "باید"
-                    }
-                },
-                {
-                    "match_phrase": {
-                        "attachment.content": "نباید"
-                    }
-                }
-            ],
-            "minimum_should_match": 1,
-        }
-    }
-
-    ALL_FIELDS = True
-
-    if not all(field == 0 for field in fields):
-        ALL_FIELDS = False
-        res_query['bool']['filter'] = []
-        res_query = filter_rahbari_fields(res_query, type_id, label_name, from_year, to_year, rahbari_type)
-
-    if text != "empty":
-        res_query["bool"]["must"] = []
-
-        if search_type == 'exact':
-            res_query = exact_search_text(res_query, place, text, ALL_FIELDS)
-        else:
-            res_query = boolean_search_text(res_query, place, text, search_type, ALL_FIELDS)
-
-    country_obj = Country.objects.get(id=country_id)
-    index_name = standardIndexName(country_obj, Document.__name__)
-    # index_name = "rahbari_document"
-
-    # ---------------------- Get Chart Data -------------------------
-
-    from_value = (curr_page - 1) * search_result_size
-
-    response = client.search(index=index_name,
-                             _source_includes=['document_id', 'name', 'document_file_name',
-                                               'rahbari_date', 'rahbari_year',
-                                               'labels', 'type'],
-                             request_timeout=40,
-                             query=res_query,
-                             from_=from_value,
-                             size=search_result_size
-                             )
-
-    result = response['hits']['hits']
-
-    total_hits = response['hits']['total']['value']
-
-    if total_hits == 10000:
-        total_hits = client.count(body={
-            "query": res_query
-        }, index=index_name, doc_type='_doc')['count']
-
-    return JsonResponse({
-        "result": result,
-        'total_hits': total_hits,
-        "curr_page": curr_page,
-    })
-
-
 def ingest_full_profile_analysis_to_elastic(request, id):
     file = get_object_or_404(Country, id=id)
     from es_scripts import IngestFullProfileAnalysisToElastic
@@ -8311,128 +6194,6 @@ def ingest_full_profile_analysis_to_elastic(request, id):
 
     IngestFullProfileAnalysisToElastic.apply(folder_name, file)
     return redirect('zip')
-
-
-def rahbari_get_full_profile_analysis(request, country_id, type_id, label_name, from_year, to_year, rahbari_type, place,
-                                      text,
-                                      search_type, curr_page):
-    fields = [type_id, label_name, from_year, to_year]
-
-    res_query = {
-        "bool": {
-
-        }
-    }
-
-    ALL_FIELDS = True
-
-    if not all(field == 0 for field in fields):
-        ALL_FIELDS = False
-        res_query['bool']['filter'] = []
-        res_query = filter_rahbari_fields(res_query, type_id, label_name, from_year, to_year, rahbari_type)
-
-    if text != "empty":
-        res_query["bool"]["must"] = []
-
-        if search_type == 'exact':
-            res_query = exact_search_text(res_query, place, text, ALL_FIELDS)
-        else:
-            res_query = boolean_search_text(res_query, place, text, search_type, ALL_FIELDS)
-
-    country_obj = Country.objects.get(id=country_id)
-    index_name = standardIndexName(country_obj, FullProfileAnalysis.__name__)
-
-    # ---------------------- Get Chart Data -------------------------
-    res_agg = {
-        "rahbari-sentiment-agg": {
-            "terms": {
-                "field": "sentiment.keyword",
-                "size": bucket_size
-            }
-        },
-        "rahbari-classification-subject-agg":
-            {
-                "multi_terms": {
-                    "terms": [{
-                        "field": "classification_subject.keyword",
-                    }, {
-                        "field": "sentiment.keyword",
-                    }],
-                    "size": bucket_size
-                }
-            },
-        "rahbari-person-agg":
-            {
-                "multi_terms": {
-                    "terms": [{
-                        "field": "persons.keyword",
-                    }, {
-                        "field": "sentiment.keyword",
-                    }],
-                    "size": 10000
-                }
-
-            },
-        "rahbari-location-agg":
-            {
-                "multi_terms":
-                    {
-                        "terms": [{
-                            "field": "locations.keyword",
-                        }, {
-                            "field": "sentiment.keyword",
-                        }],
-                        "size": bucket_size
-                    }
-            },
-        "rahbari-organization-agg":
-            {
-                "multi_terms":
-                    {
-                        "terms": [{
-                            "field": "organizations.keyword",
-                        }, {
-                            "field": "sentiment.keyword",
-                        }],
-                        "size": bucket_size
-                    }
-            }
-    }
-
-    from_value = (curr_page - 1) * search_result_size
-
-    response = client.search(index=index_name,
-                             request_timeout=40,
-                             query=res_query,
-                             aggregations=res_agg,
-                             from_=from_value,
-                             size=search_result_size
-                             )
-
-    result = response['hits']['hits']
-
-    total_hits = response['hits']['total']['value']
-
-    aggregations = response['aggregations']
-
-    if total_hits == 10000:
-        total_hits = client.count(body={
-            "query": res_query
-        }, index=index_name, doc_type='_doc')['count']
-
-    response = client.search(index=index_name,
-                             request_timeout=40,
-                             query=res_query
-                             )
-    max_score = response['hits']['hits'][0]['_score'] if total_hits > 0 else 1
-    max_score = max_score if max_score > 0 else 1
-
-    return JsonResponse({
-        "result": result,
-        'total_hits': total_hits,
-        'max_score': max_score,
-        "curr_page": curr_page,
-        'aggregations': aggregations})
 
 
 def GetParagraphBy_ID(request, paragraph_id):
