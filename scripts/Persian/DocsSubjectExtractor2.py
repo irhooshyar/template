@@ -114,7 +114,7 @@ def apply(folder_name, Country):
             document_subject.append(classification_result_dict)
 
 
-            if first:
+            if first and Subject.objects.all().count() == 0:
                 first = False
                 for subject in classification_result_dict.keys():
                     Subject.objects.create(name=subject)
