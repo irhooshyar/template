@@ -112,6 +112,7 @@ def apply(folder_name, Country):
 
 
             if first:
+                first = False
                 for subject in classification_result.keys():
                     Subject.objects.create(name=subject)
 
