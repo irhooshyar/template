@@ -2,7 +2,7 @@
 from scripts.Persian import DocsParagraphsExtractor, DocsListExtractor, \
     Preprocessing,  DocsCreateDocumentsListCubeData, DocsCompleteJsonField, AIParagraphTopicLDA
 from scripts.Persian import ClusteringGraphData
-# from scripts.Persian import StaticDataImportDB
+from scripts.Persian import StaticDataImportDB
 from scripts.Persian import DocsParagraphsClustering
 from scripts.Persian import SubjectParagraphExtractor
 # from scripts.Persian import DocsSubjectExtractor2
@@ -55,35 +55,7 @@ def persian_apply(folder_name, Country, tasks_list, host_url):
         Country.save()
 
         print("4. StaticDataImportDB")
-        # StaticDataImportDB.apply(folder_name, Country)
-
-    # if "DocsTFIDFExtractor" in tasks_list: ####
-    #     Country.status = "DocsTFIDFExtractor"
-    #     Country.save()
-    #
-    #     print("5. DocsTFIDFExtractor")
-    #     DocsTFIDFExtractor.apply(folder_name, Country)
-    #
-    # if "Docs2gramExtractor" in tasks_list: ####
-    #     Country.status = "Docs2gramExtractor"
-    #     Country.save()
-    #
-    #     print("6. Docs2gramExtractor")
-    #     DocsNgramExtractor.apply(folder_name, 2, Country)
-    #
-    # if "Docs3gramExtractor" in tasks_list: ####
-    #     Country.status = "Docs3gramExtractor"
-    #     Country.save()
-    #
-    #     print("7. Docs3gramExtractor")
-    #     DocsNgramExtractor.apply(folder_name, 3, Country)
-
-    # if "DocFeaturesExtractor" in tasks_list: ####
-    #     Country.status = "DocFeaturesExtractor"
-    #     Country.save()
-    #
-    #     print("8. DocFeaturesExtractor")
-    #     DocFeaturesExtractor.apply(folder_name, Country)
+        StaticDataImportDB.apply(folder_name, Country)
 
 
     # Edit By HuggingFace

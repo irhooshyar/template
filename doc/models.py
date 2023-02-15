@@ -53,8 +53,8 @@ class User(models.Model):
 
 class MainPanels(models.Model):
     id = models.AutoField(primary_key=True)
-    panel_persian_name = models.CharField(max_length=500)
-    panel_english_name = models.CharField(max_length=250, unique=True)
+    panel_persian_name = models.CharField(max_length=100)
+    panel_english_name = models.CharField(max_length=100, unique=True)
 
     class Meta:
         app_label = 'doc'
@@ -76,8 +76,8 @@ class User_Expertise(models.Model):
 class Panels(models.Model):
     id = models.AutoField(primary_key=True)
     parent = models.ForeignKey(MainPanels, null=True, on_delete=models.CASCADE)
-    panel_persian_name = models.CharField(max_length=500)
-    panel_english_name = models.CharField(max_length=250, unique=True)
+    panel_persian_name = models.CharField(max_length=100)
+    panel_english_name = models.CharField(max_length=100, unique=True)
 
     class Meta:
         app_label = 'doc'

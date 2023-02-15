@@ -47,3 +47,7 @@ HUGGINGFACE_CONFIGS = SERVER_HUGGINGFACE_CONFIGS if (os.environ.get('LOAD_MODELS
 # HUGGINGFACE_CONFIGS = LOCAL_HUGGINGFACE_CONFIGS
 SERVER_USER_NAME = "mn76"
 # ----------------------------------------------
+
+if not os.path.exists(Path(BASE_PATH, 'media_cdn', "data")):
+    os.mkdir(Path(BASE_PATH, 'media_cdn'))
+    os.mkdir(Path(BASE_PATH, 'media_cdn', "data"))
