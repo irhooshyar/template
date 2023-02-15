@@ -74,37 +74,8 @@
                 <a href="{% url 'delete' file.pk  file.language %}">Delete</a>
 
                 {##---------------- temporary option , will be removed after level detection bug is fixed ----------------##}
-                <a href="{% url 'detect_level' file.pk %}">level</a>
                 <a href="{% url 'static_data_import_db'  file.pk 'English' %}">en-static-data</a>
 
-          
-                <span class="bold"> | </span>
-                <a href="{% url 'rahbari_labels_to_db' file.pk %}">rahbari_labels_to_db</a>
-
-                <span class="bold"> | </span>
-
-                <a href="{% url 'rahbari_labels_time_series_extractor' file.pk %}">rahbari_labels_time_series_extractor</a>
-
-
-                <span class="bold"> | </span>
-                <a  href="{% url 'RahabriCoLabelsGraph' file.pk %}">RahabriCoLabelsGraph</a>
-
-                <span class="bold"> | </span>
-                <a  href="{% url 'RahbariGraphUpload' file.pk %}">RahbariGraph</a>
-
-                <span class="bold"> | </span>
-                <a  href="{% url 'RahbariTypeExtractor' file.pk %}">RahbariTypeExtractor</a>
-
-                <span class="bold"> | </span>
-                <a  href="{% url 'rahbari_correlated_labels_extractor' file.pk %}">rahbari_correlated_labels_extractor</a>
-
-                <span class="bold"> | </span>
-                <a  href="{% url 'insert_docs_to_rahbari_table' file.pk %}">insert_docs_to_rahbari_table</a>
-
-                <span class="bold"> | </span>
-                <a href="{% url 'rahbari_search_parameters_to_db' file.pk %}">rahbari_search_parameters_to_db</a>
-
-                
                 
             </p>
 
