@@ -75,10 +75,10 @@ urlpatterns = [
     path('GetCountryById/<int:id>/', views.GetCountryById, name='GetCountryById'),
     path('GetSubjectsByCountryId/<int:country_id>/', views.GetSubjectsByCountryId, name='GetSubjectsByCountryId'),
     path(
-        'SearchDocument_ES/<int:country_id>/<int:level_id>/<int:subject_id>/<int:type_id>/<int:approval_reference_id>/<int:from_year>/<int:to_year>/<int:from_advisory_opinion_count>/<int:from_interpretation_rules_count>/<int:revoked_type_id>/<str:place>/<str:text>/<str:search_type>/<int:curr_page>/',
+        'SearchDocument_ES/<int:country_id>/<int:category_id>/<int:subject_id>/<int:from_year>/<int:to_year>/<str:place>/<str:text>/<str:search_type>/<int:curr_page>/',
         views.SearchDocument_ES, name='SearchDocument_ES'),
     path(
-        'SearchDocuments_Column_ES/<int:country_id>/<str:level_name>/<str:subject_name>/<str:type_name>/<str:approval_reference_name>/<str:from_year>/<str:to_year>/<int:from_advisory_opinion_count>/<int:from_interpretation_rules_count>/<str:revoked_type_name>/<str:place>/<str:text>/<str:search_type>/<int:curr_page>/',
+        'SearchDocuments_Column_ES/<int:country_id>/<str:subject_name>/<str:category_name>/<str:from_year>/<str:to_year>/<str:place>/<str:text>/<str:search_type>/<int:curr_page>/',
         views.SearchDocuments_Column_ES, name='SearchDocuments_Column_ES'),
     path(
         'SearchDocument_ES2/<int:country_id>/<int:level_id>/<int:subject_id>/<int:type_id>/<int:approval_reference_id>/<int:from_year>/<int:to_year>/<int:from_advisory_opinion_count>/<int:from_interpretation_rules_count>/<int:revoked_type_id>/<str:place>/<str:text>/<str:search_type>/',
@@ -358,5 +358,9 @@ urlpatterns = [
 
     path('ingest_userlogs_to_index/<int:id>/<str:language>/', views.userlogs_to_index,
          name='ingest_userlogs_to_index'),
+
+
+    path('GetSearchParameters/<int:country_id>/', views.GetSearchParameters, name='GetSearchParameters'),
+
 
 ]

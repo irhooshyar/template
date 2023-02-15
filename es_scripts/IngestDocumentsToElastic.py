@@ -54,10 +54,10 @@ class DocumentIndex(ES_Index):
 
                 new_doc = {
                     "document_id": doc_id,
-                    "name": doc_name,
-                    "date": doc_date,
-                    "year": doc_year,
-                    "time": doc_time,
+                    "document_name": doc_name,
+                    "document_date": doc_date,
+                    "document_year": doc_year,
+                    "document_time": doc_time,
                     "raw_file_name": doc_file_name,
                     "category_name": doc_category,
                     "subject_name": doc_subject,

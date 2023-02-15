@@ -116,22 +116,22 @@ def Update_Docs_fromExcel(Country):
         if document_name in dataframe_dictionary:
             date = CheckDate(str(dataframe_dictionary[document_name]['date']))
             category_name = str(dataframe_dictionary[document_name]['category'])
+
+            category_name = category_name.replace("»", "-")
+            category_name = category_name.replace("صفحه نخست-", "")
+
             if category_name == "nan":
                 category_name = "نامشخص"
 
             try:
                 category_id = Category.objects.get(name=category_name).id
             except Exception as e:
-                category = create_category_news(category_name)
+                category = Category.objects.create(name=category_name)
                 category_id = category.id
 
             Document.objects.filter(id=document_id).update(date=date, category_id=category_id, category_name=category_name)
 
-def create_category_news(category_name):
-    category_name = category_name.replace("»", "/")
-    category_name = category_name.replace("صفحه نخست/", "")
 
-    return Category.objects.create(name=category_name)
 
 def ActorRolePatternKeywords_Insert():
     ActorRolePatternKeywordsFile = str(Path(config.PERSIAN_PATH, 'ActorRolePatternKeywords.json'))

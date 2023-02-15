@@ -14,7 +14,7 @@ DOTIC_DOC_INDEX = "doticfull_document"
 DOTIC_PARA_INDEX = "doticfull_documentparagraphs_graph"
 
 LOCAL_USER_LOG_INDEX = "local_user_log"
-SERVE_USER_LOG_INDEX = "rahnamud_user_log"
+SERVE_USER_LOG_INDEX = "satar_user_log"
 
 Book_Index = "book_search_index"
 
