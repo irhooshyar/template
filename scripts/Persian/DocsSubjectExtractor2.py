@@ -155,11 +155,14 @@ def apply(folder_name, Country):
 
         document_subject = concat_dictionary(document_subject)
 
-        print(document_subject)
-
         document_subject = normalize_dictionary(document_subject)
 
+        print(document_subject)
+
         top_1_items = dict(heapq.nlargest(1, document_subject.items(), key=itemgetter(1)))
+
+        print(top_1_items)
+
 
         main_subject_name = list(top_1_items.keys())[0]
         main_subject_weight = top_1_items[main_subject_name]
