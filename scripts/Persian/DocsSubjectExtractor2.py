@@ -131,13 +131,13 @@ def apply(folder_name, Country):
             subject1_score = result[0][1]
             subject1_name = subject1.name
 
-            subject2 = None if result[1][1] > 0 else Subject.objects.get(id=result[1][0])
-            subject2_score = None if result[1][1] > 0 else result[1][1]
-            subject2_name = None if result[1][1] > 0 else subject2.name
+            subject2 = None if result[1][1] <= 0 else Subject.objects.get(id=result[1][0])
+            subject2_score = None if result[1][1] <= 0 else result[1][1]
+            subject2_name = None if result[1][1] <= 0 else subject2.name
 
-            subject3 = None if result[2][1] > 0 else Subject.objects.get(id=result[2][0])
-            subject3_score = None if result[2][1] > 0 else result[2][1]
-            subject3_name = None if result[2][1] > 0 else subject3.name
+            subject3 = None if result[2][1] <= 0 else Subject.objects.get(id=result[2][0])
+            subject3_score = None if result[2][1] <= 0 else result[2][1]
+            subject3_name = None if result[2][1] <= 0 else subject3.name
 
 
             ParagraphsSubject.objects.create(country=Country,
@@ -160,16 +160,11 @@ def apply(folder_name, Country):
 
         top_1_items = dict(heapq.nlargest(1, document_subject.items(), key=itemgetter(1)))
 
-        print(1)
         main_subject_name = list(top_1_items.keys())[0]
-        print(2)
         main_subject_weight = top_1_items[main_subject_name]
-        print(3)
         main_subject = Subject.objects.get(name=main_subject_name)
-        print(4)
         Document.objects.filter(id=document.id).update(subject_id=main_subject, subject_name=main_subject_name,
                                                        subject_weight=main_subject_weight)
-        print(5)
         for subject, weight in document_subject.items():
             subject = Subject.objects.get(name=subject)
             DocumentSubject.objects.create(document_id_id= document_id, subject_id=subject, weight=weight)
