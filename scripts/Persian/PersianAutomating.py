@@ -56,7 +56,7 @@ def persian_apply(folder_name, Country, tasks_list, host_url):
         Country.save()
         # New Script
         print("8. DocsSubjectExtractor2")
-        # DocsSubjectExtractor2.apply(folder_name, Country) #update paragraphs and document
+        DocsSubjectExtractor2.apply(folder_name, Country) #update paragraphs and document
 
     if "SubjectParagraphExtractor" in tasks_list:
         Country.status = "SubjectParagraphExtractor"
