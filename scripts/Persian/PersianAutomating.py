@@ -5,7 +5,7 @@ from scripts.Persian import ClusteringGraphData
 from scripts.Persian import StaticDataImportDB
 from scripts.Persian import DocsParagraphsClustering
 from scripts.Persian import SubjectParagraphExtractor
-# from scripts.Persian import DocsSubjectExtractor2
+from scripts.Persian import DocsSubjectExtractor2
 from scripts.Persian import DocsParagraphsClusteringCubeData,LDAGraphData 
 from scripts.Persian import DocProvisionsFullProfileAnalysis
 from datetime import datetime
