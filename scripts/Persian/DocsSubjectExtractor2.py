@@ -109,23 +109,13 @@ def apply(folder_name, Country):
             classification_result = text_classifications_analysis(paragraph_text)
             document_subject.append(classification_result)
 
-            document_subject = concat_dictionary(document_subject)
 
             if first:
-                for subject in document_subject.keys():
+                for subject in classification_result.keys():
                     Subject.objects.create(name=subject)
 
-            document_subject = normalize_dictionary(document_subject)
+            top_3_items = dict(heapq.nlargest(3, classification_result.items(), key=itemgetter(1)))
 
-            top_1_items = dict(heapq.nlargest(1, document_subject.items(), key=itemgetter(1)))
-            top_3_items = dict(heapq.nlargest(3, document_subject.items(), key=itemgetter(1)))
-
-
-            main_subject_name = list(top_1_items.keys())[0]
-            main_subject_weight = top_1_items[main_subject_name]
-            main_subject = Subject.objects.get(main_subject_name)
-            Document.objects.filter(id=document.id).update(subject_id=main_subject, subject_name=main_subject_name,
-                                                           subject_weight=main_subject_weight)
 
             result = []
             for subject_name, score in dict(top_3_items).items():
@@ -158,10 +148,20 @@ def apply(folder_name, Country):
                                              subject3_score=subject3_score,
                                              subject3_name=subject3_name)
 
+        document_subject = concat_dictionary(document_subject)
+        document_subject = normalize_dictionary(document_subject)
 
-            for subject, weight in document_subject.items():
-                subject = Subject.objects.get(name=subject)
-                DocumentSubject.objects.create(document_id_id= document_id, subject_id=subject, weight=weight)
+        top_1_items = dict(heapq.nlargest(1, document_subject.items(), key=itemgetter(1)))
+
+        main_subject_name = list(top_1_items.keys())[0]
+        main_subject_weight = top_1_items[main_subject_name]
+        main_subject = Subject.objects.get(main_subject_name)
+        Document.objects.filter(id=document.id).update(subject_id=main_subject, subject_name=main_subject_name,
+                                                       subject_weight=main_subject_weight)
+
+        for subject, weight in document_subject.items():
+            subject = Subject.objects.get(name=subject)
+            DocumentSubject.objects.create(document_id_id= document_id, subject_id=subject, weight=weight)
 
 
     print("Done . . .")
