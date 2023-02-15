@@ -28,7 +28,7 @@ Thread_Count = 8
 LOCAL_HUGGINGFACE_CONFIGS = {
     "sentimentAnalyser":"local",
     "taggingAnalyser":"local",
-    "classificationAnalyser":"global",
+    "classificationAnalyser":"local",
     "machineTranslator":"local",
     "summarizer":"local",
 }
