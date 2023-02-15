@@ -5,7 +5,7 @@ import base64
 from django.db.models import F
 from es_scripts.ES_Index import ES_Index
 from scripts.Persian.Preprocessing import standardIndexName
-from doc.models import FullProfileAnalysis, Rahbari, Type
+from doc.models import FullProfileAnalysis, Document
 
 
 # ---------------------------------------------------------------------------------
@@ -38,23 +38,20 @@ class FullProfileIndex(ES_Index):
                 'بدون ذکر سازمان']
 
             date = self.paragraph_document_fields[paragraph_id]['date']
-            rahbari_date = date if date != None else 'نامشخص'
+            Document_date = date if date != None else 'نامشخص'
 
-            year = self.paragraph_document_fields[paragraph_id]['year']
-            rahbari_year = year if year != None else '0'
+            time = self.paragraph_document_fields[paragraph_id]['time']
+            Document_time = time if time != None else 'نامشخص'
 
             labels = self.paragraph_document_fields[paragraph_id]['labels']
-            rahbari_labels = labels if labels != None else 'نامشخس'
-            if rahbari_labels[-1] == "؛":
-                rahbari_labels = rahbari_labels[:-1]
-            rahbari_labels = rahbari_labels.split("؛ ")
+            Document_labels = labels if labels != None else 'نامشخس'
 
-            rahbari_type = self.paragraph_document_fields[paragraph_id]['type']
-            try:
-                type_obj = Type.objects.get(id=rahbari_type.id)
-                rahbari_type = type_obj.name
-            except:
-                rahbari_type = 'نامشخص'
+            category_name = self.paragraph_document_fields[paragraph_id]['category_name']
+            Document_category_name = category_name if category_name != None else 'نامشخس'
+
+            subject_name = self.paragraph_document_fields[paragraph_id]['subject_name']
+            Document_subject_name = subject_name if subject_name != None else 'نامشخس'
+
 
             text_bytes = bytes(paragraph_text, encoding="utf8")
             base64_bytes = base64.b64encode(text_bytes)
@@ -73,10 +70,11 @@ class FullProfileIndex(ES_Index):
                 'locations_object': locations_list,
                 'classification_subject': classification_subject,
                 'organizations_object': organizations_list,
-                "rahbari_date": rahbari_date,
-                "rahbari_year": rahbari_year,
-                "labels": rahbari_labels,
-                "type": rahbari_type,
+                "Document_date": Document_date,
+                "Document_time": Document_time,
+                "Document_labels": Document_labels,
+                "Document_category_name": Document_category_name,
+                "Document_subject_name": Document_subject_name,
                 "data": base64_file
             }
 
@@ -114,10 +112,10 @@ def apply(folder, Country):
 
     print(len(records))
     counter = 0
-    all_objects = Rahbari.objects.all()
+    all_objects = Document.objects.all()
     print("objects fetched successfully")
     objects_array = list(all_objects)
-    rahbari_objects_dictionary = {item.document_id.id: item for item in objects_array}
+    Document_objects_dictionary = {item.id: item for item in objects_array}
     print("dictionary is ok")
     for record in records:
         counter += 1
@@ -125,10 +123,12 @@ def apply(folder, Country):
         paragraph_id = record['paragraph_id']
 
         try:
-            rahbari_record = rahbari_objects_dictionary[document_id]
-            paragraph_document_fields[paragraph_id] = {'date': rahbari_record.rahbari_date,
-                                                       'year': rahbari_record.rahbari_year,
-                                                       'labels': rahbari_record.labels, 'type': rahbari_record.type}
+            Document_record = Document_objects_dictionary[document_id]
+            paragraph_document_fields[paragraph_id] = {'date': Document_record.date,
+                                                       'time': Document_record.time,
+                                                       'labels': Document_record.labels,
+                                                        'category_name': Document_record.category_name,
+                                                        'subject_name': Document_record.subject_name}
             print(counter, document_id, paragraph_id)
         except:
             paragraph_document_fields[paragraph_id] = {'date': 'نامشخص', 'year': 0,
