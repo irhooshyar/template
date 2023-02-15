@@ -28,7 +28,7 @@ Thread_Count = 8
 LOCAL_HUGGINGFACE_CONFIGS = {
     "sentimentAnalyser":"local",
     "taggingAnalyser":"local",
-    "classificationAnalyser":"local",
+    "classificationAnalyser":"global",
     "machineTranslator":"local",
     "summarizer":"local",
 }
@@ -43,8 +43,8 @@ SERVER_HUGGINGFACE_CONFIGS = {
 
 LOAD_MODELS = str(os.environ.get('LOAD_MODELS')) == 'true'
 
-HUGGINGFACE_CONFIGS = SERVER_HUGGINGFACE_CONFIGS if (os.environ.get('LOAD_MODELS') is None or LOAD_MODELS) else LOCAL_HUGGINGFACE_CONFIGS
-# HUGGINGFACE_CONFIGS = LOCAL_HUGGINGFACE_CONFIGS
+# HUGGINGFACE_CONFIGS = SERVER_HUGGINGFACE_CONFIGS if (os.environ.get('LOAD_MODELS') is None or LOAD_MODELS) else LOCAL_HUGGINGFACE_CONFIGS
+HUGGINGFACE_CONFIGS = LOCAL_HUGGINGFACE_CONFIGS
 SERVER_USER_NAME = "mn76"
 # ----------------------------------------------
 
