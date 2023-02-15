@@ -89,7 +89,7 @@ def apply(folder_name, Country):
     Country.status = "Docs_Subject_Extractor"
     Country.save()
 
-    document_list = Document.objects.filter(country=Country).all()
+    document_list = Document.objects.filter(country_id=Country).all()
 
     first = True
     i = 1
@@ -106,26 +106,21 @@ def apply(folder_name, Country):
             paragraph_id = paragraph.id
 
             paragraph_text = paragraph.text
-            classification_result = text_classifications_analysis(paragraph_text)
-            document_subject.append(classification_result)
+            classification_result = text_classifications_analysis(paragraph_text)['result'][0]
+            classification_result_dict = {}
+            for item in classification_result:
+                classification_result_dict[item["label"]] = item["score"]
 
-            document_subject = concat_dictionary(document_subject)
+            document_subject.append(classification_result_dict)
+
 
             if first:
-                for subject in document_subject.keys():
+                first = False
+                for subject in classification_result_dict.keys():
                     Subject.objects.create(name=subject)
 
-            document_subject = normalize_dictionary(document_subject)
+            top_3_items = dict(heapq.nlargest(3, classification_result_dict.items(), key=itemgetter(1)))
 
-            top_1_items = dict(heapq.nlargest(1, document_subject.items(), key=itemgetter(1)))
-            top_3_items = dict(heapq.nlargest(3, document_subject.items(), key=itemgetter(1)))
-
-
-            main_subject_name = list(top_1_items.keys())[0]
-            main_subject_weight = top_1_items[main_subject_name]
-            main_subject = Subject.objects.get(main_subject_name)
-            Document.objects.filter(id=document.id).update(subject_id=main_subject, subject_name=main_subject_name,
-                                                           subject_weight=main_subject_weight)
 
             result = []
             for subject_name, score in dict(top_3_items).items():
@@ -158,10 +153,26 @@ def apply(folder_name, Country):
                                              subject3_score=subject3_score,
                                              subject3_name=subject3_name)
 
+        document_subject = concat_dictionary(document_subject)
 
-            for subject, weight in document_subject.items():
-                subject = Subject.objects.get(name=subject)
-                DocumentSubject.objects.create(document_id_id= document_id, subject_id=subject, weight=weight)
+        document_subject = normalize_dictionary(document_subject)
+
+
+        top_1_items = dict(heapq.nlargest(1, document_subject.items(), key=itemgetter(1)))
+
+        print(1)
+        main_subject_name = list(top_1_items.keys())[0]
+        print(2)
+        main_subject_weight = top_1_items[main_subject_name]
+        print(3)
+        main_subject = Subject.objects.get(main_subject_name)
+        print(4)
+        Document.objects.filter(id=document.id).update(subject_id=main_subject, subject_name=main_subject_name,
+                                                       subject_weight=main_subject_weight)
+        print(5)
+        for subject, weight in document_subject.items():
+            subject = Subject.objects.get(name=subject)
+            DocumentSubject.objects.create(document_id_id= document_id, subject_id=subject, weight=weight)
 
 
     print("Done . . .")
