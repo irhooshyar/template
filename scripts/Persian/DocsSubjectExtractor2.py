@@ -94,81 +94,85 @@ def apply(folder_name, Country):
     first = True
     i = 1
     for document in document_list:
+        try:
+            print(i/document_list.__len__())
+            i += 1
 
-        print(i/document_list.__len__())
-        i += 1
+            document_id = document.id
 
-        document_id = document.id
+            paragraph_list = DocumentParagraphs.objects.filter(document_id=document)
+            document_subject = []
+            for paragraph in paragraph_list:
+                try:
+                    paragraph_id = paragraph.id
 
-        paragraph_list = DocumentParagraphs.objects.filter(document_id=document)
-        document_subject = []
-        for paragraph in paragraph_list:
-            paragraph_id = paragraph.id
+                    paragraph_text = paragraph.text
+                    classification_result = text_classifications_analysis(paragraph_text)['result'][0]
+                    classification_result_dict = {}
+                    for item in classification_result:
+                        classification_result_dict[item["label"]] = item["score"]
 
-            paragraph_text = paragraph.text
-            classification_result = text_classifications_analysis(paragraph_text)['result'][0]
-            classification_result_dict = {}
-            for item in classification_result:
-                classification_result_dict[item["label"]] = item["score"]
-
-            document_subject.append(classification_result_dict)
-
-
-            if first and Subject.objects.all().count() == 0:
-                first = False
-                for subject in classification_result_dict.keys():
-                    Subject.objects.create(name=subject)
-
-            top_3_items = dict(heapq.nlargest(3, classification_result_dict.items(), key=itemgetter(1)))
+                    document_subject.append(classification_result_dict)
 
 
-            result = []
-            for subject_name, score in dict(top_3_items).items():
-                subject_id = Subject.objects.get(name=subject_name).id
-                result.append([subject_id, score])
+                    if first and Subject.objects.all().count() == 0:
+                        first = False
+                        for subject in classification_result_dict.keys():
+                            Subject.objects.create(name=subject)
 
-            subject1 = Subject.objects.get(id=result[0][0])
-            subject1_score = result[0][1]
-            subject1_name = subject1.name
-
-            subject2 = None if result[1][1] <= 0 else Subject.objects.get(id=result[1][0])
-            subject2_score = None if result[1][1] <= 0 else result[1][1]
-            subject2_name = None if result[1][1] <= 0 else subject2.name
-
-            subject3 = None if result[2][1] <= 0 else Subject.objects.get(id=result[2][0])
-            subject3_score = None if result[2][1] <= 0 else result[2][1]
-            subject3_name = None if result[2][1] <= 0 else subject3.name
+                    top_3_items = dict(heapq.nlargest(3, classification_result_dict.items(), key=itemgetter(1)))
 
 
-            ParagraphsSubject.objects.create(country=Country,
-                                             paragraph_id=paragraph_id,
-                                             document_id=document_id,
-                                             subject1=subject1,
-                                             subject1_score=subject1_score,
-                                             subject1_name=subject1_name,
-                                             subject2=subject2,
-                                             subject2_score=subject2_score,
-                                             subject2_name=subject2_name,
-                                             subject3=subject3,
-                                             subject3_score=subject3_score,
-                                             subject3_name=subject3_name)
+                    result = []
+                    for subject_name, score in dict(top_3_items).items():
+                        subject_id = Subject.objects.get(name=subject_name).id
+                        result.append([subject_id, score])
 
-        document_subject = concat_dictionary(document_subject)
+                    subject1 = Subject.objects.get(id=result[0][0])
+                    subject1_score = result[0][1]
+                    subject1_name = subject1.name
 
-        document_subject = normalize_dictionary(document_subject)
+                    subject2 = None if result[1][1] <= 0 else Subject.objects.get(id=result[1][0])
+                    subject2_score = None if result[1][1] <= 0 else result[1][1]
+                    subject2_name = None if result[1][1] <= 0 else subject2.name
+
+                    subject3 = None if result[2][1] <= 0 else Subject.objects.get(id=result[2][0])
+                    subject3_score = None if result[2][1] <= 0 else result[2][1]
+                    subject3_name = None if result[2][1] <= 0 else subject3.name
 
 
-        top_1_items = dict(heapq.nlargest(1, document_subject.items(), key=itemgetter(1)))
+                    ParagraphsSubject.objects.create(country=Country,
+                                                     paragraph_id=paragraph_id,
+                                                     document_id=document_id,
+                                                     subject1=subject1,
+                                                     subject1_score=subject1_score,
+                                                     subject1_name=subject1_name,
+                                                     subject2=subject2,
+                                                     subject2_score=subject2_score,
+                                                     subject2_name=subject2_name,
+                                                     subject3=subject3,
+                                                     subject3_score=subject3_score,
+                                                     subject3_name=subject3_name)
+                except:
+                    print("Error paragraph: ", paragraph_id)
 
-        main_subject_name = list(top_1_items.keys())[0]
-        main_subject_weight = top_1_items[main_subject_name]
-        main_subject = Subject.objects.get(name=main_subject_name)
-        Document.objects.filter(id=document.id).update(subject_id=main_subject, subject_name=main_subject_name,
-                                                       subject_weight=main_subject_weight)
-        for subject, weight in document_subject.items():
-            subject = Subject.objects.get(name=subject)
-            DocumentSubject.objects.create(document_id_id= document_id, subject_id=subject, weight=weight)
+            document_subject = concat_dictionary(document_subject)
 
+            document_subject = normalize_dictionary(document_subject)
+
+            top_1_items = dict(heapq.nlargest(1, document_subject.items(), key=itemgetter(1)))
+
+            main_subject_name = list(top_1_items.keys())[0]
+            main_subject_weight = top_1_items[main_subject_name]
+            main_subject = Subject.objects.get(name=main_subject_name)
+            Document.objects.filter(id=document.id).update(subject_id=main_subject, subject_name=main_subject_name,
+                                                           subject_weight=main_subject_weight)
+            for subject, weight in document_subject.items():
+                subject = Subject.objects.get(name=subject)
+                DocumentSubject.objects.create(document_id_id= document_id, subject_id=subject, weight=weight)
+
+        except:
+            print("Error Document: ", document_id)
 
     print("Done . . .")
 
