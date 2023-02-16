@@ -344,10 +344,10 @@
                     <div class="row mt-4 w-100 flex-row-reverse justify-content-around mx-0 px-0">
                         <div id="subject_container" chart-height="350px" class="half">
                         </div>
-                        <div id="category_container" chart-height="350px" class="half">
-                        </div>
-                        <div id="year_container" chart-height="350px" class="full"></div>
 
+                        <div id="year_container" chart-height="350px" class="half"></div>
+                        <div id="category_container" chart-height="650px" class="full">
+                        </div>
 
                     </div>
                 </div>
@@ -666,10 +666,12 @@
             }, {
                 "name": "name",
                 "title": "عنوان خبر",
-            }, {
-                "name": "subject_name",
-                "title": "موضوع خبر",
-            }, {
+            },
+            //  {
+            //     "name": "subject_name",
+            //     "title": "موضوع خبر",
+            // },
+             {
                 "name": "category_name",
                 "title": "دسته خبر",
             },  {
@@ -1095,27 +1097,28 @@
                 }
 
                 newDoughnutChart(container, options);
-            }else if (container === "year_container"){
-
-                options.onClick = async function (event, data) {
-                    const click_tag_index = event.domTarget.tag;
-                    console.log(data)
-                    console.log(click_tag_index)
-                    const text = data['mc'][click_tag_index][0];
-                    console.log(text)
-                    const best_result_count = documents_information_result.length
-
-                    let filtered_result = []
-                    let header = ""
-                    let save_file_name = document.getElementById("SearchBox").value;
-
-                    await GetClickedColumnDocuments(container, text)
-
-                    $("#ChartModalBtn").click();
-                }
-
-                newLineChart(container, options)
             }
+            // else if (container === "year_container"){
+
+            //     options.onClick = async function (event, data) {
+            //         const click_tag_index = event.domTarget.tag;
+            //         console.log(data)
+            //         console.log(click_tag_index)
+            //         const text = data['mc'][click_tag_index][0];
+            //         console.log(text)
+            //         const best_result_count = documents_information_result.length
+
+            //         let filtered_result = []
+            //         let header = ""
+            //         let save_file_name = document.getElementById("SearchBox").value;
+
+            //         await GetClickedColumnDocuments(container, text)
+
+            //         $("#ChartModalBtn").click();
+            //     }
+
+            //     newLineChart(container, options)
+            // }
              else {
                 newBarChart(container, options)
             }
