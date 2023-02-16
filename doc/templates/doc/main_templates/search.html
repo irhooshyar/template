@@ -629,6 +629,8 @@
                 const id = doc["_source"]["document_id"]
                 const name = doc["_source"]["document_name"]
                 const category_name = doc["_source"]["category_name"]
+                const source_name = doc["_source"]["source_name"]
+                
                 const subject = doc["_source"]["subject_name"]
                 const date = doc["_source"]["document_date"]
                 let score = Math.round((doc['_score'] / max_score) * 100)
@@ -646,7 +648,7 @@
                 const doc_name = '<a target="_blank" href="' + document_link + '">' + name + "</a>"
 
                 const row = {
-                    "id": index, "name": doc_name, "subject_name": subject,
+                    "id": index, "name": doc_name,"source_name":source_name, "subject_name": subject,
                      "date": date,"category_name":category_name,
                     "count": score, "detail": detail
                 }
@@ -672,6 +674,11 @@
                 "name": "name",
                 "title": "عنوان خبر",
             },
+            {
+                "name": "source_name",
+                "title": "مرجع خبر",
+            },
+            
              {
                 "name": "subject_name",
                 "title": "موضوع خبر",
