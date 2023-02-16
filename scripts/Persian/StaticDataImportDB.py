@@ -297,8 +297,8 @@ def Search_Parameters_Insert(Country):
     if documents_list.count() > 0:
         max_year = documents_list.aggregate(Max('date'))["date__max"][0:4]
         min_year = documents_list.aggregate(Min('date'))["date__min"][0:4]
-        min_year_res = int(min_year) - 1
-        max_year_res = int(max_year) + 1
+        min_year_res = int(min_year)
+        max_year_res = int(max_year)
 
     if max_year_res != -1 and min_year_res != -1:
         for i in range(max_year_res ,(min_year_res-1), -1):
