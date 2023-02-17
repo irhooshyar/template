@@ -44,7 +44,7 @@ class DocumentIndex(ES_Index):
             doc_subject = doc['subject_name'] if doc['subject_name'] != None else 'نامشخص'
             doc_subject_weight = doc['subject_weight'] if doc['subject_weight'] != None else 'نامشخص'
             doc_category = doc['category_name'] if doc['category_name'] != None else 'نامشخص'
-
+            doc_source = doc['source_name']
             doc_year = doc['year'] if doc['year'] != None else 0
             doc_date = doc['date'] if doc['date'] != None else 'نامشخص'
             doc_time = doc['time'] if doc['time'] != None else 'نامشخص'
@@ -60,6 +60,7 @@ class DocumentIndex(ES_Index):
                     "document_time": doc_time,
                     "raw_file_name": doc_file_name,
                     "category_name": doc_category,
+                    "source_name": doc_source,
                     "subject_name": doc_subject,
                     "subject_weight": doc_subject_weight,  
                     "data": base64_file
@@ -93,7 +94,8 @@ def apply(folder, Country):
 
 
     documents = Document_Model.objects.filter(country_id__id=Country.id).annotate(
-        year=Cast(Substr('date', 1, 4), IntegerField())).values()
+        year=Cast(Substr('date', 1, 4), IntegerField()),
+        source_name = F('country_id__name')).values()
 
 
     # If index exists -> delete it.
