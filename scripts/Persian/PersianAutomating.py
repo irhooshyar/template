@@ -145,7 +145,7 @@ def persian_apply(folder_name, Country, tasks_list, host_url):
         Country.save()
 
         print("28. DocProvisionsFullProfileAnalysis.")
-        DocProvisionsFullProfileAnalysis.apply(Country)
+        DocProvisionsFullProfileAnalysis.apply(folder_name, Country)
 
 
     if "DocsParagraphVectorExtractor" in tasks_list: ####
