@@ -140,12 +140,12 @@ def persian_apply(folder_name, Country, tasks_list, host_url):
     #     print("28. LDAGraphData.")
     #     LDAGraphData.apply(Country)
 
-    # if "DocProvisionsFullProfileAnalysis" in tasks_list:
-    #     Country.status = "DocProvisionsFullProfileAnalysis"
-    #     Country.save()
+    if "DocProvisionsFullProfileAnalysis" in tasks_list:
+        Country.status = "DocProvisionsFullProfileAnalysis"
+        Country.save()
 
-    #     print("28. DocProvisionsFullProfileAnalysis.")
-    #     DocProvisionsFullProfileAnalysis.apply(Country)
+        print("28. DocProvisionsFullProfileAnalysis.")
+        DocProvisionsFullProfileAnalysis.apply(Country)
 
 
     if "DocsParagraphVectorExtractor" in tasks_list: ####

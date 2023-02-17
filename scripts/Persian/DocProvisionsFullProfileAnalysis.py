@@ -5,6 +5,7 @@ from transformers import AutoTokenizer, AutoModelForTokenClassification, pipelin
 from doc.models import FullProfileAnalysis
 from doc.models import DocumentParagraphs
 import after_response
+import math
 
 taggingSentenceTokenizer = AutoTokenizer.from_pretrained("HooshvareLab/bert-base-parsbert-ner-uncased")
 taggingSentenceModel = AutoModelForTokenClassification.from_pretrained(
@@ -154,11 +155,22 @@ def apply(folder_name, Country):
     print('insert in database')
     FullProfileAnalysis.objects.filter(country_id=Country.id).delete()
 
+    Result_Create_List = []
     for item in analysis:
-        FullProfileAnalysis.objects.create(country=Country, sentiment=item[1],
+        obj = FullProfileAnalysis(country=Country, sentiment=item[1],
                                            classification_subject=item[2], persons=item[3]['persons'],
                                            locations=item[3]['locations'], organizations=item[3]['organizations'],
                                            document_paragraph_id=item[0])
+        Result_Create_List.append(obj)
+
+
+    batch_size = 20000
+    slice_count = math.ceil(Result_Create_List.__len__() / batch_size)
+    for i in range(slice_count):
+        start_idx = i * batch_size
+        end_idx = min(start_idx + batch_size, Result_Create_List.__len__())
+        sub_list = Result_Create_List[start_idx:end_idx]
+        FullProfileAnalysis.objects.bulk_create(sub_list)
 
     Country.status = "Done"
     Country.save()
