@@ -26,9 +26,9 @@ class FullProfileIndex(ES_Index):
             classification_subject = record['classification_subject']
             sentiment = record['sentiment']
 
-            persons_list = json.loads(record['persons'].replace("\'", "\""))
-            locations_list = json.loads(record['locations'].replace("\'", "\""))
-            organizations_list = json.loads(record['organizations'].replace("\'", "\""))
+            persons_list = json.loads(record['persons'].replace("\\'", '\\"'))
+            locations_list = json.loads(record['locations'].replace("\\'", '\\"'))
+            organizations_list = json.loads(record['organizations'].replace("\\'", '\\"'))
             # moneys_list = json.loads(record['moneys'].replace("\'", "\""))
             # dates_list = json.loads(record['dates'].replace("\'", "\""))
 
