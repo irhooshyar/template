@@ -5556,7 +5556,7 @@ def GetKeywordClustersData(request, country_id, algorithm_name, algorithm_vector
     })
 
 
-def GetRahbariDocumentById(request, country_id, document_id):
+def GetDetailDocumentById(request, country_id, document_id):
     country_obj = Country.objects.get(id=country_id)
     index_name = standardIndexName(country_obj, FullProfileAnalysis.__name__)
 
@@ -5567,20 +5567,33 @@ def GetRahbariDocumentById(request, country_id, document_id):
     }
 
     response = client.search(index=index_name,
-                             _source_includes=['document_id', 'rahbari_date', 'type', 'labels', 'document_name'],
+                             _source_includes=['document_id', 'date', 'category', 'document_name'],
                              request_timeout=40,
                              query=res_query)
     result = response['hits']['hits']
     total_hits = response['hits']['total']['value']
 
     document = Document.objects.get(id=document_id)
-    subject_name = "نامشخص"
-    if document.subject_id is not None:
-        subject_name = document.subject_id.name
+
+    date = "نامشخص"
+    year = "نامشخص"
+    if document.date is not None:
+        date = document.date
+        year = date[0:4]
+
+    category = "نامشخص"
+    if document.category_name is not None:
+        category = document.category_name
+
+    subject = "نامشخص"
+    if document.subject_name is not None:
+        subject = document.subject_name
 
     return JsonResponse({
         "result": result,
         "subject": subject_name,
+        "date": date,
+        "category": category,
         'total_hits': total_hits,
     })
 

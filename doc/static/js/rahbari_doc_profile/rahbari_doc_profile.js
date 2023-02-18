@@ -494,7 +494,7 @@ async function pagingchange() {
 
 async function SelectDocumentFunction(document_id) {
     const country_id = document.getElementById('country').value
-    const request_link = 'http://' + location.host + "/GetRahbariDocumentById/" + country_id + "/" + document_id + "/";
+    const request_link = 'http://' + location.host + "/GetDetailDocumentById/" + country_id + "/" + document_id + "/";
     let response = await fetch(request_link).then(response => response.json());
     document.getElementById("document_subject").innerHTML = response['subject']
     const result = response["result"][0]['_source']
@@ -504,10 +504,9 @@ async function SelectDocumentFunction(document_id) {
     document.getElementById('document_select').innerHTML = document_select_tag;
     document.getElementById('document_select').title = result['document_name'];
 
-    document.getElementById('document_date').innerHTML = result['rahbari_date']
-    document.getElementById('document_type').innerHTML = result['type']
-    document.getElementById('document_labels').innerHTML = result['labels']
-    document.getElementById("document_subject").innerHTML = response['subject']
+    document.getElementById('document_date').innerHTML = result['date']
+    document.getElementById('document_subject').innerHTML = result['subject']
+    document.getElementById('document_category').innerHTML = result['category']
     // GetTextSummary()
     ShowResult();
     find_rahbari_document_actors(document_id)
