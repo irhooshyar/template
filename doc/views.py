@@ -5598,7 +5598,7 @@ def GetDetailDocumentById(request, country_id, document_id):
 
     return JsonResponse({
         "result": result,
-        "subject": subject_name,
+        "subject": subject,
         "date": date,
         "category": category,
         'total_hits': total_hits,
