@@ -26,11 +26,11 @@ class FullProfileIndex(ES_Index):
             classification_subject = record['classification_subject']
             sentiment = record['sentiment']
 
-            persons_list = json.loads(record['persons'].replace("\'", '\"'))
+            persons_list = json.loads(record['persons'].replace(b"\'", b'\"'))
 
-            locations_list = json.loads(record['locations'].replace("\'", '\"'))
+            locations_list = json.loads(record['locations'].replace(b"\'", b'\"'))
 
-            organizations_list = json.loads(record['organizations'].replace("\'", '\"'))
+            organizations_list = json.loads(record['organizations'].replace(b"\'", b'\"'))
 
 
             persons = [item['word'] for item in persons_list] if len(persons_list) != 0 else ['بدون شخص حقیقی']
