@@ -3468,7 +3468,7 @@ def SearchDocument_ES(request, country_id, category_id, subject_id, from_year, t
                              _source_includes=['document_id', 'document_name', 'document_date',
                                                'subject_name', 'category_name', 'document_year',
                                                'raw_file_name',
-                                               'source_name','document_hour'],
+                                               'source_name','document_time'],
                              request_timeout=40,
                              query=res_query,
                              aggregations=res_agg,
