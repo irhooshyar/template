@@ -634,7 +634,7 @@
                 
                 const subject = doc["_source"]["subject_name"]
                 const date = doc["_source"]["document_date"]
-                const hour = doc["_source"]["document_hour"]
+                const time = doc["_source"]["document_time"]
                 let score = Math.round((doc['_score'] / max_score) * 100)
 
                 let button_disable = ""
@@ -651,7 +651,7 @@
 
                 const row = {
                     "id": index, "name": doc_name,"source_name":source_name, "subject_name": subject,
-                     "date": date,"hour":hour,"category_name":category_name,
+                     "date": date,"time":time,"category_name":category_name,
                     "count": score, "detail": detail
                 }
 
@@ -696,7 +696,7 @@
                 "title": "تاریخ خبر",
             },
             {
-                "name": "hour",
+                "name": "time",
                 "title": "ساعت خبر",
             },{
                 "name": "count",
