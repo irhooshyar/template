@@ -503,6 +503,7 @@ async function SelectDocumentFunction(document_id) {
     document.getElementById('document_select').innerHTML = document_select_tag;
     document.getElementById('document_select').title = result['document_name'];
 
+    console.log(result)
     document.getElementById('document_date').innerHTML = result['date']
     document.getElementById('document_subject').innerHTML = result['subject']
     document.getElementById('document_category').innerHTML = result['category']
