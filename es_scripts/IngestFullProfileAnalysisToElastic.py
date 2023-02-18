@@ -85,6 +85,9 @@ class FullProfileIndex(ES_Index):
             yield new_document
 
 
+import after_response
+
+@after_response.enable
 def apply(folder, Country):
     settings = {}
     mappings = {}
