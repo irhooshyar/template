@@ -155,12 +155,12 @@ def persian_apply(folder_name, Country, tasks_list, host_url):
         DocsParagraphVectorExtractor.apply(folder_name, Country)
 
 
-    if "DocProvisionsFullProfileAnalysis" in tasks_list:
-        Country.status = "DocProvisionsFullProfileAnalysis"
-        Country.save()
-
-        print("28. DocProvisionsFullProfileAnalysis.")
-        DocProvisionsFullProfileAnalysis.apply(folder_name, Country)
+    # if "DocProvisionsFullProfileAnalysis" in tasks_list:
+    #     Country.status = "DocProvisionsFullProfileAnalysis"
+    #     Country.save()
+    #
+    #     print("28. DocProvisionsFullProfileAnalysis.")
+    #     DocProvisionsFullProfileAnalysis.apply(folder_name, Country)
 
     if "IngestFullProfileAnalysisToElastic" in tasks_list:
         Country.status = "IngestFullProfileAnalysisToElastic"
