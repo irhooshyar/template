@@ -27,24 +27,13 @@ class FullProfileIndex(ES_Index):
             sentiment = record['sentiment']
 
             try:
-                persons_list = json.loads(record['persons'].replace("\\'", '\\"'))
+                persons_list = json.loads(record['persons'].replace("'", '"'))
             except:
                 print(record['persons'])
-                persons_list = []
-            try:
-                locations_list = json.loads(record['locations'].replace("\\'", '\\"'))
-            except:
-                print(record['locations'])
-                locations_list = []
-            try:
-                organizations_list = json.loads(record['organizations'].replace("\\'", '\\"'))
-            except:
-                print(record['organizations'])
-                organizations_list = []
 
-            
-            # moneys_list = json.loads(record['moneys'].replace("\'", "\""))
-            # dates_list = json.loads(record['dates'].replace("\'", "\""))
+            locations_list = json.loads(record['locations'].replace("'", '"'))
+
+            organizations_list = json.loads(record['organizations'].replace("'", '"'))
 
 
             persons = [item['word'] for item in persons_list] if len(persons_list) != 0 else ['بدون شخص حقیقی']
@@ -127,7 +116,6 @@ def apply(folder, Country):
     ).values('id', 'document_id', 'document_name', 'paragraph_text', 'paragraph_id', 'sentiment',
              'classification_subject', 'persons', 'locations', 'organizations')
 
-    print(len(records))
     counter = 0
     all_objects = Document.objects.all()
     print("objects fetched successfully")

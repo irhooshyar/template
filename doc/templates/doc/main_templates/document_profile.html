@@ -172,18 +172,15 @@
                 <thead class="table" style="background: #1e56a0;">
                 <tr>
                     <th class="text-center" scope="col">تاریخ سند</th>
-                    <th class="text-center" scope="col">زمان</th>
                     <th class="text-center" scope="col">موضوع سند</th>
                     <th class="text-center" scope="col">دسته سند</th>
-                    <th class="text-center" scope="col">برچسب‌های سند</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr>
                     <td class="text-center" id="document_date">-</td>
                     <td class="text-center" id="document_subject">-</td>
-                    <td class="text-center" id="document_type">-</td>
-                    <td class="text-center" id="document_labels">-</td>
+                    <td class="text-center" id="document_category">-</td>
                 </tr>
                 </tbody>
             </table>
@@ -209,8 +206,8 @@
 
         <li class="nav-item float-right" role="presentation">
             <button id="sim_document_tab" class="nav-link" data-bs-toggle="pill"
-                    data-bs-target="#sim_document_tab" type="button" role="tab"
-                    aria-controls="sim_document_tab" aria-selected="false">شباهت‌یابی میان اسناد
+                    data-bs-target="#sim_document_pane" type="button" role="tab"
+                    aria-controls="sim_document_pane" aria-selected="false">شباهت‌یابی میان اسناد
             </button>
         </li>
 
@@ -296,7 +293,7 @@
         </div>
 
         <!-- Reference Pane -->
-        <div id="sim_document_tab" class="tab-pane w-100 fade float-right" role="tabpanel"
+        <div id="sim_document_pane" class="tab-pane w-100 fade float-right" role="tabpanel"
              aria-labelledby="sim_document_tab" dir="rtl">
 
             <div class="mt-4">

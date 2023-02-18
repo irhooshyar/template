@@ -85,9 +85,9 @@ async function getDocumentFullProfileInfo(country_id, document_id) {
 
     // showChartData(sentiment_chart, "sentiment_container", "paragraph_charts", [], undefined, "احساس", "توزیع احکام براساس احساسات", "تعداد احکام")
     doc_showChart(classification_chart, "subject_container", "", undefined, "موضوع", "توزیع پاراگراف ها براساس موضوع", "تعداد پاراگراف", true)
-    doc_showChart(persons_chart, "person_container", "", undefined, "شخص", "توزیع بیانات براساس اشخاص حقیقی")
-    doc_showChart(locations_chart, "location_container", "", undefined, "موقعیت مکانی", "توزیع بیانات براساس موقعیت مکانی")
-    doc_showChart(organizations_chart, "organization_container", "", undefined, "شخص حقوقی", "توزیع بیانات  براساس اشخاص حقوقی")
+    doc_showChart(persons_chart, "person_container", "", undefined, "شخص", "توزیع اسناد براساس اشخاص حقیقی")
+    doc_showChart(locations_chart, "location_container", "", undefined, "موقعیت مکانی", "توزیع اسناد براساس موقعیت مکانی")
+    doc_showChart(organizations_chart, "organization_container", "", undefined, "شخص حقوقی", "توزیع اسناد  براساس اشخاص حقوقی")
 
     // get_document_profile_real_persons(persons_chart)
     // get_document_profile_locations(locations_chart)
