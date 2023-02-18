@@ -104,27 +104,24 @@ def update_doc(request, id, language, ):
     file.status = "Starting..."
     file.save()
 
-    if language == 'کتاب':
-        StratAutomating.apply.after_response(folder_name, file, "DocsAreaGraphCubeData", host_url)
-    else:
 
-        StratAutomating.apply.after_response(folder_name, file, "IngestFullProfileAnalysisToElastic", host_url)
-        # from scripts.Persian import DocsParagraphVectorExtractor
-        # DocsParagraphVectorExtractor.apply(folder_name, file)
-        #
-        # from es_scripts import IngestFullProfileAnalysisToElastic
-        # IngestFullProfileAnalysisToElastic.apply.after_response(folder_name, file)
+    StratAutomating.apply.after_response(folder_name, file, "DocsCreateDocumentsListCubeData", host_url)
+    # from scripts.Persian import DocsParagraphVectorExtractor
+    # DocsParagraphVectorExtractor.apply(folder_name, file)
+    #
+    # from es_scripts import IngestFullProfileAnalysisToElastic
+    # IngestFullProfileAnalysisToElastic.apply.after_response(folder_name, file)
 
-        # DocsSubjectExtractor2_DocsParagraphsClustering_AIParagraphTopicLDA_LDAGraphData
-        # DocsSubjectAreaExtractor.apply(folder_name,file),DocsParagraphsClustering
-        # AIParagraphTopicLDA_LDAGraphData-DocsActorsExtractor
-        # DocsParagraphsClusteringCubeData,ClusteringGraphData
+    # DocsSubjectExtractor2_DocsParagraphsClustering_AIParagraphTopicLDA_LDAGraphData
+    # DocsSubjectAreaExtractor.apply(folder_name,file),DocsParagraphsClustering
+    # AIParagraphTopicLDA_LDAGraphData-DocsActorsExtractor
+    # DocsParagraphsClusteringCubeData,ClusteringGraphData
 
-        # from scripts.Persian import DocsSubjectExtractor2
-        # DocsSubjectExtractor2.apply.after_response(folder_name, file)
+    # from scripts.Persian import DocsSubjectExtractor2
+    # DocsSubjectExtractor2.apply.after_response(folder_name, file)
 
-        # from scripts.Persian import DocProvisionsFullProfileAnalysis
-        # DocProvisionsFullProfileAnalysis.apply.after_response(folder_name, file)
+    # from scripts.Persian import DocProvisionsFullProfileAnalysis
+    # DocProvisionsFullProfileAnalysis.apply.after_response(folder_name, file)
 
     return redirect('zip')
 
