@@ -6277,8 +6277,8 @@ def getUserLogs_ES(request, user_id, time_start, time_end, curr_page, page_size)
             "query": res_query
         }, index=index_name, doc_type='_doc')['count']
 
-    es_search_chart_data = getPanelDetailType_Aggregation(user_id, time_start, time_end, 'rahbari_search')
-    graph_chart_data = getPanelDetailType_Aggregation(user_id, time_start, time_end, 'rahbari_graph')
+    es_search_chart_data = getPanelDetailType_Aggregation(user_id, time_start, time_end, 'es_search')
+    graph_chart_data = getPanelDetailType_Aggregation(user_id, time_start, time_end, 'graph2')
 
     return JsonResponse(
         {
