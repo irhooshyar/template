@@ -13,7 +13,7 @@ from datetime import datetime
 from abdal.settings import LOCAL_SETTING
 ENABLE_BERT = LOCAL_SETTING['ENABLE_BERT']
 
-from es_scripts import IngestDocumentsToElastic, IngestParagraphsToElastic
+from es_scripts import IngestDocumentsToElastic, IngestParagraphsToElastic, IngestFullProfileAnalysisToElastic
 
 
 
@@ -146,6 +146,13 @@ def persian_apply(folder_name, Country, tasks_list, host_url):
 
         print("28. DocProvisionsFullProfileAnalysis.")
         DocProvisionsFullProfileAnalysis.apply(folder_name, Country)
+
+    if "IngestFullProfileAnalysisToElastic" in tasks_list:
+        Country.status = "IngestFullProfileAnalysisToElastic"
+        Country.save()
+
+        print("28. IngestFullProfileAnalysisToElastic.")
+        IngestFullProfileAnalysisToElastic.apply(folder_name, Country)
 
 
     if "DocsParagraphVectorExtractor" in tasks_list: ####
