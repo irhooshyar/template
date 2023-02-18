@@ -351,6 +351,9 @@
                         </div>
 
                         <div id="year_container" chart-height="350px" class="half"></div>
+
+                        <div id="hour_container" chart-height="350px" class="full"></div>
+
                         <div id="category_container" chart-height="650px" class="full">
                         </div>
 
@@ -497,6 +500,7 @@
             "subject_container": "subject_name",
             "category_container": "category_name",
             "year_container": "document_year",
+            "hour_container":"document_hour"
         }
 
         let UserSearchParameters = {
@@ -832,6 +836,7 @@
             subject_data = ES_Aggregations['subject-agg']['buckets']
             category_data = ES_Aggregations['category-agg']['buckets']
             year_data = ES_Aggregations['year-agg']['buckets']
+            hour_data = ES_Aggregations['hour-agg']['buckets']
 
 
             /* Show Chart  */
@@ -839,7 +844,8 @@
             showChartData(subject_data, "subject_container", documents_information_result, false, "موضوع خبر", "توزیع موضوعی اخبار")
             showChartData(category_data, "category_container", documents_information_result, false, "دسته خبر","توزیع اخبار براساس دسته اخبار")
             showChartData(year_data, "year_container", documents_information_result, true, "سال خبر","توزیع اخبار براساس سال خبر")
-
+            showChartData(hour_data, "hour_container", documents_information_result, true, "ساعت خبر","توزیع اخبار براساس ساعت خبر")
+            
             stopBlockUI('bar_chart_info_pane', 'داشبورد آماری');
 
         }
@@ -1119,27 +1125,27 @@
 
                 newDoughnutChart(container, options);
             }
-            // else if (container === "year_container"){
+            else if (container === "hour_container"){
 
-            //     options.onClick = async function (event, data) {
-            //         const click_tag_index = event.domTarget.tag;
-            //         console.log(data)
-            //         console.log(click_tag_index)
-            //         const text = data['mc'][click_tag_index][0];
-            //         console.log(text)
-            //         const best_result_count = documents_information_result.length
+                options.onClick = async function (event, data) {
+                    const click_tag_index = event.domTarget.tag;
+                    console.log(data)
+                    console.log(click_tag_index)
+                    const text = data['mc'][click_tag_index][0];
+                    console.log(text)
+                    const best_result_count = documents_information_result.length
 
-            //         let filtered_result = []
-            //         let header = ""
-            //         let save_file_name = document.getElementById("SearchBox").value;
+                    let filtered_result = []
+                    let header = ""
+                    let save_file_name = document.getElementById("SearchBox").value;
 
-            //         await GetClickedColumnDocuments(container, text)
+                    await GetClickedColumnDocuments(container, text)
 
-            //         $("#ChartModalBtn").click();
-            //     }
+                    $("#ChartModalBtn").click();
+                }
 
-            //     newLineChart(container, options)
-            // }
+                newLineChart(container, options)
+            }
              else {
                 newBarChart(container, options)
             }

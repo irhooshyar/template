@@ -3459,6 +3459,18 @@ def SearchDocument_ES(request, country_id, category_id, subject_id, from_year, t
                 "size": bucket_size
             }
         },
+          "hour-agg": {
+            "terms": {
+                "field": "document_hour",
+                "size": bucket_size
+            }
+        },
+        "day-agg": {
+            "terms": {
+                "field": "document_date",
+                "size": bucket_size
+            }
+        },
 
     }
 
