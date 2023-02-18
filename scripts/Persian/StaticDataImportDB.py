@@ -27,8 +27,14 @@ def standardFileName(name):
 
     return name
 
-def extractTime(date_time):
-    time = date_time.split('-')[1].strip()
+def extractTime(date_time,Country):
+    time = None
+
+    if Country.name == 'تابناک':
+        time = date_time.split('-')[1].strip()
+    elif Country.name == 'خبر آنلاین':
+        time = date_time.split(" ")[1].strip()
+    
     return time
 
 
@@ -106,11 +112,11 @@ def Update_Docs_fromExcel(Country):
     # Category.objects.all().delete()
 
     documentList = Document.objects.filter(country_id=Country)
-    excelFile = str(Path(config.PERSIAN_PATH, 'data.xlsx'))
+    excelFile = str(Path(config.PERSIAN_PATH, 'khabaronline-data.xlsx'))
 
     df = pd.read_excel(excelFile)
     df['title'] = df['title'].apply(lambda x: standardFileName(x))
-    df['date_time'] = df['date_time'].apply(lambda x: extractTime(x))
+    df['date_time'] = df['date_time'].apply(lambda x: extractTime(x,Country))
 
     # documents update
     dataframe_dictionary = DataFrame2Dict(df, "title", ["category", "date","date_time"])

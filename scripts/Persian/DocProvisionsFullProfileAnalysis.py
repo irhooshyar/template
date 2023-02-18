@@ -115,11 +115,12 @@ def apply(folder_name, Country):
 
     error_count = 0
     counter = 0
+    all_paragraphs = len(selected_paragraphs)
     for paragraph in selected_paragraphs:
         counter += 1
         if len(paragraph['text']) < 80:
             error_count += 1
-            print(counter, '...less than 80 character...')
+            print(f'{counter}/{all_paragraphs}...less than 80 character...')
             continue
 
         try:

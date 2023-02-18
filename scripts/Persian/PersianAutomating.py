@@ -89,6 +89,15 @@ def persian_apply(folder_name, Country, tasks_list, host_url):
         IngestParagraphsToElastic.apply(folder_name, Country,1)
 
 
+
+    # --- Ingest Paragraphs For Similarity
+    if "IngestParagraphsToElastic" in tasks_list:
+        Country.status = "IngestParagraphsToElastic"
+        Country.save()
+
+        print("15. IngestParagraphsToElastic.")
+        IngestParagraphsToElastic.apply(folder_name, Country,0)
+
     # if "DocsParagraphsClustering" in tasks_list:
     #     Country.status = "DocsParagraphsClustering"
     #     Country.save()
@@ -138,6 +147,14 @@ def persian_apply(folder_name, Country, tasks_list, host_url):
     #     print("28. LDAGraphData.")
     #     LDAGraphData.apply(Country)
 
+    if "DocsParagraphVectorExtractor" in tasks_list: ####
+        Country.status = "DocsParagraphVectorExtractor"
+        Country.save()
+
+        print("4. DocsParagraphVectorExtractor")
+        DocsParagraphVectorExtractor.apply(folder_name, Country)
+
+
     if "DocProvisionsFullProfileAnalysis" in tasks_list:
         Country.status = "DocProvisionsFullProfileAnalysis"
         Country.save()
@@ -153,12 +170,7 @@ def persian_apply(folder_name, Country, tasks_list, host_url):
         IngestFullProfileAnalysisToElastic.apply(folder_name, Country)
 
 
-    if "DocsParagraphVectorExtractor" in tasks_list: ####
-        Country.status = "DocsParagraphVectorExtractor"
-        Country.save()
 
-        print("4. DocsParagraphVectorExtractor")
-        DocsParagraphVectorExtractor.apply(folder_name, Country)
 
     print("finished at: ", datetime.now().strftime("%H:%M:%S"))
 
