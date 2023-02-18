@@ -139,7 +139,6 @@ async function ShowResult() {
     document.getElementById("document_download").disabled = false;
     document.getElementById("pdf_download").disabled = false;
     document.getElementById("document_search").disabled = false;
-    document.getElementById("document_subject_btn").disabled = false;
 
     getDocumentFullProfileInfo(country_id, document_id)
 
