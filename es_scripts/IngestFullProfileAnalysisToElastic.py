@@ -26,16 +26,15 @@ class FullProfileIndex(ES_Index):
             classification_subject = record['classification_subject']
             sentiment = record['sentiment']
 
-            persons_list = json.loads(record['persons'].replace("\'", "\""))
-            locations_list = json.loads(record['locations'].replace("\'", "\""))
-            organizations_list = json.loads(record['organizations'].replace("\'", "\""))
+            persons_list = json.loads(record['persons'].replace("\\'", '\\"'))
+            locations_list = json.loads(record['locations'].replace("\\'", '\\"'))
+            organizations_list = json.loads(record['organizations'].replace("\\'", '\\"'))
             # moneys_list = json.loads(record['moneys'].replace("\'", "\""))
             # dates_list = json.loads(record['dates'].replace("\'", "\""))
 
             persons = [item['word'] for item in persons_list] if len(persons_list) != 0 else ['بدون شخص حقیقی']
             locations = [item['word'] for item in locations_list] if len(locations_list) != 0 else ['بدون موقعیت مکانی']
-            organizations = [item['word'] for item in organizations_list] if len(organizations_list) != 0 else [
-                'بدون ذکر سازمان']
+            organizations = [item['word'] for item in organizations_list] if len(organizations_list) != 0 else ['بدون ذکر سازمان']
 
             date = self.paragraph_document_fields[paragraph_id]['date']
             Document_date = date if date != None else 'نامشخص'
@@ -87,6 +86,9 @@ class FullProfileIndex(ES_Index):
             yield new_document
 
 
+import after_response
+
+@after_response.enable
 def apply(folder, Country):
     settings = {}
     mappings = {}

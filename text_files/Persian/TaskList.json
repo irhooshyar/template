@@ -13,7 +13,8 @@
         "گراف‌های خوشه‌بندی": ["ClusteringGraphData", 0],
         "گراف‌های LDA":["LDAGraphData" , 0],
         "استخراج پروفایل احکام":["DocProvisionsFullProfileAnalysis" , 0],
-        "استخراج بردار معنایی پاراگراف‌ها":["DocsParagraphVectorExtractor" , 0]
+        "تزریق پروفایل احکام در الستیک":["IngestFullProfileAnalysisToElastic" , 0],
+        "استخراج بردار معنایی پاراگراف‌ها":["DocsParagraphVectorExtractor" , 0],
 
     }
 }

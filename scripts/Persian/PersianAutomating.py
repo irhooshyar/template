@@ -1,6 +1,4 @@
-
-from scripts.Persian import DocsParagraphsExtractor, DocsListExtractor, \
-    Preprocessing,  DocsCreateDocumentsListCubeData, DocsCompleteJsonField, AIParagraphTopicLDA
+from scripts.Persian import DocsParagraphsExtractor, DocsListExtractor, Preprocessing,  DocsCreateDocumentsListCubeData, DocsCompleteJsonField, AIParagraphTopicLDA
 from scripts.Persian import ClusteringGraphData
 from scripts.Persian import StaticDataImportDB
 from scripts.Persian import DocsParagraphsClustering
@@ -13,7 +11,7 @@ from datetime import datetime
 from abdal.settings import LOCAL_SETTING
 ENABLE_BERT = LOCAL_SETTING['ENABLE_BERT']
 
-from es_scripts import IngestDocumentsToElastic, IngestParagraphsToElastic
+from es_scripts import IngestDocumentsToElastic, IngestParagraphsToElastic, IngestFullProfileAnalysisToElastic
 
 
 
@@ -140,12 +138,19 @@ def persian_apply(folder_name, Country, tasks_list, host_url):
     #     print("28. LDAGraphData.")
     #     LDAGraphData.apply(Country)
 
-    # if "DocProvisionsFullProfileAnalysis" in tasks_list:
-    #     Country.status = "DocProvisionsFullProfileAnalysis"
-    #     Country.save()
+    if "DocProvisionsFullProfileAnalysis" in tasks_list:
+        Country.status = "DocProvisionsFullProfileAnalysis"
+        Country.save()
 
-    #     print("28. DocProvisionsFullProfileAnalysis.")
-    #     DocProvisionsFullProfileAnalysis.apply(Country)
+        print("28. DocProvisionsFullProfileAnalysis.")
+        DocProvisionsFullProfileAnalysis.apply(folder_name, Country)
+
+    if "IngestFullProfileAnalysisToElastic" in tasks_list:
+        Country.status = "IngestFullProfileAnalysisToElastic"
+        Country.save()
+
+        print("28. IngestFullProfileAnalysisToElastic.")
+        IngestFullProfileAnalysisToElastic.apply(folder_name, Country)
 
 
     if "DocsParagraphVectorExtractor" in tasks_list: ####
