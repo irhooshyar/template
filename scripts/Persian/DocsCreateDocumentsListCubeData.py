@@ -64,8 +64,6 @@ def ExtractList_CUBE(filesList,  Result_Create_List, thread_number, Country):
         if doc.subject_id is not None:
             subject = doc.subject_name
 
-
-
         date = "نامشخص"
         year = "نامشخص"
         if doc.date is not None:

@@ -38,11 +38,11 @@ const ft = FooTable.init('#PopUpTable', {
         "name": "subject",
         "title": "موضوع سند"
     }, {
-        "name": "approval_reference",
-        "title": "مرجع تصویب"
+        "name": "category",
+        "title": "دسته سند"
     }, {
-        "name": "approval_date",
-        "title": "تاریخ تصویب"
+        "name": "date",
+        "title": "تاریخ"
     }, {
         "name": "tag",
         "title": "انتخاب"
