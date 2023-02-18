@@ -3201,59 +3201,28 @@ def GetDoticSimDocument_ByTitle(request, document_name):
 def GetDocumentById(request, id):
     document = Document.objects.get(id=id)
 
-    approval_ref = "نامشخص"
-    if document.approval_reference_id != None:
-        approval_ref = document.approval_reference_id.name
+    date = "نامشخص"
+    if document.date != None:
+        date = document.date
 
-    approval_date = "نامشخص"
-    if document.approval_date != None:
-        approval_date = document.approval_date
-
-    communicated_date = "نامشخص"
-    if document.communicated_date != None:
-        communicated_date = document.communicated_date
-
-    type_name = "سایر"
-    if document.type_id != None:
-        type_name = document.type_id.name
-
-    level_name = "نامشخص"
-    if document.level_id != None:
-        level_name = document.level_id.name
+    category_name = "نامشخص"
+    if document.category_name != None:
+        category_name = document.category_name
 
     subject_name = "نامشخص"
-    if document.subject_id != None:
-        subject_name = document.subject_id.name
-
-    validation_type = document.revoked_type_name
-
-    revoked_size = ""
-    revoked_clauses = ""
-
-
-    document_actors_chart_data = []
-    if document.actors_chart_data != None:
-        document_actors_chart_data = document.actors_chart_data['data']
+    if document.subject_name != None:
+        subject_name = document.subject_name
 
     result = {"id": document.id,
               "name": document.name,
               "file_name": document.file_name,
               "country_id": document.country_id_id,
               "country": document.country_id.name,
-              "level": level_name,
               "subject": subject_name,
-              "type": type_name,
-              "approval_reference": approval_ref,
-              "approval_date": approval_date,
-              "communicated_date": communicated_date,
-              "validation_type": validation_type,
-              "revoked_size": revoked_size,
-              "revoked_clauses": revoked_clauses,
-              "word_count": document.word_count,
-              "distinct_word_count": document.distinct_word_count,
-              "stopword_count": document.stopword_count,
-              "actors_chart_data": document_actors_chart_data
+              "date": date,
+              "category": category_name,
               }
+
     return JsonResponse({'document_information': [result]})
 
 
