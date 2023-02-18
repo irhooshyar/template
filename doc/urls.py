@@ -11,6 +11,8 @@ urlpatterns = [
 
     path('get_task_list/', views.get_task_list, name='get_task_list'),
     path('static_data_import_db/<int:id>/<str:language>/', views.static_data_import_db, name='static_data_import_db'),
+    path('update_docs_from_excel/<int:id>/', views.update_docs_from_excel, name='update_docs_from_excel'),
+    
     path('search_parameters_to_db/<int:id>/', views.search_parameters_to_db, name='search_parameters_to_db'),
     path('rahbari_search_parameters_to_db/<int:id>/', views.rahbari_search_parameters_to_db,
          name='rahbari_search_parameters_to_db'),
@@ -82,9 +84,7 @@ urlpatterns = [
     path(
         'SearchDocuments_Column_ES/<int:country_id>/<str:subject_name>/<str:category_name>/<str:from_year>/<str:to_year>/<str:place>/<str:text>/<str:search_type>/<int:curr_page>/',
         views.SearchDocuments_Column_ES, name='SearchDocuments_Column_ES'),
-    path(
-        'SearchDocument_ES2/<int:country_id>/<int:level_id>/<int:subject_id>/<int:type_id>/<int:approval_reference_id>/<int:from_year>/<int:to_year>/<int:from_advisory_opinion_count>/<int:from_interpretation_rules_count>/<int:revoked_type_id>/<str:place>/<str:text>/<str:search_type>/',
-        views.SearchDocument_ES2, name='SearchDocument_ES2'),
+
     path(
         'GetActorsChartData_ES_2/<int:country_id>/<int:level_id>/<int:subject_id>/<int:type_id>/<int:approval_reference_id>/<int:from_year>/<int:to_year>/<int:from_advisory_opinion_count>/<int:from_interpretation_rules_count>/<int:revoked_type_id>/<str:place>/<str:text>/<str:search_type>/',
         views.GetActorsChartData_ES_2, name='GetActorsChartData_ES_2'),

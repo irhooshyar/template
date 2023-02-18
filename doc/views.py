@@ -500,6 +500,12 @@ def static_data_import_db(request, id, language):
     StaticDataImportDB.apply(None, file)
     return redirect('zip')
 
+def update_docs_from_excel(request, id):
+    file = get_object_or_404(Country, id=id)
+    from scripts.Persian import StaticDataImportDB
+    StaticDataImportDB.Update_Docs_fromExcel(file)
+    return redirect('zip')
+
 
 def insert_docs_to_rahbari_table(request, id):
     file = get_object_or_404(Country, id=id)
@@ -3461,7 +3467,7 @@ def SearchDocument_ES(request, country_id, category_id, subject_id, from_year, t
                              _source_includes=['document_id', 'document_name', 'document_date',
                                                'subject_name', 'category_name', 'document_year',
                                                'raw_file_name',
-                                               'source_name'],
+                                               'source_name','document_hour'],
                              request_timeout=40,
                              query=res_query,
                              aggregations=res_agg,
@@ -4723,65 +4729,6 @@ def GetDocumentSubjectContent(request, document_id, version_id):
 
     return JsonResponse({'document_paragraphs': document_paragraphs})
 
-
-def SearchDocument_ES2(request, country_id, level_id, subject_id, type_id, approval_reference_id, from_year, to_year,
-                       from_advisory_opinion_count,
-                       from_interpretation_rules_count, revoked_type_id, place, text, search_type):
-    organization_type_id = 0
-
-    fields = [level_id, subject_id, type_id, approval_reference_id, from_year, to_year, from_advisory_opinion_count,
-              from_interpretation_rules_count, revoked_type_id, organization_type_id]
-
-    res_query = {
-        "bool": {}
-    }
-
-    ALL_FIELDS = True
-
-    if not all(field == 0 for field in fields):
-        ALL_FIELDS = False
-        res_query['bool']['filter'] = []
-        res_query = filter_doc_fields(res_query, level_id, subject_id, type_id, approval_reference_id, from_year,
-                                      to_year,
-                                      from_advisory_opinion_count, from_interpretation_rules_count,
-                                      revoked_type_id, organization_type_id)
-
-    if text != "empty":
-        res_query["bool"]["must"] = []
-
-        if search_type == 'exact':
-            res_query = exact_search_text(res_query, place, text, ALL_FIELDS)
-        else:
-            res_query = boolean_search_text(res_query, place, text, search_type, ALL_FIELDS)
-
-    # index_name = Country.objects.get(id = country_id).name
-    # index_name = index_name.replace(' ','_')
-    country_obj = Country.objects.get(id=country_id)
-    index_name = standardIndexName(country_obj, Document.__name__)
-
-    response = client.search(index=index_name,
-                             _source_includes=['document_id', 'name', 'approval_reference_name', 'approval_date',
-                                               'subject_name',
-                                               "level_name", 'type_name', 'approval_year', 'communicated_date',
-                                               'advisory_opinion_count', 'interpretation_rules_count'],
-                             request_timeout=40,
-                             query=res_query,
-                             size=1300
-
-                             )
-
-    result = response['hits']['hits']
-
-    total_hits = response['hits']['total']['value']
-
-    if total_hits == 10000:
-        total_hits = client.count(body={
-            "query": res_query
-        }, index=index_name, doc_type='_doc')['count']
-
-    return JsonResponse({
-        "result": result,
-        'total_hits': total_hits})
 
 
 def CreateDocumentComment(request, document, comment, username, comment_show_info, time):

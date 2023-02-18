@@ -1432,11 +1432,13 @@ FA_Mappings = {
         "document_year": {
             "type": "integer"
         },
-
         "document_time": {
             "type": "text"
         },
 
+        "document_hour": {
+            "type": "integer"
+        },
 
         "document_id": {
             "type": "integer"

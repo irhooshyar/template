@@ -74,7 +74,7 @@
                 <a href="{% url 'delete' file.pk  file.language %}">Delete</a>
 
                 {##---------------- temporary option , will be removed after level detection bug is fixed ----------------##}
-                <a href="{% url 'static_data_import_db'  file.pk 'English' %}">en-static-data</a>
+                <a href="{% url 'update_docs_from_excel'  file.pk %}">update-doc-from-excel</a>
 
                 <span class="bold"> | </span>
                 <a href="{% url 'fullProfileAnalysis' file.pk %}">full-profile-analysis</a>

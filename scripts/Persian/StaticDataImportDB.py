@@ -27,6 +27,11 @@ def standardFileName(name):
 
     return name
 
+def extractTime(date_time):
+    time = date_time.split('-')[1].strip()
+    return time
+
+
 def persianNumConvert(text):
     persian_num_dict = {"۱": "1" ,"۲": "2", "۳": "3", "۴": "4", "۵": "5", "۶": "6", "۷": "7", "۸": "8", "۹":"9" , "۰": "0" }
     for key, value in persian_num_dict.items():
@@ -98,16 +103,17 @@ def Roles_Insert():
 
 
 def Update_Docs_fromExcel(Country):
-    Category.objects.all().delete()
+    # Category.objects.all().delete()
+    
     documentList = Document.objects.filter(country_id=Country)
     excelFile = str(Path(config.PERSIAN_PATH, 'data.xlsx'))
 
     df = pd.read_excel(excelFile)
     df['title'] = df['title'].apply(lambda x: standardFileName(x))
-
+    df['time'] = df['time'].apply(lambda x: extractTime(x))
 
     # documents update
-    dataframe_dictionary = DataFrame2Dict(df, "title", ["category", "date"])
+    dataframe_dictionary = DataFrame2Dict(df, "title", ["category", "date","time"])
 
     for document in documentList:
         document_id = document.id
@@ -116,6 +122,7 @@ def Update_Docs_fromExcel(Country):
         if document_name in dataframe_dictionary:
             date = CheckDate(str(dataframe_dictionary[document_name]['date']))
             category_name = str(dataframe_dictionary[document_name]['category'])
+            time = str(dataframe_dictionary[document_name]['time'])
 
             category_name = category_name.replace("»", "-")
             category_name = category_name.replace("صفحه نخست-", "")
@@ -129,7 +136,8 @@ def Update_Docs_fromExcel(Country):
                 category = Category.objects.create(name=category_name)
                 category_id = category.id
 
-            Document.objects.filter(id=document_id).update(date=date, category_id=category_id, category_name=category_name)
+            Document.objects.filter(id=document_id).update(date=date,time = time,
+                                                            category_id=category_id, category_name=category_name)
 
 
 
