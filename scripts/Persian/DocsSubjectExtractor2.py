@@ -154,7 +154,7 @@ def apply(folder_name, Country):
                                                      subject3_score=subject3_score,
                                                      subject3_name=subject3_name)
                 except:
-                    print("Error paragraph: ", paragraph_id)
+                    print("Error paragraph: ", paragraph.id)
 
             document_subject = concat_dictionary(document_subject)
 
@@ -172,7 +172,7 @@ def apply(folder_name, Country):
                 DocumentSubject.objects.create(document_id_id= document_id, subject_id=subject, weight=weight)
 
         except:
-            print("Error Document: ", document_id)
+            print("Error Document: ", document.id)
 
     print("Done . . .")
 
