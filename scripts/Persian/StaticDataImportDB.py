@@ -104,16 +104,16 @@ def Roles_Insert():
 
 def Update_Docs_fromExcel(Country):
     # Category.objects.all().delete()
-    
+
     documentList = Document.objects.filter(country_id=Country)
     excelFile = str(Path(config.PERSIAN_PATH, 'data.xlsx'))
 
     df = pd.read_excel(excelFile)
     df['title'] = df['title'].apply(lambda x: standardFileName(x))
-    df['time'] = df['time'].apply(lambda x: extractTime(x))
+    df['date_time'] = df['date_time'].apply(lambda x: extractTime(x))
 
     # documents update
-    dataframe_dictionary = DataFrame2Dict(df, "title", ["category", "date","time"])
+    dataframe_dictionary = DataFrame2Dict(df, "title", ["category", "date","date_time"])
 
     for document in documentList:
         document_id = document.id
@@ -122,7 +122,7 @@ def Update_Docs_fromExcel(Country):
         if document_name in dataframe_dictionary:
             date = CheckDate(str(dataframe_dictionary[document_name]['date']))
             category_name = str(dataframe_dictionary[document_name]['category'])
-            time = str(dataframe_dictionary[document_name]['time'])
+            time = str(dataframe_dictionary[document_name]['date_time'])
 
             category_name = category_name.replace("»", "-")
             category_name = category_name.replace("صفحه نخست-", "")
