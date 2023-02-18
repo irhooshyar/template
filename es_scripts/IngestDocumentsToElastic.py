@@ -48,7 +48,7 @@ class DocumentIndex(ES_Index):
             doc_year = doc['year'] if doc['year'] != None else 0
             doc_date = doc['date'] if doc['date'] != None else 'نامشخص'
             doc_time = doc['time'] if doc['time'] != None else 'نامشخص'
-            doc_hour = doc_time.split(':')[0].strip()
+            doc_hour = int(doc_time.split(':')[0].strip())
 
             if doc_file_name in files_dict:
                 base64_file = files_dict[doc_file_name]
