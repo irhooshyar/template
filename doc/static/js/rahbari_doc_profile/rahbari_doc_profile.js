@@ -107,7 +107,6 @@ async function init() {
         document.getElementById("document_download").disabled = true;
         document.getElementById("pdf_download").disabled = true;
         document.getElementById("document_search").disabled = true;
-        document.getElementById("document_subject_btn").disabled = true;
 
         document.getElementById("document_select").disabled = true;
         const country_name = $("#country option:selected").text();

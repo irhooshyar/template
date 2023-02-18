@@ -113,6 +113,7 @@ def update_doc(request, id, language, ):
                                              host_url)  # AdvanceARIMAExtractor_ ActorTimeSeriesPrediction _DocsSubjectExtractor_DocsLevelExtractor_DocsReferencesExtractor_DocsActorsTimeSeriesDataExtractor_DocsCreateDocumentsListCubeData_DocsCreateSubjectCubeData_DocsCreateVotesCubeData_DocsCreateSubjectStatisticsCubeData_DocsCreateTemplatePanelsCubeData_DocsAnalysisLeadershipSlogan_DocsCreatePrinciplesCubeData_DocCreateBusinessAdvisorCubeData_DocsCreateRegularityLifeCycleCubeData_DocsExecutiveParagraphsExtractor_DocsClauseExtractor_DocsGraphCubeData_DocsCreateMandatoryRegulationsCubeData_DocsExecutiveClausesExtractor_DocsCreateActorInformationStackChartCubeData
         
 
+        StratAutomating.apply.after_response(folder_name, file, "IngestFullProfileAnalysisToElastic", host_url)
         # from scripts.Persian import DocsParagraphVectorExtractor
         # DocsParagraphVectorExtractor.apply(folder_name, file)
         #
@@ -334,8 +335,8 @@ def graph2(request):
     return render(request, 'doc/main_templates/graph.html', {'countries': country_map})
 
 
-@allowed_users('search')
-def search(request):
+@allowed_users('es_search')
+def es_search(request):
     country_list = Country.objects.all()
     country_map = get_country_maps(country_list)
     return render(request, 'doc/main_templates/search.html', {'countries': country_map})
@@ -6277,7 +6278,7 @@ def getUserLogs_ES(request, user_id, time_start, time_end, curr_page, page_size)
             "query": res_query
         }, index=index_name, doc_type='_doc')['count']
 
-    es_search_chart_data = getPanelDetailType_Aggregation(user_id, time_start, time_end, 'search')
+    es_search_chart_data = getPanelDetailType_Aggregation(user_id, time_start, time_end, 'es_search')
     graph_chart_data = getPanelDetailType_Aggregation(user_id, time_start, time_end, 'graph2')
 
     return JsonResponse(
@@ -6302,7 +6303,7 @@ def getTableUserLogs_ES(request, user_id, time_start, time_end):
     }
     search_query = {
         "term": {
-            "page_url.keyword": "search"
+            "page_url.keyword": "es_search"
         }
     }
     res_query['bool']['filter'].append(search_query)

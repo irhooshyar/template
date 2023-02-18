@@ -162,3 +162,5 @@ def apply(folder, Country):
     new_index = FullProfileIndex(index_name, settings, mappings, paragraph_document_fields)
     new_index.create()
     new_index.bulk_insert_documents(folder, records, do_parallel=True)
+
+    print("Done ...........")
