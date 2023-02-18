@@ -104,8 +104,15 @@ def update_doc(request, id, language, ):
     file.status = "Starting..."
     file.save()
 
+    if language == 'کتاب':
+        StratAutomating.apply.after_response(folder_name, file, "DocsAreaGraphCubeData", host_url)
+    else:
+        #
+        StratAutomating.apply.after_response(folder_name, file,
+                                             "DocsParagraphVectorExtractor",
+                                             host_url)  # AdvanceARIMAExtractor_ ActorTimeSeriesPrediction _DocsSubjectExtractor_DocsLevelExtractor_DocsReferencesExtractor_DocsActorsTimeSeriesDataExtractor_DocsCreateDocumentsListCubeData_DocsCreateSubjectCubeData_DocsCreateVotesCubeData_DocsCreateSubjectStatisticsCubeData_DocsCreateTemplatePanelsCubeData_DocsAnalysisLeadershipSlogan_DocsCreatePrinciplesCubeData_DocCreateBusinessAdvisorCubeData_DocsCreateRegularityLifeCycleCubeData_DocsExecutiveParagraphsExtractor_DocsClauseExtractor_DocsGraphCubeData_DocsCreateMandatoryRegulationsCubeData_DocsExecutiveClausesExtractor_DocsCreateActorInformationStackChartCubeData
+        
 
-    StratAutomating.apply.after_response(folder_name, file, "DocsCreateDocumentsListCubeData", host_url)
     # from scripts.Persian import DocsParagraphVectorExtractor
     # DocsParagraphVectorExtractor.apply(folder_name, file)
     #
@@ -6118,11 +6125,11 @@ def getChartLogs_ES(request, user_id, time_start, time_end):
         column = [url, count]
         chart_data_list.append(column)
 
-    panels = {'es_search': {'chart_dict': {}, 'chart_list': []},
+    panels = {'search': {'chart_dict': {}, 'chart_list': []},
               'graph2': {'chart_dict': {}, 'chart_list': []}
               }
 
-    es_search_chart_data = getPanelDetailType_Aggregation(user_id, time_start, time_end, 'es_search')
+    es_search_chart_data = getPanelDetailType_Aggregation(user_id, time_start, time_end, 'search')
     graph_chart_data = getPanelDetailType_Aggregation(user_id, time_start, time_end, 'graph2')
 
     # 'chart_data_information': panels['information']['chart_list'],
