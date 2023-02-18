@@ -127,7 +127,6 @@ def apply(folder, Country):
     ).values('id', 'document_id', 'document_name', 'paragraph_text', 'paragraph_id', 'sentiment',
              'classification_subject', 'persons', 'locations', 'organizations')
 
-    print(len(records))
     counter = 0
     all_objects = Document.objects.all()
     print("objects fetched successfully")
