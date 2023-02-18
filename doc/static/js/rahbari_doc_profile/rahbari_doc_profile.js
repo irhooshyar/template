@@ -495,7 +495,6 @@ async function SelectDocumentFunction(document_id) {
     const country_id = document.getElementById('country').value
     const request_link = 'http://' + location.host + "/GetDetailDocumentById/" + country_id + "/" + document_id + "/";
     let response = await fetch(request_link).then(response => response.json());
-    document.getElementById("document_subject").innerHTML = response['subject']
     const result = response["result"][0]['_source']
     document.getElementById("document").innerHTML = "<option value=" + result["document_id"] + " >" + result["document_name"] + "</option>";
 
@@ -503,10 +502,9 @@ async function SelectDocumentFunction(document_id) {
     document.getElementById('document_select').innerHTML = document_select_tag;
     document.getElementById('document_select').title = result['document_name'];
 
-    console.log(result)
-    document.getElementById('document_date').innerHTML = result['date']
-    document.getElementById('document_subject').innerHTML = result['subject']
-    document.getElementById('document_category').innerHTML = result['category']
+    document.getElementById('document_date').innerHTML = response['date']
+    document.getElementById('document_subject').innerHTML = response['subject']
+    document.getElementById('document_category').innerHTML = response['category']
     // GetTextSummary()
     ShowResult();
     find_rahbari_document_actors(document_id)
