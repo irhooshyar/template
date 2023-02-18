@@ -6302,7 +6302,7 @@ def getTableUserLogs_ES(request, user_id, time_start, time_end):
     }
     search_query = {
         "term": {
-            "page_url.keyword": "rahbari_search"
+            "page_url.keyword": "search"
         }
     }
     res_query['bool']['filter'].append(search_query)
