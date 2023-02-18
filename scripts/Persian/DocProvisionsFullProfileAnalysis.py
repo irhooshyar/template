@@ -1,7 +1,6 @@
 import json
 
-from transformers import AutoTokenizer, AutoModelForTokenClassification, pipeline, MT5Tokenizer, \
-    MT5ForConditionalGeneration, AutoModelForSequenceClassification
+from transformers import AutoTokenizer, AutoModelForTokenClassification, pipeline, MT5Tokenizer, MT5ForConditionalGeneration, AutoModelForSequenceClassification
 from doc.models import FullProfileAnalysis
 from doc.models import DocumentParagraphs
 import after_response

@@ -1,6 +1,4 @@
-
-from scripts.Persian import DocsParagraphsExtractor, DocsListExtractor, \
-    Preprocessing,  DocsCreateDocumentsListCubeData, DocsCompleteJsonField, AIParagraphTopicLDA
+from scripts.Persian import DocsParagraphsExtractor, DocsListExtractor, Preprocessing,  DocsCreateDocumentsListCubeData, DocsCompleteJsonField, AIParagraphTopicLDA
 from scripts.Persian import ClusteringGraphData
 from scripts.Persian import StaticDataImportDB
 from scripts.Persian import DocsParagraphsClustering
