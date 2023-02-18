@@ -26,7 +26,10 @@ class FullProfileIndex(ES_Index):
             classification_subject = record['classification_subject']
             sentiment = record['sentiment']
 
-            persons_list = json.loads(record['persons'].replace("'", '"'))
+            try:
+                persons_list = json.loads(record['persons'].replace("'", '"'))
+            except:
+                print(record['persons'])
 
             locations_list = json.loads(record['locations'].replace("'", '"'))
 
