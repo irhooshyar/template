@@ -181,8 +181,8 @@ def get_book_maps(country_objects):
 
 def fullProfileAnalysis(request, id):
     file = get_object_or_404(Country, id=id)
-    from scripts.Persian import DocProvisionsFullProfileAnalysis
-    DocProvisionsFullProfileAnalysis.apply(None, file)
+    from scripts.Persian import DocProvisionsFullProfileAnalysis2
+    DocProvisionsFullProfileAnalysis2.apply(None, file)
     return redirect('zip')
 
 
