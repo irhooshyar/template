@@ -112,7 +112,7 @@ def Update_Docs_fromExcel(Country):
     # Category.objects.all().delete()
 
     documentList = Document.objects.filter(country_id=Country)
-    excelFile = str(Path(config.PERSIAN_PATH, 'khabaronline-data.xlsx'))
+    excelFile = str(Path(config.PERSIAN_PATH, 'tabnak-data.xlsx'))
 
     df = pd.read_excel(excelFile)
     df['title'] = df['title'].apply(lambda x: standardFileName(x))
