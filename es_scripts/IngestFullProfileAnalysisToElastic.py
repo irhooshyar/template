@@ -27,17 +27,17 @@ class FullProfileIndex(ES_Index):
             sentiment = record['sentiment']
 
             try:
-                persons_list = json.loads(str(record['persons']).replace("'", '"').replace("\\", '\\\\'))
+                persons_list = json.loads(str(record['persons']).replace('"',"").replace("'", '"').replace("\\", '\\\\'))
             except:
                 print(str(record['persons']))
 
             try:
-                locations_list = json.loads(str(record['locations']).replace("'", '"').replace("\\", '\\\\'))
+                locations_list = json.loads(str(record['locations']).replace('"',"").replace("'", '"').replace("\\", '\\\\'))
             except:
                 print(str(record['locations']))
 
             try:
-                organizations_list = json.loads(str(record['organizations']).replace("'", '"').replace("\\", '\\\\'))
+                organizations_list = json.loads(str(record['organizations']).replace('"',"").replace("'", '"').replace("\\", '\\\\'))
             except:
                 print(str(record['organizations']))
 
