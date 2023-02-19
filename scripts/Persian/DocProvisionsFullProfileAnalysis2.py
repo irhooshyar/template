@@ -105,19 +105,27 @@ def Extract_Sentiment(Paragraph_Dict, Result_Create_List, thread_number, Country
     Create_List = []
     f = 0
     for para_id, para_text in Paragraph_Dict.items():
-        
+        print(f"{f}/{len(Paragraph_Dict.keys())}")
         try:
             classification_model_result = text_classifications_analysis(para_text)
             tagging_model_result = text_tagging_analysis(para_text)
-            sentiment_model_result = text_sentiment_analysis(para_text)
             classification_result = process_text_classification_model(classification_model_result['result'])
             tagging_result = process_text_tagging_model(tagging_model_result['result'], para_text)
+            
+            sentiment_model_result = text_sentiment_analysis(para_text)
             sentiment_result = process_text_sentiment_model(sentiment_model_result['result'][0])
 
             obj = FullProfileAnalysis(country=Country, sentiment=sentiment_result,
                                            classification_subject=classification_result, persons=tagging_result['persons'],
                                            locations=tagging_result['locations'], organizations=tagging_result['organizations'],
                                            document_paragraph_id=para_id)
+            
+
+            # obj = FullProfileAnalysis(country=Country,
+            #                           classification_subject=classification_result, persons=tagging_result['persons'],
+            #                                locations=tagging_result['locations'], organizations=tagging_result['organizations'],
+            #                                document_paragraph_id=para_id)
+
             Create_List.append(obj)
 
         except Exception as e:
