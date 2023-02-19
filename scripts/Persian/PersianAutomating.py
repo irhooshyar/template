@@ -173,7 +173,6 @@ def persian_apply(folder_name, Country, tasks_list, host_url):
         IngestFullProfileAnalysisToElastic.apply(folder_name, Country)
 
 
-
-
     print("finished at: ", datetime.now().strftime("%H:%M:%S"))
-
+    Country.status = "Done"
+    Country.save()
