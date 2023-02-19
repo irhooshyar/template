@@ -30,8 +30,10 @@ class FullProfileIndex(ES_Index):
 
             locations_list = json.loads(record['locations'].replace("\'", '\"'))
 
-            organizations_list = json.loads(record['organizations'].replace("\'", '\"'))
-
+            try:
+                organizations_list = json.loads(record['organizations'].replace("\'", '\"'))
+            except:
+                print(record['organizations'])
 
             persons = [item['word'] for item in persons_list] if len(persons_list) != 0 else ['بدون شخص حقیقی']
             locations = [item['word'] for item in locations_list] if len(locations_list) != 0 else ['بدون موقعیت مکانی']
