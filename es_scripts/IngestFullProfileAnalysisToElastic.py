@@ -28,6 +28,8 @@ class FullProfileIndex(ES_Index):
 
             try:
                 persons_list = json.loads(str(record['persons']).replace('"',"").replace("'", '"').replace("\\", '\\\\'))
+                if document_id == 1:
+                    print(persons_list)
             except:
                 print(str(record['persons']))
 
