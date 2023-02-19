@@ -131,7 +131,6 @@ def apply(folder, Country):
                                                        'labels': Document_record.labels,
                                                         'category_name': Document_record.category_name,
                                                         'subject_name': Document_record.subject_name}
-            print(counter, document_id, paragraph_id)
         except:
             paragraph_document_fields[paragraph_id] = {'date': 'نامشخص', 'year': 0,
                                                        'labels': 'نامشخس', 'type': 'نامشخص'}
