@@ -128,6 +128,31 @@ async function init() {
     UserLog(form_data)
 }
 
+
+async function CountryChanged() {
+
+    startBlockUI();
+    document.getElementById("document_select").disabled = true;
+
+    const country_name = $("#country option:selected").text();
+
+    document.getElementById('ModalHeader').innerText = 'مجموعه سند: ' + country_name;
+
+    document.getElementById("document_select").disabled = false;
+
+    counter = 0;
+    loaded_doc = 0
+    first_loading = true
+
+    $(".add-row-1").css('visibility', 'visible');
+
+    document.getElementById("document_select").disabled = true;
+    await setTimeout(loadMoreDoc(), 1000)
+    document.getElementById("document_select").disabled = false;
+
+    stopBlockUI()
+}
+
 async function ShowResult() {
     await DownloadLinkSet();
     await ShowDocumentComment()

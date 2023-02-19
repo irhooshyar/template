@@ -26,20 +26,12 @@ class FullProfileIndex(ES_Index):
             classification_subject = record['classification_subject']
             sentiment = record['sentiment']
 
-            try:
-                persons_list = json.loads(str(record['persons']).replace("'", '"').replace("\\", '\\\\'))
-            except:
-                print(str(record['persons']))
+            persons_list = json.loads(str(record['persons']).replace('"',"").replace("'", '"').replace("\\", '\\\\'))
 
-            try:
-                locations_list = json.loads(str(record['locations']).replace("'", '"').replace("\\", '\\\\'))
-            except:
-                print(str(record['locations']))
+            locations_list = json.loads(str(record['locations']).replace('"',"").replace("'", '"').replace("\\", '\\\\'))
 
-            try:
-                organizations_list = json.loads(str(record['organizations']).replace("'", '"').replace("\\", '\\\\'))
-            except:
-                print(str(record['organizations']))
+            organizations_list = json.loads(str(record['organizations']).replace('"',"").replace("'", '"').replace("\\", '\\\\'))
+
 
             persons = [item['word'] for item in persons_list] if len(persons_list) != 0 else ['بدون شخص حقیقی']
             locations = [item['word'] for item in locations_list] if len(locations_list) != 0 else ['بدون موقعیت مکانی']
@@ -139,7 +131,6 @@ def apply(folder, Country):
                                                        'labels': Document_record.labels,
                                                         'category_name': Document_record.category_name,
                                                         'subject_name': Document_record.subject_name}
-            print(counter, document_id, paragraph_id)
         except:
             paragraph_document_fields[paragraph_id] = {'date': 'نامشخص', 'year': 0,
                                                        'labels': 'نامشخس', 'type': 'نامشخص'}
