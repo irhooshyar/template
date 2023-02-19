@@ -3431,7 +3431,7 @@ def SearchDocument_ES(request, country_id, category_id, subject_id, from_year, t
                 "size": bucket_size
             }
         },
-        "day-agg": {
+        "date-agg": {
             "terms": {
                 "field": "document_date.keyword",
                 "size": bucket_size

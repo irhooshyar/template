@@ -1427,7 +1427,13 @@ FA_Mappings = {
     "properties": {
     
         "document_date": {
-            "type": "text"
+            "type": "text",
+            "fields": {
+                "keyword": {
+                    "type": "keyword",
+                    "ignore_above": 256
+                }
+            }
         },
         "document_year": {
             "type": "integer"
