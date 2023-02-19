@@ -5,7 +5,7 @@ from scripts.Persian import DocsParagraphsClustering
 from scripts.Persian import SubjectParagraphExtractor
 from scripts.Persian import DocsSubjectExtractor2
 from scripts.Persian import DocsParagraphsClusteringCubeData,LDAGraphData 
-from scripts.Persian import DocProvisionsFullProfileAnalysis,DocsParagraphVectorExtractor
+from scripts.Persian import DocProvisionsFullProfileAnalysis2,DocsParagraphVectorExtractor
 from datetime import datetime
 
 from abdal.settings import LOCAL_SETTING
@@ -158,12 +158,12 @@ def persian_apply(folder_name, Country, tasks_list, host_url):
         DocsParagraphVectorExtractor.apply(folder_name, Country)
 
 
-    # if "DocProvisionsFullProfileAnalysis" in tasks_list:
-    #     Country.status = "DocProvisionsFullProfileAnalysis"
-    #     Country.save()
-    #
-    #     print("28. DocProvisionsFullProfileAnalysis.")
-    #     DocProvisionsFullProfileAnalysis.apply(folder_name, Country)
+    if "DocProvisionsFullProfileAnalysis" in tasks_list:
+        Country.status = "DocProvisionsFullProfileAnalysis2"
+        Country.save()
+    
+        print("28. DocProvisionsFullProfileAnalysis2.")
+        DocProvisionsFullProfileAnalysis2.apply(folder_name, Country)
 
     if "IngestFullProfileAnalysisToElastic" in tasks_list:
         Country.status = "IngestFullProfileAnalysisToElastic"
