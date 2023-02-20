@@ -74,7 +74,7 @@ def apply(folder_name, Country):
     t = time.time()
 
     # excelFile = str(Path(config.PERSIAN_PATH, 'DoticFull_with_limited_title.xlsx'))
-    excelFile = str(Path(config.PERSIAN_PATH, 'tabnak-data.xlsx'))
+    excelFile = str(Path(config.PERSIAN_PATH, 'asriran-data.xlsx'))
     df = pd.read_excel(excelFile)
     df['title'] = df['title'].apply(lambda x: standardFileName(x))
 
