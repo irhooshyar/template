@@ -1,10 +1,10 @@
-const FingerprintJS = require("@fingerprintjs/fingerprintjs");
-import FingerprintJSp from "@fingerprintjs/fingerprintjs-pro";
+// const FingerprintJS = require("@fingerprintjs/fingerprintjs");
+// import FingerprintJSp from "@fingerprintjs/fingerprintjs-pro";
 
-const fpPromise_pro = FingerprintJSp.load({ apiKey: "nLvTePYiYEFERqTHoSZ7" });
+// const fpPromise_pro = FingerprintJSp.load({ apiKey: "nLvTePYiYEFERqTHoSZ7" });
 
 // Initialize the agent at application startup.
-const fpPromise = FingerprintJS.load();
+// const fpPromise = FingerprintJS.load();
 
 // const fpPromise_pro = import("https://fpcdn.io/v3/nLvTePYiYEFERqTHoSZ7").then(
 //   (FingerprintJS) => FingerprintJS.load()
@@ -5691,20 +5691,31 @@ function pushSubmit(event) {
   }
 }
 
-export function initXC(siteId, apiKey) {
-          console.log("Bita2")
+function initXC(siteId, apiKey) {
   xApiKey = apiKey;
-  fpPromise_pro
+  // fpPromise_pro
+  //   .then((fp) => fp.get())
+  //   .then((result) => {
+  //     initMatomo(result.visitorId, siteId);
+  //   })
+  //   .catch((err) => {
+  //     fpPromise
+  //       .then((fp) => fp.get())
+  //       .then((result) => {
+  //         initMatomo(result.visitorId, siteId);
+  //       });
+  //   });
+  const fpPromise = import("https://openfpcdn.io/fingerprintjs/v3").then(
+    (FingerprintJS) => FingerprintJS.load()
+  );
+
+  // Get the visitor identifier when you need it.
+  fpPromise
     .then((fp) => fp.get())
     .then((result) => {
-      initMatomo(result.visitorId, siteId);
-    })
-    .catch((err) => {
-      fpPromise
-        .then((fp) => fp.get())
-        .then((result) => {
-          initMatomo(result.visitorId, siteId);
-        });
+      // This is the visitor identifier:
+      const visitorId = result.visitorId;
+      initMatomo(visitorId, siteId);
     });
 
   for (const form of getAllFormsInThisPage()) {
@@ -5721,3 +5732,5 @@ export function initXC(siteId, apiKey) {
     form.addEventListener("submit", pushSubmit);
   }
 }
+
+initXC(224, "Wz5C96h5dg37j4tlmVt3b6UD4O1GDLv34fHmfp6l");
