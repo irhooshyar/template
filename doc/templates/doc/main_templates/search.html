@@ -2245,7 +2245,7 @@
             Csv += "\n"
             for (const document of SearchResultValue) {
                 for (const row of rows) {
-                    Csv += document["_source"][row] + sep
+                    Csv += document["_source"][row].replaceAll(',','-') + sep
                 }
                 Csv += "\n"
             }
