@@ -3905,7 +3905,7 @@ def SearchDocuments_Column_ES(request, country_name, category_name, subject_name
                               , place, text, search_type, curr_page):
 
     country_id = Country.objects.get(name = country_name).id if country_name != 'همه' else 0
-    print(f"========= {country_id}")
+    index_name = None
     res_query = {
         "bool": {}
     }
