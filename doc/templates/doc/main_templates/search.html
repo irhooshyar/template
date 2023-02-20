@@ -131,6 +131,7 @@
                     <select dir="rtl" id="country" name="country"
                         class="form-select text-right float-right searchable-select" style="direction: rtl;"
                         onchange="CountryChanged()">
+                        <option value="0">همه</option>
                         {% for k,v in countries.items %}
                         <option value="{{ k }}">{{ v }}</option>
                         {% endfor %}
@@ -349,12 +350,16 @@
                         <div id="subject_container" chart-height="350px" class="half">
                         </div>
 
+                        <div id="source_name_container" chart-height="350px" class="half">
+                        </div>
+
                         <div id="year_container" chart-height="350px" class="half"></div>
 
-                        <div id="hour_container" chart-height="350px" class="full"></div>
+                        <div id="hour_container" chart-height="350px" class="half"></div>
 
                         <div id="category_container" chart-height="650px" class="full">
                         </div>
+
 
                     </div>
                 </div>
@@ -499,12 +504,14 @@
             "subject_container": "subject_name",
             "category_container": "category_name",
             "year_container": "document_year",
-            "hour_container":"document_hour"
+            "hour_container":"document_hour",
+            "source_name_container":"source_name"
         }
 
         let UserSearchParameters = {
 
             country_id: "",
+            source_name: "",
             subject_name: "",
             category_name: "",
             from_year: "",
@@ -519,6 +526,7 @@
 
 
                 this.country_id = document.getElementById("country").value;
+                this.source_name =$("#country option:selected").text();
                 this.subject_name = $("#SubjectSelect option:selected").text();
                 this.category_name = $("#CategorySelect option:selected").text();
                 this.approval_reference_name = $("#ApprovalReferences option:selected").text();
@@ -565,6 +573,10 @@
 
 
         async function init() {
+            container_id_list = ['SearchResultLable', 'SearchTable','subject_container',
+        'year_container','hour_container','source_name_container','category_container']
+            clearPrevResults(container_id_list)
+
             const country_id = document.getElementById("country").value
             startFullPageBlockUI();
 
@@ -594,10 +606,6 @@
 
             UserSearchParameters.update_parameters();
 
-
-            
-
-
             syncAllSelectsWithResetExceptions(["country"]);
 
 
@@ -612,8 +620,8 @@
         }
         
 
-        function CountryChanged() {
-            init()
+        async function CountryChanged() {
+            await init()
         }
 
 
@@ -634,11 +642,18 @@
                 const name = doc["_source"]["document_name"]
                 const category_name = doc["_source"]["category_name"]
                 const source_name = doc["_source"]["source_name"]
-                
+                let source_tag = ""
+                if (source_name == "تابناک" || source_name == "تابناک- تست") {
+                    source_tag = '<img width="60px" class="rounded-pill shadow" src="../../../static/icons/logo/tabnak.JFIF"" alt="">'
+                }else if (source_name == "خبر آنلاین") {
+                    source_tag = '<img width="65px" class="rounded-pill shadow" src="../../../static/icons/logo/khabar-online.png" %}" alt="">'
+
+                }
                 const subject = doc["_source"]["subject_name"]
                 const date = doc["_source"]["document_date"]
                 const time = doc["_source"]["document_time"]
                 let score = Math.round((doc['_score'] / max_score) * 100)
+
 
                 let button_disable = ""
                 if (mode === "All") {
@@ -653,7 +668,7 @@
                 const doc_name = '<a target="_blank" href="' + document_link + '">' + name + "</a>"
 
                 const row = {
-                    "id": index, "name": doc_name,"source_name":source_name, "subject_name": subject,
+                    "id": index, "name": doc_name,"source_name":source_tag, "subject_name": subject,
                      "date": date,"time":time,"category_name":category_name,
                     "count": score, "detail": detail
                 }
@@ -675,17 +690,18 @@
                 "title": "ردیف",
                 "breakpoints": "xs sm",
                 "type": "number",
-            }, {
-                "name": "name",
-                "title": "عنوان خبر",
             },
-            {
+             {
                 "name": "source_name",
                 "title": "مرجع خبر",
                 "style": {
                 "width": "5%"
                 }
+            }, {
+                "name": "name",
+                "title": "عنوان خبر",
             },
+           
             
              {
                 "name": "subject_name",
@@ -836,6 +852,7 @@
             category_data = ES_Aggregations['category-agg']['buckets']
             year_data = ES_Aggregations['year-agg']['buckets']
             hour_data = ES_Aggregations['hour-agg']['buckets']
+            source_name_data = ES_Aggregations['source-name-agg']['buckets']
 
 
             /* Show Chart  */
@@ -844,6 +861,7 @@
             showChartData(category_data, "category_container", documents_information_result, false, "دسته خبر","توزیع اخبار براساس دسته اخبار")
             showChartData(year_data, "year_container", documents_information_result, true, "سال خبر","توزیع اخبار براساس سال خبر")
             showChartData(hour_data, "hour_container", documents_information_result, true, "ساعت خبر","توزیع اخبار براساس ساعت خبر")
+            showChartData(source_name_data, "source_name_container", documents_information_result, true, "مرجع خبر","توزیع اخبار براساس مرجع خبر")
             
             stopBlockUI('bar_chart_info_pane', 'داشبورد آماری');
 
@@ -1106,7 +1124,8 @@
                 }
             };
 
-            if (container === "subject_container") {
+            if (container === "subject_container" ||
+            container === "source_name_container") {
                 options.onClick = async function (event, data) {
                     const click_tag = event.domTarget.tag;
                     const index = click_tag["index"]
@@ -1229,7 +1248,7 @@
 
             Doc_Field = CHART_FIELD_DICT[position]
 
-
+            source_name = UserSearchParameters.source_name
             subject_name = UserSearchParameters.subject_name
             category_name = UserSearchParameters.category_name
             from_year = UserSearchParameters.from_year
@@ -1242,19 +1261,26 @@
 
                 header = "موضوع: " + column_value
                 subject_name = column_value
-                save_file_name += " (مجموعه خبر {1} و موضوع {2})".replace("1", "هوش‌یار").replace("2", column_value)
+                save_file_name += " (مجموعه خبر {1} و موضوع {2})".replace("1", "خبرکاو").replace("2", column_value)
 
-            } else if (Doc_Field == 'category_name') {
+            }else if (Doc_Field == 'source_name') {
+
+                header = "مرجع خبر: " + column_value
+                source_name = column_value
+                save_file_name += " (مجموعه خبر {1} و مرجع خبر {2})".replace("1", "خبرکاو").replace("2", column_value)
+
+            }
+             else if (Doc_Field == 'category_name') {
 
                 header = "دسته خبر: " + column_value
                 category_name = column_value
-                save_file_name += " (مجموعه خبر {1} و سطح خبر {2})".replace("1", "هوش‌یار").replace("2", column_value)
+                save_file_name += " (مجموعه خبر {1} و دسته خبر {2})".replace("1", "خبرکاو").replace("2", column_value)
 
             }
             else if (Doc_Field == 'document_year') {
 
                 header = "سال خبر: " + column_value
-                save_file_name += " (مجموعه خبر {1} و سال خبر {2})".replace("1", "هوش‌یار").replace("2", column_value)
+                save_file_name += " (مجموعه خبر {1} و سال خبر {2})".replace("1", "خبرکاو").replace("2", column_value)
 
                 if (column_value == 'نامشخص') {
                     from_year = "0"
@@ -1272,7 +1298,7 @@
 
 
             request_link = 'http://' + location.host + "/SearchDocuments_Column_ES/"
-                + UserSearchParameters.country_id + "/"
+                + source_name + "/"
                 + subject_name + "/"
                 + category_name + "/"
                 + from_year + "/"
@@ -1302,11 +1328,11 @@
 
                 sep = ","
                 let Csv = "نام خبر" + sep + 
-                    "موضوع خبر" + sep + "دسته خبر" + sep + "تاریخ خبر" + "\n"
+                    "موضوع خبر" + sep + "دسته خبر" + sep + "تاریخ خبر" + sep + "مرجع خبر" + "\n"
 
                 for (const document of RESULT_DOCUMENTS) {
                     Csv += document['_source']["document_name"].replaceAll(',', '-') + sep + document['_source']["subject_name"].replaceAll(',', '-') + sep +
-                        document['_source']["category_name"].replaceAll(',', '-')  + sep + document['_source']["document_date"].replaceAll(',', '-') + "\n"
+                        document['_source']["category_name"].replaceAll(',', '-')  + sep + document['_source']["document_date"].replaceAll(',', '-') + sep + document['_source']["source_name"].replaceAll(',', '-') + "\n"
 
                 }
 
@@ -2149,23 +2175,27 @@
             const country_id = document.getElementById('country').value
             let zip = new JSZip()
 
-            const request_link = 'http://' + location.host + "/GetCountryById/" + country_id + "/";
+            if (country_id != "0") {
+                const request_link = 'http://' + location.host + "/GetCountryById/" + country_id + "/";
             let response = await fetch(request_link).then(response => response.json());
             response = response["country_information"][0]
             const country_folder = response["folder"];
             const country_name = response["name"];
 
             save_file_name += " مجموعه خبر {" + country_name + "}"
+            }
+            else {
+                save_file_name += " مجموعه خبر {" + "همه" + "}"
+            }
+
 
 
             let extension = ".txt"
-            if (country_name.includes("فاوا")) {
-                extension = '.docx';
-            }
+
 
             for (const document of file_name_list) {
                 const document_name = document["_source"]["raw_file_name"] + extension
-                const path = 'http://' + location.host + '/media/data/' + country_folder + '\\' + document_name;
+                const path = 'http://' + location.host + '/media/data/' + document["_source"]["source_folder"] + '\\' + document_name;
 
                 await fetch(path)
                     .then(res => res.arrayBuffer())

@@ -3279,28 +3279,24 @@ def GetUnknownDocuments(request):
 
 
 def GetSearchParameters(request, country_id):
-    search_parameters = SearchParameters.objects.filter(country__id=country_id)
+    search_parameters = SearchParameters.objects.all()
     parameters_result = {}
+
+
+    if country_id != 0:
+        search_parameters = SearchParameters.objects.filter(country__id=country_id)
+        print("country_id")
+        print(country_id)
+
+    for param in search_parameters:
+        para_name = param.parameter_name
+        parameters_result[para_name] = ""
 
     for param in search_parameters:
         para_name = param.parameter_name
         options = param.parameter_values["options"]
-        parameters_result[para_name] = options
 
-    country = Country.objects.get(id=country_id)
-    # sub_areas = SubjectSubArea.objects.filter(subject_area_id__language=country.language).values('id', 'name',
-    #                                                                                              'subject_area_id__id',
-    #                                                                                              'subject_area_id__name')
-    #
-    # subject_area = {}
-    # for sub_area in sub_areas:
-    #     if str(sub_area['subject_area_id__id']) + "#" + sub_area['subject_area_id__name'] in subject_area.keys():
-    #         subject_area[str(sub_area['subject_area_id__id']) + "#" + sub_area['subject_area_id__name']]. \
-    #             append((sub_area['id'], sub_area['name']))
-    #     else:
-    #         subject_area[str(sub_area['subject_area_id__id']) + "#" + sub_area['subject_area_id__name']] = [
-    #             (sub_area['id'], sub_area['name'])]
-
+        parameters_result[para_name] += options
 
     return JsonResponse({"parameters_result": parameters_result}, )
 
@@ -3400,9 +3396,7 @@ def SearchDocument_ES(request, country_id, category_id, subject_id, from_year, t
     # print('search_query')
     # print(res_query)
 
-    country_obj = Country.objects.get(id=country_id)
-    index_name = standardIndexName(country_obj, Document.__name__)
-    # index_name = "doticfull_document"
+    index_name = None
 
     # ---------------------- Get Chart Data -------------------------
     res_agg = {
@@ -3431,9 +3425,9 @@ def SearchDocument_ES(request, country_id, category_id, subject_id, from_year, t
                 "size": bucket_size
             }
         },
-        "date-agg": {
+        "source-name-agg": {
             "terms": {
-                "field": "document_date.keyword",
+                "field": "source_name.keyword",
                 "size": bucket_size
             }
         },
@@ -3442,10 +3436,23 @@ def SearchDocument_ES(request, country_id, category_id, subject_id, from_year, t
 
     from_value = (curr_page - 1) * search_result_size
 
+    if country_id == 0:
+        index_name_list = []
+        country_list = Country.objects.all().exclude(name="تابناک- تست")
+        for country in country_list:
+            index_name = standardIndexName(country, Document.__name__)
+            index_name_list.append(index_name)
+
+        index_name =  index_name_list
+    else:
+        
+        country_obj = Country.objects.get(id=country_id)
+        index_name = standardIndexName(country_obj, Document.__name__)
+
     response = client.search(index=index_name,
                              _source_includes=['document_id', 'document_name', 'document_date',
                                                'subject_name', 'category_name', 'document_year',
-                                               'raw_file_name',
+                                               'raw_file_name','source_id','source_folder',
                                                'source_name','document_time'],
                              request_timeout=40,
                              query=res_query,
@@ -3893,10 +3900,12 @@ def filter_doc_fields_COLUMN(res_query, category_name, subject_name,
     return res_query
 
 
-def SearchDocuments_Column_ES(request, country_id, category_name, subject_name,
+def SearchDocuments_Column_ES(request, country_name, category_name, subject_name,
                               from_year, to_year
                               , place, text, search_type, curr_page):
 
+    country_id = Country.objects.get(name = country_name).id if country_name != 'همه' else 0
+    print(f"========= {country_id}")
     res_query = {
         "bool": {}
     }
@@ -3915,14 +3924,24 @@ def SearchDocuments_Column_ES(request, country_id, category_name, subject_name,
         else:
             res_query = boolean_search_text(res_query, place, text, search_type, ALL_FIELDS)
 
-    country_obj = Country.objects.get(id=country_id)
-    index_name = standardIndexName(country_obj, Document.__name__)
+    if country_id == 0:
+        index_name_list = []
+        country_list = Country.objects.all().exclude(name="تابناک- تست")
+        for country in country_list:
+            index_name = standardIndexName(country, Document.__name__)
+            index_name_list.append(index_name)
+
+        index_name =  index_name_list
+    else:
+        
+        country_obj = Country.objects.get(id=country_id)
+        index_name = standardIndexName(country_obj, Document.__name__)
 
     from_value = (curr_page - 1) * search_result_size
 
     response = client.search(index=index_name,
                              _source_includes=['document_id', 'document_name', 'document_date',
-                                               'subject_name',
+                                               'subject_name','source_id','source_folder','source_name',
                                                "category_name", 'raw_file_name'],
                              request_timeout=40,
                              query=res_query,

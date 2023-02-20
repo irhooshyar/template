@@ -1497,7 +1497,18 @@ FA_Mappings = {
                 }
             }
         },
-
+        "source_id": {
+            "type": "integer"
+        },
+        "source_folder": {
+            "type": "text",
+            "fields": {
+                "keyword": {
+                    "type": "keyword",
+                    "ignore_above": 256
+                }
+            }
+        },
         "source_name": {
             "type": "text",
             "analyzer": "persian_custom_analyzer",

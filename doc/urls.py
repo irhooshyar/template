@@ -82,7 +82,7 @@ urlpatterns = [
         'SearchDocument_ES/<int:country_id>/<int:category_id>/<int:subject_id>/<int:from_year>/<int:to_year>/<str:place>/<str:text>/<str:search_type>/<int:curr_page>/',
         views.SearchDocument_ES, name='SearchDocument_ES'),
     path(
-        'SearchDocuments_Column_ES/<int:country_id>/<str:subject_name>/<str:category_name>/<str:from_year>/<str:to_year>/<str:place>/<str:text>/<str:search_type>/<int:curr_page>/',
+        'SearchDocuments_Column_ES/<str:country_name>/<str:subject_name>/<str:category_name>/<str:from_year>/<str:to_year>/<str:place>/<str:text>/<str:search_type>/<int:curr_page>/',
         views.SearchDocuments_Column_ES, name='SearchDocuments_Column_ES'),
 
     path(
