@@ -135,7 +135,6 @@
                         {% for k,v in countries.items %}
                         <option value="{{ k }}">{{ v }}</option>
                         {% endfor %}
-                        <option disabled value="عصر ایران">عصر ایران</option>
                         <option disabled value="تسنیم">تسنیم</option>
                         <option disabled value="فارس نیوز">فارس نیوز</option>
                         <option disabled value="ایسنا">ایسنا</option>
@@ -647,6 +646,10 @@
                     source_tag = '<img width="60px" class="rounded-pill shadow" src="../../../static/icons/logo/tabnak.jfif" alt="تابناک">'
                 }else if (source_name == "خبر آنلاین") {
                     source_tag = '<img width="65px" class="rounded-pill shadow" src="../../../static/icons/logo/khabar-online.png" alt="خبر آنلاین">'
+
+                }
+                else if (source_name == "عصر ایران") {
+                    source_tag = '<img width="65px" class="rounded-pill shadow" src="../../../static/icons/logo/asriran.jfif" alt="عصر ایران">'
 
                 }
                 const subject = doc["_source"]["subject_name"]
