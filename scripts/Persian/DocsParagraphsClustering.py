@@ -62,21 +62,21 @@ from . import DocsParagraphsClusteringCubeData,ClusteringGraphData
 clustering_configs = {
     "تابناک":{
         "min_k":5,
-        "max_k":25,
+        "max_k":50,
         "step":5,
         "batch_size":512,
         "ngram_types":[(1,1)]
     },
     "خبر آنلاین":{
         "min_k":5,
-        "max_k":25,
+        "max_k":50,
         "step":5,
         "batch_size":512,
         "ngram_types":[(1,1)]
     },
     "عصر ایران":{
         "min_k":5,
-        "max_k":25,
+        "max_k":50,
         "step":5,
         "batch_size":512,
         "ngram_types":[(1,1)]
@@ -222,6 +222,11 @@ def Preprocessing(country_name,text, tokenize=True, stem=True, removeSW=True, no
                 "\n")
 
             stopword_list = list(set(stopword_list))
+            # ---------------------------------------
+            news_stopword_list = open(Path(config.PERSIAN_PATH, "news_stopwords.txt"), encoding="utf8").read().split(
+                "\n")
+
+            stopword_list += list(set(news_stopword_list))
 
 
             if country_name == 'فاوا':

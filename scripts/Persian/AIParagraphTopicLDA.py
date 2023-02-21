@@ -109,6 +109,11 @@ def Preprocessing(country_name,text, tokenize=True, stem=True, removeSW=True, no
 
             stopword_list = list(set(stopword_list))
 
+            news_stopword_list = open(Path(config.PERSIAN_PATH, "news_stopwords.txt"), encoding="utf8").read().split(
+                "\n")
+
+            stopword_list += list(set(news_stopword_list))
+
 
             if country_name == 'فاوا':
                 stopword_list += ['فناوری','اطلاعات','ارتباطات']
