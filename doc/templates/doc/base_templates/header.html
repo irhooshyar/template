@@ -61,7 +61,7 @@
             <li class="nav-item" id="document_profile" style="display: none;">
                 <a class="nav-link" id="Rahbari_profile_link" role="button"
                    href="{% url 'information' %}" aria-expanded="false">
-                    پروفایل اسناد
+                    پروفایل اخبار
                 </a>
             </li>
 
@@ -79,21 +79,20 @@
                 </a>
             </li>
 
-            <li class="nav-item dropdown" id="AI_analysis" style="display: none;">
+            <li class="nav-item dropdown" id="AI_analysis">
             <a class="nav-link dropdown-toggle" href="#" id="AIDropdown" role="button" data-bs-toggle="dropdown"
                 aria-expanded="false">
                 تحلیل هوشمند
             </a>
             <ul class="dropdown-menu" aria-labelledby="GraphDropdown">
                 <li>
-                    <a id="AI_topics" class="dropdown-item text-right" href="{% url 'AI_topics' %}"
-                        style="display: none;">
+                    <a id="AI_topics" class="dropdown-item text-right" href="{% url 'AI_topics' %}">
                         دسته‌بندی موضوعی (LDA)
                     </a>
                 </li>
                 <li>
                     <a id="paragraph_clustering" class="dropdown-item text-right"
-                        href="{% url 'paragrraph_clustering' %}" style="display: none;">خوشه‌بندی احکام</a>
+                        href="{% url 'paragrraph_clustering' %}">خوشه‌بندی احکام</a>
                 </li>
 
                 <li>
@@ -172,7 +171,7 @@
                     </li>
                     <li><a id="admin_accept_user_comments" class="dropdown-item text-right"
                            href="{% url 'admin_accept_user_comments' %}" style="display: none;">
-                        تایید نظرات تحلیل اسناد</a>
+                        تایید نظرات تحلیل اخبار</a>
                     </li>
                     <li><a id="super_admin_user_log" class="dropdown-item text-right"
                            href="{% url 'super_admin_user_log' %}" style="display: none;">

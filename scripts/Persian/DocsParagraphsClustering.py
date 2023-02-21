@@ -60,27 +60,19 @@ from . import DocsParagraphsClusteringCubeData,ClusteringGraphData
 # --------------------------------
 
 clustering_configs = {
-    "اسناد رهبری":{
+    "تابناک":{
         "min_k":5,
-        "max_k":50,
+        "max_k":25,
         "step":5,
         "batch_size":512,
         "ngram_types":[(1,1)]
     },
-    "فاوا":{
+    "خبر آنلاین":{
         "min_k":5,
-        "max_k":20,
+        "max_k":25,
         "step":5,
         "batch_size":512,
         "ngram_types":[(1,1)]
-    },
-    "هوش‌یار":{
-        "min_k":5,
-        "max_k":50,
-        "step":5,
-        "batch_size":4096,
-        "ngram_types":[(1,1)]
-
     }
 }
 
@@ -246,20 +238,6 @@ def Preprocessing(country_name,text, tokenize=True, stem=True, removeSW=True, no
             text = [stemming(word) for word in text]
 
     return text
-
-
-def save_stopwords(stopwrod_list):
-    f = open("all_stopwrods.txt", "w",encoding="utf8")
-
-    i = 0
-    for sw in stopwrod_list:
-        i+=1
-        if i < len(stopwrod_list):
-            sw = sw+"\n"
-       
-        f.write(sw)
-    
-    f.close()
 
 
 def FeatureExtraction(corpus,ngram_type):
@@ -466,11 +444,6 @@ def create_corpus(Country):
         document_id__country_id__id = Country.id
     )
 
-    if Country.name not in  ['فاوا' , 'اسناد رهبری'] :
-
-        selected_paragraphs = selected_paragraphs.filter(
-                document_id__type_name = 'قانون'
-        )
 
     selected_paragraphs = selected_paragraphs.values()
 
@@ -505,7 +478,6 @@ def create_corpus(Country):
 
     paragraph_list = ParagraphsSubject.objects.filter(
         country__id = Country.id,
-        version__id = 12,
         paragraph__id__in = para_id_list).values('paragraph_id','subject1_name')
 
     for para in paragraph_list:

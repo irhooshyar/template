@@ -131,12 +131,10 @@ class ClusteringParagraphIndex(ES_Index):
             document_id = row['doc_id']
             document_name = row['doc_name']
 
-            approval_reference_name = row['approval_reference_name'] if row['approval_reference_name'] != None else 'نامشخص'
-            level_name =  row['level_name'] if row['level_name'] != None else 'نامشخص'
-            approval_year = row['approval_year'] if row['approval_year'] != None else 0
-            keyword_subject = row['keyword_subject'] if row['keyword_subject'] != None else 'نامشخص'
-            
-            
+            subject_name = row['subject_name'] if row['subject_name'] != None else 'نامشخص'
+            category_name =  row['category_name'] if row['category_name'] != None else 'نامشخص'
+            document_year = row['doc_year'] if row['doc_year'] != None else 0
+                        
             topic_id = row['topic_id']
             topic_name = row['topic_name']
             score = row['score']
@@ -151,10 +149,9 @@ class ClusteringParagraphIndex(ES_Index):
                 "preprocessed_text":preprocessed_text,
                 "document_id": document_id,
                 "document_name": document_name,
-                'approval_reference_name':approval_reference_name,
-                'level_name':level_name,
-                'approval_year':approval_year,
-                'keyword_subject':keyword_subject,
+                'subject_name':subject_name,
+                'category_name':category_name,
+                'document_year':document_year,
                 "topic_id": topic_id,
                 "topic_name": topic_name,
                 "score":score,
@@ -193,17 +190,12 @@ def apply(folder, Country):
             country_name = F('country__name'),
             doc_id = F('paragraph__document_id__id'),
             doc_name = F('paragraph__document_id__name'),
-            approval_reference_name = F('paragraph__document_id__approval_reference_name'),
-            level_name = F('paragraph__document_id__level_name'),
-            approval_year=Cast(Substr('paragraph__document_id__approval_date', 1, 4), IntegerField()),
+            subject_name = F('paragraph__document_id__subject_name'),
+            category_name = F('paragraph__document_id__category_name'),
+            doc_year=Cast(Substr('paragraph__document_id__date', 1, 4), IntegerField()),
 
             paragraph_text = F('paragraph__text'),
-            topic_name = F('topic__name')).values(
-            'id','country_name',
-            'doc_id','doc_name',
-            'level_name','approval_year','approval_reference_name','keyword_subject',
-            'paragraph_id','paragraph_text',
-            'topic_id','topic_name','score')
+            topic_name = F('topic__name')).values()
 
     print("=========== Ingest topics paragraphs ================")
     

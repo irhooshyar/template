@@ -106,7 +106,7 @@ def update_doc(request, id, language, ):
 
 
     StratAutomating.apply.after_response(folder_name, file,
-                                             "IngestFullProfileAnalysisToElastic",
+                                             "DocsParagraphsClustering",
                                              host_url)  # AdvanceARIMAExtractor_ ActorTimeSeriesPrediction _DocsSubjectExtractor_DocsLevelExtractor_DocsReferencesExtractor_DocsActorsTimeSeriesDataExtractor_DocsCreateDocumentsListCubeData_DocsCreateSubjectCubeData_DocsCreateVotesCubeData_DocsCreateSubjectStatisticsCubeData_DocsCreateTemplatePanelsCubeData_DocsAnalysisLeadershipSlogan_DocsCreatePrinciplesCubeData_DocCreateBusinessAdvisorCubeData_DocsCreateRegularityLifeCycleCubeData_DocsExecutiveParagraphsExtractor_DocsClauseExtractor_DocsGraphCubeData_DocsCreateMandatoryRegulationsCubeData_DocsExecutiveClausesExtractor_DocsCreateActorInformationStackChartCubeData
 
 
@@ -1754,27 +1754,22 @@ def Get_Topic_Paragraphs_ES(request, country_id, topic_id, result_size, curr_pag
 
     # ---------------------- Get Chart Data -------------------------
     res_agg = {
-        "approval-ref-agg": {
+        "category-agg": {
             "terms": {
-                "field": "approval_reference_name.keyword",
+                "field": "category_name.keyword",
                 "size": bucket_size
             }
         },
         "subject-agg": {
             "terms": {
-                "field": "keyword_subject.keyword",
+                "field": "subject_name.keyword",
                 "size": bucket_size
             }
         },
-        "level-agg": {
+
+        "document-year-agg": {
             "terms": {
-                "field": "level_name.keyword",
-                "size": bucket_size
-            }
-        },
-        "approval-year-agg": {
-            "terms": {
-                "field": "approval_year",
+                "field": "document_year",
                 "size": bucket_size
             }
         }
