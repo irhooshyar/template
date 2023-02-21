@@ -73,6 +73,13 @@ clustering_configs = {
         "step":5,
         "batch_size":512,
         "ngram_types":[(1,1)]
+    },
+    "عصر ایران":{
+        "min_k":5,
+        "max_k":25,
+        "step":5,
+        "batch_size":512,
+        "ngram_types":[(1,1)]
     }
 }
 
