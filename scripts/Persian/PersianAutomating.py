@@ -113,22 +113,22 @@ def persian_apply(folder_name, Country, tasks_list, host_url):
         print("20. DocsCreateDocumentsListCubeData")
         DocsCreateDocumentsListCubeData.apply(folder_name, Country)
 
-    # if "AIParagraphTopicLDA" in tasks_list:
-    #     Country.status = "AIParagraphTopicLDA"
-    #     Country.save()
+    if "AIParagraphTopicLDA" in tasks_list:
+        Country.status = "AIParagraphTopicLDA"
+        Country.save()
 
-    #     print("25. AIParagraphTopicLDA.")
-    #     AIParagraphTopicLDA.apply(folder_name, Country)
-
-
+        print("25. AIParagraphTopicLDA.")
+        AIParagraphTopicLDA.apply(folder_name, Country)
 
 
-    # if "LDAGraphData" in tasks_list:
-    #     Country.status = "LDAGraphData"
-    #     Country.save()
 
-    #     print("28. LDAGraphData.")
-    #     LDAGraphData.apply(Country)
+
+    if "LDAGraphData" in tasks_list:
+        Country.status = "LDAGraphData"
+        Country.save()
+
+        print("28. LDAGraphData.")
+        LDAGraphData.apply(Country)
 
 
     # Edit By HuggingFace

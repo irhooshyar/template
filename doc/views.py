@@ -106,7 +106,7 @@ def update_doc(request, id, language, ):
 
 
     StratAutomating.apply.after_response(folder_name, file,
-                                             "DocsParagraphsClustering",
+                                             "AIParagraphTopicLDA_LDAGraphData",
                                              host_url)  # AdvanceARIMAExtractor_ ActorTimeSeriesPrediction _DocsSubjectExtractor_DocsLevelExtractor_DocsReferencesExtractor_DocsActorsTimeSeriesDataExtractor_DocsCreateDocumentsListCubeData_DocsCreateSubjectCubeData_DocsCreateVotesCubeData_DocsCreateSubjectStatisticsCubeData_DocsCreateTemplatePanelsCubeData_DocsAnalysisLeadershipSlogan_DocsCreatePrinciplesCubeData_DocCreateBusinessAdvisorCubeData_DocsCreateRegularityLifeCycleCubeData_DocsExecutiveParagraphsExtractor_DocsClauseExtractor_DocsGraphCubeData_DocsCreateMandatoryRegulationsCubeData_DocsExecutiveClausesExtractor_DocsCreateActorInformationStackChartCubeData
 
 
@@ -931,8 +931,8 @@ def GetDocumentsPredictSubjectLDA(request, country_id, number_of_topic):
         ~Q(id__in=para_id_list)).annotate(
         doc_id=F('document_id__id')).annotate(
         doc_name=F('document_id__name')).annotate(
-        approval_reference_name=F('document_id__approval_reference_name')).annotate(
-        approval_date=F('document_id__approval_date')).annotate(
+        category_name=F('document_id__category_name')).annotate(
+        document_date=F('document_id__date')).annotate(
         subject_name=F('document_id__subject_name')).annotate(text_len=Length('text')).filter(
         text_len__gt=80)[:300]
 
@@ -943,8 +943,8 @@ def GetDocumentsPredictSubjectLDA(request, country_id, number_of_topic):
             'document_id': row.doc_id,
             'document_name': row.doc_name,
             'subject_name': row.subject_name if row.subject_name != None else 'نامشخص',
-            'approval_reference_name': row.approval_reference_name if row.approval_reference_name != None else 'نامشخص',
-            'approval_date': row.approval_date if row.approval_date != None else 'نامشخص',
+            'category_name': row.category_name if row.category_name != None else 'نامشخص',
+            'document_date': row.document_date if row.document_date != None else 'نامشخص',
         }
         result_without.append(res)
 
@@ -1033,11 +1033,6 @@ def AIGetLDATopic(request, country_id, number_of_topic, username):
 def BoostingSearchParagraph_Column_ES(request, country_id, field_name, field_value, curr_page, result_size):
     res_query = {"bool": {
         "filter": [
-            {
-                "term": {
-                    "type_name.keyword": "قانون"
-                }
-            },
             {
                 "term":
                     {
@@ -1157,11 +1152,6 @@ def BoostingSearchParagraph_ES(request, country_id, curr_page, result_size):
     res_query = {"bool": {
         "filter": [
             {
-                "term": {
-                    "type_name.keyword": "قانون"
-                }
-            },
-            {
                 "range": {
                     "attachment.content_length": {
                         "gte": 80
@@ -1234,22 +1224,22 @@ def BoostingSearchParagraph_ES(request, country_id, curr_page, result_size):
 
     # ---------------------- Get Chart Data -------------------------
     res_agg = {
-        "approval-ref-agg": {
+        "subject-agg": {
             "terms": {
-                "field": "approval_reference_name.keyword",
+                "field": "subject_name.keyword",
                 "size": bucket_size
             }
         },
 
-        "level-agg": {
+        "category-agg": {
             "terms": {
-                "field": "level_name.keyword",
+                "field": "category_name.keyword",
                 "size": bucket_size
             }
         },
-        "approval-year-agg": {
+        "document-year-agg": {
             "terms": {
-                "field": "approval_year",
+                "field": "document_year",
                 "size": bucket_size
             }
         }

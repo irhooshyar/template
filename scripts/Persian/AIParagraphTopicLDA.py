@@ -16,15 +16,15 @@ import json
 
 
 LDA_configs = {
-    "اسناد رهبری":{
-        "num_topic":[5,10,15,20,25,30,35,40,45,50]
-        },
-    "فاوا":{
+    "تابناک":{
         "num_topic":[5,10,15,20,25]
     },
-    "هوش‌یار":{
-        "num_topic":[5,10,15,20,25,30,35,40,45,50,60,70,80,90,100]
-    }
+    "خبر آنلاین":{
+        "num_topic":[5,10,15,20,25]
+    },
+    "عصر ایران":{
+        "num_topic":[5,10,15,20,25]
+    },
 }
 
 normalizer = Normalizer()
@@ -163,7 +163,7 @@ def apply(folder_name, Country):
     for para in paragraphs_list:
         subject_name = ''
         try:
-            subject_name = ParagraphsSubject.objects.get(country__id=Country.id, paragraph_id=para['id'], version__id=12).subject1_name
+            subject_name = ParagraphsSubject.objects.get(country__id=Country.id, paragraph_id=para['id']).subject1_name
         except:
             subject_name = "نامشخص"
         

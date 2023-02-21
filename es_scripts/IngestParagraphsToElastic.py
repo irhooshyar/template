@@ -35,7 +35,8 @@ class ParagraphIndex(ES_Index):
             document_id = para['doc_id']
             document_name = para['doc_name']
             category_name = para['category_name'] if para['category_name'] is not None else 'نامشخص'
-            year = para['year'] if para['year'] != None else 0
+            subject_name = para['subject_name'] if para['subject_name'] is not None else 'نامشخص'
+            document_year = para['year'] if para['year'] != None else 0
             
             para_text = para['para_text']
 
@@ -48,8 +49,9 @@ class ParagraphIndex(ES_Index):
                 "paragraph_id": paragraph_id,
                 "document_id": document_id,
                 "document_name": document_name,
+                "document_year": document_year,
                 "category_name":category_name,
-                'year':year,
+                "subject_name":subject_name,
                 "data": base64_file
             }
 
@@ -92,13 +94,10 @@ def apply(folder, Country,is_for_ref):
                 doc_id = F('document_id__id')).annotate(
                 doc_name = F('document_id__name'), 
                 category_name = F('document_id__category_name'),
+                subject_name = F('document_id__subject_name'),
+                
                 year=Cast(Substr('document_id__date', 1, 4), IntegerField())).annotate(
-                para_text = F('text')).values(
-
-        'para_id','doc_id','doc_name',
-        'para_text', 
-        'year', 'category_name'
-    )
+                para_text = F('text')).values()
     print(len(paragraphs))
     new_index = ParagraphIndex(index_name, settings, mappings)
 

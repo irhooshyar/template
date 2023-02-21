@@ -131,25 +131,15 @@
             <div class="row flex-row-reverse mt-2 mx-auto">
                 <!-- Country Input -->
                 <div class="col-md-6  pt-3 col-12 col-lg-2 bg-light" dir="rtl">
-                    <label class=" text-right bg-light float-right" style="direction: rtl;;">مجموعه سند:</label>
+                    <label class=" text-right bg-light float-right" style="direction: rtl;;">مجموعه خبر:</label>
                     <select dir="rtl" id="country" name="country"
                         class="form-select text-right float-right searchable-select" style="direction: rtl;"
                         onchange="CountryChanged()">
                         {% for k,v in countries.items %}
-                        {% if v == 'فاوا' %}
+                   
                         <option value="{{ k }}">{{ v }}</option>
 
-                        {% endif %}
-
-                        {% if v == 'اسناد رهبری' %}
-                        <option value="{{ k }}">{{ v }}</option>
-
-                        {% endif %}
-
-                        {% if v == 'هوش‌یار' %}
-                        <option value="{{ k }}">{{ v }}- قوانین</option>
-
-                        {% endif %}
+                
 
                         {% endfor %}
                     </select>
@@ -216,7 +206,7 @@
 
 
                 <!-- Download Buttons -->
-                <!--                <button type="button" data-bs-toggle="tooltip" data-bs-placement="top" title="دانلود اسناد"-->
+                <!--                <button type="button" data-bs-toggle="tooltip" data-bs-placement="top" title="دانلود اخبار"-->
                 <!--                    class="btn float-left p-0 px-1 mt-2" id="DownloadBtn" onclick="DownloadSerachResultFunction()"-->
                 <!--                    type="button">-->
                 <!--                    <i class="far fa-file-archive m-0" style="font-size: 25px;margin: 0px;"></i>-->
@@ -680,10 +670,8 @@
 
 <script>
     COUNTRY_CLUSTER_COUNT_DICT = {
-        "اسناد رهبری": [5, 10, 15, 20, 25, 30, 35, 40, 45, 50],
-        "فاوا": [5, 10, 15, 20, 25],
-        "هوش‌یار- قوانین": [5, 10, 15, 20, 25, 30, 35, 40, 45, 50,
-            60, 70, 80, 90, 100]
+        "تابناک": [5, 10, 15, 20, 25],
+        "خبر آنلاین" :[5, 10, 15, 20, 25]
     }
     
     TABLE_INFO = []
@@ -1218,8 +1206,8 @@
                 "doc_name": doc_name,  
                 "para_text":para_text,
                 "subject_name": doc['subject_name'],
-                "approval_reference_name": doc['approval_reference_name'],
-                "approval_date": doc['approval_date']
+                "category_name": doc['category_name'],
+                "document_date": doc['document_date']
             }
 
             document_result.push(row);
@@ -1254,25 +1242,25 @@
                 }
             }, {
                 "name": "doc_name",
-                "title": "نام سند",
+                "title": "نام خبر",
                 "style": {
                     "width": "30%"
                 }
             },{
                 "name": "subject_name",
-                "title": "موضوع سند",
+                "title": "موضوع خبر",
                 "style": {
                     "width": "10%"
                 }
             },{
-                "name": "approval_reference_name",
-                "title": "مرجع تصویب",
+                "name": "category_name",
+                "title": "دسته خبر",
                 "style": {
                     "width": "10%"
                 }
             },{
-                "name": "approval_date",
-                "title": "تاریخ تصویب",
+                "name": "document_date",
+                "title": "تاریخ خبر",
                 "style": {
                     "width": "10%"
                 }
@@ -1346,7 +1334,7 @@
                 }
             }, {
                 "name": "doc_name",
-                "title": "نام سند",
+                "title": "عنوان خبر",
                 "style": {
                     "width": "35%"
                 }
@@ -1358,7 +1346,7 @@
                 }
             }, {
                 "name": "subject",
-                "title": "موضوع با کلیدواژه",
+                "title": "موضوع پیش‌فرض خبر",
                 "style": {
                     "width": "10%"
                 }
@@ -1471,7 +1459,7 @@
                 }
             }, {
                 "name": "name",
-                "title": "نام سند",
+                "title": "نام خبر",
                 "style": {
                     "width": "35%"
                 }
@@ -1583,9 +1571,9 @@
         const options = {
             data,
             sortKeys,
-            xAxisTitle: "موضوع سند",
+            xAxisTitle: "موضوع خبر",
             title: "تعداد احکام: " + paragraph_count + '\n' + 'موضوع غالب (براساس کلیدواژگان): ' + dominant_subject_name + "\n" + 'آنتروپی: ' + correlation_score + "\n",
-            yAxisTitle: "تعداد سند"
+            yAxisTitle: "تعداد خبر"
 
         }
         newDoughnutChart(position, options)
@@ -1618,7 +1606,7 @@
         const country_folder = response["folder"];
         const country_name = response["name"];
 
-        save_file_name += " مجموعه سند {" + country_name + "}"
+        save_file_name += " مجموعه خبر {" + country_name + "}"
 
 
         let extension = ".txt"
@@ -1645,7 +1633,7 @@
                 // see FileSaver.js
                 saveAs(content, save_file_name + ".zip");
             });
-        stopFullPageBlockUI('دانلود اسناد');
+        stopFullPageBlockUI('دانلود اخبار');
     }
 
     async function DownloadSerachResultFunction() {
@@ -1672,8 +1660,8 @@
             index += 1
         }
 
-        let save_file_name = "موضوعات اسناد با استفاده از LDA در"
-        save_file_name += " مجموعه سند {" + $('#country option:selected').text() + "}"
+        let save_file_name = "موضوعات اخبار با استفاده از LDA در"
+        save_file_name += " مجموعه خبر {" + $('#country option:selected').text() + "}"
 
         let csvContent = "data:text/csv;charset=utf-8,%EF%BB%BF" + encodeURI(Csv);
         var link = document.createElement("a");
