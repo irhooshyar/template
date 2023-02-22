@@ -492,6 +492,14 @@
         let max_selected_weight;
         let show_hide_state = "show"
 
+        SOURCE_IMAGE_TAG = {
+            "تابناک- تست":'<img width="60px" class="rounded-pill shadow" src="../../../static/icons/logo/tabnak.jfif" alt="تابناک">',
+            "تابناک":'<img width="60px" class="rounded-pill shadow" src="../../../static/icons/logo/tabnak.jfif" alt="تابناک">',
+            "خبر آنلاین":'<img width="60px" class="rounded-pill shadow" src="../../../static/icons/logo/khabar-online.png" alt="خبر آنلاین">',
+            "عصر ایران":'<img width="60px" class="rounded-pill shadow" src="../../../static/icons/logo/asriran.jfif" alt="عصر ایران">',
+            "ایسنا":'<img width="60px" class="rounded-pill shadow" src="../../../static/icons/logo/isna.jfif" alt="ایسنا">'
+        }
+
         const COLUMNS = {
             "subject_name": 'موضوع خبر',
             "category_name": 'دسته خبر',
@@ -641,17 +649,8 @@
                 const name = doc["_source"]["document_name"]
                 const category_name = doc["_source"]["category_name"]
                 const source_name = doc["_source"]["source_name"]
-                let source_tag = ""
-                if (source_name == "تابناک" || source_name == "تابناک- تست") {
-                    source_tag = '<img width="60px" class="rounded-pill shadow" src="../../../static/icons/logo/tabnak.jfif" alt="تابناک">'
-                }else if (source_name == "خبر آنلاین") {
-                    source_tag = '<img width="65px" class="rounded-pill shadow" src="../../../static/icons/logo/khabar-online.png" alt="خبر آنلاین">'
-
-                }
-                else if (source_name == "عصر ایران") {
-                    source_tag = '<img width="70px" class="rounded-pill shadow" src="../../../static/icons/logo/asriran.jfif" alt="عصر ایران">'
-
-                }
+                const source_tag = SOURCE_IMAGE_TAG[source_name]
+                
                 const subject = doc["_source"]["subject_name"]
                 const date = doc["_source"]["document_date"]
                 const time = doc["_source"]["document_time"]

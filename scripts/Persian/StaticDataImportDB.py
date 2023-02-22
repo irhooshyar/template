@@ -36,6 +36,9 @@ def extractTime(date_time,Country):
         time = date_time.split(" ")[1].strip()
     elif Country.name == 'عصر ایران':
         time = date_time.strip()
+    elif Country.name == 'ایسنا':
+        time = date_time.split(' ')[3].strip() 
+    
     return time
 
 
@@ -113,7 +116,7 @@ def Update_Docs_fromExcel(Country):
     # Category.objects.all().delete()
 
     documentList = Document.objects.filter(country_id=Country)
-    excelFile = str(Path(config.PERSIAN_PATH, 'asriran-data.xlsx'))
+    excelFile = str(Path(config.PERSIAN_PATH, 'isna-data.xlsx'))
 
     df = pd.read_excel(excelFile)
     df['title'] = df['title'].apply(lambda x: standardFileName(x))
