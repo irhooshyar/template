@@ -150,7 +150,9 @@
                         class="form-select text-right float-right searchable-select" style="direction: rtl;"
                         onchange="CountryChanged()">
                         {% for k,v in countries.items %}
+                        {% if v == 'تابناک' %}
                         <option value="{{k}}">{{v}}</option>
+                        {% endif %}
                         {% endfor %}
                     </select>
                 </div>
