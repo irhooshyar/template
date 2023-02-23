@@ -71,9 +71,10 @@
 
                         <div class="mb-3" id="multipleSelectDiv">
                             <label for="expertise">زمینه تخصصی <span style="color: red">*</span>:</label>
-                            <select class="form-select text-right float-right" style="direction: rtl;" id="expertise" multiple>
+                            <select class="form-select text-right float-right" style="direction: rtl;" id="expertise" multiple onchange=OnExpertiseChange()>
                             </select>
                         </div>
+                        <div id="other-expertise-container" class="col mb-3" id="div_firstname" style="margin-top: 8px"></div>
 
                         <div class="mb-3">
                             <label for="username">نام کاربری <span style="color: red">*</span>:</label>
@@ -152,6 +153,22 @@
             }
         }
 
+        function OnExpertiseChange() {
+            let e = document.getElementById("expertise");
+            let otherIsActive = [...e.options]
+                .some(option => option.selected && option.outerText == "سایر موارد");
+
+            const otherExpertiseElement = document.getElementById("other-expertise-container");
+            if(otherIsActive && otherExpertiseElement.innerHTML.length == 0) {
+                otherExpertiseElement.innerHTML = `<label for="other_expertise">سایر<span style="color: red">*</span>:</label>
+                <input type="text" class="form-control fa-input" id="other_expertise" include-content-tracking required>`
+                return
+            }
+            if (!otherIsActive) {
+                otherExpertiseElement.innerHTML = "";
+            }
+        }
+
         document.getElementById("register").addEventListener("submit", onSubmit);
 
         async function onSubmit(e) {
@@ -160,11 +177,16 @@
 
             let phonenumber = 0;
             if (formElements.phonenumber.value !== "")
-                phonenumber = formElements.phonenumber.value
+                phonenumber = formElements.phonenumber.value;
+
+            let otherExpertise = "";
+            if (!!formElements.other_expertise) {
+                otherExpertise = formElements.other_expertise.value;
+            }
 
             const expertise = getMultiSelectValue("expertise")
             const user_ip = "127.0.0.0"
-            const request_link = 'http://' + location.host + "/SaveUser/" + formElements.firstname.value + "/" + formElements.lastname.value + "/" + formElements.email.value + "/" + phonenumber + "/" + formElements.role.value + "/" + formElements.username.value + "/" + formElements.password.value + "/" + user_ip + "/" + expertise + "/";
+            const request_link = 'http://' + location.host + "/SaveUser/" + formElements.firstname.value + "/" + formElements.lastname.value + "/" + formElements.email.value + "/" + phonenumber + "/" + formElements.role.value + "/" + formElements.username.value + "/" + formElements.password.value + "/" + user_ip + "/" + expertise + "/" + otherExpertise + "/";
             let response = await fetch(request_link);
             response = await response.json();
 
