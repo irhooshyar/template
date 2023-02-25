@@ -129,21 +129,24 @@ def apply(folder_name, Country):
 
     doc_subject_create_list = []
     for doc_id, document_subject in result_docs.items():
-        document_subject = concat_dictionary(document_subject)
+        try:
+            document_subject = concat_dictionary(document_subject)
 
-        document_subject = normalize_dictionary(document_subject)
+            document_subject = normalize_dictionary(document_subject)
 
-        top_1_items = dict(heapq.nlargest(1, document_subject.items(), key=itemgetter(1)))
+            top_1_items = dict(heapq.nlargest(1, document_subject.items(), key=itemgetter(1)))
 
-        main_subject_name = list(top_1_items.keys())[0]
-        main_subject_weight = top_1_items[main_subject_name]
-        main_subject = Subject.objects.get(name=main_subject_name)
-        Document.objects.filter(id=doc_id).update(subject_id=main_subject, subject_name=main_subject_name,
-                                                  subject_weight=main_subject_weight)
-        for subject, weight in document_subject.items():
-            subject = Subject.objects.get(name=subject)
-            object = DocumentSubject(document_id_id=doc_id, subject_id=subject, weight=weight)
-            doc_subject_create_list.append(object)
+            main_subject_name = list(top_1_items.keys())[0]
+            main_subject_weight = top_1_items[main_subject_name]
+            main_subject = Subject.objects.get(name=main_subject_name)
+            Document.objects.filter(id=doc_id).update(subject_id=main_subject, subject_name=main_subject_name,
+                                                      subject_weight=main_subject_weight)
+            for subject, weight in document_subject.items():
+                subject = Subject.objects.get(name=subject)
+                object = DocumentSubject(document_id_id=doc_id, subject_id=subject, weight=weight)
+                doc_subject_create_list.append(object)
+        except Exception as e:
+            print(e, doc_id)
 
     batch_size = 10000
     slice_count = math.ceil(doc_subject_create_list.__len__() / batch_size)
