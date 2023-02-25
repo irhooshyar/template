@@ -35,7 +35,6 @@ def normalize_dictionary(dictionary):
 def apply(folder_name, Country):
     path = str(Path(config.PERSIAN_PATH, 'result_subject_tabnak_1.txt'))
     file = open(path, encoding="utf8").read()
-    file = file.split("\n")[:100]
     delimiter = "&!&"
 
     result_docs = {}
