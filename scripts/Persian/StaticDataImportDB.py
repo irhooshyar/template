@@ -38,7 +38,10 @@ def extractTime(date_time,Country):
         time = date_time.strip()
     elif Country.name == 'ایسنا':
         time = date_time.split(' ')[3].strip() 
-    
+
+    elif Country.name == 'BBC':
+        time = date_time.split(' ')[0].strip() 
+
     return time
 
 
@@ -144,6 +147,45 @@ def Update_Docs_fromExcel(Country):
                 category_id = Category.objects.get(name=category_name).id
             except Exception as e:
                 category = Category.objects.create(name=category_name)
+                category_id = category.id
+
+            Document.objects.filter(id=document_id).update(date=date,time = time,
+                                                            category_id=category_id, category_name=category_name)
+
+
+
+def EN_Update_Docs_fromExcel(Country):
+    # Category.objects.all().delete()
+
+    documentList = Document.objects.filter(country_id=Country)
+    excelFile = str(Path(config.PERSIAN_PATH, 'bbc-data.xlsx'))
+
+    df = pd.read_excel(excelFile)
+    df['title'] = df['title'].apply(lambda x: standardFileName(x))
+    df['date_time'] = df['date_time'].apply(lambda x: extractTime(x,Country))
+
+    # documents update
+    dataframe_dictionary = DataFrame2Dict(df, "title", ["category", "date","date_time"])
+
+    for document in documentList:
+        document_id = document.id
+        document_name = standardFileName(document.name)
+
+        if document_name in dataframe_dictionary:
+            date = CheckDate(str(dataframe_dictionary[document_name]['date']))
+            category_name = str(dataframe_dictionary[document_name]['category'])
+            time = str(dataframe_dictionary[document_name]['date_time'])
+
+            category_name = category_name.replace("»", "-")
+            category_name = category_name.replace("صفحه نخست-", "")
+
+            if category_name == "nan":
+                category_name = "نامشخص"
+
+            try:
+                category_id = Category.objects.get(name=category_name,language = 'انگلیسی').id
+            except Exception as e:
+                category = Category.objects.create(name=category_name,language = 'انگلیسی')
                 category_id = category.id
 
             Document.objects.filter(id=document_id).update(date=date,time = time,
@@ -435,35 +477,45 @@ def feature_selection_algorithms_to_db(Country):
     f.close()
 
 
+
 def apply(folder_name, Country):
 
     t = time.time()
 
-    print("Roles_Insert ...")
-    Roles_Insert()
+    if Country.language == 'فارسی':
+        print("Roles_Insert ...")
+        Roles_Insert()
 
-    print("Update_Docs_fromExcel ...")
-    Update_Docs_fromExcel(Country)
-
-    print("ActorRolePatternKeywords_Insert ...")
-    ActorRolePatternKeywords_Insert()
-
-    print("Actors_Insert ...")
-    Actors_Insert()
+        print("Update_Docs_fromExcel ...")
+        Update_Docs_fromExcel(Country)
 
 
-    print("Update_ActorsArea ...")
-    Update_ActorsArea()
+        print("ActorRolePatternKeywords_Insert ...")
+        ActorRolePatternKeywords_Insert()
 
-    print("Search_Parameters_Insert ...")
-    Search_Parameters_Insert(Country)
-
-
-    print("clustering_algorithms_to_db ...")
-    clustering_algorithms_to_db(Country)
+        print("Actors_Insert ...")
+        Actors_Insert()
 
 
-    print("feature_selection_algorithms_to_db ...")
-    feature_selection_algorithms_to_db(Country)
+        print("Update_ActorsArea ...")
+        Update_ActorsArea()
+
+        print("Search_Parameters_Insert ...")
+        Search_Parameters_Insert(Country)
+
+
+        print("clustering_algorithms_to_db ...")
+        clustering_algorithms_to_db(Country)
+
+
+        print("feature_selection_algorithms_to_db ...")
+        feature_selection_algorithms_to_db(Country)
+
+
+    elif Country.language == 'انگلیسی':
+        print("EN_Update_Docs_fromExcel ...")
+        EN_Update_Docs_fromExcel(Country)
 
     print("time ", time.time() - t)
+
+

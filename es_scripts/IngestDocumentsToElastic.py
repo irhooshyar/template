@@ -84,27 +84,101 @@ class DocumentIndex(ES_Index):
 
 
 
+class EN_DocumentIndex(ES_Index):
+    def __init__(self, name, settings,mappings):
+        super().__init__(name, settings,mappings)
+    
+    def generate_docs(self, files_dict, documents):
+
+        for doc in documents:
+
+            doc_id = int(doc['id'])
+            source_id = int(doc['source_id'])
+            source_folder = doc['source_folder'].split("/")[-1].split(".")[0]
+
+            doc_name = doc['name']
+
+            doc_file_name = ""
+
+            if 'file_name' in doc and doc['file_name'] != None:
+                doc_file_name = doc['file_name']
+            else:
+                doc_file_name = doc_name
+
+            doc_subject = doc['subject_name'] if doc['subject_name'] != None else 'unknown'
+            doc_subject_weight = doc['subject_weight'] if doc['subject_weight'] != None else 'unknown'
+            doc_category = doc['category_name'] if doc['category_name'] != None else 'unknown'
+            doc_source = doc['source_name']
+            
+            doc_date = doc['date'] if doc['date'] != None else 'unknown'
+            doc_year = int(doc['date'].split(' ')[2]) if len(doc['date'].split(' ')) == 3 else 2023
+
+            doc_time = doc['time'] if doc['time'] != None else 'unknown'
+            doc_hour =  int(doc_time.split(':')[0].strip()) if doc_time != 'unknown' else 0
+
+            if doc_file_name in files_dict:
+                base64_file = files_dict[doc_file_name]
+
+                new_doc = {
+                    "source_id":source_id,
+                    "source_folder":source_folder,
+                    "document_id": doc_id,
+                    "document_name": doc_name,
+                    "document_date": doc_date,
+                    "document_year": doc_year,
+                    "document_time": doc_time,
+                    "document_hour":doc_hour,
+                    "raw_file_name": doc_file_name,
+                    "category_name": doc_category,
+                    "source_name": doc_source,
+                    "subject_name": doc_subject,
+                    "subject_weight": doc_subject_weight,  
+                    "data": base64_file
+                }
+
+
+                new_document = {
+                    "_index": self.name,
+                    "_id": doc_id,
+                    "pipeline":"attachment",
+                    "_source":new_doc,
+                }
+                yield new_document
+
+
+
+
 
 def apply(folder, Country):
     settings = {}
     mappings = {}
     model_name = Document.__name__
     index_name = standardIndexName(Country,model_name)
+
     new_index = None
-    
-    
 
-    settings = es_config.FA_Settings
-    mappings = es_config.FA_Mappings
-    Document_Model = Document
-    new_index = DocumentIndex(index_name, settings, mappings)
+    country_lang = Country.language
+    documents = []
 
+    if country_lang == "انگلیسی":
+        settings = es_config.EN_Settings
+        mappings = es_config.EN_Mappings
+        new_index = EN_DocumentIndex(index_name, settings, mappings)
+        documents = Document.objects.filter(country_id__id=Country.id).annotate(
+            source_id = F('country_id__id'),
+            source_folder = F('country_id__file'),
+            source_name = F('country_id__name')).values()
 
-    documents = Document_Model.objects.filter(country_id__id=Country.id).annotate(
-        year=Cast(Substr('date', 1, 4), IntegerField()),
-        source_id = F('country_id__id'),
-        source_folder = F('country_id__file'),
-        source_name = F('country_id__name')).values()
+    else:
+        settings = es_config.FA_Settings
+        mappings = es_config.FA_Mappings
+        new_index = DocumentIndex(index_name, settings, mappings)
+
+        documents = Document.objects.filter(country_id__id=Country.id).annotate(
+            year=Cast(Substr('date', 1, 4), IntegerField()),
+            source_id = F('country_id__id'),
+            source_folder = F('country_id__file'),
+            source_name = F('country_id__name')).values()
 
 
     # If index exists -> delete it.

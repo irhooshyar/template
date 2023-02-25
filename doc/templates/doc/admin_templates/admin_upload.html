@@ -75,7 +75,7 @@
                 <div class="container-fluid process-div mb-3">
                     <form class="form-inline mt-5"  action="" method="post" enctype="multipart/form-data">
                         <div class="row d-flex m-auto mb-4">
-                            <div class="col-4 form-group">
+                            <div class="col-3 form-group">
                                 <label class="text-right d-block w-100 bg-light float-right pb-2" style="direction: rtl;;">انتخاب
                                 فایل:
                                 </label>
@@ -85,12 +85,20 @@
                                 </button>
                                 <input type="file" name="inputFile_name" id="inputFile" class="d-none">
                             </div>
-                            <div class="col-4 form-group">
+                            <div class="col-3 form-group">
                                 <label for="country" class="mr-sm-2 pb-2">مجموعه سند:</label>
                                 <input type="text" class="form-control" id="country" placeholder="مجموعه سند" required>
                             </div>
 
-                            <div class="col-4 form-group">
+                            <div class="col-3 form-group">
+                                <label for="language" class="mr-sm-2 pb-2">زبان:</label>
+                                <select onchange="LanguageChanged()"  class="form-control w-100 mx-1" id="language" placeholder="زبان" required>
+                                    <option value="فارسی">فارسی</option>
+                                    <option value="انگلیسی">انگلیسی</option>
+                                </select>
+                            </div>
+
+                            <div class="col-3 form-group">
                                 <label class="mr-sm-2 pb-2"></label>
                                 <button type="button" id= "submit_btn" class="btn mb-0 p-1 d-block float-right" onclick="UploadFile()" style="margin-top: 20px;">آپلود و پردازش</button>
                             </div>
@@ -138,8 +146,8 @@
 
     async function LanguageChanged()
     {
-        // const language = document.getElementById("language").value
-        const language = 'فارسی'
+        const language = document.getElementById("language").value
+        // const language = 'فارسی'
 
         /* Extract Task List */
         const request_url = 'http://' + location.host + '/get_task_list/';
@@ -169,7 +177,10 @@
     async function UploadFile()
     {
         const country = document.getElementById("country").value
-        const language ='فارسی'
+
+        const language = document.getElementById("language").value
+
+        // const language ='فارسی'
         if (country !== "")
         {
             let checkboxes = document.querySelectorAll('input[name="task"]:checked');

@@ -160,6 +160,7 @@ class ActorCategory(models.Model):
 class Category(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(null=True, max_length=500)  # سازمان, وزارت, مرکز
+    language = models.CharField(default="فارسی", max_length=500)
 
 
 class Label(models.Model):

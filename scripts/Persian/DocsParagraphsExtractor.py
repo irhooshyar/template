@@ -45,7 +45,9 @@ def apply(folder_name, Country):
     dataPath = str(Path(config.DATA_PATH, folder_name))
     DocumentParagraphs.objects.filter(document_id__country_id=Country).delete()
     files_text = Preprocessing.readFiles(dataPath, preprocess=False)
-
+    print("files_text")
+    print(files_text)
+    print("===============")
     Thread_Count = config.Thread_Count
     Result_Create_List = [None] * Thread_Count
     Sliced_Files = Slice_Dict(files_text, Thread_Count)
@@ -58,7 +60,7 @@ def apply(folder_name, Country):
     thread_obj = []
     thread_number = 0
     for S in Sliced_Files:
-        thread = threading.Thread(target=Extract_Paragraph, args=(S, Document_Dictionary, Result_Create_List, thread_number,))
+        thread = threading.Thread(target=Extract_Paragraph, args=(S, Document_Dictionary, Result_Create_List, thread_number,Country))
         thread_obj.append(thread)
         thread_number += 1
         thread.start()
@@ -85,7 +87,7 @@ def delete_empty_line(line_list):
     return result_line
 
 
-def Extract_Paragraph(files_text, Document_Dictionary, Result_Create_List, thread_number,):
+def Extract_Paragraph(files_text, Document_Dictionary, Result_Create_List, thread_number,Country):
     Create_List = []
     f = 0
     for key, value in files_text.items():
@@ -95,7 +97,10 @@ def Extract_Paragraph(files_text, Document_Dictionary, Result_Create_List, threa
         paragraphs = delete_empty_line(paragraphs)
         document = Document_Dictionary[key]
         for i in range(paragraphs.__len__()):
-            paragraph = arabic_preprocessing(paragraphs[i])
+
+            paragraph = paragraphs[i]
+            if Country.language == 'فارسی':
+                paragraph = arabic_preprocessing(paragraphs[i])
 
             # added for standard
             # paragraph = paragraph.replace('\n',' ')

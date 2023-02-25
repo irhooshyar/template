@@ -235,6 +235,7 @@ Paragraphs_Mappings = {
     }
 }
 
+
 Paragraphs_Settings_2 = {
     "analysis": {
         "filter": {
@@ -2055,19 +2056,36 @@ EN_Settings = {
 
 EN_Mappings = {
     "properties": {
-        "approval_date": {
+    
+        "document_date": {
+            "type": "text",
+            "fields": {
+                "keyword": {
+                    "type": "keyword",
+                    "ignore_above": 256
+                }
+            }
+        },
+        "document_year": {
             "type": "integer"
         },
-        "approval_year": {
+        "document_time": {
+            "type": "text"
+        },
+
+        "document_hour": {
             "type": "integer"
         },
+
         "document_id": {
             "type": "integer"
         },
 
-        "approval_reference_name": {
+
+        "document_name": {
             "type": "text",
             "analyzer": "english_custom_analyzer",
+            "term_vector": "with_positions_offsets",
             "fields": {
                 "keyword": {
                     "type": "keyword",
@@ -2080,8 +2098,12 @@ EN_Mappings = {
             "type": "text",
             "analyzer": "english_custom_analyzer"
         },
+        "standard_file_name": {
+            "type": "text",
+            "analyzer": "english_custom_analyzer"
+        },
 
-        "level_name": {
+        "subject_name": {
             "type": "text",
             "analyzer": "english_custom_analyzer",
             "fields": {
@@ -2092,15 +2114,47 @@ EN_Mappings = {
             }
         },
 
-        "name": {
-            "type": "text",
-            "analyzer": "english_custom_analyzer"
+        "subject_weight": {
+            "type": "text"
         },
+
+        "category_name": {
+            "type": "text",
+            "analyzer": "english_custom_analyzer",
+            "fields": {
+                "keyword": {
+                    "type": "keyword",
+                    "ignore_above": 256
+                }
+            }
+        },
+        "source_id": {
+            "type": "integer"
+        },
+        "source_folder": {
+            "type": "text",
+            "fields": {
+                "keyword": {
+                    "type": "keyword",
+                    "ignore_above": 256
+                }
+            }
+        },
+        "source_name": {
+            "type": "text",
+            "analyzer": "english_custom_analyzer",
+            "fields": {
+                "keyword": {
+                    "type": "keyword",
+                    "ignore_above": 256
+                }
+            }
+        },
+
 
         "data": {
             "type": "text"
         },
-
         "attachment": {
             "properties": {
                 "author": {
@@ -2115,6 +2169,7 @@ EN_Mappings = {
                 "content": {
                     "type": "text",
                     "analyzer": "english_custom_analyzer",
+                    # "term_vector": "with_positions_offsets",
                     "fields": {
                         "keyword": {
                             "type": "keyword",
@@ -2150,6 +2205,7 @@ EN_Mappings = {
         }
     }
 }
+
 
 EN_Paragraphs_Mappings = {
     "properties": {
@@ -2251,6 +2307,110 @@ EN_Paragraphs_Mappings = {
         }
     }
 }
+
+
+
+EN_Paragraphs_Mappings = {
+    "properties": {
+    
+        "wikitriplet_vector": {
+        "type": "dense_vector",
+        "dims": 768
+        },
+
+        "document_id": {
+            "type": "integer"
+        },
+        "document_name": {
+            "type": "text",
+            "analyzer": "english_custom_analyzer"
+        },
+        "category_name": {
+            "type": "text",
+            "analyzer": "english_custom_analyzer",
+            "fields": {
+                "keyword": {
+                    "type": "keyword",
+                    "ignore_above": 256
+                }
+            }
+        },
+            "subject_name": {
+            "type": "text",
+            "analyzer": "english_custom_analyzer",
+            "fields": {
+                "keyword": {
+                    "type": "keyword",
+                    "ignore_above": 256
+                }
+            }
+        },
+
+
+        "document_year": {
+            "type": "integer"
+        },
+
+
+        "paragraph_id": {
+            "type": "integer"
+        },
+        "data": {
+            "type": "text"
+        },
+        "attachment": {
+            "properties": {
+                "author": {
+                    "type": "text",
+                    "fields": {
+                        "keyword": {
+                            "type": "keyword",
+                            "ignore_above": 256
+                        }
+                    }
+                },
+                "content": {
+                    "type": "text",
+                    "term_vector": "with_positions_offsets",
+                    "analyzer": "english_custom_analyzer",
+                    "fields": {
+                        "keyword": {
+                            "type": "keyword",
+                            "ignore_above": 256
+                        }
+                    }
+                },
+                "content_length": {
+                    "type": "long"
+                },
+                "content_type": {
+                    "type": "text",
+                    "fields": {
+                        "keyword": {
+                            "type": "keyword",
+                            "ignore_above": 256
+                        }
+                    }
+                },
+                "date": {
+                    "type": "date"
+                },
+                "language": {
+                    "type": "text",
+                    "fields": {
+                        "keyword": {
+                            "type": "keyword",
+                            "ignore_above": 256
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+
 # -----------------------------------------------
 
 Standard_Mappings = {

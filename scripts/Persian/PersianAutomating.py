@@ -84,12 +84,12 @@ def persian_apply(folder_name, Country, tasks_list, host_url):
 
 
     # --- Ingest Paragraphs For Similarity
-    if "IngestParagraphsToElastic" in tasks_list:
-        Country.status = "IngestParagraphsToElastic"
-        Country.save()
+    # if "IngestParagraphsToElastic" in tasks_list:
+    #     Country.status = "IngestParagraphsToElastic"
+    #     Country.save()
 
-        print("15. IngestParagraphsToElastic.")
-        IngestParagraphsToElastic.apply(folder_name, Country,0)
+    #     print("15. IngestParagraphsToElastic.")
+    #     IngestParagraphsToElastic.apply(folder_name, Country,0)
 
     if "DocsParagraphsClustering" in tasks_list:
         Country.status = "DocsParagraphsClustering"

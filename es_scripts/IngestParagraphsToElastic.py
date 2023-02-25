@@ -66,6 +66,49 @@ class ParagraphIndex(ES_Index):
 
 
 
+
+class EN_ParagraphIndex(ES_Index):
+    def __init__(self, name, settings,mappings):
+        super().__init__(name, settings,mappings)
+    
+    def generate_docs(self,files_dict,paragraphs):
+
+        for para in paragraphs:
+            paragraph_id = para['para_id']
+            document_id = para['doc_id']
+            document_name = para['doc_name']
+            category_name = para['category_name'] if para['category_name'] is not None else 'unknown'
+            subject_name = para['subject_name'] if para['subject_name'] is not None else 'unknown'
+            document_year =int(para['date'].split(' ')[2]) if len(para['date'].split(' ')) == 3 else 2023
+            
+            para_text = para['para_text']
+
+            text_bytes = bytes(para_text,encoding="utf8")
+            base64_bytes = base64.b64encode(text_bytes)
+            base64_text = (str(base64_bytes)[2:-1])
+            base64_file = base64_text
+
+            new_para = {
+                "paragraph_id": paragraph_id,
+                "document_id": document_id,
+                "document_name": document_name,
+                "document_year": document_year,
+                "category_name":category_name,
+                "subject_name":subject_name,
+                "data": base64_file
+            }
+
+
+            new_paragraph = {
+                "_index": self.name,
+                "_id": paragraph_id,
+                "pipeline":"attachment",
+                "_source":new_para,
+            }
+            yield new_paragraph
+
+
+
 def apply(folder, Country,is_for_ref):
     settings = {}
     mappings = {}
@@ -79,28 +122,43 @@ def apply(folder, Country,is_for_ref):
         print(is_for_ref)
         
     country_lang = Country.language
+    new_index = None
+    paragraphs = []
 
     if country_lang in ["فارسی","استاندارد"]:
         settings = es_config.Paragraphs_Settings_2 if is_for_ref == 1 else es_config.Paragraphs_Settings_3
         mappings = es_config.Paragraphs_Mappings
-
-
-
-    Paragraphs_Model = DocumentParagraphs
-
-    paragraphs = Paragraphs_Model.objects.filter(
-        document_id__country_id__id = Country.id).annotate(
-            para_id = F('id')).annotate(
+        new_index = ParagraphIndex(index_name, settings, mappings) 
+        paragraphs = DocumentParagraphs.objects.filter(
+            document_id__country_id__id = Country.id).annotate(
+                para_id = F('id')).annotate(
                 doc_id = F('document_id__id')).annotate(
                 doc_name = F('document_id__name'), 
                 category_name = F('document_id__category_name'),
                 subject_name = F('document_id__subject_name'),
-                
                 year=Cast(Substr('document_id__date', 1, 4), IntegerField())).annotate(
                 para_text = F('text')).values()
-    print(len(paragraphs))
-    new_index = ParagraphIndex(index_name, settings, mappings)
 
+
+    elif country_lang == "انگلیسی":
+        settings = es_config.EN_Settings
+        mappings = es_config.EN_Paragraphs_Mappings
+        new_index = EN_ParagraphIndex(index_name, settings, mappings)
+
+        paragraphs = DocumentParagraphs.objects.filter(
+            document_id__country_id__id = Country.id).annotate(
+            para_id = F('id')).annotate(
+                doc_id = F('document_id__id')).annotate(
+                doc_name = F('document_id__name'), 
+                date = F('document_id__date'), 
+                category_name = F('document_id__category_name'),
+                subject_name = F('document_id__subject_name'),                    
+                para_text = F('text')).values()
+    
+    
+    print(len(paragraphs))
+    
+        
     # If index exists -> delete it.
     if ES_Index.CLIENT.indices.exists(index=index_name):
         ES_Index.CLIENT.indices.delete(index=index_name, ignore=[400, 404])

@@ -912,7 +912,7 @@ def get_country_maps(country_objects):
         id = each.id
         name = each.name
         language = each.language
-        if language == "فارسی":
+        if True or language == "فارسی":
             dataset_map[id] = name
     return dataset_map
 

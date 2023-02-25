@@ -14,5 +14,14 @@
         "تزریق پروفایل احکام در الستیک":["IngestFullProfileAnalysisToElastic" , 0],
         "استخراج بردار معنایی پاراگراف‌ها":["DocsParagraphVectorExtractor" , 0]
 
+    },
+
+    "انگلیسی": {
+        "استاندارسازی نام فایل": ["renameFilesToStandard", 0],
+        "پیش پردازش": ["Preprocess", 0],
+        "واردکردن اطلاعات ثابت": ["StaticDataImportDB", 0],
+        "تزریق اسناد در الستیک": ["IngestDocumentsToElastic", 0],
+        "تزریق احکام در الستیک": ["IngestParagraphsToElastic", 0]
     }
+ 
 }
