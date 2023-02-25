@@ -32,6 +32,9 @@ class DocumentIndex(ES_Index):
         for doc in documents:
 
             doc_id = int(doc['id'])
+            source_id = int(doc['source_id'])
+            source_folder = doc['source_folder'].split("/")[-1].split(".")[0]
+
             doc_name = doc['name']
 
             doc_file_name = ""
@@ -54,6 +57,8 @@ class DocumentIndex(ES_Index):
                 base64_file = files_dict[doc_file_name]
 
                 new_doc = {
+                    "source_id":source_id,
+                    "source_folder":source_folder,
                     "document_id": doc_id,
                     "document_name": doc_name,
                     "document_date": doc_date,
@@ -97,6 +102,8 @@ def apply(folder, Country):
 
     documents = Document_Model.objects.filter(country_id__id=Country.id).annotate(
         year=Cast(Substr('date', 1, 4), IntegerField()),
+        source_id = F('country_id__id'),
+        source_folder = F('country_id__file'),
         source_name = F('country_id__name')).values()
 
 

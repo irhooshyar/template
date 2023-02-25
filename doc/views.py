@@ -106,7 +106,7 @@ def update_doc(request, id, language, ):
 
 
     StratAutomating.apply.after_response(folder_name, file,
-                                             "IngestFullProfileAnalysisToElastic",
+                                             "DocsParagraphsClustering_AIParagraphTopicLDA_LDAGraphData",
                                              host_url)  # AdvanceARIMAExtractor_ ActorTimeSeriesPrediction _DocsSubjectExtractor_DocsLevelExtractor_DocsReferencesExtractor_DocsActorsTimeSeriesDataExtractor_DocsCreateDocumentsListCubeData_DocsCreateSubjectCubeData_DocsCreateVotesCubeData_DocsCreateSubjectStatisticsCubeData_DocsCreateTemplatePanelsCubeData_DocsAnalysisLeadershipSlogan_DocsCreatePrinciplesCubeData_DocCreateBusinessAdvisorCubeData_DocsCreateRegularityLifeCycleCubeData_DocsExecutiveParagraphsExtractor_DocsClauseExtractor_DocsGraphCubeData_DocsCreateMandatoryRegulationsCubeData_DocsExecutiveClausesExtractor_DocsCreateActorInformationStackChartCubeData
 
 
@@ -931,8 +931,8 @@ def GetDocumentsPredictSubjectLDA(request, country_id, number_of_topic):
         ~Q(id__in=para_id_list)).annotate(
         doc_id=F('document_id__id')).annotate(
         doc_name=F('document_id__name')).annotate(
-        approval_reference_name=F('document_id__approval_reference_name')).annotate(
-        approval_date=F('document_id__approval_date')).annotate(
+        category_name=F('document_id__category_name')).annotate(
+        document_date=F('document_id__date')).annotate(
         subject_name=F('document_id__subject_name')).annotate(text_len=Length('text')).filter(
         text_len__gt=80)[:300]
 
@@ -943,8 +943,8 @@ def GetDocumentsPredictSubjectLDA(request, country_id, number_of_topic):
             'document_id': row.doc_id,
             'document_name': row.doc_name,
             'subject_name': row.subject_name if row.subject_name != None else 'نامشخص',
-            'approval_reference_name': row.approval_reference_name if row.approval_reference_name != None else 'نامشخص',
-            'approval_date': row.approval_date if row.approval_date != None else 'نامشخص',
+            'category_name': row.category_name if row.category_name != None else 'نامشخص',
+            'document_date': row.document_date if row.document_date != None else 'نامشخص',
         }
         result_without.append(res)
 
@@ -1033,11 +1033,6 @@ def AIGetLDATopic(request, country_id, number_of_topic, username):
 def BoostingSearchParagraph_Column_ES(request, country_id, field_name, field_value, curr_page, result_size):
     res_query = {"bool": {
         "filter": [
-            {
-                "term": {
-                    "type_name.keyword": "قانون"
-                }
-            },
             {
                 "term":
                     {
@@ -1157,11 +1152,6 @@ def BoostingSearchParagraph_ES(request, country_id, curr_page, result_size):
     res_query = {"bool": {
         "filter": [
             {
-                "term": {
-                    "type_name.keyword": "قانون"
-                }
-            },
-            {
                 "range": {
                     "attachment.content_length": {
                         "gte": 80
@@ -1234,22 +1224,22 @@ def BoostingSearchParagraph_ES(request, country_id, curr_page, result_size):
 
     # ---------------------- Get Chart Data -------------------------
     res_agg = {
-        "approval-ref-agg": {
+        "subject-agg": {
             "terms": {
-                "field": "approval_reference_name.keyword",
+                "field": "subject_name.keyword",
                 "size": bucket_size
             }
         },
 
-        "level-agg": {
+        "category-agg": {
             "terms": {
-                "field": "level_name.keyword",
+                "field": "category_name.keyword",
                 "size": bucket_size
             }
         },
-        "approval-year-agg": {
+        "document-year-agg": {
             "terms": {
-                "field": "approval_year",
+                "field": "document_year",
                 "size": bucket_size
             }
         }
@@ -1754,27 +1744,22 @@ def Get_Topic_Paragraphs_ES(request, country_id, topic_id, result_size, curr_pag
 
     # ---------------------- Get Chart Data -------------------------
     res_agg = {
-        "approval-ref-agg": {
+        "category-agg": {
             "terms": {
-                "field": "approval_reference_name.keyword",
+                "field": "category_name.keyword",
                 "size": bucket_size
             }
         },
         "subject-agg": {
             "terms": {
-                "field": "keyword_subject.keyword",
+                "field": "subject_name.keyword",
                 "size": bucket_size
             }
         },
-        "level-agg": {
+
+        "document-year-agg": {
             "terms": {
-                "field": "level_name.keyword",
-                "size": bucket_size
-            }
-        },
-        "approval-year-agg": {
-            "terms": {
-                "field": "approval_year",
+                "field": "document_year",
                 "size": bucket_size
             }
         }
@@ -1953,8 +1938,13 @@ def GetMyUserProfile(request):
     user = User.objects.get(username=username)
     user_expertise = User_Expertise.objects.filter(user_id=user.id)
     expertise = []
+    expertise_ids = []
     for e in user_expertise:
-        expertise.append(e.experise_id.expertise)
+        if e.experise_id.expertise == "سایر موارد":
+            expertise.append(user.other_expertise)
+        else:
+            expertise.append(e.experise_id.expertise)
+        expertise_ids.append(e.experise_id.id)    
     expertise = " - ".join(expertise)
 
     if expertise == "":
@@ -2512,7 +2502,7 @@ def user_activation(request, user_id, token, code):
         
     return JsonResponse({ "status": "Not OK" })
 
-def SaveUser(request, firstname, lastname,email, phonenumber, role, username, password, ip, expertise):
+def SaveUser(request, firstname, lastname,email, phonenumber, role, username, password, ip, expertise, other_expertise):
     user_username = User.objects.filter(username=username)
     user_email = User.objects.filter(email=email)
     if user_username.count() > 0:
@@ -2525,7 +2515,7 @@ def SaveUser(request, firstname, lastname,email, phonenumber, role, username, pa
         user = User.objects.create(first_name=firstname, last_name=lastname,email=email,
                                    role_id=role,
                                    mobile=phonenumber, username=username, password=hashed_pwd, last_login=last_login,
-                                   is_super_user=0, is_active=0)
+                                   is_super_user=0, is_active=0, other_expertise=other_expertise)
 
         for e in expertise.split(','):
             User_Expertise.objects.create(user_id_id=user.id, experise_id_id=e)
@@ -3279,28 +3269,24 @@ def GetUnknownDocuments(request):
 
 
 def GetSearchParameters(request, country_id):
-    search_parameters = SearchParameters.objects.filter(country__id=country_id)
+    search_parameters = SearchParameters.objects.all()
     parameters_result = {}
+
+
+    if country_id != 0:
+        search_parameters = SearchParameters.objects.filter(country__id=country_id)
+        print("country_id")
+        print(country_id)
+
+    for param in search_parameters:
+        para_name = param.parameter_name
+        parameters_result[para_name] = ""
 
     for param in search_parameters:
         para_name = param.parameter_name
         options = param.parameter_values["options"]
-        parameters_result[para_name] = options
 
-    country = Country.objects.get(id=country_id)
-    # sub_areas = SubjectSubArea.objects.filter(subject_area_id__language=country.language).values('id', 'name',
-    #                                                                                              'subject_area_id__id',
-    #                                                                                              'subject_area_id__name')
-    #
-    # subject_area = {}
-    # for sub_area in sub_areas:
-    #     if str(sub_area['subject_area_id__id']) + "#" + sub_area['subject_area_id__name'] in subject_area.keys():
-    #         subject_area[str(sub_area['subject_area_id__id']) + "#" + sub_area['subject_area_id__name']]. \
-    #             append((sub_area['id'], sub_area['name']))
-    #     else:
-    #         subject_area[str(sub_area['subject_area_id__id']) + "#" + sub_area['subject_area_id__name']] = [
-    #             (sub_area['id'], sub_area['name'])]
-
+        parameters_result[para_name] += options
 
     return JsonResponse({"parameters_result": parameters_result}, )
 
@@ -3400,9 +3386,7 @@ def SearchDocument_ES(request, country_id, category_id, subject_id, from_year, t
     # print('search_query')
     # print(res_query)
 
-    country_obj = Country.objects.get(id=country_id)
-    index_name = standardIndexName(country_obj, Document.__name__)
-    # index_name = "doticfull_document"
+    index_name = None
 
     # ---------------------- Get Chart Data -------------------------
     res_agg = {
@@ -3431,9 +3415,9 @@ def SearchDocument_ES(request, country_id, category_id, subject_id, from_year, t
                 "size": bucket_size
             }
         },
-        "day-agg": {
+        "source-name-agg": {
             "terms": {
-                "field": "document_date.keyword",
+                "field": "source_name.keyword",
                 "size": bucket_size
             }
         },
@@ -3442,10 +3426,23 @@ def SearchDocument_ES(request, country_id, category_id, subject_id, from_year, t
 
     from_value = (curr_page - 1) * search_result_size
 
+    if country_id == 0:
+        index_name_list = []
+        country_list = Country.objects.all().exclude(name="تابناک- تست")
+        for country in country_list:
+            index_name = standardIndexName(country, Document.__name__)
+            index_name_list.append(index_name)
+
+        index_name =  index_name_list
+    else:
+        
+        country_obj = Country.objects.get(id=country_id)
+        index_name = standardIndexName(country_obj, Document.__name__)
+
     response = client.search(index=index_name,
                              _source_includes=['document_id', 'document_name', 'document_date',
                                                'subject_name', 'category_name', 'document_year',
-                                               'raw_file_name',
+                                               'raw_file_name','source_id','source_folder',
                                                'source_name','document_time'],
                              request_timeout=40,
                              query=res_query,
@@ -3893,10 +3890,12 @@ def filter_doc_fields_COLUMN(res_query, category_name, subject_name,
     return res_query
 
 
-def SearchDocuments_Column_ES(request, country_id, category_name, subject_name,
+def SearchDocuments_Column_ES(request, country_name, category_name, subject_name,
                               from_year, to_year
                               , place, text, search_type, curr_page):
 
+    country_id = Country.objects.get(name = country_name).id if country_name != 'همه' else 0
+    index_name = None
     res_query = {
         "bool": {}
     }
@@ -3915,14 +3914,24 @@ def SearchDocuments_Column_ES(request, country_id, category_name, subject_name,
         else:
             res_query = boolean_search_text(res_query, place, text, search_type, ALL_FIELDS)
 
-    country_obj = Country.objects.get(id=country_id)
-    index_name = standardIndexName(country_obj, Document.__name__)
+    if country_id == 0:
+        index_name_list = []
+        country_list = Country.objects.all().exclude(name="تابناک- تست")
+        for country in country_list:
+            index_name = standardIndexName(country, Document.__name__)
+            index_name_list.append(index_name)
+
+        index_name =  index_name_list
+    else:
+        
+        country_obj = Country.objects.get(id=country_id)
+        index_name = standardIndexName(country_obj, Document.__name__)
 
     from_value = (curr_page - 1) * search_result_size
 
     response = client.search(index=index_name,
                              _source_includes=['document_id', 'document_name', 'document_date',
-                                               'subject_name',
+                                               'subject_name','source_id','source_folder','source_name',
                                                "category_name", 'raw_file_name'],
                              request_timeout=40,
                              query=res_query,

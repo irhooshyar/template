@@ -127,19 +127,13 @@
 
                 <!-- Country select -->
                 <div class="col-md-6 col-12 col-lg-2 bg-light pt-3  mt-1" dir="rtl">
-                    <label for="country" class=" text-right bg-light float-right">مجموعه سند:</label>
+                    <label for="country" class=" text-right bg-light float-right">مجموعه خبر:</label>
                     <select dir="rtl" id="country" name="country"
                         class="form-select text-right float-right searchable-select" onchange="CountryChanged()">
                         {% for k,v in countries.items %}
-                        {% if v == 'فاوا' %}
-                        <option value="{{ k }}">{{ v }}- قوانین</option>
+      
+                        <option value="{{ k }}">{{ v }}</option>
 
-                        {% endif %}
-
-                        {% if v == 'هوش‌یار' %}
-                        <option value="{{ k }}">{{ v }}- قوانین</option>
-
-                        {% endif %}
 
                         {% endfor %}
                     </select>
@@ -182,7 +176,7 @@
             <li class="nav-item float-right" role="presentation">
                 <button id="result_doc" class="nav-link active" data-bs-toggle="pill"
                     data-bs-target="#result_doc_subject" type="button" role="tab" aria-controls="result_doc_subject"
-                    aria-selected="true">احکام خوشه</button>
+                    aria-selected="true">پاراگراف‌ها خوشه</button>
             </li>
 
 
@@ -193,7 +187,7 @@
             </li> -->
 
             <!-- Download Buttons -->
-            <!-- <button type="button" disabled data-bs-toggle="tooltip" data-bs-placement="top" title="دانلود اسناد"
+            <!-- <button type="button" disabled data-bs-toggle="tooltip" data-bs-placement="top" title="دانلود اخبار"
                 class="btn float-left p-0 px-1 mt-2" id="DownloadBtn" onclick="DownloadSerachResultFunction()"
                 type="button">
                 <i class="far fa-file-archive m-0" style="font-size: 25px;margin: 0px;"></i>
@@ -243,10 +237,12 @@
 
                     <div class="row mt-0 w-100 flex-row-reverse mx-0 px-0">
 
-                        <div id="year_container" class="full" chart-height="750px">
+                        <div id="year_container" class="half">
                         </div>
-                        <div id="level_container" class="half"></div>
-                        <div id="approval_container" class="half">
+                        <div id="subject_container"  class="half"></div>
+
+                        <div id="category_container" class="full" chart-height="750px"></div>
+                        
                         </div>
 
                     </div>
@@ -255,7 +251,7 @@
                 <!-- Modal footer -->
                 <div class="modal-footer">
 
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">بستن</button>
+                    
                 </div>
 
             </div>
@@ -278,7 +274,7 @@
                 </div>
                 <!-- Modal footer -->
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">بستن</button>
+                    
                 </div>
 
             </div>
@@ -315,12 +311,11 @@
                     <!-- <input type="number" id="ColumnModalPaginationInput" min="1" max="1" value="1"
                         class="form-select text-right float-right d-none"> -->
 
-                    <button id="close_btn" type="button" class="btn btn-secondary" data-bs-dismiss="modal">بستن
-                    </button>
+                    
 
                     <!-- <button id="ExportExcel2" onclick="TopicParagraphs_Excel()"
                         class="btn btn-outline-primary float-left"><i class="fa fa-download"></i>
-                        خروجی اکسل احکام
+                        خروجی اکسل پاراگراف‌ها
                     </button> -->
                 </div>
 
@@ -337,7 +332,7 @@
 
                 <!-- Modal Header -->
                 <div class="modal-header">
-                    <h5 id="detailModalHeader" class="modal-title">عنوان سند</h5>
+                    <h5 id="detailModalHeader" class="modal-title">عنوان خبر</h5>
                     <button type="button" class="btn-close m-0" data-bs-dismiss="modal"
                         onclick="default_modal()"></button>
                 </div>
@@ -436,14 +431,14 @@
         let main_cluster_result = []
         let clusters_data = {}
         CHART_FIELD_DICT = {
-            "level_container": "level_name",
-            "year_container": "approval_year",
-            "approval_container": "approval_reference_name",
+            "category_container": "category_name",
+            "year_container": "document_year",
+            "subject_container": "subject_name",
         }
         CHART_NAME_DICT = {
-            "level_container": "سطح احکام",
-            "year_container": "سال تصویب احکام",
-            "approval_container": "مرجع تصویب احکام",
+            "category_container": "دسته پاراگراف‌ها",
+            "year_container": "سال  پاراگراف‌ها",
+            "subject_container": "موضوع پاراگراف‌ها",
         }
 
         MAX_RESULT_WINDOW = 5000
@@ -508,7 +503,7 @@
                 }
             }, {
                 "name": "name",
-                "title": "نام سند",
+                "title": "نام خبر",
                 "style": {
                     "width": "30%"
                 }
@@ -544,7 +539,7 @@
                 "sorting": {
                     "enabled": true
                 },
-                "empty": "سندی یافت نشد.",
+                "empty": "خبری یافت نشد.",
                 "columns": columns,
                 "rows": TABLE_INFO
             });
@@ -855,7 +850,7 @@
                 }
             }, {
                 "name": "total_hits",
-                "title": "تعداد احکام",
+                "title": "تعداد پاراگراف‌ها",
                 "style": {
                     "width": "10%"
                 }
@@ -873,7 +868,7 @@
                 }
             }, {
                 "name": "detail",
-                "title": "احکام مرتبط",
+                "title": "پاراگراف‌ها مرتبط",
                 "style": {
                     "width": "10%"
                 }
@@ -897,7 +892,7 @@
                 "sorting": {
                     "enabled": true
                 },
-                "empty": "سندی یافت نشد.",
+                "empty": "خبری یافت نشد.",
                 "columns": columns,
                 "rows": main_cluster_result
             });
@@ -988,16 +983,16 @@
                 ES_Aggregations = res["aggregations"]
 
                 // subject_data = ES_Aggregations['subject-agg']['buckets']
-                approval_references_data = ES_Aggregations['approval-ref-agg']['buckets']
-                approval_year_data = ES_Aggregations['approval-year-agg']['buckets']
-                level_data = ES_Aggregations['level-agg']['buckets']
+                subject_data = ES_Aggregations['subject-agg']['buckets']
+                document_year_data = ES_Aggregations['document-year-agg']['buckets']
+                category_data = ES_Aggregations['category-agg']['buckets']
 
 
 
                 // showChartData(country_id, subject_data, "subject_container", documents_information_result, false, "موضوع حکم")
-                showChartData(country_id, cluster_id, approval_year_data, "year_container", true, "سال تصویب سند", "توزیع احکام بر اساس سال تصویب")
-                showHistogramChart(country_id, cluster_id, approval_references_data, "approval_container", false, "مرجع تصویب سند", "توزیع احکام بر اساس مرجع تصویب")
-                showChartData(country_id, cluster_id, level_data, "level_container", false, "سطح سند", "توزیع احکام براساس سطح احکام")
+                showChartData(country_id, cluster_id, document_year_data, "year_container", true, "سال خبر", "توزیع پاراگراف‌ها براساس سال اخبار")
+                showHistogramChart(country_id, cluster_id, subject_data, "subject_container", false, "موضوع خبر", "توزیع پاراگراف‌ها براساس موضوع")
+                showChartData(country_id, cluster_id, category_data, "category_container", false, "دسته خبر", "توزیع پاراگراف‌ها براساس دسته اخبار")
 
             }).fail(function (res) {
                 console.log("fail")
@@ -1028,7 +1023,7 @@
                 xAxisTitle,
                 title,
                 showLabels: true,
-                yAxisTitle: "تعداد احکام",
+                yAxisTitle: "تعداد پاراگراف‌ها",
                 onClick: async function (event, data) {
                     const click_tag = event.domTarget.tag;
                     const index = click_tag["index"]
@@ -1060,7 +1055,7 @@
                 title,
                 xAxisTitle,
                 data,
-                yAxisTitle: "تعداد احکام",
+                yAxisTitle: "تعداد پاراگراف‌ها",
                 sortKeys,
                 onclick: async function (event, data) {
                     const click_tag = event.domTarget.tag;
@@ -1215,7 +1210,7 @@
                     let count = Math.round((doc['_score'] * 100)) / 100
 
                     const document_link = 'http://' + location.host + "/document_profile/?id=" + id
-                    const doc_name = "<a title='پروفایل سند' class='bold text-secondary' target='blank' href='" + document_link + "'>" + name + "</a>"
+                    const doc_name = "<a title='پروفایل خبر' class='bold text-secondary' target='blank' href='" + document_link + "'>" + name + "</a>"
 
                     paragraph_link = 'http://' + location.host + "/sentiment_analysis/?id=" + paragraph_id;
 
@@ -1292,7 +1287,7 @@
             const country_folder = response["folder"];
             const country_name = response["name"];
 
-            // save_file_name += " مجموعه سند {" + country_name + "}"
+            // save_file_name += " مجموعه خبر {" + country_name + "}"
 
 
             let extension = ".txt"
@@ -1320,7 +1315,7 @@
                     // see FileSaver.js
                     saveAs(content, save_file_name + ".zip");
                 });
-            stopFullPageBlockUI('دانلود اسناد');
+            stopFullPageBlockUI('دانلود اخبار');
         }
 
         async function DownloadSerachResultFunction() {
@@ -1334,7 +1329,7 @@
             sep = ","
 
 
-            let Csv = "نام سند" + sep + "موضوع سند" + sep + "مرجع تصویب" + sep + "تاریخ تصویب" + sep + "کلمات کلیدی" +
+            let Csv = "نام خبر" + sep + "موضوع خبر" + sep + "مرجع تصویب" + sep + "تاریخ تصویب" + sep + "کلمات کلیدی" +
                 "\n"
             for (const doc_info of SearchResultValue) {
                 const document_name = doc_info["document_name"]
@@ -1351,7 +1346,7 @@
             }
 
             let save_file_name = "پنل تحلیل درگاه: "
-            save_file_name += " مجموعه سند {" + $('#country option:selected').text() + "}"
+            save_file_name += " مجموعه خبر {" + $('#country option:selected').text() + "}"
 
             let csvContent = "data:text/csv;charset=utf-8,%EF%BB%BF" + encodeURI(Csv);
             var link = document.createElement("a");

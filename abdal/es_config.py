@@ -161,9 +161,19 @@ Paragraphs_Mappings = {
                 }
             }
         },
+            "subject_name": {
+            "type": "text",
+            "analyzer": "persian_custom_analyzer",
+            "fields": {
+                "keyword": {
+                    "type": "keyword",
+                    "ignore_above": 256
+                }
+            }
+        },
 
 
-        "year": {
+        "document_year": {
             "type": "integer"
         },
 
@@ -322,7 +332,7 @@ Clustering_Paragraphs_Mappings = {
             "analyzer": "persian_custom_analyzer"
         },
 
-        "keyword_subject": {
+        "subject_name": {
             "type": "text",
             "analyzer": "persian_custom_analyzer",
             "fields": {
@@ -333,7 +343,7 @@ Clustering_Paragraphs_Mappings = {
             }
         },
 
-        "approval_reference_name": {
+        "category_name": {
             "type": "text",
             "analyzer": "persian_custom_analyzer",
             "fields": {
@@ -344,19 +354,8 @@ Clustering_Paragraphs_Mappings = {
             }
         },
 
-        "approval_year": {
+        "document_year": {
             "type": "integer"
-        },
-
-        "level_name": {
-            "type": "text",
-            "analyzer": "persian_custom_analyzer",
-            "fields": {
-                "keyword": {
-                    "type": "keyword",
-                    "ignore_above": 256
-                }
-            }
         },
 
         "paragraph_id": {
@@ -1427,7 +1426,13 @@ FA_Mappings = {
     "properties": {
     
         "document_date": {
-            "type": "text"
+            "type": "text",
+            "fields": {
+                "keyword": {
+                    "type": "keyword",
+                    "ignore_above": 256
+                }
+            }
         },
         "document_year": {
             "type": "integer"
@@ -1491,7 +1496,18 @@ FA_Mappings = {
                 }
             }
         },
-
+        "source_id": {
+            "type": "integer"
+        },
+        "source_folder": {
+            "type": "text",
+            "fields": {
+                "keyword": {
+                    "type": "keyword",
+                    "ignore_above": 256
+                }
+            }
+        },
         "source_name": {
             "type": "text",
             "analyzer": "persian_custom_analyzer",

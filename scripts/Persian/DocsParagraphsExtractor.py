@@ -14,6 +14,11 @@ def arabic_preprocessing(text):
     for key, value in arabic_char.items():
         text = text.replace(key, value)
 
+    # Delete non-ACII char
+    for ch in text:
+        if ch != "/" and ord(ch) <= 255 or (ord(ch) > 2000):
+            text = text.replace(ch, " ")
+
     return text
 
 

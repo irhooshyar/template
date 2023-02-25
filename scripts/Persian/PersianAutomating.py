@@ -91,19 +91,14 @@ def persian_apply(folder_name, Country, tasks_list, host_url):
         print("15. IngestParagraphsToElastic.")
         IngestParagraphsToElastic.apply(folder_name, Country,0)
 
-    # if "DocsParagraphsClustering" in tasks_list:
-    #     Country.status = "DocsParagraphsClustering"
-    #     Country.save()
+    if "DocsParagraphsClustering" in tasks_list:
+        Country.status = "DocsParagraphsClustering"
+        Country.save()
 
-    #     print("17. DocsParagraphsClustering")
-    #     DocsParagraphsClustering.apply(folder_name, Country)
+        print("17. DocsParagraphsClustering")
+        DocsParagraphsClustering.apply(folder_name, Country)
 
-    # if "DocsParagraphsClusteringCubeData" in tasks_list:
-    #     Country.status = "DocsParagraphsClusteringCubeData"
-    #     Country.save()
 
-    #     print("18. DocsParagraphsClusteringCubeData")
-    #     DocsParagraphsClusteringCubeData.apply(folder_name, Country)
 
     if "DocsCreateDocumentsListCubeData" in tasks_list:
         Country.status = "DocsCompleteJsonField"
@@ -118,27 +113,22 @@ def persian_apply(folder_name, Country, tasks_list, host_url):
         print("20. DocsCreateDocumentsListCubeData")
         DocsCreateDocumentsListCubeData.apply(folder_name, Country)
 
-    # if "AIParagraphTopicLDA" in tasks_list:
-    #     Country.status = "AIParagraphTopicLDA"
-    #     Country.save()
+    if "AIParagraphTopicLDA" in tasks_list:
+        Country.status = "AIParagraphTopicLDA"
+        Country.save()
 
-    #     print("25. AIParagraphTopicLDA.")
-    #     AIParagraphTopicLDA.apply(folder_name, Country)
+        print("25. AIParagraphTopicLDA.")
+        AIParagraphTopicLDA.apply(folder_name, Country)
 
 
-    # if "ClusteringGraphData" in tasks_list:
-    #     Country.status = "ClusteringGraphData"
-    #     Country.save()
 
-    #     print("27. ClusteringGraphData.")
-    #     ClusteringGraphData.apply(Country)
 
-    # if "LDAGraphData" in tasks_list:
-    #     Country.status = "LDAGraphData"
-    #     Country.save()
+    if "LDAGraphData" in tasks_list:
+        Country.status = "LDAGraphData"
+        Country.save()
 
-    #     print("28. LDAGraphData.")
-    #     LDAGraphData.apply(Country)
+        print("28. LDAGraphData.")
+        LDAGraphData.apply(Country)
 
 
     # Edit By HuggingFace

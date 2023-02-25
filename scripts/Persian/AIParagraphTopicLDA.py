@@ -16,15 +16,15 @@ import json
 
 
 LDA_configs = {
-    "اسناد رهبری":{
-        "num_topic":[5,10,15,20,25,30,35,40,45,50]
-        },
-    "فاوا":{
-        "num_topic":[5,10,15,20,25]
+    "تابناک":{
+        "num_topic":[5, 10, 15, 20, 25,30,35,40,45,50]
     },
-    "هوش‌یار":{
-        "num_topic":[5,10,15,20,25,30,35,40,45,50,60,70,80,90,100]
-    }
+    "خبر آنلاین":{
+        "num_topic":[5, 10, 15, 20, 25,30,35,40,45,50]
+    },
+    "عصر ایران":{
+        "num_topic":[5, 10, 15, 20, 25,30,35,40,45,50]
+    },
 }
 
 normalizer = Normalizer()
@@ -109,6 +109,11 @@ def Preprocessing(country_name,text, tokenize=True, stem=True, removeSW=True, no
 
             stopword_list = list(set(stopword_list))
 
+            news_stopword_list = open(Path(config.PERSIAN_PATH, "news_stopwords.txt"), encoding="utf8").read().split(
+                "\n")
+
+            stopword_list += list(set(news_stopword_list))
+
 
             if country_name == 'فاوا':
                 stopword_list += ['فناوری','اطلاعات','ارتباطات']
@@ -163,7 +168,7 @@ def apply(folder_name, Country):
     for para in paragraphs_list:
         subject_name = ''
         try:
-            subject_name = ParagraphsSubject.objects.get(country__id=Country.id, paragraph_id=para['id'], version__id=12).subject1_name
+            subject_name = ParagraphsSubject.objects.get(country__id=Country.id, paragraph_id=para['id']).subject1_name
         except:
             subject_name = "نامشخص"
         

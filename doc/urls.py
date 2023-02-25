@@ -82,7 +82,7 @@ urlpatterns = [
         'SearchDocument_ES/<int:country_id>/<int:category_id>/<int:subject_id>/<int:from_year>/<int:to_year>/<str:place>/<str:text>/<str:search_type>/<int:curr_page>/',
         views.SearchDocument_ES, name='SearchDocument_ES'),
     path(
-        'SearchDocuments_Column_ES/<int:country_id>/<str:subject_name>/<str:category_name>/<str:from_year>/<str:to_year>/<str:place>/<str:text>/<str:search_type>/<int:curr_page>/',
+        'SearchDocuments_Column_ES/<str:country_name>/<str:subject_name>/<str:category_name>/<str:from_year>/<str:to_year>/<str:place>/<str:text>/<str:search_type>/<int:curr_page>/',
         views.SearchDocuments_Column_ES, name='SearchDocuments_Column_ES'),
 
     path(
@@ -108,7 +108,7 @@ urlpatterns = [
     path('GetDocumentSubjectContent/<int:document_id>/<int:version_id>/', views.GetDocumentSubjectContent,
          name='GetDocumentSubjectContent'),
     path(
-        'SaveUser/<str:firstname>/<str:lastname>/<str:email>/<str:phonenumber>/<int:role>/<str:username>/<str:password>/<str:ip>/<str:expertise>/',
+        'SaveUser/<str:firstname>/<str:lastname>/<str:email>/<str:phonenumber>/<int:role>/<str:username>/<str:password>/<str:ip>/<str:expertise>/<str:other_expertise>/',
         views.SaveUser, name='SaveUser'),
     path('CheckUserLogin/<str:username>/<str:password>/<str:ip>/', views.CheckUserLogin, name='CheckUserLogin'),
     path('changeUserState/<int:user_id>/<str:state>/', views.changeUserState, name='changeUserState'),
