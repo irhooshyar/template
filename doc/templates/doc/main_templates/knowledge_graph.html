@@ -1065,6 +1065,9 @@
                     const index = click_tag["index"]
 
                     let field_value = data.row(index)[0];
+                    if (filed_name == 'document_year' && field_value == 'نامشخص') {
+                        field_value = 0
+                    }
                     let language = document.getElementById("language_select").value
 
                     if (search_type === "OR") {
