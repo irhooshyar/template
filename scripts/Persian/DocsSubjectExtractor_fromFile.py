@@ -33,7 +33,7 @@ def normalize_dictionary(dictionary):
 
 @after_response.enable
 def apply(folder_name, Country):
-    path = str(Path(config.PERSIAN_PATH, 'result_subject_khabar_online_1.txt'))
+    path = str(Path(config.PERSIAN_PATH, 'result_subject_asre_iran_1.txt'))
     file = open(path, encoding="utf8").read()
     delimiter = "&!&"
     file = file.split("\n")
@@ -70,7 +70,6 @@ def apply(folder_name, Country):
                 item = dict(json.loads(item))
                 classification_result_dict[item["label"]] = item["score"]
 
-            print(classification_result_dict)
             if first and Subject.objects.all().count() == 0:
                 first = False
                 for subject in classification_result_dict.keys():
