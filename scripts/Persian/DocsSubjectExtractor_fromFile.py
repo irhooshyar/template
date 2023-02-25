@@ -33,7 +33,7 @@ def normalize_dictionary(dictionary):
 
 @after_response.enable
 def apply(folder_name, Country):
-    path = str(Path(config.PERSIAN_PATH, 'isna-data.xlsx'))
+    path = str(Path(config.PERSIAN_PATH, 'result_subject_tabnak_1.txt'))
     file = open(path, encoding="utf8").read()
     file = file.split("\n")
     delimiter = "&!&"
