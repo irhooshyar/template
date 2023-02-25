@@ -31,7 +31,7 @@ def normalize_dictionary(dictionary):
 
 @after_response.enable
 def apply(folder_name, Country):
-    file = open(r"F:\template\scripts\Persian\result_subject_tabnak_1.txt", encoding="utf8").read()
+    file = open(r"result_subject_tabnak_1.txt", encoding="utf8").read()
     file = file.split("\n")
     delimiter = "&!&"
 
