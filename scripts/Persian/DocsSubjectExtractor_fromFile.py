@@ -5,6 +5,8 @@ import heapq
 from operator import itemgetter
 import json
 import math
+from abdal import config
+from pathlib import Path
 
 def concat_dictionary(dict_list):
     result_dict = {}
@@ -31,7 +33,8 @@ def normalize_dictionary(dictionary):
 
 @after_response.enable
 def apply(folder_name, Country):
-    file = open(r"result_subject_tabnak_1.txt", encoding="utf8").read()
+    path = str(Path(config.PERSIAN_PATH, 'isna-data.xlsx'))
+    file = open(path, encoding="utf8").read()
     file = file.split("\n")
     delimiter = "&!&"
 
