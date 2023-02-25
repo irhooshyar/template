@@ -44,6 +44,10 @@ def apply(folder_name, Country):
     para_subject_create_list = []
     subject_dictionary = {}
 
+    sub_list = Subject.objects.all()
+    for row in sub_list:
+        subject_dictionary[row.name] = row.id
+
     print("Load paragraph dict ...")
     paragraph_dictionary = {}
     para_list = DocumentParagraphs.objects.filter(document_id__country_id=Country)
@@ -69,8 +73,7 @@ def apply(folder_name, Country):
             if first and Subject.objects.all().count() == 0:
                 first = False
                 for subject in classification_result_dict.keys():
-                    row = Subject.objects.create(name=subject)
-                    subject_dictionary[subject] = row.id
+                    Subject.objects.create(name=subject)
 
             document_id = paragraph_dictionary[paragraph_id]
 
