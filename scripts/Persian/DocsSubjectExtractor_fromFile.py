@@ -49,7 +49,7 @@ def apply(folder_name, Country):
     para_list = DocumentParagraphs.objects.filter(document_id__country_id=Country)
     v = 1
     for row in para_list:
-        paragraph_dictionary[row.id] = row.document_id.id
+        paragraph_dictionary[str(row.id)] = row.document_id.id
 
     for row in file:
         print(counter)
