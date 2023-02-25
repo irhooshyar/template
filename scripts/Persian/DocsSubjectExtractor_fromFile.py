@@ -36,7 +36,7 @@ def apply(folder_name, Country):
     path = str(Path(config.PERSIAN_PATH, 'result_subject_khabar_online_1.txt'))
     file = open(path, encoding="utf8").read()
     delimiter = "&!&"
-
+    file = file.split("\n")
     result_docs = {}
     first = True
     counter = 1
@@ -58,6 +58,8 @@ def apply(folder_name, Country):
         counter += 1
         try:
             line = row.split(delimiter)
+            print("row", row)
+            print("line", line)
             paragraph_id = line[1]
             data = line[2][1:-1].split("}, ")
             classification_result_dict = {}
@@ -68,6 +70,7 @@ def apply(folder_name, Country):
                 item = dict(json.loads(item))
                 classification_result_dict[item["label"]] = item["score"]
 
+            print(classification_result_dict)
             if first and Subject.objects.all().count() == 0:
                 first = False
                 for subject in classification_result_dict.keys():
