@@ -44,13 +44,13 @@ class FullProfileIndex(ES_Index):
             Document_time = time if time != None else 'نامشخص'
 
             labels = self.paragraph_document_fields[paragraph_id]['labels']
-            Document_labels = labels if labels != None else 'نامشخس'
+            Document_labels = labels if labels != None else 'نامشخص'
 
             category_name = self.paragraph_document_fields[paragraph_id]['category_name']
-            Document_category_name = category_name if category_name != None else 'نامشخس'
+            Document_category_name = category_name if category_name != None else 'نامشخص'
 
             subject_name = self.paragraph_document_fields[paragraph_id]['subject_name']
-            Document_subject_name = subject_name if subject_name != None else 'نامشخس'
+            Document_subject_name = subject_name if subject_name != None else 'نامشخص'
 
 
             text_bytes = bytes(paragraph_text, encoding="utf8")
