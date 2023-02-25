@@ -3,7 +3,7 @@ from scripts.Persian import ClusteringGraphData
 from scripts.Persian import StaticDataImportDB
 from scripts.Persian import DocsParagraphsClustering
 from scripts.Persian import SubjectParagraphExtractor
-from scripts.Persian import DocsSubjectExtractor2
+from scripts.Persian import DocsSubjectExtractor2, DocsSubjectExtractor_fromFile
 from scripts.Persian import DocsParagraphsClusteringCubeData,LDAGraphData 
 from scripts.Persian import DocProvisionsFullProfileAnalysis2,DocsParagraphVectorExtractor
 from datetime import datetime
@@ -137,7 +137,8 @@ def persian_apply(folder_name, Country, tasks_list, host_url):
         Country.save()
         # New Script
         print("8. DocsSubjectExtractor2")
-        DocsSubjectExtractor2.apply(folder_name, Country) #update paragraphs and document
+        # DocsSubjectExtractor2.apply(folder_name, Country) #update paragraphs and document
+        DocsSubjectExtractor_fromFile.apply(folder_name, Country)
 
 
     if "DocsParagraphVectorExtractor" in tasks_list: ####
