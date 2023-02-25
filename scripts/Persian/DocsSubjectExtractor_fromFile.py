@@ -35,7 +35,7 @@ def normalize_dictionary(dictionary):
 def apply(folder_name, Country):
     path = str(Path(config.PERSIAN_PATH, 'result_subject_tabnak_1.txt'))
     file = open(path, encoding="utf8").read()
-    file = file.split("\n")
+    file = file.split("\n")[:100]
     delimiter = "&!&"
 
     result_docs = {}
@@ -135,7 +135,7 @@ def apply(folder_name, Country):
             document_subject = normalize_dictionary(document_subject)
 
             top_1_items = dict(heapq.nlargest(1, document_subject.items(), key=itemgetter(1)))
-
+            print(top_1_items)
             main_subject_name = list(top_1_items.keys())[0]
             main_subject_weight = top_1_items[main_subject_name]
             main_subject = Subject.objects.get(name=main_subject_name)
