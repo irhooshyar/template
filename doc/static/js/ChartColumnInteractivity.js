@@ -217,7 +217,7 @@ class ColumnInteractivity {
                 "><a target='blank' href='" +
                 link +
                 "'>" +
-                doc["_source"]["name"] +
+                doc["_source"]["document_name"] +
                 "</a></li>";
             body_content += tag;
         }
