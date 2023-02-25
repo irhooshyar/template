@@ -1938,8 +1938,13 @@ def GetMyUserProfile(request):
     user = User.objects.get(username=username)
     user_expertise = User_Expertise.objects.filter(user_id=user.id)
     expertise = []
+    expertise_ids = []
     for e in user_expertise:
-        expertise.append(e.experise_id.expertise)
+        if e.experise_id.expertise == "سایر موارد":
+            expertise.append(user.other_expertise)
+        else:
+            expertise.append(e.experise_id.expertise)
+        expertise_ids.append(e.experise_id.id)    
     expertise = " - ".join(expertise)
 
     if expertise == "":
@@ -2497,7 +2502,7 @@ def user_activation(request, user_id, token, code):
         
     return JsonResponse({ "status": "Not OK" })
 
-def SaveUser(request, firstname, lastname,email, phonenumber, role, username, password, ip, expertise):
+def SaveUser(request, firstname, lastname,email, phonenumber, role, username, password, ip, expertise, other_expertise):
     user_username = User.objects.filter(username=username)
     user_email = User.objects.filter(email=email)
     if user_username.count() > 0:
@@ -2510,7 +2515,7 @@ def SaveUser(request, firstname, lastname,email, phonenumber, role, username, pa
         user = User.objects.create(first_name=firstname, last_name=lastname,email=email,
                                    role_id=role,
                                    mobile=phonenumber, username=username, password=hashed_pwd, last_login=last_login,
-                                   is_super_user=0, is_active=0)
+                                   is_super_user=0, is_active=0, other_expertise=other_expertise)
 
         for e in expertise.split(','):
             User_Expertise.objects.create(user_id_id=user.id, experise_id_id=e)
