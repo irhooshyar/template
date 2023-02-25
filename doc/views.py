@@ -912,7 +912,7 @@ def get_country_maps(country_objects):
         id = each.id
         name = each.name
         language = each.language
-        if True or language == "فارسی":
+        if language == "فارسی":
             dataset_map[id] = name
     return dataset_map
 
@@ -4960,6 +4960,26 @@ def BoostingSearchKnowledgeGraph_ES(request, country_id, field_name, field_value
             index_name = "us-fixed_document"
             result_field = ['document_id', 'name', 'attachment.content']
 
+    if language == "BBC":
+
+        cluser_keyword_data = cluser_keyword_data[:, [1, 2]]
+
+        if search_type == "AND":
+            search_type = "must"
+            index_name = "bbc_documentparagraphs_graph"
+            result_field = ['document_id', 'document_name', 'paragraph_id', 'attachment.content']
+
+        elif search_type == "OR":
+            search_type = "should"
+            index_name = "bbc_documentparagraphs_graph"
+            result_field = ['document_id', 'document_name', 'paragraph_id', 'attachment.content']
+
+        elif search_type == "AND_DOC":
+            search_type = "must"
+            index_name = "bbc_document"
+            result_field = ['document_id', 'document_name', 'attachment.content']
+
+
     res_query = {"bool": {
         "filter": [
             {
@@ -4996,22 +5016,22 @@ def BoostingSearchKnowledgeGraph_ES(request, country_id, field_name, field_value
 
     # ---------------------- Get Chart Data -------------------------
     res_agg = {
-        "approval-ref-agg": {
+        "subject-agg": {
             "terms": {
-                "field": "approval_reference_name.keyword",
+                "field": "subject_name.keyword",
                 "size": bucket_size
             }
         },
 
-        "level-agg": {
+        "category-agg": {
             "terms": {
-                "field": "level_name.keyword",
+                "field": "category_name.keyword",
                 "size": bucket_size
             }
         },
-        "approval-year-agg": {
+        "year-agg": {
             "terms": {
-                "field": "approval_year",
+                "field": "document_year",
                 "size": bucket_size
             }
         }

@@ -120,7 +120,7 @@
                         onchange="CountryChanged()">
                         {% for k,v in countries.items %}
 
-                        <option value="{{ k }}">{{ v }}- قوانین</option>
+                        <option value="{{ k }}">{{ v }}</option>
 
                         {% endfor %}
                     </select>
@@ -292,7 +292,7 @@
     <button type="button" id="paraDetailModal_modal_btn" class="btn d-none modal_btn" data-bs-toggle="modal"
     data-bs-target="#paraDetailModal"></button>
     <div class="modal fade" id="paraDetailModal">
-        <div class="modal-dialog modal-dialog-scrollable modal-xl" style="max-width: 75%">
+        <div class="modal-dialog modal-dialog-scrollable modal-xl" >
             <div class="modal-content">
 
                 <!-- Modal Header -->
@@ -302,8 +302,9 @@
                         <label for="language_select" class=" text-right pl-3 pt-3" style="direction: rtl;"> زبان:</label>
                         <select dir="rtl" id="language_select" name="language_select" class="col-4 form-select text-right searchable-select" style="direction: rtl;">
                             <option value="IRI">ایران</option>
-                            <option value="UK">انگلستان</option>
-                            <option value="US">آمریکا</option>
+                            <!-- <option value="UK">انگلستان</option>
+                            <option value="US">آمریکا</option> -->
+                            <option value="BBC">BBC</option>
                         </select>
                     </div>
 
@@ -327,12 +328,12 @@
                         <li class="nav-item float-right" role="presentation">
                             <button id="AndResultData_tab" class="nav-link" data-bs-toggle="pill"
                                 data-bs-target="#AndResultData_pane" type="button" role="tab"
-                                aria-controls="AndResultData_pane" aria-selected="false">نتایج جستجو AND (حکم)</button>
+                                aria-controls="AndResultData_pane" aria-selected="false">نتایج جستجو AND (پاراگراف)</button>
                         </li>
                         <li class="nav-item float-right" role="presentation">
                             <button id="ANDChartData_tab" class="nav-link" data-bs-toggle="pill"
                                 data-bs-target="#ANDChartData_pane" type="button" role="tab"
-                                aria-controls="ANDChartData_pane" aria-selected="false">اطلاعات نموداری  AND (حکم)</button>
+                                aria-controls="ANDChartData_pane" aria-selected="false">اطلاعات نموداری  AND (پاراگراف)</button>
                         </li>
                         <li class="nav-item float-right" role="presentation">
                             <button id="AndDocResultData_tab" class="nav-link" data-bs-toggle="pill"
@@ -360,14 +361,14 @@
 
                         <div id="ORChartData_pane" class="tab-pane w-100 fade float-right" role="tabpanel" aria-labelledby="ORChartData_tab">
                             <div class="charts-list-container">
-                                <div id="or_year_container" class="full" chart-height="850px">
+                                <div id="or_year_container" class="half">
+                                </div>
+                                <div id="or_approval_container" class="half">
+                                </div>
+                                <div id="or_level_container" class="full"  chart-height="950px">
                                 </div>
 
-                                <div id="or_level_container" class="full">
-                                </div>
-
-                                <div id="or_approval_container" class="full">
-                                </div>
+                                
                             </div>
                         </div>
 
@@ -383,14 +384,14 @@
                         <div id="ANDChartData_pane" class="tab-pane w-100 fade float-right" role="tabpanel"
                              aria-labelledby="ANDChartData_tab">
                             <div class="charts-list-container">
-                                <div id="and_year_container" class="full" chart-height="850px">
+                                <div id="and_year_container" class="half" >
+                                </div>
+                                <div id="and_approval_container" class="half">
+                                </div>
+                                <div id="and_level_container" class="full" chart-height="850px">
                                 </div>
 
-                                <div id="and_level_container" class="full">
-                                </div>
-
-                                <div id="and_approval_container" class="full">
-                                </div>
+                                
                             </div>
                         </div>
 
@@ -406,14 +407,14 @@
                         <div id="ANDDocChartData_pane" class="tab-pane w-100 fade float-right" role="tabpanel"
                              aria-labelledby="ANDDocChartData_tab">
                             <div class="charts-list-container">
-                                <div id="and_doc_year_container" class="full" chart-height="850px">
+                                <div id="and_doc_year_container" class="half" >
+                                </div>
+                                <div id="and_doc_approval_container" class="half" >
+                                </div>
+                                <div id="and_doc_level_container" class="full" chart-height="850px">
                                 </div>
 
-                                <div id="and_doc_level_container" class="full">
-                                </div>
-
-                                <div id="and_doc_approval_container" class="full">
-                                </div>
+                                
                             </div>
                         </div>
                     </div>
@@ -1138,8 +1139,8 @@
             let search_level = "paragraphs";
             const country_id = document.getElementById("country").value
 
-            let y_label = "تعداد احکام"
-            let result_message = "حکم"
+            let y_label = "تعداد پاراگراف‌ها"
+            let result_message = "پاراگراف"
             if (search_type.includes("DOC"))
             {
                 y_label = "تعداد اسناد"
@@ -1217,13 +1218,13 @@
 
                 const ES_Aggregations = result_data["aggregations"]
 
-                const approval_references_data = ES_Aggregations['approval-ref-agg']['buckets']
-                const approval_year_data = ES_Aggregations['approval-year-agg']['buckets']
-                const level_data = ES_Aggregations['level-agg']['buckets']
+                const subject_data = ES_Aggregations['subject-agg']['buckets']
+                const year_data = ES_Aggregations['year-agg']['buckets']
+                const category_data = ES_Aggregations['category-agg']['buckets']
 
-                showChartData(country_id, search_type, "approval_year", approval_year_data, chart_container_list[0], true, "سال تصویب سند", y_label, form_data, "توزیع احکام براساس سال تصویب")
-                showChartData(country_id, search_type, "level_name", level_data, chart_container_list[1], false, "سطح سند", y_label, form_data, "توزیع احکام براساس سطح احکام")
-                showHistogramChart(country_id, search_type, "approval_reference_name", approval_references_data, chart_container_list[2], false, "مرجع تصویب سند", y_label, form_data, "توزیع احکام براساس مرجع تصویب")
+                showChartData(country_id, search_type, "document_year", year_data, chart_container_list[0], true, "سال  خبر", y_label, form_data, "توزیع پاراگراف‌ها براساس سال خبر")
+                showChartData(country_id, search_type, "category_name", category_data, chart_container_list[1], false, "دسته خبر", y_label, form_data, "توزیع پاراگراف‌ها براساس دسته پاراگراف‌ها")
+                showHistogramChart(country_id, search_type, "subject_name", subject_data, chart_container_list[2], false, "موضوع خبر", y_label, form_data, "توزیع پاراگراف‌ها براساس موضوع")
 
             }
 
