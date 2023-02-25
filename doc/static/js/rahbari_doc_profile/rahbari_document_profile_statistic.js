@@ -69,7 +69,7 @@ async function getDocumentFullProfileInfo(country_id, document_id) {
     //     document.getElementById("SearchResultLable").innerText = "تعداد کل نتایج: " + total_hits + " حکم"
     // })
 
-    // let sentiment_chart = ES_Aggregations['rahbari-sentiment-agg']['buckets']
+    let sentiment_chart = ES_Aggregations['rahbari-sentiment-agg']['buckets']
     let classification_chart = ES_Aggregations['rahbari-classification-subject-agg']['buckets']
     let persons_chart = ES_Aggregations['rahbari-person-agg']['buckets']
     let locations_chart = ES_Aggregations['rahbari-location-agg']['buckets']
@@ -83,7 +83,7 @@ async function getDocumentFullProfileInfo(country_id, document_id) {
     // })
 
 
-    // showChartData(sentiment_chart, "sentiment_container", "paragraph_charts", [], undefined, "احساس", "توزیع احکام براساس احساسات", "تعداد احکام")
+    showChartData(sentiment_chart, "sentiment_container", "paragraph_charts", [], undefined, "احساس", "توزیع احکام براساس احساسات", "تعداد احکام")
     doc_showChart(classification_chart, "subject_container", "", undefined, "موضوع", "توزیع پاراگراف ها براساس موضوع", "تعداد پاراگراف", true)
     doc_showChart(persons_chart, "person_container", "", undefined, "شخص", "توزیع اسناد براساس اشخاص حقیقی")
     doc_showChart(locations_chart, "location_container", "", undefined, "موقعیت مکانی", "توزیع اسناد براساس موقعیت مکانی")
