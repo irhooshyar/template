@@ -17,6 +17,7 @@ import pandas as pd
 import hazm
 import requests
 import time
+import json
 
 import torch
 from sentence_transformers import models, SentenceTransformer, util
@@ -100,3 +101,49 @@ def apply(folder_name, Country):
 
     
     IngestParagraphsVectorsToElastic.apply(folder_name,Country,0)
+
+
+def bulk_to_db(folder_name, Country):
+    ParagraphVector.objects.filter(paragraph__document_id__country_id__id = Country.id).delete()
+    
+    batch_size = 1000
+
+    t = time.time()
+    print('started...')
+
+    #load json
+    with open('test_vector_result.json') as user_file:
+    parsed_json = json.load(user_file)
+
+
+    # save vectors to db
+    vector_type = None
+    try:
+        vector_type = ParagraphVectorType.objects.get(name = 'wikitriplet_vector')
+    except:
+        vector_type = ParagraphVectorType.objects.create(name = 'wikitriplet_vector')
+
+    for item in parsed_json:
+        para_id = item
+        para_vector = parsed_json[item]
+
+        row_obj = ParagraphVector(
+            paragraph = paragraph_dict[i],
+            vector_value = {"data":para_vector},
+            vector_type = vector_type
+        )
+        create_list.append(row_obj)
+
+
+        if create_list.__len__() > batch_size:
+            ParagraphVector.objects.bulk_create(create_list)
+            create_list = []
+
+
+    ParagraphVector.objects.bulk_create(create_list)
+
+    IngestParagraphsVectorsToElastic.apply(folder_name,Country,0)
+    print("time ", time.time() - t)
+
+
+    
