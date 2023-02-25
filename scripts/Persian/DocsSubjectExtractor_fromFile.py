@@ -58,8 +58,6 @@ def apply(folder_name, Country):
         counter += 1
         try:
             line = row.split(delimiter)
-            print("row", row)
-            print("line", line)
             paragraph_id = line[1]
             data = line[2][1:-1].split("}, ")
             classification_result_dict = {}
