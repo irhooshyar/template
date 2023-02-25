@@ -79,8 +79,8 @@ class EN_ParagraphIndex(ES_Index):
             document_name = para['doc_name']
             category_name = para['category_name'] if para['category_name'] is not None else 'unknown'
             subject_name = para['subject_name'] if para['subject_name'] is not None else 'unknown'
-            document_year =int(para['date'].split(' ')[2]) if len(para['date'].split(' ')) == 3 else 2023
-            
+            document_year =int(para['date'].split(' ')[2]) if para['date'] != "unknown" and len(para['date'].split(' ')) == 3 else 2023
+
             para_text = para['para_text']
 
             text_bytes = bytes(para_text,encoding="utf8")

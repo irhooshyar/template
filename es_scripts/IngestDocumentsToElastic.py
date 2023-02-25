@@ -111,7 +111,7 @@ class EN_DocumentIndex(ES_Index):
             doc_source = doc['source_name']
             
             doc_date = doc['date'] if doc['date'] != None else 'unknown'
-            doc_year = int(doc['date'].split(' ')[2]) if len(doc['date'].split(' ')) == 3 else 2023
+            doc_year = int(doc_date.split(' ')[2]) if doc_date != "unknown" and len(doc_date.split(' ')) == 3 else 2023
 
             doc_time = doc['time'] if doc['time'] != None else 'unknown'
             doc_hour =  int(doc_time.split(':')[0].strip()) if doc_time != 'unknown' else 0
