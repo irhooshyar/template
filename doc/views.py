@@ -4920,7 +4920,7 @@ def BoostingSearchKnowledgeGraph_ES(request, country_id, field_name, field_value
         elif search_type == "AND_DOC":
             search_type = "must"
             index_name = standardIndexName(country_obj, Document.__name__)
-            result_field = ['document_id', 'name', 'attachment.content']
+            result_field = ['document_id', 'document_name', 'attachment.content']
 
     if language == "UK":
 
