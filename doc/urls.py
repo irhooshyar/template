@@ -108,7 +108,7 @@ urlpatterns = [
     path('GetDocumentSubjectContent/<int:document_id>/<int:version_id>/', views.GetDocumentSubjectContent,
          name='GetDocumentSubjectContent'),
     path(
-        'SaveUser/<str:firstname>/<str:lastname>/<str:email>/<str:phonenumber>/<int:role>/<str:username>/<str:password>/<str:ip>/<str:expertise>/<str:other_expertise>/',
+        'SaveUser/<str:firstname>/<str:lastname>/<str:email>/<str:phonenumber>/<int:role>/<str:username>/<str:password>/<str:ip>/<str:expertise>/',
         views.SaveUser, name='SaveUser'),
     path('CheckUserLogin/<str:username>/<str:password>/<str:ip>/', views.CheckUserLogin, name='CheckUserLogin'),
     path('changeUserState/<int:user_id>/<str:state>/', views.changeUserState, name='changeUserState'),
