@@ -96,10 +96,21 @@ function newBarChart(container_id, options) {
     chart.yScale().minimum(0);
     chart.yScale().ticks().interval(Math.ceil(max / 10)).allowFractional(false);
 
+    for (let i=0 ; i<data['mc'].length; i++){
+        for (let j=0 ; j<data['mc'][i].length; j++){
+            let x = data['mc'][i][j].toString()
+            if (x.includes('u200')){
+                console.log(data['mc'][i])
+                data['mc'].splice(i, 1)
+            }
+        }
+    }
+
     // initiate drawing the chart
     chart.draw();
     console.log("----------------------------------------------------------------")
     console.log(options.data.length)
+
     if (data.length == 0) {
 
         document.getElementById(container_id).innerHTML = "نتیجه‌ای یافت نشد"

@@ -145,8 +145,8 @@ async function CountryChanged() {
     counter = 0;
     loaded_doc = 0
     first_loading = true
-
-    $(".add-row-1").css('visibility', 'visible');
+    
+    // $(".add-row-1").css('visibility', 'visible');
 
     document.getElementById("document_select").disabled = true;
     await setTimeout(loadMoreDoc(), 1000)
@@ -503,9 +503,11 @@ async function loadMoreDoc() {
     if (loaded_doc === all_count) {
         $(".add-row-1").css('visibility', 'hidden');
     } else {
-        window.setTimeout(function () {
-            $(".pagination").append("<li class='footable-page visible'><a class='add-row-1' href='#' onclick='loadMoreDoc()'>+</a></li>");
-        }, 1000);
+        if ($('.add-row-1').length === 0) {
+            window.setTimeout(function () {
+                $(".pagination").append("<li class='footable-page visible'><a class='add-row-1' href='#' onclick='loadMoreDoc()'>+</a></li>");
+            }, 1000);
+        }
     }
 
 }
