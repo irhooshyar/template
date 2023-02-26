@@ -127,7 +127,7 @@
                 </div>
                 <div class="col-md-6  pt-3 col-12 col-lg-3 bg-light" dir="rtl">
                     <label for="graph_select" class=" text-right bg-light float-right" style="direction: rtl;">انتخاب گراف:</label>
-                    <select dir="rtl" id="graph_select" name="graph_select" class="form-select text-right float-right searchable-select" style="direction: rtl;">
+                    <select dir="rtl" id="graph_select" name="graph_select" class="form-select text-right float-right searchable-select" style="direction: rtl;" onchange="change_graph_select()">
                         <option value="0">انتخاب نمایید</option>
                     </select>
                 </div>
@@ -858,6 +858,7 @@
                 document.getElementById("node_input_div").style.display = "none"
                 document.getElementById("edge_input_div").style.display = "none"
 
+
                 if (response["version_id"] !== 0)
                 {
                     graph_object.clear();
@@ -873,24 +874,31 @@
                 }
                 else
                 {
-
                     const selected_graph = $("#edit_graph_select").find("option:selected").val()
 
                     graph_object.clear();
                     let select = document.getElementById('graph_select');
                     let control = select.tomselect;
-                    console.log(control, selected_graph)
                     control.updateOption((selected_graph).toString(), {text:graph_name, value:selected_graph});
 
                     select = document.getElementById('edit_graph_select');
                     control = select.tomselect;
-                    console.log(control, selected_graph)
                     control.updateOption((selected_graph).toString(), {text:graph_name, value:selected_graph});
                 }
+
+                let select = document.getElementById('graph_select');
+                let control = select.tomselect;
+                control.setValue('0');
+
+                select = document.getElementById('edit_graph_select');
+                control = select.tomselect;
+                control.setValue('0');
 
             }).fail(function (response) {
                 console.log(response);
             });
+
+            document.getElementById("knowledge_graph_container").innerHTML = ""
         }
 
         async function ShowGraph()
@@ -1335,6 +1343,11 @@
                 });
 
             }
+        }
+
+        async function change_graph_select()
+        {
+            document.getElementById("show_knowledge__graph_container").innerHTML = ""
         }
 </script>
 
