@@ -788,14 +788,13 @@
 
         async function edit_graph_changed()
         {
+            console.log("Ffffffffff")
             const graph_id = document.getElementById("edit_graph_select").value
             if (graph_id === "0")
             {
                 data_graph = {nodes: [], edges: []};
                 CreateNewKnowledgeGraph("knowledge_graph_container")
-
                 document.getElementById("knowledgeGraphName").value = ""
-
             }
             else
             {
@@ -803,9 +802,7 @@
                 let response = await fetch(request_link).then(response => response.json());
                 data_graph = {nodes: response["Nodes_data"], edges: response["Edges_data"]};
                 CreateNewKnowledgeGraph("knowledge_graph_container")
-
                 document.getElementById("knowledgeGraphName").value = document.getElementById("edit_graph_select").options[document.getElementById("edit_graph_select").selectedIndex].text
-
             }
         }
 
@@ -899,7 +896,7 @@
             });
 
             document.getElementById("knowledge_graph_container").innerHTML = ""
-            graph_object = null
+
         }
 
         async function ShowGraph()
