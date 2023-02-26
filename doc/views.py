@@ -3057,7 +3057,7 @@ def AILDADocFromTopic(request, topic_id):
         paragraph_id = record['paragraph_id']
         paragraph = DocumentParagraphs.objects.get(id=paragraph_id)
         try:
-            subjects_name = ParagraphsSubject.objects.get(paragraph__id=paragraph_id, version__id=12)
+            subjects_name = ParagraphsSubject.objects.get(paragraph__id=paragraph_id)
 
             topic_paragraphs.append({
 
@@ -6488,7 +6488,7 @@ def AILDASubjectChartTopicGetInformation(request, topic_id, subject_name, curr_p
             break
         paragraph_id = record['paragraph_id']
         try:
-            subjects_name = ParagraphsSubject.objects.get(paragraph__id=paragraph_id, version__id=12)
+            subjects_name = ParagraphsSubject.objects.get(paragraph__id=paragraph_id)
 
             if subjects_name.subject1_name == subject_name:
                 paragraph = DocumentParagraphs.objects.get(id=paragraph_id)
@@ -6540,7 +6540,7 @@ def AILDASubjectChartTopicGetInformationExport(request, topic_id, subject_name, 
             break
         paragraph_id = record['paragraph_id']
         try:
-            subjects_name = ParagraphsSubject.objects.get(paragraph__id=paragraph_id, version__id=12)
+            subjects_name = ParagraphsSubject.objects.get(paragraph__id=paragraph_id)
 
             if subjects_name.subject1_name == subject_name:
                 paragraph = DocumentParagraphs.objects.get(id=paragraph_id)
