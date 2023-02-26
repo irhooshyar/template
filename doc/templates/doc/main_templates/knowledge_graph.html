@@ -869,6 +869,10 @@
                     control.addOption({value: response["version_id"], text:graph_name});
                     control.addItem(response["version_id"]);
 
+                    select = document.getElementById('edit_graph_select');
+                    control = select.tomselect;
+                    control.addOption({value: response["version_id"], text:graph_name});
+                    control.addItem(response["version_id"]);
                 }
                 else
                 {
@@ -877,14 +881,20 @@
                     graph_object.clear();
                     let select = document.getElementById('graph_select');
                     let control = select.tomselect;
-                    console.log(control, selected_graph)
                     control.updateOption((selected_graph).toString(), {text:graph_name, value:selected_graph});
 
                     select = document.getElementById('edit_graph_select');
                     control = select.tomselect;
-                    console.log(control, selected_graph)
                     control.updateOption((selected_graph).toString(), {text:graph_name, value:selected_graph});
                 }
+
+                let select = document.getElementById('graph_select');
+                let control = select.tomselect;
+                control.setValue('0');
+
+                select = document.getElementById('edit_graph_select');
+                control = select.tomselect;
+                control.setValue('0');
 
             }).fail(function (response) {
                 console.log(response);
