@@ -34,8 +34,8 @@
 
     <script src="../../../static/library/anychart-8.10.0-tag-cloud.min.js"></script>
     <script src="../../../static/library/anychart-8.10.0-heatmap.min.js"></script>
-    
-    
+
+
     <!-- Multi Select  -->
     <link rel="stylesheet" type="text/css" href="../../../static/styles/multiselect/multiselect-style.css">
     <script type="text/javascript" src="../../../static/js/multiselect/jquery-2.2.4.min.js"></script>
@@ -152,7 +152,7 @@
                         {% for k,v in countries.items %}
                         {% if v == 'تابناک' %}
                         <option selected value="{{ k }}">{{ v }}</option>
-                        {% elif v == 'خبر آنلاین'  %}
+                        {% elif v == 'خبر آنلاین' %}
                         <option value="{{ k }}">{{ v }}</option>
                         {% endif %}
                         {% endfor %}
@@ -207,7 +207,8 @@
                 <!-- Ngram Type  -->
                 <div class="col-md-6  pt-3 col-12 col-lg-3 mt-1 bg-light" dir="rtl">
                     <label class="text-right bg-light float-right" style="direction: rtl;;">نوع ویژگی‌ها:</label>
-                    <select id="Ngram_Type_Select" class="form-select text-right float-right searchable-select" style="direction: rtl;">
+                    <select id="Ngram_Type_Select" class="form-select text-right float-right searchable-select"
+                        style="direction: rtl;">
 
                         <option value="(1, 1)">تک- واژه‌ای</option>
                         <option value="(2, 2)">دو- واژه‌ای</option>
@@ -432,7 +433,7 @@
 
                         <div class="chart-container half">
                             <h5 class="chart-title">
-                            تعیین تعداد بهینه خوشه‌ها براساس نمودار Elbow
+                                تعیین تعداد بهینه خوشه‌ها براساس نمودار Elbow
                             </h5>
                             <div id="elbow_inertia_chart_container" style="height: 450px">
                             </div>
@@ -722,15 +723,18 @@
                 <div id="dist_chart_info" class="modal-body bg-light text-justify">
                     <div class="charts-list-container">
                         <div id="subject_container" class="half"></div>
-                        <div id="category_container" class="half"></div>
-                        <div id="year_container" class="full" chart-height="750px"></div>
+
+                        <div id="year_container" class="half" ></div>
+
+
+                        <div id="category_container" class="full" chart-height="750px"></div>
 
                     </div>
                 </div>
                 <!-- Modal footer -->
                 <div class="modal-footer">
 
-                    
+
                 </div>
 
             </div>
@@ -772,7 +776,7 @@
                     <input type="number" id="ColumnModalPaginationInput" min="1" max="1" value="1"
                         class="form-select text-right float-right d-none">
 
-                    
+
 
                     <button id="ExportExcel2" onclick="TopicParagraphs_Excel()"
                         class="btn btn-outline-primary float-left"><i class="fa fa-download"></i>
@@ -848,6 +852,7 @@
 
 <script src="../../../static/js/column.js"></script>
 <script src="../../../static/js/ChartColumnInteractivity.js"></script>
+
 <script>
     CLUSTERS_DATA = {}
 
@@ -855,9 +860,9 @@
     CLUSTERING_ALG_ID = 0;
 
     COUNTRY_CLUSTER_COUNT_DICT = {
-        "ایسنا": [5, 10, 15, 20, 25,30,35,40,45,50],
-        "تابناک": [5, 10, 15, 20, 25,30,35,40,45,50],
-        "خبر آنلاین": [5, 10, 15, 20, 25,30,35,40,45,50],
+        "ایسنا": [5, 10, 15, 20, 25, 30, 35, 40, 45, 50],
+        "تابناک": [5, 10, 15, 20, 25, 30, 35, 40, 45, 50],
+        "خبر آنلاین": [5, 10, 15, 20, 25, 30, 35, 40, 45, 50],
     }
 
     TABLE_INFO = []
@@ -930,7 +935,7 @@
 
         const options = []
         for (c of country_cluster_count_list) {
-            options.push({value:c, text:c})
+            options.push({ value: c, text: c })
         }
         syncSelectOptions("Cluster_Count_Select", options);
 
@@ -959,7 +964,7 @@
 
         const options = []
         for (c of country_cluster_count_list) {
-            options.push({value:c, text:c})
+            options.push({ value: c, text: c })
         }
         syncSelectOptions("Cluster_Count_Select", options);
 
@@ -994,7 +999,7 @@
         const username = getCookie("username");
 
         let request_link = 'http://' + location.host + "/GetParagraph_Clusters/" + country_id + "/"
-            + algorithm_name + "/" + vector_type + "/" + cluster_count + "/"+ ngram_type + "/" + username + "/";
+            + algorithm_name + "/" + vector_type + "/" + cluster_count + "/" + ngram_type + "/" + username + "/";
 
         let response = await fetch(request_link).then(response => response.json());
 
@@ -1116,7 +1121,7 @@
         startBlockUI('cluster_size_chart_container');
 
         request_link = 'http://' + location.host + "/Get_ClusterCenters_ChartData/" + country_id + "/"
-            + algorithm_name + "/" + vector_type + "/" + cluster_count + "/"+ ngram_type + "/";
+            + algorithm_name + "/" + vector_type + "/" + cluster_count + "/" + ngram_type + "/";
 
         response = await fetch(request_link).then(response => response.json());
 
@@ -1125,7 +1130,7 @@
         cluster_size_chart_data = response["cluster_size_chart_data"]
 
         if (cluster_size_chart_data.length != 0)
-            await showChart(cluster_size_chart_data, "cluster_size_chart_container", false, "خوشه", "تعداد پاراگراف","توزیع خوشه‌ها در پاراگراف")
+            await showChart(cluster_size_chart_data, "cluster_size_chart_container", false, "خوشه", "تعداد پاراگراف", "توزیع خوشه‌ها در پاراگراف")
 
         if (heatmap_chart_data.length != 0)
             await show_heatmap_charts('heatmap_chart_container', heatmap_chart_data);
@@ -1146,10 +1151,10 @@
         decision_tree_chart_data = response["decision_tree_chart_data"]
 
         if (anova_chart_data.length != 0)
-            await showChart(anova_chart_data, "anova_chart_container", false, "واژه", "درصد امتیاز","واژگان متمایزکننده براساس الگوریتم ANOVA")
+            await showChart(anova_chart_data, "anova_chart_container", false, "واژه", "درصد امتیاز", "واژگان متمایزکننده براساس الگوریتم ANOVA")
 
         if (decision_tree_chart_data.length != 0)
-            await showChart(decision_tree_chart_data, "decision_tree_chart_container", false, "واژه", "درصد امتیاز"," واژگان متمایزکننده براساس الگوریتم درخت تصمیم (ضریب Gini)")
+            await showChart(decision_tree_chart_data, "decision_tree_chart_container", false, "واژه", "درصد امتیاز", " واژگان متمایزکننده براساس الگوریتم درخت تصمیم (ضریب Gini)")
 
         stopBlockUI('discriminant_features_pane', 'واژگان متمایزکننده');
         //------------- Silhouette chart --------------------------------
@@ -1288,13 +1293,13 @@
             "btn_id": "anova_word_ExportExcel2"
         }
         segmentation_config = {
-                "parameters": null,
-                "keyword": null,
-                "enable": false,
-                "aggregation_keyword":null
-            }
+            "parameters": null,
+            "keyword": null,
+            "enable": false,
+            "aggregation_keyword": null
+        }
         column_interactivity_obj = new ColumnInteractivity("paragraphs",
-            request_configs, export_configs, modal_configs, highlight_configs,segmentation_config)
+            request_configs, export_configs, modal_configs, highlight_configs, segmentation_config)
 
         column_interactivity_obj.load_content();
 
@@ -1428,14 +1433,14 @@
 
 
         columns = [{
-                "name": "id",
-                "title": "ردیف",
-                "breakpoints": "xs sm",
-                "type": "number",
-                "style": {
-                    "width": "5%"
-                }
-            },{
+            "name": "id",
+            "title": "ردیف",
+            "breakpoints": "xs sm",
+            "type": "number",
+            "style": {
+                "width": "5%"
+            }
+        }, {
             "name": "cluster_name",
             "title": "نام خوشه",
         }, {
@@ -1579,7 +1584,7 @@
 
             if (ngram_type == '(2, 2)') {
                 tag = '<div class="form-check form-check-inline float-right py-2 pb-1"><input disabled class="form-check-input topic_keyword' + '" id="kw_' + i + '" style="padding:0;"  type="checkbox" value="' + keyword + '" checked = "true"><label class="form-check-label">' + keyword + '</label> </div>'
-            }else {
+            } else {
                 tag = '<div class="form-check form-check-inline float-right py-2 pb-1"><input class="form-check-input topic_keyword' + '" id="kw_' + i + '" style="padding:0;"  type="checkbox" value="' + keyword + '" checked = "true"><label class="form-check-label">' + keyword + '</label> </div>'
             }
             document.getElementById("topic_keywords_container").innerHTML += tag;
@@ -1815,7 +1820,7 @@
         /* Show Chart  */
 
 
-        showChartData(country_id, topic_id, subject_data, "subject_container", documents_information_result, false, "موضوع حکم", entropy, cluster_size, 'توزیع موضوعی پاراگراف' + '\n' +  "آنتروپی: " + entropy + "\n" + "تعداد پاراگراف: " + cluster_size)
+        showChartData(country_id, topic_id, subject_data, "subject_container", documents_information_result, false, "موضوع حکم", entropy, cluster_size, 'توزیع موضوعی پاراگراف' + '\n' + "آنتروپی: " + entropy + "\n" + "تعداد پاراگراف: " + cluster_size)
         showChartData(country_id, topic_id, document_year_data, "year_container", documents_information_result, true, "سال خبر", entropy, cluster_size, "توزیع پاراگراف براساس سال اخبار")
         showChartData(country_id, topic_id, category_data, "category_container", documents_information_result, false, "دسته خبر", entropy, cluster_size, "توزیع پاراگراف براساس دسته اخبار")
     }
@@ -1836,7 +1841,7 @@
             if (!dataDict[d]) {
                 dataDict[d] = [];
             }
-            dataDict[d].push({x: String(year), value: column["doc_count"]});
+            dataDict[d].push({ x: String(year), value: column["doc_count"] });
         }
 
         const options = {
@@ -1851,10 +1856,10 @@
                     const index = click_tag["index"]
 
                     let field_value = data.row(index)[0];
-                    let field_name = CHART_FIELD_DICT[position] + ".keyword"
-                    let chart_name = CHART_NAME_DICT[position]
+                    let field_name = CHART_FIELD_DICT[container] + ".keyword"
+                    let chart_name = CHART_NAME_DICT[container]
 
-                    if (position == "year_container") {
+                    if (container == "year_container") {
 
                         field_name = field_name.replaceAll(".keyword", "");
                         if (field_value == "نامشخص")
@@ -1873,43 +1878,43 @@
     }
 
     function showHistogramChart(country_id, topic_id, data, container, documents_information_result, sortKeys, xAxisTitle, title) {
-            // dict { 'approval_reference': [{ x: count, y: 1 }]
-            const references = {};
-            data.forEach(ref => {
-                references[ref.key] = [{ x: String(ref.doc_count), y: 1 }]
-            });
-            const options = {
-                data: references,
-                sortKeys,
-                xAxisTitle,
-                title,
-                showLabels: true,
-                yAxisTitle: "تعداد پاراگراف",
-                onClick:async function (event, data) {
-                    const click_tag = event.domTarget.tag;
-                    const index = click_tag["index"]
+        // dict { 'approval_reference': [{ x: count, y: 1 }]
+        const references = {};
+        data.forEach(ref => {
+            references[ref.key] = [{ x: String(ref.doc_count), y: 1 }]
+        });
+        const options = {
+            data: references,
+            sortKeys,
+            xAxisTitle,
+            title,
+            showLabels: true,
+            yAxisTitle: "تعداد پاراگراف",
+            onClick: async function (event, data) {
+                const click_tag = event.domTarget.tag;
+                const index = click_tag["index"]
 
-                    let field_value = data.row(index)[0];
-                    let field_name = CHART_FIELD_DICT[position] + ".keyword"
-                    let chart_name = CHART_NAME_DICT[position]
+                let field_value = data.row(index)[0];
+                let field_name = CHART_FIELD_DICT[container] + ".keyword"
+                let chart_name = CHART_NAME_DICT[container]
 
-                    if (position == "year_container") {
+                if (container == "year_container") {
 
-                        field_name = field_name.replaceAll(".keyword", "");
-                        if (field_value == "نامشخص")
-                            field_value = 0
-                    }
-
-                    await GetClickedColumnParagraphs(country_id, topic_id, chart_name, field_name, field_value)
-
-                    $("#detailModal").modal("show")
-                    $("#detail_modal_footer #close_btn").show();
-                    $("#detail_modal_footer #ExportExcel2").hide();
+                    field_name = field_name.replaceAll(".keyword", "");
+                    if (field_value == "نامشخص")
+                        field_value = 0
                 }
-            };
 
-            newStackedColumnChart(container, options)
-        }
+                await GetClickedColumnParagraphs(country_id, topic_id, chart_name, field_name, field_value)
+
+                $("#detailModal").modal("show")
+                $("#detail_modal_footer #close_btn").show();
+                $("#detail_modal_footer #ExportExcel2").hide();
+            }
+        };
+
+        newStackedColumnChart(container, options)
+    }
 
     function showChartData(country_id, topic_id, data, container, documents_information_result, keySort, xAxisTitle, entropy, cluster_size, title) {
         let chart_data = []
@@ -1934,17 +1939,25 @@
             onClick: async function (event, data) {
                 const click_tag = event.domTarget.tag;
                 const index = click_tag["index"]
+                let field_value = ""
+                if (container == "subject_container") {
+                    field_value = data[index][0];
+                }
+                else {
+                    field_value = data.row(index)[0];
 
-                let field_value = data.row(index)[0];
-                let field_name = CHART_FIELD_DICT[position] + ".keyword"
-                let chart_name = CHART_NAME_DICT[position]
+                }
+                let field_name = CHART_FIELD_DICT[container] + ".keyword"
+                let chart_name = CHART_NAME_DICT[container]
 
-                if (position == "year_container") {
+                if (container == "year_container") {
 
                     field_name = field_name.replaceAll(".keyword", "");
                     if (field_value == "نامشخص")
                         field_value = 0
                 }
+
+
 
                 await GetClickedColumnParagraphs(country_id, topic_id, chart_name, field_name, field_value)
 
@@ -2055,13 +2068,13 @@
             "btn_id": null
         }
         segmentation_config = {
-                "parameters": null,
-                "keyword": null,
-                "enable": false,
-                "aggregation_keyword":null
-            }
+            "parameters": null,
+            "keyword": null,
+            "enable": false,
+            "aggregation_keyword": null
+        }
         column_interactivity_obj = new ColumnInteractivity("paragraphs",
-            request_configs, export_configs, modal_configs, highlight_configs,segmentation_config)
+            request_configs, export_configs, modal_configs, highlight_configs, segmentation_config)
 
         column_interactivity_obj.load_content();
 
@@ -2131,7 +2144,7 @@
 
 
 
-        showChart(discriminant_words_chart_data, "DetailText", false, "واژه", "درصد امتیاز","نمودار واژگان متمایزکننده")
+        showChart(discriminant_words_chart_data, "DetailText", false, "واژه", "درصد امتیاز", "نمودار واژگان متمایزکننده")
         stopFullPageBlockUI('واژگان متمایزکننده');
 
     }
@@ -2213,7 +2226,7 @@
         const cluster_size = document.getElementById("Cluster_Count_Select").value;
         const ngram_type = document.getElementById("Ngram_Type_Select").value;
 
-        let request_link = 'http://' + location.host + "/GetClusteringGraphData/" + country_id + "/" + algorithm_name + "/" + vector_type + "/" + cluster_size + "/"+ ngram_type + "/";
+        let request_link = 'http://' + location.host + "/GetClusteringGraphData/" + country_id + "/" + algorithm_name + "/" + vector_type + "/" + cluster_size + "/" + ngram_type + "/";
         let response = await fetch(request_link).then(response => response.json());
 
         const Nodes_data = response["Nodes_data"]
@@ -2255,7 +2268,7 @@
         const cluster_size = document.getElementById("Cluster_Count_Select").value;
         const ngram_type = document.getElementById("Ngram_Type_Select").value;
 
-        let request_link = 'http://' + location.host + "/GetClusterKeywordGraphData/" + country_id + "/" + algorithm_name + "/" + vector_type + "/" + cluster_size + "/"+ ngram_type + "/";
+        let request_link = 'http://' + location.host + "/GetClusterKeywordGraphData/" + country_id + "/" + algorithm_name + "/" + vector_type + "/" + cluster_size + "/" + ngram_type + "/";
         let response = await fetch(request_link).then(response => response.json());
 
         const Nodes_data = response["Nodes_data"]
@@ -2302,41 +2315,41 @@
             document.getElementById("DetailText").innerHTML = '<table class="table table-striped" style="min-height: 200px;" id="KeywordSearchTable"></table>'
             let columns = [
                 {
-                "name": "index",
-                "title": "ردیف",
-                "breakpoints": "xs sm",
-                "type": "number",
-                "style": {
-                    "width": "5%"
-                }
-            },{
-                "name": "cluster_name",
-                "title": "نام خوشه",
-            }, {
-                "name": "word_list",
-                "title": "موضوع (20 کلمه کلیدی)",
-            }, {
-                "name": "cluster_size",
-                "title": "تعداد پاراگراف",
-                "style": {
-                    "width": "5%"
-                }
-            }, {
-                "name": "cluster_entropy",
-                "title": "آنتروپی",
-                "style": {
-                    "width": "5%"
-                }
-            }, {
-                "name": "cluster_frequent_keyword_subject",
-                "title": "موضوع غالب (براساس کلیدواژگان)",
-                "style": {
-                    "width": "10%"
-                }
-            }, {
-                "name": "user_label",
-                "title": "برچسب پیشنهادی",
-            },]
+                    "name": "index",
+                    "title": "ردیف",
+                    "breakpoints": "xs sm",
+                    "type": "number",
+                    "style": {
+                        "width": "5%"
+                    }
+                }, {
+                    "name": "cluster_name",
+                    "title": "نام خوشه",
+                }, {
+                    "name": "word_list",
+                    "title": "موضوع (20 کلمه کلیدی)",
+                }, {
+                    "name": "cluster_size",
+                    "title": "تعداد پاراگراف",
+                    "style": {
+                        "width": "5%"
+                    }
+                }, {
+                    "name": "cluster_entropy",
+                    "title": "آنتروپی",
+                    "style": {
+                        "width": "5%"
+                    }
+                }, {
+                    "name": "cluster_frequent_keyword_subject",
+                    "title": "موضوع غالب (براساس کلیدواژگان)",
+                    "style": {
+                        "width": "10%"
+                    }
+                }, {
+                    "name": "user_label",
+                    "title": "برچسب پیشنهادی",
+                },]
 
             $('#KeywordSearchTable').empty();
             $('#KeywordSearchTable').footable({
