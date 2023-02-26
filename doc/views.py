@@ -907,7 +907,7 @@ def delete_doc(request, id, language):
 def get_country_maps(country_objects):
     dataset_map = {}
     # country_objects = country_objects.order_by("-id")
-    country_objects = country_objects.order_by("name","-id")
+    country_objects = country_objects.order_by("id")
     for each in country_objects:
         id = each.id
         name = each.name

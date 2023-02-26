@@ -14,7 +14,7 @@
     <link rel="stylesheet" href="../../../static/library/bootstrap-icons-1.3.0.css">
     <!-- Fontawesome Icons -->
 
-    <link rel="stylesheet" href="../../../static/library/fontawesome-5.10.0.all.css"  />
+    <link rel="stylesheet" href="../../../static/library/fontawesome-5.10.0.all.css" />
     <link rel="stylesheet" href="../../../static/library/font-awesome.min-4.7.0.css">
 
 
@@ -136,10 +136,12 @@
                         class="form-select text-right float-right searchable-select" style="direction: rtl;"
                         onchange="CountryChanged()">
                         {% for k,v in countries.items %}
-                   
-                        <option value="{{ k }}">{{ v }}</option>
 
-                
+                        {% if v == 'تابناک' %}
+                        <option selected value="{{ k }}">{{ v }}</option>
+                        {% elif v == 'خبر آنلاین'  %}
+                        <option value="{{ k }}">{{ v }}</option>
+                        {% endif %}
 
                         {% endfor %}
                     </select>
@@ -148,8 +150,8 @@
                 <!-- Cluster Size  -->
                 <div class="col-md-6  pt-3 col-12 col-lg-2 bg-light" dir="rtl">
                     <label class="text-right bg-light float-right" style="direction: rtl;;">تعداد خوشه‌ها:</label>
-                    <select id="Cluster_Count_Select" onchange="ShowResult()" class="form-select text-right float-right searchable-select"
-                        style="direction: rtl;">
+                    <select id="Cluster_Count_Select" onchange="ShowResult()"
+                        class="form-select text-right float-right searchable-select" style="direction: rtl;">
                     </select>
                 </div>
 
@@ -592,8 +594,9 @@
                 </div>
                 <!-- Modal footer -->
                 <div dir="ltr" class="modal-footer">
-                    
-                    <button id="ExportExcel2" disabled class="btn btn-outline-secondary"><i class="fa fa-download"></i> خروجی اکسل احکام
+
+                    <button id="ExportExcel2" disabled class="btn btn-outline-secondary"><i class="fa fa-download"></i>
+                        خروجی اکسل احکام
                     </button>
                 </div>
             </div>
@@ -616,7 +619,7 @@
                 </div>
                 <!-- Modal footer -->
                 <div class="modal-footer">
-                    
+
                 </div>
 
             </div>
@@ -638,7 +641,7 @@
                 </div>
                 <!-- Modal footer -->
                 <div class="modal-footer">
-                    
+
                 </div>
 
             </div>
@@ -670,11 +673,11 @@
 
 <script>
     COUNTRY_CLUSTER_COUNT_DICT = {
-        "ایسنا": [5, 10, 15, 20, 25,30,35,40,45,50],
-        "تابناک": [5, 10, 15, 20, 25,30,35,40,45,50],
-        "خبر آنلاین" :[5, 10, 15, 20, 25,30,35,40,45,50]
+        "ایسنا": [5, 10, 15, 20, 25, 30, 35, 40, 45, 50],
+        "تابناک": [5, 10, 15, 20, 25, 30, 35, 40, 45, 50],
+        "خبر آنلاین": [5, 10, 15, 20, 25, 30, 35, 40, 45, 50]
     }
-    
+
     TABLE_INFO = []
     const COLUMNS = {
         "cloud": "ابر واژگان",
@@ -688,7 +691,7 @@
 
     let topic_response = []
 
-    container_id_list = ['SearchTable','DifferentSubjectTableId',
+    container_id_list = ['SearchTable', 'DifferentSubjectTableId',
         'heatmap_chart_container',
         'centroids_graph_container',
         'clustersKeywords_graph_container'
@@ -711,13 +714,13 @@
 
         const options = []
         for (i of num_topic) {
-            options.push({value:i, text:i})
+            options.push({ value: i, text: i })
         }
-         syncSelectOptions("Cluster_Count_Select", options);
+        syncSelectOptions("Cluster_Count_Select", options);
 
         // await ShowResult();
 
-        
+
 
 
     }
@@ -726,7 +729,7 @@
     async function ShowResult() {
         clearPrevResults(container_id_list);
         notyf.dismissAll();
-        
+
         startBlockUI('SearchTable');
 
         const number_of_topic = document.getElementById("Cluster_Count_Select").value;
@@ -739,7 +742,7 @@
         topic_response = response['lda_topics']
         all_para_count = response["all_para_count"]
         console.log(all_para_count)
-        await showDocumentInformation(topic_response,all_para_count);
+        await showDocumentInformation(topic_response, all_para_count);
 
         //user log
         let form_data = new FormData()
@@ -750,7 +753,7 @@
         form_data.append('country_name', country_name);
         form_data.append('cluster_size', cluster_size);
         UserLog(form_data)
- 
+
 
 
         stopBlockUI('SearchTable', 'موضوعات');
@@ -766,11 +769,11 @@
         show_heatmap_charts('heatmap_chart_container', heatmap_chart_data);
 
         Centroids_showChart(cluster_size_chart_data, "cluster_size_chart_container", false, "خوشه", "تعداد پاراگراف")
-        
+
         stopBlockUI('heatmap_chart_container', 'فاصله مراکز خوشه‌ها');
         stopBlockUI('cluster_size_chart_container', 'توزیع اندازه خوشه‌ها');
         //------------- Show Graph Between Centroid --------------------------------
-        
+
         startBlockUI('centroids_graph_pane');
 
         await showCentroidGraph("centroids_graph_container")
@@ -796,9 +799,9 @@
         await showDifferenceSubjectTable(documents_difference_subject);
         stopBlockUI('DifferentSubjectTableId', 'احکام با موضوع متفاوت');
 
-        
 
-       
+
+
     }
 
 
@@ -865,7 +868,7 @@
 
         let Graph_Object = new MyGraph("clustersKeywords_graph_container",
             Nodes_data, Edges_data, {}, {}, width, height, "circular", "clustersKeywords_ChangeLayout", false,
-            "Yellow","clustersKeywords_DegreeSlider", "clustersKeywords_WeightSlider", 1, 0.001,
+            "Yellow", "clustersKeywords_DegreeSlider", "clustersKeywords_WeightSlider", 1, 0.001,
             "clustersKeywords_selected_node_table", "clustersKeywords_selected_edge_table",
             "clustersKeywords_SelectNeighbourImg", "clustersKeywords_ShowHideImg", "امتیاز",
             clustersKeywords_node_dbl_click, clustersKeywords_edge_dbl_click,
@@ -889,55 +892,55 @@
             let request_link = 'http://' + location.host + "/GetKeywordLDAData/" + country_id + "/" + cluster_size + "/" + username + "/" + node_date["id"] + "/";
             let response = await fetch(request_link).then(response => response.json());
 
-            await showDocumentInformation(response["lda_topics"],response["all_para_count"])
+            await showDocumentInformation(response["lda_topics"], response["all_para_count"])
             document.getElementById("CloudHeader").innerHTML = "کلیدواژه: " + node_date["id"]
             document.getElementById("DetailText").innerHTML = '<table class="table table-striped" style="min-height: 200px;" id="KeywordSearchTable"></table>'
             columns = [
                 {
-                "name": "id",
-                "title": "ردیف",
-                "breakpoints": "xs sm",
-                "type": "number",
-                "style": {
-                    "width": "5%"
-                }
-            },{
-            "name": "topic_name",
-            "title": "نام دسته",
-            "style": {
-                "width": "5%"
-            }
-        }, {
-            "name": "keywords",
-            "title": "موضوع (20 کلمه کلیدی)",
-            "style": {
-                "width": "40%"
-            }
-        }, {
-            "name": "paragraph_count",
-            "title": "تعداد احکام",
-            "style": {
-                "width": "5%"
-            }
-        }, {
-            "name": "entropy",
-            "title": "آنتروپی",
-            "style": {
-                "width": "5%"
-            }
-        }, {
-            "name": "subject",
-            "title": "موضوع غالب (براساس کلیدواژگان)",
-            "style": {
-                "width": "10%"
-            }
-        }, {
-            "name": "user_label",
-            "title": "برچسب پیشنهادی",
-            "style": {
-                "width": "10%"
-            }
-        }]
+                    "name": "id",
+                    "title": "ردیف",
+                    "breakpoints": "xs sm",
+                    "type": "number",
+                    "style": {
+                        "width": "5%"
+                    }
+                }, {
+                    "name": "topic_name",
+                    "title": "نام دسته",
+                    "style": {
+                        "width": "5%"
+                    }
+                }, {
+                    "name": "keywords",
+                    "title": "موضوع (20 کلمه کلیدی)",
+                    "style": {
+                        "width": "40%"
+                    }
+                }, {
+                    "name": "paragraph_count",
+                    "title": "تعداد احکام",
+                    "style": {
+                        "width": "5%"
+                    }
+                }, {
+                    "name": "entropy",
+                    "title": "آنتروپی",
+                    "style": {
+                        "width": "5%"
+                    }
+                }, {
+                    "name": "subject",
+                    "title": "موضوع غالب (براساس کلیدواژگان)",
+                    "style": {
+                        "width": "10%"
+                    }
+                }, {
+                    "name": "user_label",
+                    "title": "برچسب پیشنهادی",
+                    "style": {
+                        "width": "10%"
+                    }
+                }]
 
             $('#KeywordSearchTable').empty();
             $('#KeywordSearchTable').footable({
@@ -1003,7 +1006,7 @@
     }
 
 
-    async function showDocumentInformation(lda_topics,all_para_count) {
+    async function showDocumentInformation(lda_topics, all_para_count) {
         let index = 1;
         let document_result_table = [];
 
@@ -1036,10 +1039,12 @@
 
             temp = doc['words'];
             user_label = doc['user_label'];
-            const row = { "id":"" , "topic_name": doc['topic_name'], "keywords": temp,
-            "paragraph_count": doc['paragraph_count'], 
-            "subject_chart": subject_chart, "cloud": cloud, 
-            "detail": detail, "entropy": doc['entropy'], "subject": subject ,"user_label":user_label}
+            const row = {
+                "id": "", "topic_name": doc['topic_name'], "keywords": temp,
+                "paragraph_count": doc['paragraph_count'],
+                "subject_chart": subject_chart, "cloud": cloud,
+                "detail": detail, "entropy": doc['entropy'], "subject": subject, "user_label": user_label
+            }
 
             document_result_table.push(row);
             index += 1;
@@ -1052,19 +1057,19 @@
     }
 
     async function show_table_result() {
-        selected_columns = ["index","user_label", "keywords"]
+        selected_columns = ["index", "user_label", "keywords"]
         selected_columns = find_selected_column(selected_columns)
 
 
         columns = [{
-                "name": "id",
-                "title": "ردیف",
-                "breakpoints": "xs sm",
-                "type": "number",
-                "style": {
-                    "width": "5%"
-                }
-            },{
+            "name": "id",
+            "title": "ردیف",
+            "breakpoints": "xs sm",
+            "type": "number",
+            "style": {
+                "width": "5%"
+            }
+        }, {
             "name": "topic_name",
             "title": "نام دسته",
             "style": {
@@ -1169,8 +1174,8 @@
 
     async function save_user_label(topic_id) {
         username = getCookie("username");
-        label = $("#"+topic_id).val();
-        
+        label = $("#" + topic_id).val();
+
         if (label != "" && label != "بدون برچسب") {
             let request_link = 'http://' + location.host + "/save_lda_topic_label/" +
                 topic_id + "/" + username + "/" + label + "/"
@@ -1179,7 +1184,7 @@
             result_response = response["result_response"];
             notyf.success(result_response);
 
-        }else {
+        } else {
             notyf.error("!برچسبی وارد نشده‌است");
         }
 
@@ -1203,9 +1208,10 @@
                 'target="_blank" href="' + para_link + '">' + doc['paragraph_text'] +
                 "</a>";
 
-            const row = { "index": index, 
-                "doc_name": doc_name,  
-                "para_text":para_text,
+            const row = {
+                "index": index,
+                "doc_name": doc_name,
+                "para_text": para_text,
                 "subject_name": doc['subject_name'],
                 "category_name": doc['category_name'],
                 "document_date": doc['document_date']
@@ -1247,19 +1253,19 @@
                 "style": {
                     "width": "30%"
                 }
-            },{
+            }, {
                 "name": "subject_name",
                 "title": "موضوع خبر",
                 "style": {
                     "width": "10%"
                 }
-            },{
+            }, {
                 "name": "category_name",
                 "title": "دسته خبر",
                 "style": {
                     "width": "10%"
                 }
-            },{
+            }, {
                 "name": "document_date",
                 "title": "تاریخ خبر",
                 "style": {
@@ -1293,13 +1299,13 @@
                 "</a>";
 
             const para_text = '<p>' + doc['paragraph_text'] + "</p>";
-            
+
 
             paragraph_link = 'http://' + location.host + "/sentiment_analysis/?id=" + doc['paragraph_id'];
 
-            paragraph_tag ="<a class='' title = 'پروفایل حکم' target='blank' href='" + paragraph_link + "'>" + doc['paragraph_text'] + "</a>"
-            
-            
+            paragraph_tag = "<a class='' title = 'پروفایل حکم' target='blank' href='" + paragraph_link + "'>" + doc['paragraph_text'] + "</a>"
+
+
             const row = { "index": index, "doc_name": doc_name, "name": paragraph_tag, "subject": doc['document_subject'], "pre_subject": doc['document_predict_subject'] }
 
             document_result.push(row);
@@ -1367,7 +1373,7 @@
     async function DetailFunction(topic_id) {
         document.getElementById("ModalHeader").innerHTML = "";
         $('#LDAPopUpTable').empty();
-        
+
         startFullPageBlockUI();
 
         let request_link = 'http://' + location.host + "/AILDADocFromTopic/" + topic_id + "/";
@@ -1415,11 +1421,11 @@
             }
 
 
-            
+
 
             paragraph_link = 'http://' + location.host + "/sentiment_analysis/?id=" + paragraph['paragraph_id'];
             paragraph_tag = '<a ' +
-                'target="_blank"  href="' + paragraph_link + '">' + paragraph['paragraph_text']+
+                'target="_blank"  href="' + paragraph_link + '">' + paragraph['paragraph_text'] +
                 "</a>";
 
             const row = {
@@ -1428,7 +1434,7 @@
                 'paragraph_text': paragraph_tag,
                 'subject_name': subject_name,
                 'score': paragraph['score']
-                }
+            }
             document_result.push(row);
             index += 1
         }
@@ -1556,13 +1562,13 @@
 
     function Centroids_showChart(data, position, sortKeys, xAxisTitle, yAxisTitle) {
         const options = {
-                data,
-                sortKeys,
-                xAxisTitle: "خوشه",
-                title: "توزیع خوشه‌ها در پاراگراف",
-                yAxisTitle: "تعداد پاراگراف"
+            data,
+            sortKeys,
+            xAxisTitle: "خوشه",
+            title: "توزیع خوشه‌ها در پاراگراف",
+            yAxisTitle: "تعداد پاراگراف"
 
-            };
+        };
         newBarChart(position, options)
 
     }
