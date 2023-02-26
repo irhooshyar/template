@@ -4966,17 +4966,17 @@ def BoostingSearchKnowledgeGraph_ES(request, country_id, field_name, field_value
 
         if search_type == "AND":
             search_type = "must"
-            index_name = "bbc_documentparagraphs_graph"
+            index_name = "bbc_full_documentparagraphs_graph"
             result_field = ['document_id', 'document_name', 'paragraph_id', 'attachment.content']
 
         elif search_type == "OR":
             search_type = "should"
-            index_name = "bbc_documentparagraphs_graph"
+            index_name = "bbc_full_documentparagraphs_graph"
             result_field = ['document_id', 'document_name', 'paragraph_id', 'attachment.content']
 
         elif search_type == "AND_DOC":
             search_type = "must"
-            index_name = "bbc_document"
+            index_name = "bbc_full_document"
             result_field = ['document_id', 'document_name', 'attachment.content']
 
 
