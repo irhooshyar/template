@@ -491,6 +491,7 @@
         let graph_object;
         let data_graph;
         let ShowedGraphObject;
+        let is_save_mode = false;
 
         init()
 
@@ -788,10 +789,10 @@
 
         async function edit_graph_changed()
         {
-            console.log("Ffffffffff")
             const graph_id = document.getElementById("edit_graph_select").value
-            if (graph_id === "0")
+            if (graph_id === "0" || is_save_mode === true)
             {
+                is_save_mode = false
                 data_graph = {nodes: [], edges: []};
                 CreateNewKnowledgeGraph("knowledge_graph_container")
                 document.getElementById("knowledgeGraphName").value = ""
@@ -855,6 +856,7 @@
                 document.getElementById("node_input_div").style.display = "none"
                 document.getElementById("edge_input_div").style.display = "none"
 
+                is_save_mode = true
 
                 if (response["version_id"] !== 0)
                 {
@@ -887,6 +889,8 @@
                 let control = select.tomselect;
                 control.setValue('0');
 
+                is_save_mode = true
+
                 select = document.getElementById('edit_graph_select');
                 control = select.tomselect;
                 control.setValue('0');
@@ -895,8 +899,7 @@
                 console.log(response);
             });
 
-            data_graph = {nodes: [], edges: []};
-            CreateNewKnowledgeGraph("knowledge_graph_container")
+
         }
 
         async function ShowGraph()
