@@ -858,6 +858,9 @@
                 document.getElementById("node_input_div").style.display = "none"
                 document.getElementById("edge_input_div").style.display = "none"
 
+
+                document.getElementById("knowledge_graph_container").innerHTML == ""
+
                 if (response["version_id"] !== 0)
                 {
                     graph_object.clear();
@@ -873,7 +876,6 @@
                 }
                 else
                 {
-
                     const selected_graph = $("#edit_graph_select").find("option:selected").val()
 
                     graph_object.clear();
