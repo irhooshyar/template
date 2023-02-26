@@ -859,8 +859,6 @@
                 document.getElementById("edge_input_div").style.display = "none"
 
 
-                document.getElementById("knowledge_graph_container").innerHTML = ""
-
                 if (response["version_id"] !== 0)
                 {
                     graph_object.clear();
@@ -895,6 +893,8 @@
                 select = document.getElementById('edit_graph_select');
                 control = select.tomselect;
                 control.setValue('0');
+
+                document.getElementById("knowledge_graph_container").innerHTML = ""
 
             }).fail(function (response) {
                 console.log(response);
