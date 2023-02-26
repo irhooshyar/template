@@ -520,6 +520,7 @@ async function SelectDocumentFunction(document_id) {
     const country_id = document.getElementById('country').value
     const request_link = 'http://' + location.host + "/GetDetailDocumentById/" + country_id + "/" + document_id + "/";
     let response = await fetch(request_link).then(response => response.json());
+
     const result = response["result"][0]['_source']
     document.getElementById("document").innerHTML = "<option value=" + result["document_id"] + " >" + result["document_name"] + "</option>";
 

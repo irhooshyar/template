@@ -119,9 +119,9 @@
                         class="form-select text-right float-right searchable-select" style="direction: rtl;"
                         onchange="CountryChanged()">
                         {% for k,v in countries.items %}
-
+                        {% if v != 'ایسنا' %}
                         <option value="{{ k }}">{{ v }}</option>
-
+                        {% endif %}
                         {% endfor %}
                     </select>
                 </div>
@@ -1198,7 +1198,8 @@
                 "result_size_message": result_message,
                 "list_type": "ordered",
                 "custom_body_function": null,
-                "body_parameters": null
+                "body_parameters": null,
+                "link_page":"information"
             }
 
             const export_configs = {

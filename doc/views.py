@@ -5567,12 +5567,12 @@ def GetDetailDocumentById(request, country_id, document_id):
             "document_id": document_id
         }
     }
-
     response = client.search(index=index_name,
-                             _source_includes=['document_id', 'date', 'category', 'document_name'],
+                             _source_includes=['document_id', 'Document_date', 'Document_category_name', 'document_name'],
                              request_timeout=40,
                              query=res_query)
     result = response['hits']['hits']
+
     total_hits = response['hits']['total']['value']
 
     document = Document.objects.get(id=document_id)
