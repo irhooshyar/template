@@ -3428,7 +3428,7 @@ def SearchDocument_ES(request, country_id, category_id, subject_id, from_year, t
 
     if country_id == 0:
         index_name_list = []
-        country_list = Country.objects.all().exclude(name="تابناک- تست")
+        country_list = Country.objects.filter(language = "فارسی").exclude(name="تابناک- تست")
         for country in country_list:
             index_name = standardIndexName(country, Document.__name__)
             index_name_list.append(index_name)
@@ -3916,7 +3916,7 @@ def SearchDocuments_Column_ES(request, country_name, category_name, subject_name
 
     if country_id == 0:
         index_name_list = []
-        country_list = Country.objects.all().exclude(name="تابناک- تست")
+        country_list = Country.objects.filter(language = "فارسی").exclude(name="تابناک- تست")
         for country in country_list:
             index_name = standardIndexName(country, Document.__name__)
             index_name_list.append(index_name)
