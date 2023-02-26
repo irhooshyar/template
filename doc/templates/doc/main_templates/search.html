@@ -131,11 +131,10 @@
                         onchange="CountryChanged()">
                         <option value="0">همه</option>
                         {% for k,v in countries.items %}
-                        {% if v == 'تابناک' %}
-                        <option selected value="{{ k }}">{{ v }}</option>
-                        {% else %}
+
                         <option value="{{ k }}">{{ v }}</option>
-                        {% endif %} {% endfor %}
+
+                        {% endfor %}
                         <option disabled value="تسنیم">تسنیم</option>
                         <option disabled value="فارس نیوز">فارس نیوز</option>
                     </select>
