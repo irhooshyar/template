@@ -127,7 +127,7 @@
                 </div>
                 <div class="col-md-6  pt-3 col-12 col-lg-3 bg-light" dir="rtl">
                     <label for="graph_select" class=" text-right bg-light float-right" style="direction: rtl;">انتخاب گراف:</label>
-                    <select dir="rtl" id="graph_select" name="graph_select" class="form-select text-right float-right searchable-select" style="direction: rtl;">
+                    <select dir="rtl" id="graph_select" name="graph_select" class="form-select text-right float-right searchable-select" style="direction: rtl;" onchange="change_graph_select()">
                         <option value="0">انتخاب نمایید</option>
                     </select>
                 </div>
@@ -1335,6 +1335,11 @@
                 });
 
             }
+        }
+
+        async function change_graph_select()
+        {
+            document.getElementById("show_knowledge__graph_container").innerHTML = ""
         }
 </script>
 
