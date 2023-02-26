@@ -21,7 +21,7 @@ const ft = FooTable.init('#PopUpTable', {
     "sorting": {
         "enabled": true
     },
-    "empty": "در حال بازیابی اسناد (لطفا صبر نمایید)",
+    "empty": "در حال بازیابی اخبار (لطفا صبر نمایید)",
     "columns": [{
         "name": "id",
         "title": "ردیف",
