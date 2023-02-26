@@ -99,27 +99,6 @@ async function init() {
     var document_id = url.searchParams.get("id");
 
     if (document_id) {
-
-        const request_link = 'http://' + location.host + "/GetDocumentById/" + document_id + "/";
-        let response = await fetch(request_link).then(response => response.json());
-        response = response["document_information"][0]
-
-        document.getElementById("document").innerHTML = "<option value=" + response["id"] + " >" + response["name"] + "</option>";
-        // {#document.getElementById("country").value = response["country_id"]#}
-
-
-        document_select_tag = '<i class="dropdown_icon bi bi-chevron-down ml-2 bold text-black"></i>' + response['name']
-        document.getElementById('document_select').innerHTML = document_select_tag;
-        document.getElementById('document_select').title = response['name'];
-
-        /* disable country , document */
-        document.getElementById("document_select").disabled = true;
-        document.getElementById("country").disabled = true;
-
-
-        const select = document.getElementById("country");
-        let control = select.tomselect;
-        control.setValue(response["country_id"])
         
         await SelectDocumentFunction(document_id)
 
@@ -540,16 +519,43 @@ async function pagingchange() {
 }
 
 async function SelectDocumentFunction(document_id) {
-    const country_id = document.getElementById('country').value
-    const request_link = 'http://' + location.host + "/GetDetailDocumentById/" + country_id + "/" + document_id + "/";
+
+
+    let request_link = 'http://' + location.host + "/GetDocumentById/" + document_id + "/";
     let response = await fetch(request_link).then(response => response.json());
+    response = response["document_information"][0]
 
-    const result = response["result"][0]['_source']
-    document.getElementById("document").innerHTML = "<option value=" + result["document_id"] + " >" + result["document_name"] + "</option>";
+    document.getElementById("document").innerHTML = "<option value=" + response["id"] + " >" + response["name"] + "</option>";
+    // {#document.getElementById("country").value = response["country_id"]#}
 
-    document_select_tag = '<i class="dropdown_icon bi bi-chevron-down ml-2 bold text-black"></i>' + result['document_name']
+
+    document_select_tag = '<i class="dropdown_icon bi bi-chevron-down ml-2 bold text-black"></i>' + response['name']
     document.getElementById('document_select').innerHTML = document_select_tag;
-    document.getElementById('document_select').title = result['document_name'];
+    document.getElementById('document_select').title = response['name'];
+
+    /* disable country , document */
+    document.getElementById("document_select").disabled = true;
+    document.getElementById("country").disabled = true;
+
+
+    const select = document.getElementById("country");
+    let control = select.tomselect;
+    control.setValue(response["country_id"])
+    const country_id = document.getElementById('country').value
+    request_link = 'http://' + location.host + "/GetDetailDocumentById/" + country_id + "/" + document_id + "/";
+    response = await fetch(request_link).then(response => response.json());
+
+    try {
+
+        const result = response["result"][0]['_source']
+        document.getElementById("document").innerHTML = "<option value=" + result["document_id"] + " >" + result["document_name"] + "</option>";    
+    }catch{
+        console.log('Document Not Found')
+    }
+
+    // document_select_tag = '<i class="dropdown_icon bi bi-chevron-down ml-2 bold text-black"></i>' + result['document_name']
+    // document.getElementById('document_select').innerHTML = document_select_tag;
+    // document.getElementById('document_select').title = result['document_name'];
 
     document.getElementById('document_date').innerHTML = response['date']
     document.getElementById('document_subject').innerHTML = response['subject']
