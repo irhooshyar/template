@@ -895,7 +895,8 @@
                 console.log(response);
             });
 
-            setTimeout(document.getElementById("knowledge_graph_container").innerHTML = "", 1000)
+            data_graph = {nodes: [], edges: []};
+            CreateNewKnowledgeGraph("knowledge_graph_container")
         }
 
         async function ShowGraph()
