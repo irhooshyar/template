@@ -128,11 +128,11 @@ def bulk_to_db(folder_name, Country):
     for item in parsed_json:
         print(cntr/parsed_json.__len__())
         cntr +=1
-        para_id = item
+        para_id = int(item)
         para_vector = parsed_json[item]
 
         row_obj = ParagraphVector(
-            paragraph = para_id,
+            paragraph_id = para_id,
             vector_value = {"data":para_vector},
             vector_type = vector_type
         )
