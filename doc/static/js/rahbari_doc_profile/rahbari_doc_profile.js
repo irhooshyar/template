@@ -21,7 +21,7 @@ const ft = FooTable.init('#PopUpTable', {
     "sorting": {
         "enabled": true
     },
-    "empty": "در حال بازیابی اسناد (لطفا صبر نمایید)",
+    "empty": "در حال بازیابی اخبار (لطفا صبر نمایید)",
     "columns": [{
         "name": "id",
         "title": "ردیف",
@@ -99,7 +99,9 @@ async function init() {
     var document_id = url.searchParams.get("id");
 
     if (document_id) {
+        
         await SelectDocumentFunction(document_id)
+
 
     } else {
         const text = "انتخاب نمایید"
@@ -143,8 +145,8 @@ async function CountryChanged() {
     counter = 0;
     loaded_doc = 0
     first_loading = true
-
-    $(".add-row-1").css('visibility', 'visible');
+    
+    // $(".add-row-1").css('visibility', 'visible');
 
     document.getElementById("document_select").disabled = true;
     await setTimeout(loadMoreDoc(), 1000)
@@ -501,9 +503,11 @@ async function loadMoreDoc() {
     if (loaded_doc === all_count) {
         $(".add-row-1").css('visibility', 'hidden');
     } else {
-        window.setTimeout(function () {
-            $(".pagination").append("<li class='footable-page visible'><a class='add-row-1' href='#' onclick='loadMoreDoc()'>+</a></li>");
-        }, 1000);
+        if ($('.add-row-1').length === 0) {
+            window.setTimeout(function () {
+                $(".pagination").append("<li class='footable-page visible'><a class='add-row-1' href='#' onclick='loadMoreDoc()'>+</a></li>");
+            }, 1000);
+        }
     }
 
 }
@@ -517,15 +521,43 @@ async function pagingchange() {
 }
 
 async function SelectDocumentFunction(document_id) {
-    const country_id = document.getElementById('country').value
-    const request_link = 'http://' + location.host + "/GetDetailDocumentById/" + country_id + "/" + document_id + "/";
-    let response = await fetch(request_link).then(response => response.json());
-    const result = response["result"][0]['_source']
-    document.getElementById("document").innerHTML = "<option value=" + result["document_id"] + " >" + result["document_name"] + "</option>";
 
-    document_select_tag = '<i class="dropdown_icon bi bi-chevron-down ml-2 bold text-black"></i>' + result['document_name']
+
+    let request_link = 'http://' + location.host + "/GetDocumentById/" + document_id + "/";
+    let response = await fetch(request_link).then(response => response.json());
+    response = response["document_information"][0]
+
+    document.getElementById("document").innerHTML = "<option value=" + response["id"] + " >" + response["name"] + "</option>";
+    // {#document.getElementById("country").value = response["country_id"]#}
+
+
+    document_select_tag = '<i class="dropdown_icon bi bi-chevron-down ml-2 bold text-black"></i>' + response['name']
     document.getElementById('document_select').innerHTML = document_select_tag;
-    document.getElementById('document_select').title = result['document_name'];
+    document.getElementById('document_select').title = response['name'];
+
+    /* disable country , document */
+    document.getElementById("document_select").disabled = true;
+    document.getElementById("country").disabled = true;
+
+
+    const select = document.getElementById("country");
+    let control = select.tomselect;
+    control.setValue(response["country_id"])
+    const country_id = document.getElementById('country').value
+    request_link = 'http://' + location.host + "/GetDetailDocumentById/" + country_id + "/" + document_id + "/";
+    response = await fetch(request_link).then(response => response.json());
+
+    try {
+
+        const result = response["result"][0]['_source']
+        document.getElementById("document").innerHTML = "<option value=" + result["document_id"] + " >" + result["document_name"] + "</option>";    
+    }catch{
+        console.log('Document Not Found')
+    }
+
+    // document_select_tag = '<i class="dropdown_icon bi bi-chevron-down ml-2 bold text-black"></i>' + result['document_name']
+    // document.getElementById('document_select').innerHTML = document_select_tag;
+    // document.getElementById('document_select').title = result['document_name'];
 
     document.getElementById('document_date').innerHTML = response['date']
     document.getElementById('document_subject').innerHTML = response['subject']

@@ -367,5 +367,11 @@ urlpatterns = [
     path('GetSimilarParagraphs_ByParagraphID/<int:paragraph_id>/', views.GetSimilarParagraphs_ByParagraphID, name='GetSimilarParagraphs_ByParagraphID'),
 
     path('GetSemanticSimilarParagraphs_ByParagraphID/<int:paragraph_id>/', views.GetSemanticSimilarParagraphs_ByParagraphID, name='GetSemanticSimilarParagraphs_ByParagraphID'),
+    path("AILDASubjectChartTopicGetInformation/<int:topic_id>/<str:subject_name>/<int:curr_page>/<int:result_size>/",
+         views.AILDASubjectChartTopicGetInformation, name='AILDASubjectChartTopicGetInformation'),
+
+    path(
+        "AILDASubjectChartTopicGetInformationExport/<int:topic_id>/<str:subject_name>/<int:curr_page>/<int:result_size>/",
+        views.AILDASubjectChartTopicGetInformationExport, name='AILDASubjectChartTopicGetInformationExport'),
 
 ]

@@ -106,7 +106,7 @@ def update_doc(request, id, language, ):
 
 
     StratAutomating.apply.after_response(folder_name, file,
-                                             "DocsCreateDocumentsListCubeData",
+                                             "DocsParagraphsClustering_AIParagraphTopicLDA_LDAGraphData",
                                              host_url)  # AdvanceARIMAExtractor_ ActorTimeSeriesPrediction _DocsSubjectExtractor_DocsLevelExtractor_DocsReferencesExtractor_DocsActorsTimeSeriesDataExtractor_DocsCreateDocumentsListCubeData_DocsCreateSubjectCubeData_DocsCreateVotesCubeData_DocsCreateSubjectStatisticsCubeData_DocsCreateTemplatePanelsCubeData_DocsAnalysisLeadershipSlogan_DocsCreatePrinciplesCubeData_DocCreateBusinessAdvisorCubeData_DocsCreateRegularityLifeCycleCubeData_DocsExecutiveParagraphsExtractor_DocsClauseExtractor_DocsGraphCubeData_DocsCreateMandatoryRegulationsCubeData_DocsExecutiveClausesExtractor_DocsCreateActorInformationStackChartCubeData
 
 
@@ -907,7 +907,7 @@ def delete_doc(request, id, language):
 def get_country_maps(country_objects):
     dataset_map = {}
     # country_objects = country_objects.order_by("-id")
-    country_objects = country_objects.order_by("name","-id")
+    country_objects = country_objects.order_by("id")
     for each in country_objects:
         id = each.id
         name = each.name
@@ -3057,7 +3057,7 @@ def AILDADocFromTopic(request, topic_id):
         paragraph_id = record['paragraph_id']
         paragraph = DocumentParagraphs.objects.get(id=paragraph_id)
         try:
-            subjects_name = ParagraphsSubject.objects.get(paragraph__id=paragraph_id, version__id=12)
+            subjects_name = ParagraphsSubject.objects.get(paragraph__id=paragraph_id)
 
             topic_paragraphs.append({
 
@@ -5567,12 +5567,12 @@ def GetDetailDocumentById(request, country_id, document_id):
             "document_id": document_id
         }
     }
-
     response = client.search(index=index_name,
-                             _source_includes=['document_id', 'date', 'category', 'document_name'],
+                             _source_includes=['document_id', 'Document_date', 'Document_category_name', 'document_name'],
                              request_timeout=40,
                              query=res_query)
     result = response['hits']['hits']
+
     total_hits = response['hits']['total']['value']
 
     document = Document.objects.get(id=document_id)
@@ -6469,4 +6469,119 @@ def GetSemanticSimilarParagraphs_ByParagraphID(request, paragraph_id):
     similar_paragraphs = response['hits']['hits']
 
     return JsonResponse({'similar_paragraphs': similar_paragraphs})
+
+
+def AILDASubjectChartTopicGetInformation(request, topic_id, subject_name, curr_page, result_size):
+    topic_paragraphs = []
+    from_value = (curr_page - 1) * result_size
+    to_value = from_value + result_size
+    temp = AILDAParagraphToTopic.objects.filter(topic__id=topic_id).order_by('-score').values()
+
+    all_paragraph_count = AIParagraphLDATopic.objects.get(id=topic_id).subjects_list_chart_data_json['data']
+    paragraph_count = 0
+    for item in all_paragraph_count:
+        if item[0] == subject_name:
+            paragraph_count = item[1]
+
+    for record in temp:
+        if (len(topic_paragraphs) == curr_page * result_size) or (len(topic_paragraphs) == paragraph_count):
+            break
+        paragraph_id = record['paragraph_id']
+        try:
+            subjects_name = ParagraphsSubject.objects.get(paragraph__id=paragraph_id)
+
+            if subjects_name.subject1_name == subject_name:
+                paragraph = DocumentParagraphs.objects.get(id=paragraph_id)
+                topic_paragraphs.append({"_source": {
+                    "attachment": {
+                        "content": paragraph.text
+                    },
+                    "paragraph_id": paragraph.id,
+                    "document_id": paragraph.document_id.id,
+                    "document_name": paragraph.document_id.name,
+                    # "subject1_name": subjects_name.subject1_name,
+                }})
+                print("ADD", paragraph_id)
+        except:
+            if subject_name == "نامشخص":
+                paragraph = DocumentParagraphs.objects.get(id=paragraph_id)
+                topic_paragraphs.append({"_source": {
+                    "attachment": {
+                        "content": paragraph.text
+                    },
+                    "paragraph_id": paragraph.id,
+                    "document_id": paragraph.document_id.id,
+                    "document_name": paragraph.document_id.name,
+                    # "subject1_name": subjects_name.subject1_name,
+                }})
+                print("ADD", paragraph_id)
+            else:
+                print("ERROR", paragraph_id)
+
+    return JsonResponse({'result': topic_paragraphs[from_value: to_value], 'total_hits': paragraph_count})
+
+
+def AILDASubjectChartTopicGetInformationExport(request, topic_id, subject_name, curr_page, result_size):
+    topic_paragraphs = []
+    from_value = (curr_page - 1) * result_size
+    temp = AILDAParagraphToTopic.objects.filter(topic__id=topic_id).order_by('-score').values()
+    to_value = from_value + result_size
+    all_paragraph_count = AIParagraphLDATopic.objects.get(id=topic_id).subjects_list_chart_data_json['data']
+    paragraph_count = 0
+    for item in all_paragraph_count:
+        if item[0] == subject_name:
+            paragraph_count = item[1]
+
+    if to_value > paragraph_count:
+        to_value = paragraph_count
+
+    for record in temp:
+        if (len(topic_paragraphs) == curr_page * result_size) or (len(topic_paragraphs) == paragraph_count):
+            break
+        paragraph_id = record['paragraph_id']
+        try:
+            subjects_name = ParagraphsSubject.objects.get(paragraph__id=paragraph_id)
+
+            if subjects_name.subject1_name == subject_name:
+                paragraph = DocumentParagraphs.objects.get(id=paragraph_id)
+                topic_paragraphs.append({"_source": {
+                    "attachment": {
+                        "content": paragraph.text
+                    },
+                    "paragraph_id": paragraph.id,
+                    "document_id": paragraph.document_id.id,
+                    "document_name": paragraph.document_id.name,
+                    # "subject1_name": subjects_name.subject1_name,
+                }})
+                print("ADD", paragraph_id)
+        except:
+            if subject_name == "نامشخص":
+                paragraph = DocumentParagraphs.objects.get(id=paragraph_id)
+                topic_paragraphs.append({"_source": {
+                    "attachment": {
+                        "content": paragraph.text
+                    },
+                    "paragraph_id": paragraph.id,
+                    "document_id": paragraph.document_id.id,
+                    "document_name": paragraph.document_id.name,
+                    # "subject1_name": subjects_name.subject1_name,
+                }})
+                print("ADD", paragraph_id)
+            else:
+                print("ERROR", paragraph_id)
+
+    result_range = str(from_value) + " تا " + str(to_value)
+
+    paragraph_list = [
+        [doc['_source']['document_name']
+            , doc['_source']['attachment']['content']] for doc in topic_paragraphs[from_value:to_value]]
+
+    file_dataframe = pd.DataFrame(paragraph_list, columns=["نام سند", "متن پاراگراف"])
+
+    file_name = "احکام با موضوع " + subject_name + " " + result_range + ".xlsx"
+
+    file_path = os.path.join(config.MEDIA_PATH, file_name)
+    file_dataframe.to_excel(file_path, index=False)
+
+    return JsonResponse({"file_name": file_name})
 
