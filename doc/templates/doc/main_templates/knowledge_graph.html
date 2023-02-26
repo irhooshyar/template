@@ -491,6 +491,7 @@
         let graph_object;
         let data_graph;
         let ShowedGraphObject;
+        let is_save_mode = false;
 
         init()
 
@@ -789,13 +790,12 @@
         async function edit_graph_changed()
         {
             const graph_id = document.getElementById("edit_graph_select").value
-            if (graph_id === "0")
+            if (graph_id === "0" || is_save_mode === true)
             {
+                is_save_mode = false
                 data_graph = {nodes: [], edges: []};
                 CreateNewKnowledgeGraph("knowledge_graph_container")
-
                 document.getElementById("knowledgeGraphName").value = ""
-
             }
             else
             {
@@ -803,9 +803,7 @@
                 let response = await fetch(request_link).then(response => response.json());
                 data_graph = {nodes: response["Nodes_data"], edges: response["Edges_data"]};
                 CreateNewKnowledgeGraph("knowledge_graph_container")
-
                 document.getElementById("knowledgeGraphName").value = document.getElementById("edit_graph_select").options[document.getElementById("edit_graph_select").selectedIndex].text
-
             }
         }
 
@@ -858,6 +856,7 @@
                 document.getElementById("node_input_div").style.display = "none"
                 document.getElementById("edge_input_div").style.display = "none"
 
+                is_save_mode = true
 
                 if (response["version_id"] !== 0)
                 {
@@ -890,6 +889,8 @@
                 let control = select.tomselect;
                 control.setValue('0');
 
+                is_save_mode = true
+
                 select = document.getElementById('edit_graph_select');
                 control = select.tomselect;
                 control.setValue('0');
@@ -898,7 +899,7 @@
                 console.log(response);
             });
 
-            document.getElementById("knowledge_graph_container").innerHTML = ""
+
         }
 
         async function ShowGraph()
