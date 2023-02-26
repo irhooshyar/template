@@ -993,6 +993,7 @@
 
             $("#paraDetailModal_modal_btn").click()
 
+
             document.getElementById("language_select").onchange = async function () {
 
                 startFullPageBlockUI()
@@ -1006,8 +1007,9 @@
                 stopFullPageBlockUI("نمایش")
             }
 
-            // Level Search
-            const graph_level_data = ShowedGraphObject.bfsAlgorithm(roots_list[0]["id"])
+            const language_select = document.getElementById('language_select');
+            const control = language_select.tomselect;
+            resetSelectValue(control)
 
             stopFullPageBlockUI("نمایش")
         }
