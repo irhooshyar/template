@@ -28,6 +28,7 @@ urlpatterns = [
          name='GetParagraphSubjectContent'),
     path('GetUnknownDocuments/', views.GetUnknownDocuments, name='GetUnknownDocuments'),
     path('information/', views.information, name='information'),
+    path('document_profile/', views.information, name='document_profile'),
     path('following_document_comments/', views.following_document_comments, name='following_document_comments'),
     path('notes/', views.notes, name='notes'),
     path('graph2/', views.graph2, name='graph2'),

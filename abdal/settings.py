@@ -95,10 +95,6 @@ DATABASE_ROUTERS = ['routers.db_routers.FarsiRouter', 'routers.db_routers.Englis
 
 
 DATABASES = {
-    # 'default': {
-    #     'ENGINE': 'django.db.backends.sqlite3',
-    #     'NAME': str(BASE_DIR / 'db.sqlite3'),
-    # }
     'default': {},
     'Fa_DataBase': {
         'ENGINE': 'django.db.backends.mysql',
@@ -113,24 +109,7 @@ DATABASES = {
         'TEST': {
             "DEPENDENCIES": []
         }
-        # 'OPTIONS': {
-        #     'charset': 'utf8mb4'  # This is the important line
-        # }
     },
-    # 'En_DataBase': {
-    #         'ENGINE': 'django.db.backends.mysql',
-    #         'CONN_MAX_AGE': 60,
-    #         'NAME': 'CyberMapDB_En_v1' if os.environ.get('DB_EN_NAME') is None else os.environ.get('DB_EN_NAME'),
-    #         'USER': 'dbadmin',
-    #         'PASSWORD': '123456789',
-    #         'HOST': 'localhost' if os.environ.get('DB_URL') is None else
-    #         os.environ.get('DB_URL'),  # Or an IP Address that your DB is hosted on
-    #         'PORT': '3306' if os.environ.get('DB_PORT') is None else os.environ.get('DB_PORT')
-    #         ,
-    #         # 'OPTIONS': {
-    #         #     'charset': 'utf8mb4'  # This is the important line
-    #         # }
-    #     },
 }
 
 
