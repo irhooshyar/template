@@ -139,7 +139,7 @@
 
                         {% if v == 'تابناک' %}
                         <option selected value="{{ k }}">{{ v }}</option>
-                        {% elif v == 'خبر آنلاین'  %}
+                        {% elif v == 'خبر آنلاین' %}
                         <option value="{{ k }}">{{ v }}</option>
                         {% endif %}
 
@@ -648,6 +648,51 @@
         </div>
     </div>
 
+    <button type="button" id="ChartModalBtn_2" class="btn d-none modal_btn" data-bs-toggle="modal"
+        data-bs-target="#ChartModal_2"></button>
+    <div class="modal fade" id="ChartModal_2">
+        <div class="modal-dialog modal-dialog-scrollable modal-lg">
+            <div class="modal-content">
+
+                <!-- Modal Header -->
+                <div style="direction: rtl !important;" class="modal-header">
+                    <h5 id="ChartModalHeader_2" class="modal-title">عنوان</h5>
+                    <button type="button" class="btn-close m-0" data-bs-dismiss="modal"></button>
+                </div>
+
+                <!-- Modal body -->
+                <div id="ChartModalText_2" class="modal-body text-justify">
+                    <h6 id="DocsCount_2" class='text-secondary'></h6>
+                    <div id="ChartModalBodyText_2">
+                    </div>
+
+                    <button id="LoadMoreDocuments_2" class="btn btn-white w-100 mb-1 float-left"
+                        style="color: #0e3f8b"><i class="fa fa-plus pl-2" style="position:relative;top:3px;"></i>نمایش
+                        بیش‌تر
+                    </button>
+
+                </div>
+
+                <!-- Modal footer -->
+                <div dir="rtl" class="modal-footer">
+
+                    <input type="number" id="ColumnModalPaginationInput_2" min="1" max="1" value="1"
+                        class="form-select text-right float-right d-none">
+
+                    <button id="ExportExcel_2" class="btn btn-primary" disabled>
+                        <i class="fa fa-download"></i>
+                        دانلود اسناد
+                    </button>
+                    <button id="ExportExcel_2" class="btn btn-primary"><i class="fa fa-download"></i> خروجی
+                        اکسل
+                    </button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
     <!-- Scrollbar -->
     <button id="scroll_btn" class="p-0" title="بالای صفحه" onclick="topFunction()">
         <i class="far fa-caret-square-up"></i>
@@ -667,11 +712,15 @@
 <link rel="stylesheet" href="../../../static/styles/loader.css">
 <script src="../../../static/js/column.js"></script>
 
+<script src="../../../static/js/ChartColumnInteractivity.js"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="../../../static/js/GraphClass.js"></script>
 
 <script>
+    MAX_RESULT_WINDOW = 5000
+    SEARCH_RESULT_SIZE = 25
+
     COUNTRY_CLUSTER_COUNT_DICT = {
         "ایسنا": [5, 10, 15, 20, 25, 30, 35, 40, 45, 50],
         "تابناک": [5, 10, 15, 20, 25, 30, 35, 40, 45, 50],
@@ -1551,7 +1600,7 @@
 
         chart_data = response['chart_data']
         console.log(chart_data)
-        documents_information_dict = []
+        documents_information_dict = [topic_id]
         showChart(chart_data, "DetailText", documents_information_dict, true, paragraph_count, dominant_subject_name, correlation_score)
 
 
@@ -1580,11 +1629,86 @@
             sortKeys,
             xAxisTitle: "موضوع خبر",
             title: "تعداد احکام: " + paragraph_count + '\n' + 'موضوع غالب (براساس کلیدواژگان): ' + dominant_subject_name + "\n" + 'آنتروپی: ' + correlation_score + "\n",
-            yAxisTitle: "تعداد خبر"
+            yAxisTitle: "تعداد خبر",
+            onClick: (event, data) => {
+                const click_tag = event.domTarget.tag;
+                const index = click_tag["index"]
+                const text = data[index][0];
+                click_classification_chart(documents_information_result[0], text)
+            }
 
         }
         newDoughnutChart(position, options)
     }
+
+    async function click_classification_chart(topic_id, subject) {
+        startFullPageBlockUI()
+        $('#subject_close_btn').click()
+        const request_link = 'http://' + location.host + "/AILDASubjectChartTopicGetInformation/" + topic_id + "/" + subject + "/";
+
+        document.getElementById("ChartModalBodyText_2").innerHTML = ""
+        document.getElementById("ChartModalHeader_2").innerHTML = ""
+
+
+        // set modal header
+        modal_header = "احکام دارای موضوع " + subject
+        document.getElementById("ChartModalHeader_2").innerHTML = modal_header
+        // define request link without curr_page & search_result_size
+
+        request_configs = {
+            "link": request_link,
+            "search_result_size": SEARCH_RESULT_SIZE,
+            "max_result_window": MAX_RESULT_WINDOW,
+            "data_type": "url_parameters",
+            "form_data": null
+        }
+
+        export_link = 'http://' + location.host + "/AILDASubjectChartTopicGetInformationExport/" + topic_id + "/" + subject + "/";
+
+        export_configs = {
+            "link": export_link,
+            "btn_id": "ExportExcel_2"
+        }
+
+        highlight_configs = {
+            "parameters": null,
+            "highlight_enabled": false,
+            "custom_function": null
+        }
+
+        modal_configs = {
+            "body_id": "ChartModalBodyText_2",
+            "modal_load_more_btn_id": "LoadMoreDocuments_2",
+            "result_size_container_id": "DocsCount_2",
+            "result_size_message": "حکم",
+            "list_type": "ordered",
+            "custom_body_function": null,
+            "body_parameters": null
+
+        }
+
+        segmentation_config = {
+            "parameters": ["احساس بسیار منفی", "بدون ابراز احساسات", "احساس منفی", "احساس خنثی یا ترکیبی از مثبت و منفی", "احساس مثبت", "احساس بسیار مثبت"],
+            "keyword": "sentiment",
+            "enable": false,
+            "aggregation_keyword": "rahbari-sentiment-agg"
+        }
+
+
+        column_interactivity_obj = new ColumnInteractivity("paragraphs",
+            request_configs, export_configs, modal_configs, highlight_configs, segmentation_config)
+
+        result = await column_interactivity_obj.load_content();
+        console.log(result)
+
+        $('#ChartModalBtn_2').click()
+        stopFullPageBlockUI('کلیک روی نمودار');
+
+        $('#ExportExcel_2').on('click', async function () {
+            await column_interactivity_obj.download_content();
+        })
+    }
+
 
 
     async function SpinnerModeFunction(mode) {
