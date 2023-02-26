@@ -484,7 +484,7 @@
 
         let table_data = ''
         for (let i = 0; i < comments.length; i++) {
-            const document_address = 'http://' + location.host + "/document_profile/?id=" + comments[i].document_id
+            const document_address = 'http://' + location.host + "/information/?id=" + comments[i].document_id
             const document_link = '<a target = "to_blank" href = "' + document_address + '">' + comments[i].document_name + '</a>'
 
             table_data += `<tr>

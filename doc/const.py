@@ -12,10 +12,10 @@ AllPanels = {
         }
     },
 
-    'document_profile': {
+    'information': {
         'persian_name': 'پروفایل اسناد رهبری',
         'sub_panels': {
-            'document_profile': 'پروفایل اسناد رهبری',
+            'information': 'پروفایل اسناد رهبری',
         }
     },
 

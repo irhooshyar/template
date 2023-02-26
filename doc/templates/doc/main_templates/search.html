@@ -665,7 +665,7 @@
                 const detail_function = `DetailFunction2('${id}','${name}','${mode}', '${where}','${text}')`;
                 const detail = '<button type="button" class="btn modal_btn" data-bs-toggle="modal" ' + button_disable + ' onclick="' + detail_function + '" data-bs-target="#myModal">جزئیات</button>'
 
-                const document_link = 'http://' + location.host + "/document_profile/?id=" + id
+                const document_link = 'http://' + location.host + "/information/?id=" + id
                 const doc_name = '<a target="_blank" href="' + document_link + '">' + name + "</a>"
 
                 const row = {
@@ -1064,7 +1064,7 @@
         }
 
         function references_node_dbl_click(node_data) {
-            window.open('http://' + location.host + "/document_profile?id=" + node_data["id"]);
+            window.open('http://' + location.host + "/information?id=" + node_data["id"]);
 
         }
         function references_edge_dbl_click(edge_data) {
@@ -1366,7 +1366,7 @@
             let list_of_docId = ""
 
             for (const doc of result_documents) {
-                const link = 'http://' + location.host + "/document_profile/?id=" + doc["_source"]["document_id"]
+                const link = 'http://' + location.host + "/information/?id=" + doc["_source"]["document_id"]
                 let tag = "<li class='mt-3' id=" + doc["_source"]["document_id"] + "><a target='blank' href='" + link + "'>" + doc["_source"]["document_name"] + "</a></li>"
                 filtered_result_tag += tag
                 list_of_docId += doc["document_id"] + "_"
@@ -1565,7 +1565,7 @@
                 document_id = paragraph_info['document_id']
                 document_name = paragraph_info['document_name']
 
-                document_link = 'http://' + location.host + "/document_profile/?id=" + document_id
+                document_link = 'http://' + location.host + "/information/?id=" + document_id
                 doc_name = '<a class="bold text-secondary" target="_blank" href="' + document_link + '">' + document_name + "</a>"
 
                 paragraph_text = paragraph_info['text']
@@ -2061,7 +2061,7 @@
 
         async function showHighlightedParagraphs_Details(document_id, document_name, paragraphs_list) {
             /* Title Text */
-            const link = 'http://' + location.host + "/document_profile/?id=" + document_id
+            const link = 'http://' + location.host + "/information/?id=" + document_id
             let title_tag = "<a target='blank' href='" + link + "'>" + document_name + "</a>"
             document.getElementById("ModalHeader").innerHTML = title_tag
 
@@ -2122,7 +2122,7 @@
                 let response = await fetch(request_link).then(response => response.json());
                 paragraph_list = response["result"]
 
-                const link = 'http://' + location.host + "/document_profile/?id=" + doc_id
+                const link = 'http://' + location.host + "/information/?id=" + doc_id
                 let title_tag = "<a  target='blank' href='" + link + "'>" + doc_name + "</a>"
                 document.getElementById("ModalHeader").innerHTML =  title_tag 
 
@@ -2283,7 +2283,7 @@
                 for (doc_info of documents_list) {
                     const document_id = doc_info["id"]
                     const document_name = doc_info["name"]
-                    const document_link = 'http://' + location.host + "/document_profile/?id=" + document_id
+                    const document_link = 'http://' + location.host + "/information/?id=" + document_id
                     const doc_name = '<a target="_blank" href="' + document_link + '">' + document_name + "</a>"
 
                     document_node = {
@@ -2375,7 +2375,7 @@
                 const click_tag = event.domTarget.tag;
                 if (click_tag["type"] === "node") {
 
-                    // window.open('http://' + location.host + "/document_profile?id=" + click_tag["id"]);
+                    // window.open('http://' + location.host + "/information?id=" + click_tag["id"]);
                 } else if (click_tag["type"] === "edge") {
 
                     edge_data = click_tag["id"].split('__');
@@ -2396,7 +2396,7 @@
                     paragraph_text = paragraph_text.replaceAll(keyword + ' :', keyword_tag)
 
 
-                    const document_address = 'http://' + location.host + "/document_profile/?id=" + response["doc_id"]
+                    const document_address = 'http://' + location.host + "/information/?id=" + response["doc_id"]
                     const document_link = '<a target = "to_blank" href = "' + document_address + '">' + response["doc_name"] + ':</a>'
 
                     doc_tag = '<h6 class="bold">' + document_link + '</h6>'

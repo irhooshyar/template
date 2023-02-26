@@ -62,7 +62,7 @@ function generate_rahbari_rule_rows(results, search_type, text) {
         const detail_function = `DetailFunction2('${doc_id}','${doc_name}','${search_type}','${text}', ${1})`;
         const detail = '<button type="button" class="btn modal_btn" data-bs-toggle="modal" ' + ' onclick="' + detail_function + '" data-bs-target="#myModal" ' + is_disabled + '>جزئیات</button>'
 
-        const document_link = 'http://' + location.host + "/document_profile/?id=" + doc_id
+        const document_link = 'http://' + location.host + "/information/?id=" + doc_id
         const doc_name_link = '<a target="blank" href="' + document_link + '">' + doc_name + "</a>"
 
         const row = {
