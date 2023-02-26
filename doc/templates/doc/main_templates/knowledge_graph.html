@@ -894,11 +894,11 @@
                 control = select.tomselect;
                 control.setValue('0');
 
-                document.getElementById("knowledge_graph_container").innerHTML = ""
-
             }).fail(function (response) {
                 console.log(response);
             });
+
+            document.getElementById("knowledge_graph_container").innerHTML = ""
         }
 
         async function ShowGraph()
