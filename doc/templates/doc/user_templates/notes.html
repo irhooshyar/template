@@ -417,7 +417,7 @@
                         notes[i].label = "بدون برچسب"
                     }
                     const document_id = notes[i]['document_id'];
-                    const document_link = 'http://' + location.host + "/document_profile/?id=" + document_id;
+                    const document_link = 'http://' + location.host + "/information/?id=" + document_id;
                     const doc_name = '<a href="' + document_link + '">' + notes[i].document_name + "</a>";
                     if (notes[i].starred) {
                         table_data+=`<tr>
@@ -569,7 +569,7 @@
                         notes[i].label = "بدون برچسب"
                     }
                     const document_id = notes[i]['document_id'];
-                    const document_link = 'http://' + location.host + "/document_profile/?id=" + document_id;
+                    const document_link = 'http://' + location.host + "/information/?id=" + document_id;
                     const doc_name = '<a href="' + document_link + '">' + notes[i].document_name + "</a>";
                     if (notes[i].starred) {
                         table_data+=`<tr>

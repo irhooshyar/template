@@ -1193,7 +1193,7 @@
 
         for (let doc of doc_sub) {
 
-            const document_link = 'http://' + location.host + "/document_profile/?id=" + doc['document_id'];
+            const document_link = 'http://' + location.host + "/information/?id=" + doc['document_id'];
             const doc_name = '<a ' +
                 'target="_blank" href="' + document_link + '">' + doc['document_name'] +
                 "</a>";
@@ -1287,7 +1287,7 @@
 
         for (let doc of doc_sub) {
 
-            const document_link = 'http://' + location.host + "/document_profile/?id=" + doc['doc_id'];
+            const document_link = 'http://' + location.host + "/information/?id=" + doc['doc_id'];
             const doc_name = '<a ' +
                 'target="_blank" href="' + document_link + '">' + doc['doc_name'] +
                 "</a>";
@@ -1389,7 +1389,7 @@
         let document_result = [];
         for (let paragraph of paragraphs_list) {
 
-            const document_link = 'http://' + location.host + "/document_profile/?id=" + paragraph['document_id'];
+            const document_link = 'http://' + location.host + "/information/?id=" + paragraph['document_id'];
             const doc_name = '<a ' +
                 'target="_blank" href="' + document_link + '">' + paragraph['document_name'] +
                 "</a>";

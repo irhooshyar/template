@@ -28,7 +28,7 @@ class ColumnInteractivity {
         this.modal_result_size_container_id =
             modal_configs["result_size_container_id"];
         this.result_size_message = modal_configs["result_size_message"];
-        this.document_link = modal_configs["link_page"] ?? "document_profile"
+        this.document_link = modal_configs["link_page"] ?? "information"
 
         this.modal_list_type = modal_configs["list_type"];
         this.custom_body_function = modal_configs["custom_body_function"];
