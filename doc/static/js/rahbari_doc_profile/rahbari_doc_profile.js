@@ -99,7 +99,30 @@ async function init() {
     var document_id = url.searchParams.get("id");
 
     if (document_id) {
+
+        const request_link = 'http://' + location.host + "/GetDocumentById/" + document_id + "/";
+        let response = await fetch(request_link).then(response => response.json());
+        response = response["document_information"][0]
+
+        document.getElementById("document").innerHTML = "<option value=" + response["id"] + " >" + response["name"] + "</option>";
+        // {#document.getElementById("country").value = response["country_id"]#}
+
+
+        document_select_tag = '<i class="dropdown_icon bi bi-chevron-down ml-2 bold text-black"></i>' + response['name']
+        document.getElementById('document_select').innerHTML = document_select_tag;
+        document.getElementById('document_select').title = response['name'];
+
+        /* disable country , document */
+        document.getElementById("document_select").disabled = true;
+        document.getElementById("country").disabled = true;
+
+
+        const select = document.getElementById("country");
+        let control = select.tomselect;
+        control.setValue(response["country_id"])
+        
         await SelectDocumentFunction(document_id)
+
 
     } else {
         const text = "انتخاب نمایید"
