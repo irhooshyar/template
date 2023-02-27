@@ -1426,6 +1426,50 @@ FA_Settings = {
 FA_Mappings = {
     "properties": {
     
+        "document_jalili_date": {
+            "properties":{
+                "year":{
+                    "type":"integer"
+                },
+                "month":{
+                    "properties":{
+                        "number":{
+                            "type":"integer"
+                        },
+                        "name":{
+                            "type": "text",
+                            "fields": {
+                                "keyword": {
+                                    "type": "keyword",
+                                    "ignore_above": 512
+                                }
+                            }
+                        }
+                    }
+                },
+                "day":{
+                    "properties":{
+                        "number":{
+                            "type":"integer"
+                        },
+                        "name":{
+                            "type": "text",
+                            "fields": {
+                                "keyword": {
+                                    "type": "keyword",
+                                    "ignore_above": 512
+                                }
+                            }
+                        }
+                    }
+                },
+
+                "hour":{
+                        "type":"integer"
+                },
+            }   
+        },
+        
         "document_date": {
             "type": "text",
             "fields": {
@@ -3954,6 +3998,7 @@ FullProfileAnalysis_Mappings = {
                 }
             },
         },
+         
         "Document_date": {
             "type": "text",
             "fields": {
@@ -3963,6 +4008,7 @@ FullProfileAnalysis_Mappings = {
                 }
             }
         },
+
         "Document_time": {
             "type": "text",
             "fields": {
