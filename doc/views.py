@@ -1944,7 +1944,7 @@ def GetMyUserProfile(request):
             expertise.append(user.other_expertise)
         else:
             expertise.append(e.experise_id.expertise)
-        expertise_ids.append(e.experise_id.id)    
+        expertise_ids.append(e.experise_id.id)
     expertise = " - ".join(expertise)
 
     if expertise == "":
@@ -2462,7 +2462,7 @@ def confirm_email(user):
 
 
     send_mail(subject='کد تایید ایمیل', message=template, from_email=settings.EMAIL_HOST_USER,recipient_list=[user.email])
-    
+
 def resend_email(request):
     return render(request, 'doc/user_templates/resend_email.html')
 
@@ -2498,8 +2498,8 @@ def user_activation(request, user_id, token, code):
         else:
             user.save()
             return JsonResponse({ "status": "Not OK" })
-    
-        
+
+
     return JsonResponse({ "status": "Not OK" })
 
 def SaveUser(request, firstname, lastname,email, phonenumber, role, username, password, ip, expertise, other_expertise):
@@ -2746,7 +2746,7 @@ def changeUserState(request, user_id, state):
         template += f'http://rahnamud.ir:707/login/'
         print("template: ", template)
         send_mail(subject='تایید عملیات ثبت‌نام', message=template, from_email=settings.EMAIL_HOST_USER,recipient_list=[accepted_user.email])
-        
+
 
         return JsonResponse({"status": "accepted"})
     elif state == "rejected":
@@ -2759,7 +2759,7 @@ def changeUserState(request, user_id, state):
         """
         print("template: ", template)
         send_mail(subject='عدم تایید عملیات ثبت‌نام', message=template, from_email=settings.EMAIL_HOST_USER,recipient_list=[accepted_user.email])
-        
+
 
         return JsonResponse({"status": "rejected"})
 
@@ -3358,7 +3358,7 @@ def filter_doc_fields(res_query, category_id, subject_id,
 
 
 def SearchDocument_ES(request, country_id, category_id, subject_id, from_year, to_year,
-                      
+
                     place, text, search_type, curr_page):
 
     fields = [category_id, subject_id, from_year, to_year]
@@ -3457,7 +3457,7 @@ def SearchDocument_ES(request, country_id, category_id, subject_id, from_year, t
 
         index_name =  index_name_list
     else:
-        
+
         country_obj = Country.objects.get(id=country_id)
         index_name = standardIndexName(country_obj, Document.__name__)
 
@@ -3945,7 +3945,7 @@ def SearchDocuments_Column_ES(request, country_name, category_name, subject_name
 
         index_name =  index_name_list
     else:
-        
+
         country_obj = Country.objects.get(id=country_id)
         index_name = standardIndexName(country_obj, Document.__name__)
 
@@ -4601,6 +4601,161 @@ def GetBM25Similarity(request, document_id):
 
     return JsonResponse({'docs': sim_docs})
 
+def GetDocumentsSimilarity(request, document_id, ):
+    sim_docs = []
+
+    document_country_object = Document.objects.get(id=document_id).country_id
+    main_document_index_name = standardIndexName(document_country_object, Document.__name__)
+
+    country_objects = Country.objects.all()
+    similarity_types = ["BM25"]
+    for country_obj in country_objects:
+        index_name = standardIndexName(country_obj, Document.__name__)
+
+        stopword_list = []
+        all_stopwords = get_stopword_list("all_stopwords.txt")
+        rahbari_stopwords = get_stopword_list("all_stopwords.txt")
+
+        stopword_list.extend(all_stopwords)
+        stopword_list.extend(rahbari_stopwords)
+
+        sim_query = {
+            "more_like_this": {
+                "analyzer": "persian_custom_analyzer",
+                "fields": ["attachment.content"],
+                "like": [
+                    {
+                        "_index": main_document_index_name,
+                        "_id": "{}".format(document_id),
+                    }
+                ],
+                "min_term_freq": 10,
+                "min_word_length": 2,
+                "max_query_terms": 100000,
+                "minimum_should_match": "50%",
+                "stop_words": stopword_list
+            }
+        }
+
+        response = client.search(index=index_name,
+                                 _source_includes=['document_id', 'document_name', 'document_date'],
+                                 request_timeout=40,
+                                 query=sim_query,
+                                 )
+
+        result = response['hits']['hits']
+
+        for item in result:
+            newItem = {"document_id": item["_source"]["document_id"],
+                       "document_name": item["_source"]["document_name"],
+                       "document_date": item["_source"]["document_date"],
+                       "BM25_score": item["_score"],
+                       "country_name": country_obj.name
+                       }
+            sim_docs.append(newItem)
+
+        sim_docs.sort(key=return_score, reverse=True)
+    return JsonResponse({'docs': sim_docs})
+
+def return_score(item):
+    return item["BM25_score"]
+def similarityDetail(request, main_document_id, selected_document_id):
+    country_obj = Document.objects.get(id=main_document_id).country_id
+    base_index_name = standardIndexName(country_obj, Document.__name__)
+    index_name = None
+
+    # if similarity_type == "BM25":
+    #     index_name = base_index_name + "_bm25_index"
+    # elif similarity_type == "DFI":
+    #     index_name = base_index_name + "_dfi_index"
+    # elif similarity_type == "DFR":
+    #     index_name = base_index_name + "_dfr_index"
+
+    res_query = {
+        "bool": {
+            "must": [],
+            "filter": [
+                {
+                    "term": {"document_id": selected_document_id}
+                }
+            ]
+        }
+    }
+    stopword_list = get_stopword_list('rahbari_doc_similarity_stopwords.txt')
+    sim_query = {
+        "more_like_this": {
+            "analyzer": "persian_custom_analyzer",
+            "fields": ["attachment.content"],
+            "like": [
+                {
+                    "_index": index_name,
+                    "_id": "{}".format(main_document_id),
+                }
+            ],
+            "min_term_freq": 10,
+            "min_word_length": 2,
+            "max_query_terms": 100000,
+            "minimum_should_match": "50%",
+            "stop_words": stopword_list
+        }
+    }
+
+    res_query["bool"]["must"].append(sim_query)
+
+    response = client.search(index=index_name,
+                             _source_includes=['document_id', 'name', 'rahbari_date'],
+                             request_timeout=40,
+                             query=res_query,
+                             highlight={
+                                 "type": "fvh",
+                                 "fields": {
+                                     "attachment.content":
+                                         {"pre_tags": ["<span class='text-primary fw-bold'>"], "post_tags": ["</span>"],
+                                          "number_of_fragments": 0
+                                          }
+                                 }
+                             }
+                             )
+
+    result = response['hits']['hits']
+
+    highlighted_result = result[0]['highlight']['attachment.content'][0]
+    splited_list = highlighted_result.split("<span class='text-primary fw-bold'>")
+
+    new_res_query = {
+        "bool": {
+            "filter": [
+                {"term": {
+                    "document_id": main_document_id
+                }
+                }
+            ],
+            "should": []
+        }
+    }
+
+    for item in splited_list:
+        highlighted_word = item.split("</span>")[0]
+        new_res_query["bool"]["should"].append({"match_phrase": {"attachment.content": highlighted_word}})
+
+    new_response = client.search(index=index_name,
+                                 _source_includes=['document_id', 'name', 'rahbari_date'],
+                                 request_timeout=40,
+                                 query=new_res_query,
+                                 highlight={
+                                     "fields": {
+                                         "attachment.content":
+                                             {"pre_tags": ["<span class='text-primary fw-bold'>"],
+                                              "post_tags": ["</span>"],
+                                              "number_of_fragments": 0
+                                              }
+                                     }
+                                 }
+                                 )
+
+    new_result = new_response['hits']['hits']
+
+    return JsonResponse({"similarity_result": result, "main_doc_result": new_result})
 
 def GetDocActorParagraphs_Column_Modal(request, document_id, actor_name, role_name):
     actor_paragraphs = {}
@@ -6441,7 +6596,7 @@ def GetSimilarParagraphs_ByParagraphID(request, paragraph_id):
 
 
 def GetSemanticSimilarParagraphs_ByParagraphID(request, paragraph_id):
-    
+
     # get paragraph vector
     vector_query = {
         'term':{
@@ -6471,7 +6626,7 @@ def GetSemanticSimilarParagraphs_ByParagraphID(request, paragraph_id):
                 }
             },
             "script": {
-                "source": "cosineSimilarity(params.query_vector, 'wikitriplet_vector') + 1.0", 
+                "source": "cosineSimilarity(params.query_vector, 'wikitriplet_vector') + 1.0",
                 "params": {
                 "query_vector": para_vector
                 }
@@ -6487,7 +6642,7 @@ def GetSemanticSimilarParagraphs_ByParagraphID(request, paragraph_id):
                             query=knn_qeury
                             )
 
-    
+
     similar_paragraphs = response['hits']['hits']
 
     return JsonResponse({'similar_paragraphs': similar_paragraphs})

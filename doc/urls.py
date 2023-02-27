@@ -74,6 +74,7 @@ urlpatterns = [
     path('report_bug/', views.report_bug, name='report_bug'),
     path("delete_user/<int:user_id>/", views.DeleteUser, name='DeleteUser'),
     path('GetBM25Similarity/<int:document_id>/', views.GetBM25Similarity, name='GetBM25Similarity'),
+    path('GetDocumentsSimilarity/<int:document_id>/', views.GetDocumentsSimilarity, name='GetDocumentsSimilarity'),
     path('GetDocumentById/<int:id>/', views.GetDocumentById, name='GetDocumentById'),
     path('GetDocumentsByCountryId_Modal/<int:country_id>/<int:start_index>/<int:end_index>/',
          views.GetDocumentsByCountryId_Modal, name='GetDocumentsByCountryId_Modal'),

@@ -564,6 +564,7 @@ async function SelectDocumentFunction(document_id) {
     document.getElementById('document_category').innerHTML = response['category']
     // GetTextSummary()
     ShowResult();
+    BM25Similarity()
     find_rahbari_document_actors(document_id)
 }
 
