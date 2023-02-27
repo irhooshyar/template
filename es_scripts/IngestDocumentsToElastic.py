@@ -54,7 +54,7 @@ class DocumentIndex(ES_Index):
             doc_time = doc['time'] if doc['time'] != None else 'نامشخص'
             doc_hour =  int(doc_time.split(':')[0].strip()) if doc_time != 'نامشخص' else 0
             
-            document_jalili_date = "نامشخص"
+            document_jalili_date = {}
             
             if doc_date!= "نامشخص":
                 year = int(doc_date.split('/')[0])  
