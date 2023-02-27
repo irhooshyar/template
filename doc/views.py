@@ -3403,12 +3403,34 @@ def SearchDocument_ES(request, country_id, category_id, subject_id, from_year, t
             }
         },
 
+        "date-agg": {
+            "terms": {
+                "field": "document_date.keyword",
+                "size": bucket_size
+            }
+        },
+
         "year-agg": {
             "terms": {
                 "field": "document_year",
                 "size": bucket_size
             }
         },
+
+        "month-agg": {
+            "terms": {
+                "field": "document_jalili_date.month.name.keyword",
+                "size": bucket_size
+            }
+        },
+
+        "day-agg": {
+            "terms": {
+                "field": "document_jalili_date.day.name.keyword",
+                "size": bucket_size
+            }
+        },
+
           "hour-agg": {
             "terms": {
                 "field": "document_hour",

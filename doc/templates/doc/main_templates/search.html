@@ -264,6 +264,12 @@
                         aria-controls="bar_chart_info_pane" aria-selected="false">داشبورد آماری</button>
                 </li>
 
+                <li class="nav-item float-right" role="presentation">
+                    <button id="trend_chart_info_tab" class="nav-link" data-bs-toggle="pill"
+                        data-bs-target="#trend_chart_info_pane" type="button" role="tab"
+                        aria-controls="trend_chart_info_pane" aria-selected="false">تحلیل روند</button>
+                </li>
+
                 <!-- Result Count -->
                 <p id="SearchResultLable" class="text-left float-left text-secondary pl-2"></p>
 
@@ -349,10 +355,6 @@
                         <div id="source_name_container" chart-height="350px" class="half">
                         </div>
 
-                        <div id="year_container" chart-height="350px" class="half"></div>
-
-                        <div id="hour_container" chart-height="350px" class="half"></div>
-
                         <div id="category_container" chart-height="1150px" class="full">
                         </div>
 
@@ -360,6 +362,20 @@
                     </div>
                 </div>
 
+
+                <!-- Trend chart Info Pane -->
+                <div dir="rtl" style="min-height: 200px;" class="tab-pane fade float-right w-100"
+                    id="trend_chart_info_pane" role="tabpanel" aria-labelledby="trend_chart_info_tab">
+
+                    <div class="row mt-4 w-100 flex-row-reverse justify-content-around mx-0 px-0">
+                        <div id="date_container" chart-height="350px" class="full"></div>
+                        <div id="year_container" chart-height="350px" class="half"></div>
+                        <div id="month_container" chart-height="350px" class="half"></div>
+                        <div id="day_container" chart-height="350px" class="half"></div>
+                        <div id="hour_container" chart-height="350px" class="half"></div>
+
+                    </div>
+                </div>
 
             </div>
 
@@ -849,17 +865,23 @@
 
             subject_data = ES_Aggregations['subject-agg']['buckets']
             category_data = ES_Aggregations['category-agg']['buckets']
+            jalili_date_data = ES_Aggregations['date-agg']['buckets']
             year_data = ES_Aggregations['year-agg']['buckets']
+            month_data = ES_Aggregations['month-agg']['buckets']
+            day_data = ES_Aggregations['day-agg']['buckets']
             hour_data = ES_Aggregations['hour-agg']['buckets']
+            date_data = ES_Aggregations['date-agg']['buckets']
             source_name_data = ES_Aggregations['source-name-agg']['buckets']
-
 
             /* Show Chart  */
 
             showChartData(subject_data, "subject_container", documents_information_result, false, "موضوع خبر", "توزیع موضوعی اخبار")
             showChartData(category_data, "category_container", documents_information_result, false, "دسته خبر", "توزیع اخبار براساس دسته اخبار")
             showChartData(year_data, "year_container", documents_information_result, true, "سال خبر", "توزیع اخبار براساس سال خبر")
+            showChartData(month_data, "month_container", documents_information_result, true, "ماه خبر", "توزیع اخبار براساس ماه خبر")
+            showChartData(day_data, "day_container", documents_information_result, true, "روز خبر", "توزیع اخبار براساس روز خبر")
             showChartData(hour_data, "hour_container", documents_information_result, true, "ساعت خبر", "توزیع اخبار براساس ساعت خبر")
+            showChartData(date_data, "date_container", documents_information_result, true, "تاریخ خبر", "توزیع اخبار براساس تاریخ خبر")
             showChartData(source_name_data, "source_name_container", documents_information_result, true, "مرجع خبر", "توزیع اخبار براساس مرجع خبر")
 
             stopBlockUI('bar_chart_info_pane', 'داشبورد آماری');
@@ -1107,6 +1129,9 @@
                 xAxisTitle,
                 title,
                 yAxisTitle: "تعداد خبر",
+                sortPersianMonth :(container === "month_container"),
+                sortPersianDate :(container === "date_container"),
+
                 onClick: async function (event, data) {
                     const click_tag = event.domTarget.tag;
                     const index = click_tag["index"]
@@ -1124,7 +1149,8 @@
             };
 
             if (container === "subject_container" ||
-                container === "source_name_container") {
+                container === "source_name_container" ||
+                container === "day_container") {
                 options.onClick = async function (event, data) {
                     const click_tag = event.domTarget.tag;
                     const index = click_tag["index"]
@@ -1142,7 +1168,9 @@
 
                 newDoughnutChart(container, options);
             }
-            else if (container === "hour_container") {
+            else if (container === "hour_container" ||
+             container === "month_container" ||
+             container === "date_container") {
 
                 options.onClick = async function (event, data) {
                     const click_tag_index = event.domTarget.tag;

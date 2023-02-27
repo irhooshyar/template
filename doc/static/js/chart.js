@@ -2,6 +2,22 @@ const palette = anychart.palettes.distinctColors();
 
 palette.items(['#488FB8', '#B8A948', '#8FB848', '#CDC37F', '#CD7F8A', '#B1CD7F', '#CD7FB1', '#7FB1CD', '#7F8ACD', '#CDC37F', '#B1CD7F']);
 
+
+MONTH_NUM = {
+    "فروردین":1,
+    "اردیبهشت":2,
+    "خرداد":3,
+    "تیر":4,
+    "مرداد":5,
+    "شهریور":6,
+    "مهر":7,
+    "آبان":8,
+    "آذر":9,
+    "دی":10,
+    "بهمن":11,
+    "اسفند":12
+}
+
 function newBarChart(container_id, options) {
     const {chartContainerId, chartDownloadId} = newChartContainer(container_id, options);
 
@@ -501,6 +517,17 @@ function newLineChart(container_id, options) {
         // data[0][0] = 'نامشخص'
     }
 
+    if (options.sortPersianMonth){
+        data.sort(function (element_a, element_b) {
+            return MONTH_NUM[element_a[0]] - MONTH_NUM[element_b[0]];
+        });
+    }
+
+    if (options.sortPersianDate){
+        data.sort(function (element_a, element_b) {
+            return Number(element_a[0].replaceAll('/','')) - Number(element_b[0].replaceAll('/',''))
+        });
+    }
 
     data = anychart.data.set(data)
 
@@ -536,7 +563,9 @@ function newLineChart(container_id, options) {
 
     // Not allow labels overlapping
     let xAxis = chart.xAxis();
-    xAxis.overlapMode("allowOverlap");
+    // xAxis.overlapMode("allowOverlap");
+    xAxis.overlapMode("noOverlap");
+    
     xAxis.staggerMode(false);
     xAxis.title(options.xAxisTitle);
     xAxis.title().fontFamily('vazir');
