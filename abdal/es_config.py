@@ -1582,7 +1582,7 @@ FA_Mappings = {
                 "content": {
                     "type": "text",
                     "analyzer": "persian_custom_analyzer",
-                    # "term_vector": "with_positions_offsets",
+                    "term_vector": "with_positions_offsets",
                     "fields": {
                         "keyword": {
                             "type": "keyword",
