@@ -796,7 +796,7 @@ function newMultipleLineChart(container_id, options) {
   var title = chart.tooltip().title();
   title.fontFamily("vazir");
 
-  chart.tooltip().hAlign("center").format("{%value}");
+  // chart.tooltip().hAlign("center").format("{%value}");
 
   chart.yAxis().labels().format("{%value}");
 
