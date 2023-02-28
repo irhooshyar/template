@@ -3500,6 +3500,103 @@ def SearchDocument_ES(request, country_id, category_id, subject_id, from_year, t
         'aggregations': aggregations})
 
 
+
+def GetSentimentTrend_ChartData(request, country_id, category_id, subject_id, from_year, to_year,
+            place, text, search_type, curr_page):
+    
+    fields = [category_id, subject_id, from_year, to_year]
+
+    res_query = {
+        "bool": {}
+    }
+
+    ALL_FIELDS = True
+
+    if not all(field == 0 for field in fields):
+        ALL_FIELDS = False
+        res_query['bool']['filter'] = []
+        res_query = filter_doc_fields(res_query, category_id, subject_id, from_year,
+                                      to_year)
+
+    if text != "empty":
+        res_query["bool"]["must"] = []
+
+        if search_type == 'exact':
+            res_query = exact_search_text(res_query, place, text, ALL_FIELDS)
+        else:
+            res_query = boolean_search_text(res_query, place, text, search_type, ALL_FIELDS)
+
+    # print('search_query')
+    # print(res_query)
+
+    index_name = None
+
+    # ---------------------- Get Chart Data -------------------------
+    res_agg = {
+        "date-sentiment-agg": {
+            "multi_terms": {
+                "terms": [{
+                "field": "document_date.keyword" 
+                }, {
+                "field": "sentiment.keyword"
+                }]
+            }
+        },
+
+
+    }
+
+    from_value = (curr_page - 1) * search_result_size
+
+    if country_id == 0:
+        index_name_list = []
+        country_list = Country.objects.filter(language = "فارسی").exclude(name="تابناک- تست")
+        for country in country_list:
+            index_name = standardIndexName(country, FullProfileAnalysis.__name__)
+            index_name_list.append(index_name)
+
+        index_name =  index_name_list
+    else:
+
+        country_obj = Country.objects.get(id=country_id)
+        index_name = standardIndexName(country_obj, Document.__name__)
+
+    response = client.search(index=index_name,
+                             _source_includes=[],
+                             request_timeout=40,
+                             query=res_query,
+                             aggregations=res_agg,
+                             from_=from_value,
+                             size=search_result_size
+
+                             )
+
+  
+    total_hits = response['hits']['total']['value']
+
+    aggregations = response['aggregations']
+
+    if total_hits == 10000:
+        total_hits = client.count(body={
+            "query": res_query
+        }, index=index_name, doc_type='_doc')['count']
+
+    response = client.search(index=index_name,
+                             request_timeout=40,
+                             query=res_query
+                             )
+    max_score = response['hits']['hits'][0]['_score'] if total_hits > 0 else 1
+    max_score = max_score if max_score > 0 else 1
+
+    return JsonResponse({
+        'total_hits': total_hits,
+        'max_score': max_score,
+        "curr_page": curr_page,
+        'aggregations': aggregations})
+
+
+
+
 def filter_doc_actor_fields(res_query, level_id, subject_id, type_id, approval_reference_id,
                             from_year, to_year, from_advisory_opinion_count, from_interpretation_rules_count,
                             revoked_type_id, organization_type_id):
@@ -5745,7 +5842,7 @@ def GetDetailDocumentById(request, country_id, document_id):
         }
     }
     response = client.search(index=index_name,
-                             _source_includes=['document_id', 'Document_date', 'Document_category_name', 'document_name'],
+                             _source_includes=['document_id', 'document_date', 'category_name', 'document_name'],
                              request_timeout=40,
                              query=res_query)
     result = response['hits']['hits']

@@ -270,6 +270,12 @@
                         aria-controls="trend_chart_info_pane" aria-selected="false">تحلیل روند</button>
                 </li>
 
+
+                <li class="nav-item float-right" role="presentation">
+                    <button id="sentiment_chart_info_tab" class="nav-link" data-bs-toggle="pill"
+                        data-bs-target="#sentiment_chart_info_pane" type="button" role="tab"
+                        aria-controls="sentiment_chart_info_pane" aria-selected="false">تحلیل احساسات</button>
+                </li>
                 <!-- Result Count -->
                 <p id="SearchResultLable" class="text-left float-left text-secondary pl-2"></p>
 
@@ -376,6 +382,16 @@
 
                     </div>
                 </div>
+
+                <!-- Sentiment chart Info Pane -->
+                <div dir="rtl" style="min-height: 200px;" class="tab-pane fade float-right w-100"
+                    id="sentiment_chart_info_pane" role="tabpanel" aria-labelledby="sentiment_chart_info_tab">
+
+                    <div class="row mt-4 w-100 flex-row-reverse justify-content-around mx-0 px-0">
+                        <div id="sentiment_trend_container" chart-height="350px" class="full"></div>
+                    </div>
+                </div>
+
 
             </div>
 
@@ -594,9 +610,9 @@
 
         async function init() {
             container_id_list = ['SearchResultLable', 'SearchTable', 'subject_container',
-                'year_container', 'hour_container', 
+                'year_container', 'hour_container',
                 'source_name_container', 'category_container',
-            'month_container','date_container','day_container']
+                'month_container', 'date_container', 'day_container']
             clearPrevResults(container_id_list)
 
             const country_id = document.getElementById("country").value
@@ -785,8 +801,6 @@
             startBlockUI('SearchTable');
 
 
-            const from_advisory_opinion_count = 0
-            const from_interpretation_rules_count = 0
             request_link = 'http://' + location.host + "/SearchDocument_ES/" + country_id + "/" + category_id + "/" + subject_id + "/" + from_year + "/" + to_year + "/"
                 + place + "/" + text + "/" + search_type + "/" +
                 curr_page + "/"
@@ -810,6 +824,21 @@
                 country_id, category_id,
                 subject_id, from_year, to_year
                 , place, text, search_type);
+
+                GetSentimentTrendChart(country_id, category_id, subject_id,
+            from_year, to_year, place, text, search_type, curr_page)
+        }
+
+        async function GetSentimentTrendChart(country_id, category_id, subject_id,
+            from_year, to_year, place, text, search_type, curr_page) {
+
+            request_link = 'http://' + location.host + "/GetSentimentTrend_ChartData/" + country_id + "/" + category_id + "/" + subject_id + "/" + from_year + "/" + to_year + "/"
+                + place + "/" + text + "/" + search_type + "/" +
+                curr_page + "/"
+
+
+            let response = await fetch(request_link).then(response => response.json());
+                console.log(response)
         }
 
         async function update_table_pagination_input(curr_page, total_hits) {
@@ -1052,38 +1081,6 @@
             newStackedColumnChart(container, options)
         }
 
-
-        async function showReferencesGraph_v2(country_id, level_id, subject_id, type_id, approval_reference_id,
-            from_year, to_year, revoked_type_id, place, text, search_type, curr_page) {
-
-
-            let request_link = '';
-            //notyf.dismissAll();
-
-            const from_advisory_opinion_count = 0
-            const from_interpretation_rules_count = 0
-            request_link = 'http://' + location.host + "/Get_Documents_RefGraph_ES/" + country_id + "/" + level_id + "/" + subject_id + "/" + type_id + "/" +
-                approval_reference_id + "/" + from_year + "/" + to_year + "/" + from_advisory_opinion_count + "/" + from_interpretation_rules_count + "/" +
-                revoked_type_id + "/" + place + "/" + text + "/" + search_type + "/" +
-                curr_page + "/"
-
-
-            let response = await fetch(request_link).then(response => response.json());
-
-            Nodes_data = response["Nodes_data"];
-            Edges_data = response["Edges_data"];
-
-            container = document.getElementById("references_graph_container");
-            const width = 0.88 * window.innerWidth
-            const height = container.scrollHeight || 500;
-
-            let Graph_Object = new MyGraph("references_graph_container", Nodes_data, Edges_data, {}, {}, width, height, "circular", "references_ChangeLayout", true,
-                "Yellow", "references_DegreeSlider", "references_WeightSlider", 1, 1, "references_selected_node_table", "references_selected_edge_table",
-                "references_SelectNeighbourImg", "references_ShowHideImg", "تعداد ارجاع", references_node_dbl_click, references_edge_dbl_click,
-                "references_SearchBox", "references_SearchBtn")
-
-            await Graph_Object.show()
-        }
 
         function references_node_dbl_click(node_data) {
             window.open('http://' + location.host + "/information?id=" + node_data["id"]);

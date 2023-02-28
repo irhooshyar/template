@@ -38,19 +38,19 @@ class FullProfileIndex(ES_Index):
             organizations = [item['word'] for item in organizations_list] if len(organizations_list) != 0 else ['بدون ذکر سازمان']
 
             date = self.paragraph_document_fields[paragraph_id]['date']
-            Document_date = date if date != None else 'نامشخص'
+            document_date = date if date != None else 'نامشخص'
 
             time = self.paragraph_document_fields[paragraph_id]['time']
-            Document_time = time if time != None else 'نامشخص'
+            document_time = time if time != None else 'نامشخص'
 
             labels = self.paragraph_document_fields[paragraph_id]['labels']
-            Document_labels = labels if labels != None else 'نامشخص'
+            document_labels = labels if labels != None else 'نامشخص'
 
-            category_name = self.paragraph_document_fields[paragraph_id]['category_name']
-            Document_category_name = category_name if category_name != None else 'نامشخص'
+            doc_category_name = self.paragraph_document_fields[paragraph_id]['category_name']
+            category_name = doc_category_name if doc_category_name != None else 'نامشخص'
 
-            subject_name = self.paragraph_document_fields[paragraph_id]['subject_name']
-            Document_subject_name = subject_name if subject_name != None else 'نامشخص'
+            doc_subject_name = self.paragraph_document_fields[paragraph_id]['subject_name']
+            subject_name = doc_subject_name if doc_subject_name != None else 'نامشخص'
 
 
             text_bytes = bytes(paragraph_text, encoding="utf8")
@@ -70,11 +70,11 @@ class FullProfileIndex(ES_Index):
                 'locations_object': locations_list,
                 'classification_subject': classification_subject,
                 'organizations_object': organizations_list,
-                "Document_date": Document_date,
-                "Document_time": Document_time,
-                "Document_labels": Document_labels,
-                "Document_category_name": Document_category_name,
-                "Document_subject_name": Document_subject_name,
+                "document_date": document_date,
+                "document_time": document_time,
+                "document_labels": document_labels,
+                "category_name": category_name,
+                "subject_name": subject_name,
                 "data": base64_file
             }
 

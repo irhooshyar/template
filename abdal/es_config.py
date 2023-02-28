@@ -3999,56 +3999,7 @@ FullProfileAnalysis_Mappings = {
             },
         },
          
-        "Document_date": {
-            "type": "text",
-            "fields": {
-                "keyword": {
-                    "type": "keyword",
-                    "ignore_above": 256
-                }
-            }
-        },
 
-        "Document_time": {
-            "type": "text",
-            "fields": {
-                "keyword": {
-                    "type": "keyword",
-                    "ignore_above": 256
-                }
-            }
-        },
-        "Document_labels": {
-            "type": "text",
-            "analyzer": "persian_custom_analyzer",
-            "fields": {
-                "keyword": {
-                    "type": "keyword",
-                    "ignore_above": 1024
-                }
-            }
-        },
-
-        "Document_category_name": {
-            "type": "text",
-            "analyzer": "persian_custom_analyzer",
-            "fields": {
-                "keyword": {
-                    "type": "keyword",
-                    "ignore_above": 1024
-                }
-            }
-        },
-        "Document_subject_name": {
-            "type": "text",
-            "analyzer": "persian_custom_analyzer",
-            "fields": {
-                "keyword": {
-                    "type": "keyword",
-                    "ignore_above": 1024
-                }
-            }
-        },
         "data": {
             "type": "text"
         },
@@ -4068,6 +4019,64 @@ FullProfileAnalysis_Mappings = {
                 }
             }
         },
+
+        "document_year": {
+            "type": "integer"
+        },
+
+        "category_name": {
+            "type": "text",
+            "analyzer": "persian_custom_analyzer",
+            "fields": {
+                "keyword": {
+                    "type": "keyword",
+                    "ignore_above": 1024
+                }
+            }
+        },
+        "subject_name": {
+            "type": "text",
+            "analyzer": "persian_custom_analyzer",
+            "fields": {
+                "keyword": {
+                    "type": "keyword",
+                    "ignore_above": 1024
+                }
+            }
+        },
+        
+        "document_date": {
+            "type": "text",
+            "fields": {
+                "keyword": {
+                    "type": "keyword",
+                    "ignore_above": 256
+                }
+            }
+        },
+
+        "document_time": {
+            "type": "text",
+            "fields": {
+                "keyword": {
+                    "type": "keyword",
+                    "ignore_above": 256
+                }
+            }
+        },
+        "document_labels": {
+            "type": "text",
+            "analyzer": "persian_custom_analyzer",
+            "fields": {
+                "keyword": {
+                    "type": "keyword",
+                    "ignore_above": 1024
+                }
+            }
+        },
+
+        
+
 
         "attachment": {
             "properties": {
