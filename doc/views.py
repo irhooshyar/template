@@ -3539,8 +3539,10 @@ def GetSentimentTrend_ChartData(request, country_id, category_id, subject_id, fr
                 "field": "document_date.keyword" 
                 }, {
                 "field": "sentiment.keyword"
-                }]
+                }],
+                "size": bucket_size
             }
+            
         },
 
 
@@ -3559,7 +3561,7 @@ def GetSentimentTrend_ChartData(request, country_id, category_id, subject_id, fr
     else:
 
         country_obj = Country.objects.get(id=country_id)
-        index_name = standardIndexName(country_obj, Document.__name__)
+        index_name = standardIndexName(country_obj, FullProfileAnalysis.__name__)
 
     response = client.search(index=index_name,
                              _source_includes=[],
@@ -3575,6 +3577,33 @@ def GetSentimentTrend_ChartData(request, country_id, category_id, subject_id, fr
     total_hits = response['hits']['total']['value']
 
     aggregations = response['aggregations']
+    date_sentiment_buckets = aggregations['date-sentiment-agg']['buckets']
+
+    date_sentiment_dict = {}
+    for bucket in date_sentiment_buckets:
+        date = bucket['key'][0]
+        sentiment = bucket['key'][1]
+        doc_count = bucket['doc_count']
+        if date not in date_sentiment_dict:
+            date_sentiment_dict[date] = {
+                "احساس بسیار مثبت":0,
+                "احساس بسیار منفی":0,
+                "احساس مثبت":0,
+                "احساس منفی":0,
+                "بدون ابراز احساسات":0,
+                "احساس خنثی یا ترکیبی از مثبت و منفی":0
+            }
+        else:
+            date_sentiment_dict[date][sentiment] = doc_count
+    
+    date_sentiment_chart_data = []
+    for date,value in date_sentiment_dict.items():
+        date_sentiment_chart_data.append([date,
+                                        value['احساس بسیار منفی'],
+                                        value['احساس منفی'],
+                                        value['احساس مثبت'],
+                                        value['احساس بسیار مثبت']]
+                                        )
 
     if total_hits == 10000:
         total_hits = client.count(body={
@@ -3592,7 +3621,7 @@ def GetSentimentTrend_ChartData(request, country_id, category_id, subject_id, fr
         'total_hits': total_hits,
         'max_score': max_score,
         "curr_page": curr_page,
-        'aggregations': aggregations})
+        'date_sentiment_chart_data': date_sentiment_chart_data})
 
 
 

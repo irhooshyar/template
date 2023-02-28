@@ -838,7 +838,10 @@
 
 
             let response = await fetch(request_link).then(response => response.json());
-                console.log(response)
+            
+            date_sentiment_chart_data = response['date_sentiment_chart_data']
+            console.log(date_sentiment_chart_data)
+            showChart(date_sentiment_chart_data, "sentiment_trend_container", [], true, "تاریخ خبر", "توزیع احساسات اخبار براساس تاریخ خبر")
         }
 
         async function update_table_pagination_input(curr_page, total_hits) {
@@ -1129,7 +1132,8 @@
                 title,
                 yAxisTitle: "تعداد خبر",
                 sortPersianMonth: (container === "month_container"),
-                sortPersianDate: (container === "date_container"),
+                sortPersianDate: (container === "date_container" ||
+                container === "sentiment_trend_container"),
 
                 onClick: async function (event, data) {
                     const click_tag = event.domTarget.tag;
@@ -1196,6 +1200,9 @@
                 }
 
                 newLineChart(container, options)
+            }else if (container === "sentiment_trend_container"){
+                options.yAxisTitle = 'تعداد پاراگراف'
+                newMultipleLineChart(container, options)
             }
             else {
                 newBarChart(container, options)
