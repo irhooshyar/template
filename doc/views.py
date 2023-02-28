@@ -112,7 +112,7 @@ def update_doc(request, id, language, ):
 
     # from scripts.Persian import DocsParagraphVectorExtractor
     # DocsParagraphVectorExtractor.apply(folder_name, file)
-    #
+    #DocsParagraphsClustering_AIParagraphTopicLDA_LDAGraphData
     # from es_scripts import IngestFullProfileAnalysisToElastic
     # IngestFullProfileAnalysisToElastic.apply.after_response(folder_name, file)
 
