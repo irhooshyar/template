@@ -19,7 +19,7 @@ import time
 from elasticsearch import helpers
 from collections import deque
 from scripts.Persian.Preprocessing import standardIndexName
-
+import json
 
 # ---------------------------------------------------------------------------------
 
@@ -86,20 +86,62 @@ def apply(folder, Country,is_for_ref):
         mappings = es_config.EN_Paragraphs_Mappings
 
 
-    Paragraphs_Model = ParagraphVector 
 
-    paragraphs = Paragraphs_Model.objects.filter(
-        paragraph__document_id__country_id__id = Country.id).annotate(
-                para_id = F('paragraph_id')).annotate(
-                doc_id = F('paragraph__document_id__id')).annotate(
-                doc_name = F('paragraph__document_id__name'), 
-                para_text = F('paragraph__text')).values(
 
-        'para_id','doc_id','doc_name',
-        'para_text','vector_value'
-    )
+    # Paragraphs_Model = ParagraphVector 
+
+    # paragraphs = Paragraphs_Model.objects.filter(
+    #     paragraph__document_id__country_id__id = Country.id).annotate(
+    #             para_id = F('paragraph_id')).annotate(
+    #             doc_id = F('paragraph__document_id__id')).annotate(
+    #             doc_name = F('paragraph__document_id__name'), 
+    #             para_text = F('paragraph__text')).values(
+
+    #     'para_id','doc_id','doc_name',
+    #     'para_text','vector_value'
+    # )
+
+    paragraphs = get_paragraphs_list(Country)
+
     print(len(paragraphs))
     new_index = ParagraphVectorIndex(index_name, settings, mappings)
     new_index.create()
     new_index.bulk_insert_documents(folder, paragraphs,do_parallel=True)
 
+def get_paragraphs_list(Country):
+
+    result_paragraphs_list = []
+
+    # get country paragraphs
+    paragraph_list = DocumentParagraphs.objects.filter(document_id__country_id__id = Country.id)
+
+    paragraph_dict = {}
+    for para_obj in paragraph_list:
+        para_res_obj = {
+            "para_id":para_obj.id,
+            "para_text":para_obj.text,
+            "doc_id":para_obj.document_id.id,
+            "doc_name":para_obj.document_id.name,
+            "vector_value":[]
+        }
+        paragraph_dict[para_obj.id] = para_res_obj
+
+    
+    vectorFile = str(Path(config.PERSIAN_PATH, 'vector_result.json'))
+    file = open(vectorFile)
+    file_data = json.load(file)
+
+    ctr = 0
+    for para_id,para_vector in file_data.items():
+        para_id = int(para_id)
+        try:
+            paragraph_dict[para_id]["vector_value"] = para_vector
+            result_paragraphs_list.append(paragraph_dict[para_id])
+            ctr += 1
+        except:
+            print('Paragraph id not existed!')
+
+    file.close()
+    print(f"{ctr}/{len(file_data.keys())} paragraphs found.")
+
+    return result_paragraphs_list
