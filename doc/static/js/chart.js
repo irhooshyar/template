@@ -705,52 +705,34 @@ function newMultipleLineChart(container_id, options) {
   chart.container(chartContainerId);
 
   // create a column series and set the data
-
-//   var no_emotion_series_data = data.mapAs({ x: 0, value: 1 });
-//   var no_emotion_series = chart.line(no_emotion_series_data);
-//   no_emotion_series.name("بدون ابراز احساسات");
-
-//   var neutral_series_data = data.mapAs({ x: 0, value: 2 });
-//   var neutral_series = chart.line(neutral_series_data);
-//   neutral_series.name("احساس خنثی یا ترکیبی از مثبت و منفی");
-
-  var very_negative_series_data = data.mapAs({ x: 0, value: 1 });
-  var very_negative_series = chart.line(very_negative_series_data);
-  very_negative_series.name("احساس بسیار منفی");
+  series_data = options.series_data
+  console.log(series_data)
   
-  // configure the visual settings of the second series
-  very_negative_series.normal().stroke("#D31820", 2, "10 5", "round");
-  very_negative_series.hovered().stroke("#D31820", 4, "10 5", "round");
-  very_negative_series.selected().stroke("#D31820", 6, "10 5", "round");
+  for(series_settings of series_data){
+
+    var current_series_data = data.mapAs(series_settings.map);
+   
+   
+    var current_series = chart.line(current_series_data);
+
+    current_series.name(series_settings.name);
+
+    console.log(series_settings.normal.stroke_color)
+    // configure the visual settings of the second series
+    current_series.normal().stroke(series_settings.normal.stroke_color,
+      series_settings.normal.stroke_thickness,
+       "10 5", "round");
+
+       current_series.hovered().stroke(series_settings.hovered.stroke_color,
+        series_settings.hovered.stroke_thickness,
+      "10 5", "round");
+
+      current_series.selected().stroke(series_settings.selected.stroke_color,
+        series_settings.selected.stroke_thickness,
+       "10 5", "round");
 
 
-  var negative_series_data = data.mapAs({ x: 0, value: 2 });
-  var negative_series = chart.line(negative_series_data);
-  negative_series.name("احساس منفی");
-
-  // configure the visual settings of the second series
-  negative_series.normal().stroke("#E68383", 2, "10 5", "round");
-  negative_series.hovered().stroke("#E68383", 4, "10 5", "round");
-  negative_series.selected().stroke("#E68383", 6, "10 5", "round");
-
-
-  var positive_series_data = data.mapAs({ x: 0, value: 3 });
-  var positive_series = chart.line(positive_series_data);
-  positive_series.name("احساس مثبت");
-  
-  // configure the visual settings of the second series
-  positive_series.normal().stroke("#96F826", 2, "10 5", "round");
-  positive_series.hovered().stroke("#96F826", 4, "10 5", "round");
-  positive_series.selected().stroke("#96F826", 6, "10 5", "round");
-
-
-  var very_positive_series_data = data.mapAs({ x: 0, value: 4 });
-  var very_positive_series = chart.line(very_positive_series_data);
-  very_positive_series.name("احساس بسیار مثبت");
-  // configure the visual settings of the second series
-    very_positive_series.normal().stroke("#0C750B", 2, "10 5", "round");
-    very_positive_series.hovered().stroke("#0C750B", 4, "10 5", "round");
-    very_positive_series.selected().stroke("#0C750B", 6, "10 5", "round");
+  }
 
   chart.animation(true);
   // .padding([10, 40, 5, 20])
@@ -828,7 +810,7 @@ function newMultipleLineChart(container_id, options) {
   legend.position("top");
   legend.align("center");
   legend.itemsLayout("horizontalExpandable");
-
+   legend.padding({top: 10, right: 7, bottom: 7, left: 7})
   // initiate drawing the chart
   chart.draw();
   console.log(

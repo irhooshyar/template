@@ -825,8 +825,8 @@
                 subject_id, from_year, to_year
                 , place, text, search_type);
 
-                GetSentimentTrendChart(country_id, category_id, subject_id,
-            from_year, to_year, place, text, search_type, curr_page)
+            GetSentimentTrendChart(country_id, category_id, subject_id,
+                from_year, to_year, place, text, search_type, curr_page)
         }
 
         async function GetSentimentTrendChart(country_id, category_id, subject_id,
@@ -838,7 +838,7 @@
 
 
             let response = await fetch(request_link).then(response => response.json());
-            
+
             date_sentiment_chart_data = response['date_sentiment_chart_data']
             console.log(date_sentiment_chart_data)
             showChart(date_sentiment_chart_data, "sentiment_trend_container", [], true, "تاریخ خبر", "توزیع احساسات براساس تاریخ خبر")
@@ -1133,7 +1133,7 @@
                 yAxisTitle: "تعداد خبر",
                 sortPersianMonth: (container === "month_container"),
                 sortPersianDate: (container === "date_container" ||
-                container === "sentiment_trend_container"),
+                    container === "sentiment_trend_container"),
 
                 onClick: async function (event, data) {
                     const click_tag = event.domTarget.tag;
@@ -1200,8 +1200,80 @@
                 }
 
                 newLineChart(container, options)
-            }else if (container === "sentiment_trend_container"){
+            } else if (container === "sentiment_trend_container") {
                 options.yAxisTitle = 'تعداد پاراگراف'
+                options.series_data = [
+                    {   
+                        "map":{x:0,value:1},
+                        "name":"احساس بسیار منفی",
+                        "normal": {
+                            "stroke_color": "#D31820",
+                            "stroke_thickness": 2
+                        },
+                        "hovered": {
+                            "stroke_color": "#D31820",
+                            "stroke_thickness": 4
+                        },
+                        "selected": {
+                            "stroke_color": "#D31820",
+                            "stroke_thickness": 6
+                        },
+                    },
+                
+                    {   
+                        "map":{x:0,value:2},
+                        "name":"احساس منفی",
+                        "normal": {
+                            "stroke_color": "#E68383",
+                            "stroke_thickness": 2
+                        },
+                        "hovered": {
+                            "stroke_color": "#E68383",
+                            "stroke_thickness": 4
+                        },
+                        "selected": {
+                            "stroke_color": "#E68383",
+                            "stroke_thickness": 6,
+                        },
+                    }
+                    ,
+                    {   
+                        "map":{x:0,value:3},
+                        "name":"احساس مثبت",
+                        "normal": {
+                            "stroke_color": "#96F826",
+                            "stroke_thickness": 2
+                        },
+                        "hovered": {
+                            "stroke_color": "#96F826",
+                            "stroke_thickness": 4
+                        },
+                        "selected": {
+                            "stroke_color": "#96F826",
+                            "stroke_thickness": 6
+                        },
+                    }
+              
+                    ,
+                    {   
+                        "map":{x:0,value:4},
+                        "name":"احساس بسیار مثبت",
+                        "normal": {
+                            "stroke_color": "#0C750B",
+                            "stroke_thickness": 2
+                        },
+                        "hovered": {
+                            "stroke_color": "#0C750B",
+                            "stroke_thickness": 4,
+
+                        },
+                        "selected": {
+                            "stroke_color": "#0C750B",
+                            "stroke_thickness": 6
+                        },
+                    }
+              
+                ]
                 newMultipleLineChart(container, options)
             }
             else {
