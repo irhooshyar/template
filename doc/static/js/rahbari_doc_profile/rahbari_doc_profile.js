@@ -292,7 +292,7 @@ async function generatePDF() {
         "<div8 class='d-flex'> <span>&nbsp;</span>  </div8> " +
         "<div9 class='d-flex'>  <span>&nbsp;</span>  </div9> </div7> " +
 
-        "<div3 class='d-flex' style='justify-content: space-between;width: 100%'>" + "<div4 > <p>سامانه ستار</p> </div4> " +
+        "<div3 class='d-flex' style='justify-content: space-between;width: 100%'>" + "<div4 > <p>سامانه خبرکاو</p> </div4> " +
         "<div5> <span>rahnamud.ir:7074</span> </div5> </div3> </div2> </div1>"
 
     for (let i = 0; i < response.length; i++) {
@@ -564,6 +564,7 @@ async function SelectDocumentFunction(document_id) {
     document.getElementById('document_category').innerHTML = response['category']
     // GetTextSummary()
     ShowResult();
+    BM25Similarity()
     find_rahbari_document_actors(document_id)
 }
 

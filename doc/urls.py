@@ -74,6 +74,7 @@ urlpatterns = [
     path('report_bug/', views.report_bug, name='report_bug'),
     path("delete_user/<int:user_id>/", views.DeleteUser, name='DeleteUser'),
     path('GetBM25Similarity/<int:document_id>/', views.GetBM25Similarity, name='GetBM25Similarity'),
+    path('GetDocumentsSimilarity/<int:document_id>/', views.GetDocumentsSimilarity, name='GetDocumentsSimilarity'),
     path('GetDocumentById/<int:id>/', views.GetDocumentById, name='GetDocumentById'),
     path('GetDocumentsByCountryId_Modal/<int:country_id>/<int:start_index>/<int:end_index>/',
          views.GetDocumentsByCountryId_Modal, name='GetDocumentsByCountryId_Modal'),
@@ -82,6 +83,13 @@ urlpatterns = [
     path(
         'SearchDocument_ES/<int:country_id>/<int:category_id>/<int:subject_id>/<int:from_year>/<int:to_year>/<str:place>/<str:text>/<str:search_type>/<int:curr_page>/',
         views.SearchDocument_ES, name='SearchDocument_ES'),
+    
+    path(
+        'GetSentimentTrend_ChartData/<int:country_id>/<int:category_id>/<int:subject_id>/<int:from_year>/<int:to_year>/<str:place>/<str:text>/<str:search_type>/<int:curr_page>/',
+        views.GetSentimentTrend_ChartData, name='GetSentimentTrend_ChartData'),
+
+    
+    
     path(
         'SearchDocuments_Column_ES/<str:country_name>/<str:subject_name>/<str:category_name>/<str:from_year>/<str:to_year>/<str:place>/<str:text>/<str:search_type>/<int:curr_page>/',
         views.SearchDocuments_Column_ES, name='SearchDocuments_Column_ES'),

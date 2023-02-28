@@ -209,7 +209,7 @@
         <li class="nav-item float-right" role="presentation">
             <button id="sim_document_tab" class="nav-link" data-bs-toggle="pill"
                     data-bs-target="#sim_document_pane" type="button" role="tab"
-                    aria-controls="sim_document_pane" aria-selected="false">شباهت‌یابی میان اخبار
+                    aria-controls="sim_document_pane" aria-selected="false">شباهت‌یابی ظاهری میان اخبار
             </button>
         </li>
 
@@ -316,8 +316,17 @@
                     <i class="far fa-file-excel text-success m-0" style="font-size: 25px;margin: 0px;"></i>
                 </button>
             </div>
-            <table id="DocProfileActorsTable" class="table table-striped PopUpTable">
-            </table>
+             <div dir="rtl" id="search_result_pane" class="tab-pane w-100 fade show active float-right"
+                 role="tabpanel" aria-labelledby="search_result_tab">
+                <!-- Search Result table -->
+                <div class="table-responsive search_result_table mt-4">
+                    <table class="table table-striped SimilarityTable" style="min-height: 200px;" id="SimilarityTable">
+                    </table>
+                </div>
+
+            </div>
+{#            <table id="DocProfileActorsTable" class="table table-striped PopUpTable">#}
+{#            </table>#}
 
         </div>
 
@@ -656,10 +665,11 @@
 </div>
 
 </body>
-<script src="../../static/js/rahbari_doc_profile/rahbari_document_profile_statistic.js"></script>
-<script src="../../static/js/rahbari_doc_profile/rahbari_doc_profile.js"></script>
+<script src="../../../static/js/rahbari_doc_profile/rahbari_document_profile_statistic.js"></script>
+<script src="../../../static/js/rahbari_doc_profile/rahbari_doc_profile.js"></script>
+<script src="../../../static/js/rahbari_doc_profile/rahbari_doc_ES_similarity.js"></script>
 {#<script src="../../static/js/rahbari_doc_profile/rahbari_document_real_person.js"></script>#}
 {#<script src="../../static/js/rahbari_doc_profile/rahbari_document_locations.js"></script>#}
-<script src="../../static/js/rahbari_doc_profile/rahbari_document_actors.js"></script>
+<script src="../../../static/js/rahbari_doc_profile/rahbari_document_actors.js"></script>
 {#<script src="../../static/js/rahbari_doc_profile/rahbari_document_summary.js"></script>#}
 </html>
