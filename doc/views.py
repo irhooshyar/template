@@ -4767,6 +4767,7 @@ def GetDocumentsSimilarity(request, document_id, ):
                                  _source_includes=['document_id', 'document_name', 'document_date'],
                                  request_timeout=40,
                                  query=sim_query,
+                                 size=100
                                  )
 
         result = response['hits']['hits']
@@ -4781,14 +4782,16 @@ def GetDocumentsSimilarity(request, document_id, ):
             sim_docs.append(newItem)
 
         sim_docs.sort(key=return_score, reverse=True)
-    return JsonResponse({'docs': sim_docs})
+    return JsonResponse({'docs': sim_docs[:20]})
 
 def return_score(item):
     return item["BM25_score"]
-def similarityDetail(request, main_document_id, selected_document_id):
+def similarityDetail(request, main_document_id, selected_document_id, selected_country_name):
     country_obj = Document.objects.get(id=main_document_id).country_id
     base_index_name = standardIndexName(country_obj, Document.__name__)
-    index_name = None
+
+    selected_country_object = Country.objects.get(name=selected_country_name)
+    selected_index_name = standardIndexName(selected_country_object, Document.__name__)
 
     # if similarity_type == "BM25":
     #     index_name = base_index_name + "_bm25_index"
@@ -4807,29 +4810,34 @@ def similarityDetail(request, main_document_id, selected_document_id):
             ]
         }
     }
-    stopword_list = get_stopword_list('rahbari_doc_similarity_stopwords.txt')
+    stopword_list = []
+    all_stopwords = get_stopword_list("all_stopwords.txt")
+    rahbari_stopwords = get_stopword_list("all_stopwords.txt")
+
+    stopword_list.extend(all_stopwords)
+    stopword_list.extend(rahbari_stopwords)
     sim_query = {
         "more_like_this": {
             "analyzer": "persian_custom_analyzer",
             "fields": ["attachment.content"],
             "like": [
                 {
-                    "_index": index_name,
+                    "_index": base_index_name,
                     "_id": "{}".format(main_document_id),
                 }
             ],
-            "min_term_freq": 10,
+            "min_term_freq": 5,
             "min_word_length": 2,
             "max_query_terms": 100000,
-            "minimum_should_match": "50%",
+            "minimum_should_match": "20%",
             "stop_words": stopword_list
         }
     }
 
     res_query["bool"]["must"].append(sim_query)
 
-    response = client.search(index=index_name,
-                             _source_includes=['document_id', 'name', 'rahbari_date'],
+    response = client.search(index=selected_index_name,
+                             _source_includes=['document_id', 'document_name'],
                              request_timeout=40,
                              query=res_query,
                              highlight={
@@ -4864,8 +4872,8 @@ def similarityDetail(request, main_document_id, selected_document_id):
         highlighted_word = item.split("</span>")[0]
         new_res_query["bool"]["should"].append({"match_phrase": {"attachment.content": highlighted_word}})
 
-    new_response = client.search(index=index_name,
-                                 _source_includes=['document_id', 'name', 'rahbari_date'],
+    new_response = client.search(index=base_index_name,
+                                 _source_includes=['document_id', 'document_name'],
                                  request_timeout=40,
                                  query=new_res_query,
                                  highlight={
