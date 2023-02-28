@@ -995,7 +995,7 @@
 
                 // showChartData(country_id, subject_data, "subject_container", documents_information_result, false, "موضوع حکم")
                 showChartData(country_id, cluster_id, document_year_data, "year_container", true, "سال خبر", "توزیع پاراگراف‌ها براساس سال اخبار")
-                showHistogramChart(country_id, cluster_id, subject_data, "subject_container", false, "موضوع خبر", "توزیع پاراگراف‌ها براساس موضوع")
+                showChartData(country_id, cluster_id, subject_data, "subject_container", false, "موضوع خبر", "توزیع پاراگراف‌ها براساس موضوع")
                 showChartData(country_id, cluster_id, category_data, "category_container", false, "دسته خبر", "توزیع پاراگراف‌ها براساس دسته اخبار")
 
             }).fail(function (res) {
@@ -1061,11 +1061,18 @@
                 data,
                 yAxisTitle: "تعداد پاراگراف‌ها",
                 sortKeys,
-                onclick: async function (event, data) {
+                onClick: async function (event, data) {
                     const click_tag = event.domTarget.tag;
                     const index = click_tag["index"]
 
-                    let field_value = data.row(index)[0];
+                    let field_value = ""
+                    if (position == "subject_container") {
+                        field_value = data[index][0];
+                    }
+                    else {
+                        field_value = data.row(index)[0];
+
+                    }
                     let field_name = CHART_FIELD_DICT[position] + ".keyword"
                     let chart_name = CHART_NAME_DICT[position]
 
@@ -1082,7 +1089,11 @@
 
                 }
             }
-            newBarChart(position, options)
+            if(position == "subject_container"){
+                newDoughnutChart(position, options);
+            }else{
+                newBarChart(position, options)
+            }
         }
 
     async function GetClickedColumnParagraphs(country_id, cluster_id, chart_name, field_name, field_value) {
