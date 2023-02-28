@@ -512,7 +512,7 @@
                 }
             }, {
                 "name": "paragraph_text",
-                "title": "متن حکم",
+                "title": "متن پاراگراف",
                 "style": {
                     "width": "60%"
                 }
@@ -935,7 +935,7 @@
                 "body_id": "paraDetailText",
                 "modal_load_more_btn_id": "LoadMoreDocuments",
                 "result_size_container_id": "DocsCount",
-                "result_size_message": "حکم",
+                "result_size_message": "پاراگراف",
                 "list_type": "ordered",
                 "custom_body_function": null,
                 "body_parameters": null,
@@ -993,7 +993,7 @@
 
 
 
-                // showChartData(country_id, subject_data, "subject_container", documents_information_result, false, "موضوع حکم")
+                // showChartData(country_id, subject_data, "subject_container", documents_information_result, false, "موضوع پاراگراف")
                 showChartData(country_id, cluster_id, document_year_data, "year_container", true, "سال خبر", "توزیع پاراگراف‌ها براساس سال اخبار")
                 showChartData(country_id, cluster_id, subject_data, "subject_container", false, "موضوع خبر", "توزیع پاراگراف‌ها براساس موضوع")
                 showChartData(country_id, cluster_id, category_data, "category_container", false, "دسته خبر", "توزیع پاراگراف‌ها براساس دسته اخبار")
@@ -1140,7 +1140,7 @@
             "body_id": "paraDetailText",
             "modal_load_more_btn_id": "LoadMoreDocuments",
             "result_size_container_id": "DocsCount",
-            "result_size_message": "حکم",
+            "result_size_message": "پاراگراف",
             "list_type": "ordered",
             "custom_body_function": null,
             "body_parameters": null
@@ -1229,7 +1229,7 @@
 
                     paragraph_link = 'http://' + location.host + "/sentiment_analysis/?id=" + paragraph_id;
 
-                    paragraph_tag = "<a class='' title = 'پروفایل حکم' target='blank' href='" + paragraph_link + "'>" + paragraph_text + "</a>"
+                    paragraph_tag = "<a class='' title = 'پروفایل پاراگراف' target='blank' href='" + paragraph_link + "'>" + paragraph_text + "</a>"
 
 
                     const tag = "<li class='mb-3 lh-lg'>" + doc_name + paragraph_tag + "</li>"
@@ -1239,7 +1239,7 @@
 
                 modal_content = "<ol start='" + 1 + "'>" + body_content + "</ol>"
                 document.getElementById("paraDetailText").innerHTML += modal_content
-                document.getElementById("DocsCount").innerHTML = total_hits + ' حکم:'
+                document.getElementById("DocsCount").innerHTML = total_hits + ' پاراگراف:'
 
 
             }).fail(function (res) {
