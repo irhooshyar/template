@@ -3609,7 +3609,10 @@ def GetSentimentTrend_ChartData(request, country_id, category_id, subject_id, fr
                                         value['احساس بسیار منفی'],
                                         value['احساس منفی'],
                                         value['احساس مثبت'],
-                                        value['احساس بسیار مثبت']]
+                                        value['احساس بسیار مثبت'],
+                                        value['بدون ابراز احساسات'],
+                                        value["احساس خنثی یا ترکیبی از مثبت و منفی"]
+                                        ]
                                         )
 
     if total_hits == 10000:
