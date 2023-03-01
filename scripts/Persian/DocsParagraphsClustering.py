@@ -610,15 +610,15 @@ NGRAM_TYPES = [(1,1)]
 
 def apply(folder_name, Country):
 
-    for ngram in NGRAM_TYPES:
+    # for ngram in NGRAM_TYPES:
 
-        get_vocabulary(Country,ngram)
+    #     get_vocabulary(Country,ngram)
         
-        if Country.name == "فاوا":
-            create_dendrogram(folder_name, Country,ngram)
+    #     if Country.name == "فاوا":
+    #         create_dendrogram(folder_name, Country,ngram)
 
 
-    kmeans_clustering(folder_name, Country)
+    # kmeans_clustering(folder_name, Country)
 
     # agglomerative_clustering(folder_name,Country)
 
@@ -630,20 +630,20 @@ def apply(folder_name, Country):
 
     # ---- Create Graph Data ---------------------------
 
-    Country.status = "ClusteringGraphData"
-    Country.save()
+    # Country.status = "ClusteringGraphData"
+    # Country.save()
 
-    ClusteringGraphData.apply(Country)
+    # ClusteringGraphData.apply(Country)
 
-    # ---- Ingest paragraphs topic ---------
+    # # ---- Ingest paragraphs topic ---------
     
-    Country.status = "IngestClusteringParagraphsToElastic"
-    Country.save()    
-    IngestClusteringParagraphsToElastic.apply(folder_name,Country)
+    # Country.status = "IngestClusteringParagraphsToElastic"
+    # Country.save()    
+    # IngestClusteringParagraphsToElastic.apply(folder_name,Country)
 
-    # ---------------- end of apply -------------------
-    Country.status = "Done"
-    Country.save()
+    # # ---------------- end of apply -------------------
+    # Country.status = "Done"
+    # Country.save()
 
 
 def run_Agglomerative(n_clusters,data):

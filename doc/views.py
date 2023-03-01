@@ -8,7 +8,7 @@ from django.utils import timezone
 from django.conf import settings
 from django.utils.crypto import get_random_string
 from django.forms import FileField
-from doc.forms import ZipFileForm
+from doc.forms import ZipFileForm, CaptchaTestForm
 from doc.models import *
 from scripts import ZipFileExtractor, StratAutomating
 from abdal import es_config
@@ -104,8 +104,9 @@ def update_doc(request, id, language, ):
     file.save()
 
     StratAutomating.apply.after_response(folder_name, file,
-                                         "DocsParagraphsClustering_AIParagraphTopicLDA_LDAGraphData",
-                                         host_url)  # AdvanceARIMAExtractor_ ActorTimeSeriesPrediction _DocsSubjectExtractor_DocsLevelExtractor_DocsReferencesExtractor_DocsActorsTimeSeriesDataExtractor_DocsCreateDocumentsListCubeData_DocsCreateSubjectCubeData_DocsCreateVotesCubeData_DocsCreateSubjectStatisticsCubeData_DocsCreateTemplatePanelsCubeData_DocsAnalysisLeadershipSlogan_DocsCreatePrinciplesCubeData_DocCreateBusinessAdvisorCubeData_DocsCreateRegularityLifeCycleCubeData_DocsExecutiveParagraphsExtractor_DocsClauseExtractor_DocsGraphCubeData_DocsCreateMandatoryRegulationsCubeData_DocsExecutiveClausesExtractor_DocsCreateActorInformationStackChartCubeData
+                                             "DocsParagraphsClustering",
+                                             host_url)  # AdvanceARIMAExtractor_ ActorTimeSeriesPrediction _DocsSubjectExtractor_DocsLevelExtractor_DocsReferencesExtractor_DocsActorsTimeSeriesDataExtractor_DocsCreateDocumentsListCubeData_DocsCreateSubjectCubeData_DocsCreateVotesCubeData_DocsCreateSubjectStatisticsCubeData_DocsCreateTemplatePanelsCubeData_DocsAnalysisLeadershipSlogan_DocsCreatePrinciplesCubeData_DocCreateBusinessAdvisorCubeData_DocsCreateRegularityLifeCycleCubeData_DocsExecutiveParagraphsExtractor_DocsClauseExtractor_DocsGraphCubeData_DocsCreateMandatoryRegulationsCubeData_DocsExecutiveClausesExtractor_DocsCreateActorInformationStackChartCubeData
+
 
     # from scripts.Persian import DocsParagraphVectorExtractor
     # DocsParagraphVectorExtractor.apply(folder_name, file)
@@ -378,7 +379,8 @@ def notes(request):
 
 @unathenticated_user
 def signup(request):
-    return render(request, "doc/user_templates/signup.html")
+    form = CaptchaTestForm()
+    return render(request, "doc/user_templates/signup.html",  {'form_data': form})
 
 
 @unathenticated_user
@@ -408,6 +410,11 @@ def ShowUserProfile(request):
 
 def sentiment_analysis_panel(request):
     return render(request, 'doc/main_templates/paragraph_profile.html')
+
+
+@allowed_users('admin_accept_user_comments')
+def resource_profile(request):
+    return render(request, 'doc/main_templates/resource_profile.html')
 
 
 def upload_zip_file(request):
@@ -1294,8 +1301,7 @@ def forgot_password_by_email(request, email):
 
     در صورتی که قصد بازیابی ندارید این پیام را نادیده بگیرید.
     """
-    template += f'http://rahnamud.ir:7074/reset-password/{user.id}/{token}'
-
+    template += f'http://virtualjuristic.datakaveh.com:7090/reset-password/{user.id}/{token}'
     send_mail(
         subject='بازیابی کلمه عبور',
         message=template,
@@ -2079,13 +2085,13 @@ def exact_search_text(res_query, place, text, ALL_FIELDS):
         if text_list.__len__() == 1:
             title_query = {
                 "match_phrase": {
-                    "name": text
+                    "document_name": text
                 }
             }
         else:
             title_query = {
                 "terms": {
-                    "name.keyword": text_list
+                    "document_name.keyword": text_list
                 }
             }
 
@@ -2153,7 +2159,7 @@ def exact_search_text(res_query, place, text, ALL_FIELDS):
                 "should": [
                     {
                         "match_phrase": {
-                            "name": text
+                            "document_name": text
                         }
                     },
                     {
@@ -2178,7 +2184,7 @@ def boolean_search_text(res_query, place, text, operator, ALL_FIELDS):
     if place == 'عنوان':
         title_query = {
             "match": {
-                "name": {
+                "document_name": {
                     "query": text,
                     "operator": operator
                 }
@@ -2252,7 +2258,7 @@ def boolean_search_text(res_query, place, text, operator, ALL_FIELDS):
                 "should": [
                     {
                         "match": {
-                            "name": {
+                            "document_name": {
                                 "query": text,
                                 "operator": operator
                             }
@@ -2395,6 +2401,7 @@ def save_lda_topic_label(request, topic_id, username, label):
 
 def save_topic_label(request, topic_id, username, label):
     result_response = ""
+    topic_id = topic_id.replace('11','(1, 1)').replace('22','(2, 2)')
 
     user = User.objects.get(username=username)
     topic = ClusterTopic.objects.get(id=topic_id)
@@ -2436,14 +2443,20 @@ def confirm_email(user):
     user.email_confirm_code = email_code
     user.save()
 
-    template = f"""
-    لطفا برای تایید ثبت نام خود روی لینک زیر کلیک کنید. 
-    دقت فرمایید که مهلت استفاده از این کد، "دو روز" است و در صورت منقضی شدن لینک، باید مجددا وارد بخش ثبت‌نام سامانه شوید و روی لینک ارسال مجدد کد تایید، کلیک فرمایید. 
-    کد تایید ایمیل: {email_code}
-    """
-    template += f'http://rahnamud.ir:7074/Confirm-Email/{user.id}/{token}'
-    print("template: ", template)
+    send_email(user, email_code, token)
 
+def send_email(user, email_code, token):
+    template = f"""
+    لطفا برای تایید ثبت نام خود، کد تایید ایمیل را در کادر "کد تایید" موجود در صفحه ثبت‌نام، وارد نمایید.
+    کد تایید ایمیل: {email_code}
+    
+    -----------------------------------------------------------------------------------------------------------------------------
+    در صورتی که بعد از زدن دکمه‌ی ثبت‌نام، پنجره‌ی ثبت‌نام را بسته‌اید، از لینک زیر برای وارد کردن کد تایید استفاده نمایید.
+    دقت فرمایید که مهلت استفاده از این کد برای وارد کردن در لینک زیر، "دو روز" است و در صورت منقضی شدن لینک، باید مجددا وارد بخش ثبت‌نام سامانه شوید و برای دریافت کد جدید، روی لینک ارسال مجدد کد تایید، کلیک فرمایید. 
+
+    """
+
+    template += f'http://virtualjuristic.datakaveh.com:7090/Confirm-Email/{user.id}/{token}'
     send_mail(subject='کد تایید ایمیل', message=template, from_email=settings.EMAIL_HOST_USER,
               recipient_list=[user.email])
 
@@ -2457,8 +2470,9 @@ def resend_email_code(request, email):
     user = users[0]
     if user.account_acctivation_expire_time < timezone.now() and user.enable == 0:
         confirm_email(user)
+    elif user.account_acctivation_expire_time > timezone.now() and user.enable == 0:
+        send_email(user, user.email_confirm_code, user.account_activation_token)
     return JsonResponse({"status": "OK"})
-
 
 def email_check(request, user_id, token):
     url_is_valid = False
@@ -2479,19 +2493,42 @@ def user_activation(request, user_id, token, code):
 
     if (not (
             user.account_activation_token is None)) and user.account_activation_token == token and user.account_acctivation_expire_time >= timezone.now():
-        print("code: ", code)
-        print("user_code: ", user.email_confirm_code)
         if (user.email_confirm_code == code):
             user.account_activation_token = None
             user.enable = 1
             user.save()
+
+
+            template = f"""
+            ثبت‌نام شما با موفقیت انجام شد. تایید شما توسط ادمین، بررسی خواهد شد. نتیجه‌ی بررسی ادمین، در ایمیل، برای شما ارسال می‌شود.
+            """
+            send_mail(subject='عملیات ثبت‌نام', message=template, from_email=settings.EMAIL_HOST_USER,
+                      recipient_list=[user.email])
             return JsonResponse({"status": "OK"})
+
         else:
             user.save()
             return JsonResponse({"status": "Not OK"})
 
     return JsonResponse({"status": "Not OK"})
 
+def signup_user_activation(request, email, code):
+    user = User.objects.get(email=email)
+    if (user.email_confirm_code == code):
+        user.account_activation_token = None
+        user.enable = 1
+        user.save()
+
+        template = f"""
+        ثبت‌نام شما با موفقیت انجام شد. تایید شما توسط ادمین، بررسی خواهد شد. نتیجه‌ی بررسی ادمین، در ایمیل، برای شما ارسال می‌شود.
+        """
+        send_mail(subject='عملیات ثبت‌نام', message=template, from_email=settings.EMAIL_HOST_USER,
+                  recipient_list=[user.email])
+        return JsonResponse({"status": "OK"})
+
+    else:
+        user.save()
+        return JsonResponse({"status": "Not OK"})
 
 def SaveUser(request, firstname, lastname, email, phonenumber, role, username, password, ip, expertise,
              other_expertise):
@@ -2505,16 +2542,16 @@ def SaveUser(request, firstname, lastname, email, phonenumber, role, username, p
         hashed_pwd = make_password(password)
         last_login = datetime.datetime.now()
         user = User.objects.create(first_name=firstname, last_name=lastname, email=email,
-                                   role_id=role,
-                                   mobile=phonenumber, username=username, password=hashed_pwd, last_login=last_login,
-                                   is_super_user=0, is_active=0, other_expertise=other_expertise)
+                                role_id=role,
+                                mobile=phonenumber, username=username, password=hashed_pwd, last_login=last_login,
+                                is_super_user=0, is_active=0)
 
         for e in expertise.split(','):
             User_Expertise.objects.create(user_id_id=user.id, experise_id_id=e)
         SaveUserLog(user.id, ip, "signup")
         confirm_email(user)
+        return JsonResponse({"status": "OK"})
 
-    return JsonResponse({"status": "OK"})
 
 
 def SetMyUserProfile(request):
@@ -2736,10 +2773,10 @@ def changeUserState(request, user_id, state):
         template = f"""
         ثبت‌نام شما با موفقیت انجام شده است. تایید شما توسط ادمین انجام شد. هم‌اکنون، می‌توانید وارد سامانه شوید.
         """
-        template += f'http://rahnamud.ir:707/login/'
-        print("template: ", template)
-        send_mail(subject='تایید عملیات ثبت‌نام', message=template, from_email=settings.EMAIL_HOST_USER,
-                  recipient_list=[accepted_user.email])
+        template += f'http://virtualjuristic.datakaveh.com:7090/login/'
+        
+        send_mail(subject='تایید عملیات ثبت‌نام', message=template, from_email=settings.EMAIL_HOST_USER,recipient_list=[accepted_user.email])
+
 
         return JsonResponse({"status": "accepted"})
     elif state == "rejected":
@@ -2750,9 +2787,7 @@ def changeUserState(request, user_id, state):
         template = f"""
         متاسفانه ثبت‌نام شما توسط ادمین رد شده است.
         """
-        print("template: ", template)
-        send_mail(subject='عدم تایید عملیات ثبت‌نام', message=template, from_email=settings.EMAIL_HOST_USER,
-                  recipient_list=[accepted_user.email])
+        send_mail(subject='عدم تایید عملیات ثبت‌نام', message=template, from_email=settings.EMAIL_HOST_USER,recipient_list=[accepted_user.email])
 
         return JsonResponse({"status": "rejected"})
 
@@ -3475,7 +3510,9 @@ def SearchDocument_ES(request, country_id, category_id, subject_id, from_year, t
                              )
     max_score = response['hits']['hits'][0]['_score'] if total_hits > 0 else 1
     max_score = max_score if max_score > 0 else 1
-
+    print(index_name)
+    print(res_query)
+    print(result)
     return JsonResponse({
         "result": result,
         'total_hits': total_hits,
@@ -3579,11 +3616,14 @@ def GetSentimentTrend_ChartData(request, country_id, category_id, subject_id, fr
     date_sentiment_chart_data = []
     for date, value in date_sentiment_dict.items():
         date_sentiment_chart_data.append([date,
-                                          value['احساس بسیار منفی'],
-                                          value['احساس منفی'],
-                                          value['احساس مثبت'],
-                                          value['احساس بسیار مثبت']]
-                                         )
+                                        value['احساس بسیار منفی'],
+                                        value['احساس منفی'],
+                                        value['احساس مثبت'],
+                                        value['احساس بسیار مثبت'],
+                                        value['بدون ابراز احساسات'],
+                                        value["احساس خنثی یا ترکیبی از مثبت و منفی"]
+                                        ]
+                                        )
 
     if total_hits == 10000:
         total_hits = client.count(body={
@@ -6913,3 +6953,23 @@ def AILDASubjectChartTopicGetInformationExport(request, topic_id, subject_name, 
     file_dataframe.to_excel(file_path, index=False)
 
     return JsonResponse({"file_name": file_name})
+
+def GetResourceInformation(request):
+    document_object = Document.objects.all().values("country_id_id", "country_id__name").annotate(
+        doc_count=Count("id"),
+        min_date=Min("date"),
+        max_date=Max("date"),
+    )
+    result = []
+    for row in document_object:
+        res = {
+            "country_id": row["country_id_id"],
+            "country_name": row["country_id__name"],
+            "doc_count": row["doc_count"],
+            "paragraph_count": DocumentParagraphs.objects.filter(document_id__country_id__id=row["country_id_id"]).count(),
+            "min_date": row["min_date"],
+            "max_date": row["max_date"],
+        }
+        result.append(res)
+
+    return JsonResponse({"resource_information": result})

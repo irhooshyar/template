@@ -64,11 +64,11 @@ class DocumentIndex(ES_Index):
                 document_jalili_date = {
                     "year":doc_year,
                     "month":{
-                        "name":JalaliDate.to_jalali(year, month, day).strftime('%B',locale = 'fa'),
+                        "name":JalaliDate(year, month, day,locale = 'fa').strftime('%B',locale = 'fa'),
                         "number": month
                     },
                     "day":{
-                        "name":JalaliDate.to_jalali(year, month, day).strftime('%A',locale = 'fa'),
+                        "name":JalaliDate(year, month, day,locale = 'fa').strftime('%A',locale = 'fa'),
                         "number": day
                     },
                     "hour":doc_hour

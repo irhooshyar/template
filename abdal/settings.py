@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     "corsheaders",
     'doc',
+    'captcha',
     'django_extensions',
     'after_response',
     'rest_framework'
@@ -167,13 +168,12 @@ LOCAL_SETTING = {
 #     },
 # }
 
-
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'mail.irhooshyar.com'
 EMAIL_PORT = 465
 EMAIL_USE_SSL = True
-EMAIL_HOST_USER = 'support@irhooshyar.com'
-EMAIL_HOST_PASSWORD = 'SGGhChsz4aox0kB'
+EMAIL_HOST_USER = 'no-replay@irhooshyar.com'
+EMAIL_HOST_PASSWORD = 'Uk8)b?BtD?JI4(VGb*5e!@YE!3GVVy2f5OSd5o@f'
 if not (os.environ.get('EMAIL_HOST') is None):
     EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
     EMAIL_HOST = os.environ.get('EMAIL_HOST')
@@ -181,6 +181,11 @@ if not (os.environ.get('EMAIL_HOST') is None):
     EMAIL_USE_TLS = True
     EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')
     EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')
+
+
+    
+RECAPTCHA_PUBLIC_KEY = "6Lee_a4kAAAAAFlOeKh1ob2Bh3eJVOrMNq-bM7vr"
+RECAPTCHA_PRIVATE_KEY = "6Lee_a4kAAAAAOCQqhjvvSbr07nIcJDj95zn6Rhx"
 
 
 

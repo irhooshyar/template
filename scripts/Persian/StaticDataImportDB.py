@@ -340,8 +340,8 @@ def Search_Parameters_Insert(Country):
     SearchParameters.objects.filter(country__id=Country.id).delete()
 
     parameters = {
-        "category": Category,
-        "subject": Subject,
+        "category_id": Category,
+        "subject_id": Subject,
     }
 
     for parameter, model_name in parameters.items():

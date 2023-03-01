@@ -47,6 +47,7 @@ urlpatterns = [
     path("reset-password/<str:user_id>/<str:token>/<str:password>", views.reset_password, name="reset_password"),
     path("Confirm-Email/<str:user_id>/<str:token>", views.email_check, name="email_check"),
     path("Confirm-Email/<str:user_id>/<str:token>/<str:code>", views.user_activation, name="user_activation"),
+    path("signup/<str:email>/<str:code>", views.signup_user_activation, name="signup_user_activation"),
     path("resend-email/", views.resend_email, name="resend_email"),
     path("resend-email/<str:email>/", views.resend_email_code, name="resend_email_code"),
     path("admin/", views.Admin, name="admin"),
@@ -383,5 +384,10 @@ urlpatterns = [
     path(
         "AILDASubjectChartTopicGetInformationExport/<int:topic_id>/<str:subject_name>/<int:curr_page>/<int:result_size>/",
         views.AILDASubjectChartTopicGetInformationExport, name='AILDASubjectChartTopicGetInformationExport'),
+
+    path('resource_profile/', views.resource_profile, name='resource_profile'),
+    path('GetResourceInformation/', views.GetResourceInformation, name='GetResourceInformation'),
+
+
 
 ]

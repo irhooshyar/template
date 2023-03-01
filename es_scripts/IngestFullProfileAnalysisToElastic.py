@@ -38,7 +38,7 @@ class FullProfileIndex(ES_Index):
             organizations = [item['word'] for item in organizations_list] if len(organizations_list) != 0 else ['بدون ذکر سازمان']
 
             date = self.paragraph_document_fields[paragraph_id]['date']
-            document_date = date if date != None else 'نامشخص'
+            document_date = record['document_date'] if record['document_date']  != None else 'نامشخص'
 
             time = self.paragraph_document_fields[paragraph_id]['time']
             document_time = time if time != None else 'نامشخص'
@@ -108,10 +108,11 @@ def apply(folder, Country):
         country__id=Country.id).annotate(
         document_id=F('document_paragraph__document_id__id'),
         document_name=F('document_paragraph__document_id__name'),
+        document_date=F('document_paragraph__document_id__date'),
         paragraph_text=F('document_paragraph__text'),
         paragraph_id=F('document_paragraph__id')
     ).values('id', 'document_id', 'document_name', 'paragraph_text', 'paragraph_id', 'sentiment',
-             'classification_subject', 'persons', 'locations', 'organizations')
+             'classification_subject', 'persons', 'locations', 'organizations','document_date')
 
     counter = 0
     all_objects = Document.objects.all()

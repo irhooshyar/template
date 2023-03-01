@@ -211,7 +211,7 @@
                         style="direction: rtl;">
 
                         <option value="(1, 1)">تک- واژه‌ای</option>
-                        <option value="(2, 2)">دو- واژه‌ای</option>
+                        <option disabled value="(2, 2)">دو- واژه‌ای</option>
                         <option disabled value="(2-3)">دو تا سه واژه</option>
                         <option disabled value="(2-4)">دو تا چهار واژه</option>
                     </select>
@@ -361,7 +361,7 @@
 
 
                         <!-- Page select -->
-                        <div class="col-md-6 col-12 col-lg-2 float-left">
+                        <!-- <div class="col-md-6 col-12 col-lg-2 float-left">
 
                             <input type="number" disabled="true" onchange="TablePaginationChanged(event)"
                                 id="TablePaginationInput" min="1" max="1" value="1"
@@ -370,12 +370,12 @@
                         </div>
 
 
-                        <!-- Result Pagination -->
+                        
                         <p id="ResultPagination" class="text-left text-secondary float-left">صفحه:
                             <span id="from_page">1</span>
                             /
                             <span id="total_page">1</span>
-                        </p>
+                        </p> -->
 
                     </div>
                     <!-- Search Result table -->
@@ -758,7 +758,6 @@
                 </div>
 
                 <!-- Modal body -->
-                <div class="charts-list-container">
                 <div class="modal-body bg-light text-justify">
 
                     <h6 id="DocsCount" class='text-secondary'></h6>
@@ -770,18 +769,16 @@
                             class="fa fa-plus pl-2" style="position:relative;top:3px;"></i>نمایش بیش‌تر</button>
 
                 </div>
-                </div>
                 <!-- Modal footer -->
-                <div id="detail_modal_footer" dir="ltr" class="modal-footer">
+                <div id="detail_modal_footer" dir="rtl" class="modal-footer">
 
 
                     <input type="number" id="ColumnModalPaginationInput" min="1" max="1" value="1"
                         class="form-select text-right float-right d-none">
 
 
-
                     <button id="ExportExcel2" onclick="TopicParagraphs_Excel()"
-                        class="btn green-button float-left"><i class="fa fa-download"></i>
+                        class="btn green-button float-left"><i class="fa fa-file-excel"></i>
                         خروجی اکسل پاراگراف
                     </button>
                 </div>
@@ -819,14 +816,14 @@
 
                 </div>
                 <!-- Modal footer -->
-                <div id="detail_modal_footer" dir="ltr" class="modal-footer">
+                <div id="detail_modal_footer" dir="rtl" class="modal-footer">
 
 
                     <input type="number" id="anova_word_ColumnModalPaginationInput" min="1" max="1" value="1"
                         class="form-select text-right float-right d-none">
 
-                    <button id="anova_word_ExportExcel2" class="btn btn-outline-primary float-left"><i
-                            class="fa fa-download"></i>
+                    <button id="anova_word_ExportExcel2" class="btn green-button float-left"><i
+                            class="fa fa-file-excel"></i>
                         خروجی اکسل پاراگراف
                     </button>
 
@@ -847,6 +844,43 @@
     </script>
 
 </body>
+
+<!-- save log user -->
+<script>
+    async function UserLog(form_data) {
+        if (getCookie("username") !== "") {
+            const user_name = getCookie("username")
+            let page_url = window.location.pathname
+            const user_ip = "127.0.0.0"
+            page_url = page_url.slice(0, -1);
+            if (page_url === "") {
+                page_url = "/0";
+            }
+
+
+            let link_request = 'http://' + location.host + "/UserLogSaved/" + user_name + page_url + "/" + user_ip + "/";
+
+            $.ajax({
+                url: link_request,
+                data: form_data,
+                type: 'POST',
+                contentType: false,
+                processData: false,
+                async: true,
+
+
+            }).done(function (res) {
+                console.log("done")
+
+            }).fail(function (res) {
+                console.log("fail")
+            });
+
+        }
+    }
+</script>
+
+
 <!-- Blocking UI -->
 <script src="../../../static/js/blockUI.js"></script>
 <script src="../../../static/js/blockUI_handler.js"></script>
@@ -870,9 +904,9 @@
     TABLE_INFO = []
     const COLUMNS = {
         "anova": "واژگان متمایزکننده (ANOVA)",
-        "entropy": 'آنتروپی',
+        "cluster_entropy": 'آنتروپی',
         "distributions": "تحلیل توزیعی",
-        "frequent_subject": 'موضوع غالب (براساس کلیدواژگان)',
+        "cluster_frequent_keyword_subject": 'موضوع غالب (براساس کلیدواژگان)',
         "cloud": 'ابر واژگان',
         "detail": "پاراگراف مرتبط"
     }
@@ -2395,40 +2429,6 @@
 
 </script>
 
-<!-- save log user -->
-<script>
-    async function UserLog(form_data) {
-        if (getCookie("username") !== "") {
-            const user_name = getCookie("username")
-            let page_url = window.location.pathname
-            const user_ip = "127.0.0.0"
-            page_url = page_url.slice(0, -1);
-            if (page_url === "") {
-                page_url = "/0";
-            }
-
-
-            let link_request = 'http://' + location.host + "/UserLogSaved/" + user_name + page_url + "/" + user_ip + "/";
-
-            $.ajax({
-                url: link_request,
-                data: form_data,
-                type: 'POST',
-                contentType: false,
-                processData: false,
-                async: true,
-
-
-            }).done(function (res) {
-                console.log("done")
-
-            }).fail(function (res) {
-                console.log("fail")
-            });
-
-        }
-    }
-</script>
 
 
 <script src="../../../static/js/tooltip_handler.js"></script>
