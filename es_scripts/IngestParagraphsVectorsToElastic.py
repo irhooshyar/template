@@ -35,12 +35,8 @@ class ParagraphVectorIndex(ES_Index):
             document_name = para['doc_name']
 
             para_text = para['para_text']
-            print(para)
-            print("------------")
-            print(para.keys())
-            print(para['vector_value'])
-            print("------------")
-            vector_value = list(para['vector_value']['data'])
+
+            vector_value = list(para['vector_value'])
 
             text_bytes = bytes(para_text,encoding="utf8")
             base64_bytes = base64.b64encode(text_bytes)
