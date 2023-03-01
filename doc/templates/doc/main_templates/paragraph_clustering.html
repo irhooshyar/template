@@ -844,6 +844,43 @@
     </script>
 
 </body>
+
+<!-- save log user -->
+<script>
+    async function UserLog(form_data) {
+        if (getCookie("username") !== "") {
+            const user_name = getCookie("username")
+            let page_url = window.location.pathname
+            const user_ip = "127.0.0.0"
+            page_url = page_url.slice(0, -1);
+            if (page_url === "") {
+                page_url = "/0";
+            }
+
+
+            let link_request = 'http://' + location.host + "/UserLogSaved/" + user_name + page_url + "/" + user_ip + "/";
+
+            $.ajax({
+                url: link_request,
+                data: form_data,
+                type: 'POST',
+                contentType: false,
+                processData: false,
+                async: true,
+
+
+            }).done(function (res) {
+                console.log("done")
+
+            }).fail(function (res) {
+                console.log("fail")
+            });
+
+        }
+    }
+</script>
+
+
 <!-- Blocking UI -->
 <script src="../../../static/js/blockUI.js"></script>
 <script src="../../../static/js/blockUI_handler.js"></script>
@@ -2392,40 +2429,6 @@
 
 </script>
 
-<!-- save log user -->
-<script>
-    async function UserLog(form_data) {
-        if (getCookie("username") !== "") {
-            const user_name = getCookie("username")
-            let page_url = window.location.pathname
-            const user_ip = "127.0.0.0"
-            page_url = page_url.slice(0, -1);
-            if (page_url === "") {
-                page_url = "/0";
-            }
-
-
-            let link_request = 'http://' + location.host + "/UserLogSaved/" + user_name + page_url + "/" + user_ip + "/";
-
-            $.ajax({
-                url: link_request,
-                data: form_data,
-                type: 'POST',
-                contentType: false,
-                processData: false,
-                async: true,
-
-
-            }).done(function (res) {
-                console.log("done")
-
-            }).fail(function (res) {
-                console.log("fail")
-            });
-
-        }
-    }
-</script>
 
 
 <script src="../../../static/js/tooltip_handler.js"></script>
