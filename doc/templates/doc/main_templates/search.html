@@ -616,7 +616,7 @@
         async function init() {
             container_id_list = ['SearchResultLable', 'SearchTable', 'subject_container',
                 'year_container', 'hour_container','sentiment_trend_container',
-                'source_name_container', 'category_container',
+                'source_name_container', 'category_container',"SearchBox",
                 'month_container', 'date_container', 'day_container']
             clearPrevResults(container_id_list)
 
@@ -846,7 +846,8 @@
 
             date_sentiment_chart_data = response['date_sentiment_chart_data']
             console.log(date_sentiment_chart_data)
-            showChart(date_sentiment_chart_data, "sentiment_trend_container", [], true, "تاریخ خبر", "روند احساسات براساس تاریخ خبر")
+            chart_title = text=="empty" ? "روند احساسات در طول زمان":"روند احساسات در طول زمان" + " نسبت به " + text
+            showChart(date_sentiment_chart_data, "sentiment_trend_container", [], true, "تاریخ خبر", )
         }
 
         async function update_table_pagination_input(curr_page, total_hits) {
@@ -920,7 +921,7 @@
             showChartData(month_data, "month_container", documents_information_result, true, "ماه خبر", "توزیع اخبار براساس ماه خبر")
             showChartData(day_data, "day_container", documents_information_result, true, "روز خبر", "توزیع اخبار براساس روز خبر")
             showChartData(hour_data, "hour_container", documents_information_result, true, "ساعت خبر", "توزیع اخبار براساس ساعت خبر")
-            showChartData(date_data, "date_container", documents_information_result, true, "تاریخ خبر", "توزیع اخبار براساس تاریخ خبر")
+            showChartData(date_data, "date_container", documents_information_result, true, "تاریخ خبر", "توزیع اخبار در طول زمان")
             showChartData(source_name_data, "source_name_container", documents_information_result, true, "مرجع خبر", "توزیع اخبار براساس مرجع خبر")
 
             stopBlockUI('bar_chart_info_pane', 'داشبورد آماری');
