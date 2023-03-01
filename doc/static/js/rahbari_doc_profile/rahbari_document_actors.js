@@ -184,7 +184,7 @@ function actor_table_show_result() {
         "sorting": {
             "enabled": true
         },
-        "empty": "در این سند هیچ کنشگری یافت نشد.",
+        "empty": "در این خبر هیچ کنشگری یافت نشد.",
 
         "columns": ActorTableColumns,
         "rows": actors_rows

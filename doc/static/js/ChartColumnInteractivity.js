@@ -253,7 +253,7 @@ class ColumnInteractivity {
             const doc_link =
                 "http://" + location.host + "/" + this.document_link + "/?id=" + document_id;
             let doc_tag =
-                "<a title='پروفایل سند' class='bold text-secondary' target='blank' href='" +
+                "<a title='پروفایل خبر' class='bold text-secondary' target='blank' href='" +
                 doc_link +
                 "'>" +
                 document_name +

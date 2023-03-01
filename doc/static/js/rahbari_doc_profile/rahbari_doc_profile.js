@@ -33,13 +33,13 @@ const ft = FooTable.init('#PopUpTable', {
         }
     }, {
         "name": "document_name",
-        "title": "نام سند"
+        "title": "نام خبر"
     }, {
         "name": "subject",
-        "title": "موضوع سند"
+        "title": "موضوع خبر"
     }, {
         "name": "category",
-        "title": "دسته سند"
+        "title": "دسته خبر"
     }, {
         "name": "date",
         "title": "تاریخ"
@@ -112,7 +112,7 @@ async function init() {
 
         document.getElementById("document_select").disabled = true;
         const country_name = $("#country option:selected").text();
-        document.getElementById('ModalHeader').innerText = 'مجموعه سند: ' + country_name;
+        document.getElementById('ModalHeader').innerText = 'مجموعه خبر: ' + country_name;
         document.getElementById("document_select").disabled = false;
 
         if ($('.add-row-1').length === 0) {
@@ -138,7 +138,7 @@ async function CountryChanged() {
 
     const country_name = $("#country option:selected").text();
 
-    document.getElementById('ModalHeader').innerText = 'مجموعه سند: ' + country_name;
+    document.getElementById('ModalHeader').innerText = 'مجموعه خبر: ' + country_name;
 
     document.getElementById("document_select").disabled = false;
 
@@ -190,7 +190,7 @@ async function ShowDocumentContent() {
     const document_id = document.getElementById("document").value
     // disable show button before choosing a document
     if (!document_id || document_id == '0') {
-        alert('لطفا یک سند را انتخاب نمایید.')
+        alert('لطفا یک خبر را انتخاب نمایید.')
         return
     }
     $('#documentContent').modal('show');
@@ -216,7 +216,7 @@ async function ShowDocumentContent() {
 
     //user log
     let form_data = new FormData()
-    let detail_type = "نمایش سند"
+    let detail_type = "نمایش خبر"
     let country_name = $("#country option:selected").text();
     let document_select_name = document.getElementById("document_select").title
     form_data.append('detail_type', detail_type);
@@ -231,7 +231,7 @@ async function ShowDocumentSubject() {
     const document_id = document.getElementById("document").value
     // disable show button before choosing a document
     if (!document_id || document_id == '0') {
-        alert('لطفا یک سند را انتخاب نمایید.')
+        alert('لطفا یک خبر را انتخاب نمایید.')
         return
     }
     $('#subjectContent').modal('show');
@@ -272,7 +272,7 @@ async function generatePDF() {
     const document_id = document.getElementById("document").value
     // disable show button before choosing a document
     if (!document_id || document_id == '0') {
-        alert('لطفا یک سند را انتخاب نمایید.');
+        alert('لطفا یک خبر را انتخاب نمایید.');
         return;
     }
     const request_link = 'http://' + location.host + "/GetDocumentContent/" + document_id + "/";
@@ -317,7 +317,7 @@ async function generatePDF() {
 
     //user log
     let form_data = new FormData()
-    let detail_type = "دانلود سند"
+    let detail_type = "دانلود خبر"
     let country_name = $("#country option:selected").text();
     let document_select_name = document.getElementById("document_select").title
     form_data.append('detail_type', detail_type);

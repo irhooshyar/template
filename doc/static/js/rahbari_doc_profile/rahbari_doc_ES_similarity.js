@@ -179,7 +179,7 @@ function similarity_table_changed() {
         "sorting": {
             "enabled": true
         },
-        "empty": "سندی یافت نشد.",
+        "empty": "خبری یافت نشد.",
         "columns": similarity_columns,
         "rows": similrity_result
     });
