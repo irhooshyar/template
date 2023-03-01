@@ -252,21 +252,21 @@
                         </div>
 
                         <!-- Page select -->
-                        <div class="col-md-6 col-12 col-lg-2 float-left">
+                        <!-- <div class="col-md-6 col-12 col-lg-2 float-left">
 
                             <input type="number" disabled="true" onchange="TablePaginationChanged(event)"
                                 id="TablePaginationInput" min="1" max="1" value="1"
                                 class="form-select text-right float-right" style="direction: rtl;">
 
-                        </div>
+                        </div> -->
 
 
-                        <!-- Result Pagination -->
+                        <!-- Result Pagination
                         <p id="ResultPagination" class="text-left text-secondary float-left">صفحه:
                             <span id="from_page">1</span>
                             /
                             <span id="total_page">1</span>
-                        </p>
+                        </p> -->
 
                     </div>
 
@@ -593,11 +593,14 @@
                         <span class="add-row"></span>
                     </div>
                 </div>
+                
                 <!-- Modal footer -->
-                <div dir="ltr" class="modal-footer">
+                <div dir="rtl" class="modal-footer">
 
-                    <button id="ExportExcel2" disabled class="btn btn-outline-secondary"><i class="fa fa-download"></i>
-                        خروجی اکسل پاراگراف‌ها
+                    <button id="downloadFile2" disabled class="btn blue-button"><i class="fa fa-file-archive"></i> دانلود پاراگراف‌ها
+                    </button>
+
+                    <button id="ExportExcel2" disabled class="btn green-button"><i class="fa fa-file-excel"></i> خروجی اکسل
                     </button>
                 </div>
             </div>
@@ -683,10 +686,10 @@
                         class="form-select text-right float-right d-none">
 
                     <button id="ExportExcel_2" class="btn blue-button" disabled>
-                        <i class="fa fa-download"></i>
+                        <i class="fa fa-file-archive"></i>
                         دانلود اخبار
                     </button>
-                    <button id="ExportExcel_2" class="btn green-button"><i class="fa fa-download"></i> خروجی
+                    <button id="ExportExcel_2" class="btn green-button" disabled><i class="fa fa-file-excel"></i> خروجی
                         اکسل
                     </button>
                 </div>
@@ -1111,7 +1114,9 @@
         selected_columns = ["index", "user_label", "keywords"]
         selected_columns = find_selected_column(selected_columns)
 
-
+        if(selected_columns.length == 3){
+            return
+        }
         columns = [{
             "name": "id",
             "title": "ردیف",
@@ -1176,7 +1181,7 @@
             }
         }]
 
-        if (!selected_columns.includes("all")) {
+        if (!selected_columns.includes("all") && selected_columns.length) {
             for (let column of columns) {
                 if (selected_columns.includes(column["name"])) {
                     column["visible"] = true
@@ -1223,7 +1228,7 @@
 
 
 
-    async function save_user_label(topic_id) {
+    async function save_user_labelLDA(topic_id) {
         username = getCookie("username");
         label = $("#" + topic_id).val();
 
