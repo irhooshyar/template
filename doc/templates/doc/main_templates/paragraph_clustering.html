@@ -944,7 +944,8 @@
 
         document.getElementById("document_search").disabled = false;
         await CountryChanged()
-        await ShowResult();
+        // await ShowResult();
+        clearPrevResults(container_id_list);
 
         //user log
         let form_data = new FormData()
