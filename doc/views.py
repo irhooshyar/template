@@ -1490,7 +1490,7 @@ def Excel_Topic_Paragraphs_ES(request, country_id, topic_id, result_size, curr_p
     except:
         user_topic_label = 'بدون برچسب'
 
-    file_dataframe = pd.DataFrame(paragraph_list, columns=["نام سند", "متن پاراگراف", "امتیاز"])
+    file_dataframe = pd.DataFrame(paragraph_list, columns=["نام خبر", "متن پاراگراف", "امتیاز"])
 
     file_name = country_obj.name + " - " + "احکام خوشه " + cluster_name + \
                 " - " + user_topic_label + " - " + result_range + ".xlsx"
@@ -5699,7 +5699,7 @@ def Export_ANOVA_Word_Paragraphs_Column_ES(request, country_id, topic_id, word, 
     except:
         user_topic_label = 'بدون برچسب'
 
-    file_dataframe = pd.DataFrame(paragraph_list, columns=["نام سند", "متن پاراگراف", "امتیاز"])
+    file_dataframe = pd.DataFrame(paragraph_list, columns=["نام خبر", "متن پاراگراف", "امتیاز"])
 
     file_name = country_obj.name + " - " + "واژه: " + word + " در " + "احکام خوشه " + cluster_name + \
                 " - " + user_topic_label + " - " + result_range + ".xlsx"
@@ -6192,7 +6192,7 @@ def export_rahbari_document_chart_column(request, document_id, text, keyword, cu
         [doc['_source']['document_name']
             , doc['_source']['attachment']['content']] for doc in result]
 
-    file_dataframe = pd.DataFrame(paragraph_list, columns=["نام سند", "متن پاراگراف"])
+    file_dataframe = pd.DataFrame(paragraph_list, columns=["نام خبر", "متن پاراگراف"])
 
     file_name = country_obj.name + " - " + keyword.replace(".keyword",
                                                            "") + " : " + text + " - " + result_range + ".xlsx"
@@ -6887,7 +6887,7 @@ def AILDASubjectChartTopicGetInformationExport(request, topic_id, subject_name, 
         [doc['_source']['document_name']
             , doc['_source']['attachment']['content']] for doc in topic_paragraphs[from_value:to_value]]
 
-    file_dataframe = pd.DataFrame(paragraph_list, columns=["نام سند", "متن پاراگراف"])
+    file_dataframe = pd.DataFrame(paragraph_list, columns=["نام خبر", "متن پاراگراف"])
 
     file_name = "احکام با موضوع " + subject_name + " " + result_range + ".xlsx"
 
