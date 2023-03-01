@@ -1,4 +1,4 @@
-const similrity_result = []
+let similrity_result = []
 similarity_init();
 
 function similarity_init() {
@@ -13,6 +13,7 @@ function similarity_init() {
 
 async function BM25Similarity() {
     try {
+        similrity_result = []
         const document_id = document.getElementById("document").value;
         request_link = 'http://' + location.host + "/GetDocumentsSimilarity/" + document_id + "/";
         response = await fetch(request_link).then(response => response.json());

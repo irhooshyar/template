@@ -789,7 +789,7 @@ function custom_highlight_function(paragraph, highlight_parameters, items) {
   return paragraph;
 }
 
-async function click_name_chart(document_id, text, chart_name, field_value) {
+async function click_name_chart(document_id, text, chart_name, field_value, segmentation_enable = false) {
   startBlockUI("کلیک روی نمودار");
   let request_link =
     "http://" +
@@ -877,7 +877,7 @@ async function click_name_chart(document_id, text, chart_name, field_value) {
       "احساس بسیار مثبت",
     ],
     keyword: "sentiment",
-    enable: false,
+    enable: segmentation_enable,
     aggregation_keyword: "rahbari-sentiment-agg",
   };
 

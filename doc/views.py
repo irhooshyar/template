@@ -36,7 +36,6 @@ from sklearn.metrics.pairwise import cosine_similarity
 import string
 from scripts.Persian.Preprocessing import standardIndexName
 
-
 # ---------- elastic configs -------------------
 es_url = es_config.ES_URL
 client = Elasticsearch(es_url, timeout=30)
@@ -104,15 +103,13 @@ def update_doc(request, id, language, ):
     file.status = "Starting..."
     file.save()
 
-
     StratAutomating.apply.after_response(folder_name, file,
-                                             "DocsParagraphsClustering_AIParagraphTopicLDA_LDAGraphData",
-                                             host_url)  # AdvanceARIMAExtractor_ ActorTimeSeriesPrediction _DocsSubjectExtractor_DocsLevelExtractor_DocsReferencesExtractor_DocsActorsTimeSeriesDataExtractor_DocsCreateDocumentsListCubeData_DocsCreateSubjectCubeData_DocsCreateVotesCubeData_DocsCreateSubjectStatisticsCubeData_DocsCreateTemplatePanelsCubeData_DocsAnalysisLeadershipSlogan_DocsCreatePrinciplesCubeData_DocCreateBusinessAdvisorCubeData_DocsCreateRegularityLifeCycleCubeData_DocsExecutiveParagraphsExtractor_DocsClauseExtractor_DocsGraphCubeData_DocsCreateMandatoryRegulationsCubeData_DocsExecutiveClausesExtractor_DocsCreateActorInformationStackChartCubeData
-
+                                         "DocsParagraphsClustering_AIParagraphTopicLDA_LDAGraphData",
+                                         host_url)  # AdvanceARIMAExtractor_ ActorTimeSeriesPrediction _DocsSubjectExtractor_DocsLevelExtractor_DocsReferencesExtractor_DocsActorsTimeSeriesDataExtractor_DocsCreateDocumentsListCubeData_DocsCreateSubjectCubeData_DocsCreateVotesCubeData_DocsCreateSubjectStatisticsCubeData_DocsCreateTemplatePanelsCubeData_DocsAnalysisLeadershipSlogan_DocsCreatePrinciplesCubeData_DocCreateBusinessAdvisorCubeData_DocsCreateRegularityLifeCycleCubeData_DocsExecutiveParagraphsExtractor_DocsClauseExtractor_DocsGraphCubeData_DocsCreateMandatoryRegulationsCubeData_DocsExecutiveClausesExtractor_DocsCreateActorInformationStackChartCubeData
 
     # from scripts.Persian import DocsParagraphVectorExtractor
     # DocsParagraphVectorExtractor.apply(folder_name, file)
-    #DocsParagraphsClustering_AIParagraphTopicLDA_LDAGraphData
+    # DocsParagraphsClustering_AIParagraphTopicLDA_LDAGraphData
     # from es_scripts import IngestFullProfileAnalysisToElastic
     # IngestFullProfileAnalysisToElastic.apply.after_response(folder_name, file)
 
@@ -178,6 +175,7 @@ def get_book_maps(country_objects):
         if language == "کتاب" and "کتاب" in name:
             dataset_map[id] = name
     return dataset_map
+
 
 def fullProfileAnalysis(request, id):
     file = get_object_or_404(Country, id=id)
@@ -345,6 +343,7 @@ def dendrogram(request, country_id, ngram_type):
 
     return render(request, 'doc/main_templates/dendrogram.html', {"file_path": file_path})
 
+
 def showDeployLogs(request):
     return render(request, 'doc/user_templates/deploy_server_time.html')
 
@@ -498,6 +497,7 @@ def static_data_import_db(request, id, language):
     StaticDataImportDB.apply(None, file)
     return redirect('zip')
 
+
 def update_docs_from_excel(request, id):
     file = get_object_or_404(Country, id=id)
     from scripts.Persian import StaticDataImportDB
@@ -551,14 +551,12 @@ def rahbari_labels_to_db(request, id):
     StaticDataImportDB.rahbari_labels_to_db(Country)
     return redirect('zip')
 
+
 def document_json_list(request, id):
     file = get_object_or_404(Country, id=id)
     from scripts.Persian import DocsCreateDocumentsListCubeData
     DocsCreateDocumentsListCubeData.apply(None, file)
     return redirect('zip')
-
-
-
 
 
 def actors_static_data_to_db(request, id):
@@ -644,16 +642,11 @@ def update_file_name_extention(request, id):
     return redirect('zip')
 
 
-
-
 def regulators_static_import_db(request, id):
     file = get_object_or_404(Country, id=id)
     from scripts.Persian import StaticDataImportDB
     StaticDataImportDB.Regulators_Insert()
     return redirect('zip')
-
-
-
 
 
 def ingest_documents_to_index(request, id, language):
@@ -861,8 +854,6 @@ def ingest_rahbari_to_sim_index(request, id):
     return redirect('zip')
 
 
-
-
 def rahbari_similarity_calculation(request, id):
     file = get_object_or_404(Country, id=id)
     from es_scripts import RahbariDocsSimilarityCalculation
@@ -879,7 +870,6 @@ def paragraphs_similarity_calculation(request, id):
     return redirect('zip')
 
 
-
 def rahbari_paragraphs_similarity_calculation(request, id):
     file = get_object_or_404(Country, id=id)
     from es_scripts import RahbariParagraphSimilarity
@@ -893,7 +883,6 @@ def collective_static_data_to_db(request, id):
     from scripts.Persian import StaticDataImportDB
     StaticDataImportDB.Collective_Actors_Insert()
     return redirect('zip')
-
 
 
 def delete_doc(request, id, language):
@@ -1816,7 +1805,6 @@ def Get_Topic_Paragraphs_ES(request, country_id, topic_id, result_size, curr_pag
     return JsonResponse(response_dict)
 
 
-
 def GetAllNotesInTimeRange(request, username, time_start, time_end):
     user_notes = DocumentNote.objects.all().filter(user__username=username)
 
@@ -1859,7 +1847,6 @@ def GetAllNotesInTimeRange(request, username, time_start, time_end):
     #     column = [name, count]
     #     chart_data_list.append(column)
     # return JsonResponse({'user_chart_data_list': chart_data_list})
-
 
 
 def GetCountryById(request, id):
@@ -1915,8 +1902,6 @@ def GetKeywordLDAData(request, country_id, cluster_size, username, keyword):
 
             all_para_count += record.paragraph_count
     return JsonResponse({'lda_topics': lda_topics, 'all_para_count': all_para_count})
-
-
 
 
 def GetLDAGraphData(request, country_id, number_of_topic):
@@ -2050,7 +2035,6 @@ def GetParagraph_Clusters(request, country_id, algorithm_name, vector_type, clus
     })
 
 
-
 def getNeighbourforNode(node_id, edge_data, node_parents, edge_count_limit):
     edge_list = list(filter(lambda x: (x["source"] == node_id or x["target"] == node_id) and
                                       (x["source"] not in node_parents or x["target"] not in node_parents), edge_data))
@@ -2061,7 +2045,6 @@ def getNeighbourforNode(node_id, edge_data, node_parents, edge_count_limit):
         return sorted(edge_list, key=lambda k: k['weight'], reverse=True)[:edge_count_limit]
     else:
         return []
-
 
 
 def exact_search_text(res_query, place, text, ALL_FIELDS):
@@ -2295,7 +2278,6 @@ def boolean_search_text(res_query, place, text, operator, ALL_FIELDS):
     return res_query
 
 
-
 def GetUserExpertise(request):
     expertise = UserExpertise.objects.all()
     result = []
@@ -2438,10 +2420,12 @@ def save_topic_label(request, topic_id, username, label):
         "result_response": result_response
     })
 
+
 def CreateEmailCode():
     range_start = 10 ** 3
     range_end = (10 ** 4) - 1
     return randint(range_start, range_end)
+
 
 def confirm_email(user):
     email_code = CreateEmailCode()
@@ -2460,49 +2444,57 @@ def confirm_email(user):
     template += f'http://rahnamud.ir:7074/Confirm-Email/{user.id}/{token}'
     print("template: ", template)
 
+    send_mail(subject='کد تایید ایمیل', message=template, from_email=settings.EMAIL_HOST_USER,
+              recipient_list=[user.email])
 
-    send_mail(subject='کد تایید ایمیل', message=template, from_email=settings.EMAIL_HOST_USER,recipient_list=[user.email])
 
 def resend_email(request):
     return render(request, 'doc/user_templates/resend_email.html')
+
 
 def resend_email_code(request, email):
     users = User.objects.filter(email=email)
     user = users[0]
     if user.account_acctivation_expire_time < timezone.now() and user.enable == 0:
         confirm_email(user)
-    return JsonResponse({ "status": "OK" })
+    return JsonResponse({"status": "OK"})
+
 
 def email_check(request, user_id, token):
     url_is_valid = False
     try:
         user = User.objects.get(pk=user_id)
-        if (not (user.account_activation_token is None)) and user.account_activation_token == token and user.account_acctivation_expire_time >= timezone.now():
+        if (not (
+                user.account_activation_token is None)) and user.account_activation_token == token and user.account_acctivation_expire_time >= timezone.now():
             url_is_valid = True
     except:
         user_id = ""
 
-    return render(request, 'doc/user_templates/confirm_email.html', {"url_is_valid": url_is_valid, "user_id": user_id, "token": token})
+    return render(request, 'doc/user_templates/confirm_email.html',
+                  {"url_is_valid": url_is_valid, "user_id": user_id, "token": token})
+
 
 def user_activation(request, user_id, token, code):
     user = User.objects.get(pk=user_id)
 
-    if (not (user.account_activation_token is None)) and user.account_activation_token == token and user.account_acctivation_expire_time >= timezone.now():
-        print("code: ",code)
+    if (not (
+            user.account_activation_token is None)) and user.account_activation_token == token and user.account_acctivation_expire_time >= timezone.now():
+        print("code: ", code)
         print("user_code: ", user.email_confirm_code)
-        if(user.email_confirm_code == code):
+        if (user.email_confirm_code == code):
             user.account_activation_token = None
             user.enable = 1
             user.save()
-            return JsonResponse({ "status": "OK" })
+            return JsonResponse({"status": "OK"})
         else:
             user.save()
-            return JsonResponse({ "status": "Not OK" })
+            return JsonResponse({"status": "Not OK"})
+
+    return JsonResponse({"status": "Not OK"})
 
 
-    return JsonResponse({ "status": "Not OK" })
-
-def SaveUser(request, firstname, lastname,email, phonenumber, role, username, password, ip, expertise, other_expertise):
+def SaveUser(request, firstname, lastname, email, phonenumber, role, username, password, ip, expertise,
+             other_expertise):
     user_username = User.objects.filter(username=username)
     user_email = User.objects.filter(email=email)
     if user_username.count() > 0:
@@ -2512,7 +2504,7 @@ def SaveUser(request, firstname, lastname,email, phonenumber, role, username, pa
     else:
         hashed_pwd = make_password(password)
         last_login = datetime.datetime.now()
-        user = User.objects.create(first_name=firstname, last_name=lastname,email=email,
+        user = User.objects.create(first_name=firstname, last_name=lastname, email=email,
                                    role_id=role,
                                    mobile=phonenumber, username=username, password=hashed_pwd, last_login=last_login,
                                    is_super_user=0, is_active=0, other_expertise=other_expertise)
@@ -2523,6 +2515,7 @@ def SaveUser(request, firstname, lastname,email, phonenumber, role, username, pa
         confirm_email(user)
 
     return JsonResponse({"status": "OK"})
+
 
 def SetMyUserProfile(request):
     if request.method != 'POST':
@@ -2745,8 +2738,8 @@ def changeUserState(request, user_id, state):
         """
         template += f'http://rahnamud.ir:707/login/'
         print("template: ", template)
-        send_mail(subject='تایید عملیات ثبت‌نام', message=template, from_email=settings.EMAIL_HOST_USER,recipient_list=[accepted_user.email])
-
+        send_mail(subject='تایید عملیات ثبت‌نام', message=template, from_email=settings.EMAIL_HOST_USER,
+                  recipient_list=[accepted_user.email])
 
         return JsonResponse({"status": "accepted"})
     elif state == "rejected":
@@ -2758,8 +2751,8 @@ def changeUserState(request, user_id, state):
         متاسفانه ثبت‌نام شما توسط ادمین رد شده است.
         """
         print("template: ", template)
-        send_mail(subject='عدم تایید عملیات ثبت‌نام', message=template, from_email=settings.EMAIL_HOST_USER,recipient_list=[accepted_user.email])
-
+        send_mail(subject='عدم تایید عملیات ثبت‌نام', message=template, from_email=settings.EMAIL_HOST_USER,
+                  recipient_list=[accepted_user.email])
 
         return JsonResponse({"status": "rejected"})
 
@@ -3123,8 +3116,6 @@ def get_stopword_list(file_name):
     return stop_words
 
 
-
-
 def GetDoticSimDocument_ByTitle(request, document_name):
     res_query = {
         'bool': {
@@ -3272,7 +3263,6 @@ def GetSearchParameters(request, country_id):
     search_parameters = SearchParameters.objects.all()
     parameters_result = {}
 
-
     if country_id != 0:
         search_parameters = SearchParameters.objects.filter(country__id=country_id)
         print("country_id")
@@ -3291,7 +3281,6 @@ def GetSearchParameters(request, country_id):
     return JsonResponse({"parameters_result": parameters_result}, )
 
 
-
 def Local_preprocessing(text):
     space_list = [" ", "\u200c"]
     for s in space_list:
@@ -3307,8 +3296,6 @@ def Local_preprocessing(text):
 
 def filter_doc_fields(res_query, category_id, subject_id,
                       from_year, to_year):
-
-
     # ---------------------------------------------------------
     if subject_id != 0:
         subject_name = Subject.objects.get(id=subject_id).name
@@ -3327,8 +3314,6 @@ def filter_doc_fields(res_query, category_id, subject_id,
             }
         }
         res_query['bool']['filter'].append(subject_query)
-
-
 
     # ----
 
@@ -3359,8 +3344,7 @@ def filter_doc_fields(res_query, category_id, subject_id,
 
 def SearchDocument_ES(request, country_id, category_id, subject_id, from_year, to_year,
 
-                    place, text, search_type, curr_page):
-
+                      place, text, search_type, curr_page):
     fields = [category_id, subject_id, from_year, to_year]
 
     res_query = {
@@ -3431,7 +3415,7 @@ def SearchDocument_ES(request, country_id, category_id, subject_id, from_year, t
             }
         },
 
-          "hour-agg": {
+        "hour-agg": {
             "terms": {
                 "field": "document_hour",
                 "size": bucket_size
@@ -3450,12 +3434,12 @@ def SearchDocument_ES(request, country_id, category_id, subject_id, from_year, t
 
     if country_id == 0:
         index_name_list = []
-        country_list = Country.objects.filter(language = "فارسی").exclude(name="تابناک- تست")
+        country_list = Country.objects.filter(language="فارسی").exclude(name="تابناک- تست")
         for country in country_list:
             index_name = standardIndexName(country, Document.__name__)
             index_name_list.append(index_name)
 
-        index_name =  index_name_list
+        index_name = index_name_list
     else:
 
         country_obj = Country.objects.get(id=country_id)
@@ -3464,8 +3448,8 @@ def SearchDocument_ES(request, country_id, category_id, subject_id, from_year, t
     response = client.search(index=index_name,
                              _source_includes=['document_id', 'document_name', 'document_date',
                                                'subject_name', 'category_name', 'document_year',
-                                               'raw_file_name','source_id','source_folder',
-                                               'source_name','document_time'],
+                                               'raw_file_name', 'source_id', 'source_folder',
+                                               'source_name', 'document_time'],
                              request_timeout=40,
                              query=res_query,
                              aggregations=res_agg,
@@ -3500,10 +3484,8 @@ def SearchDocument_ES(request, country_id, category_id, subject_id, from_year, t
         'aggregations': aggregations})
 
 
-
 def GetSentimentTrend_ChartData(request, country_id, category_id, subject_id, from_year, to_year,
-            place, text, search_type, curr_page):
-    
+                                place, text, search_type, curr_page):
     fields = [category_id, subject_id, from_year, to_year]
 
     res_query = {
@@ -3536,15 +3518,14 @@ def GetSentimentTrend_ChartData(request, country_id, category_id, subject_id, fr
         "date-sentiment-agg": {
             "multi_terms": {
                 "terms": [{
-                "field": "document_date.keyword" 
+                    "field": "document_date.keyword"
                 }, {
-                "field": "sentiment.keyword"
+                    "field": "sentiment.keyword"
                 }],
                 "size": bucket_size
             }
-            
-        },
 
+        },
 
     }
 
@@ -3552,12 +3533,12 @@ def GetSentimentTrend_ChartData(request, country_id, category_id, subject_id, fr
 
     if country_id == 0:
         index_name_list = []
-        country_list = Country.objects.filter(language = "فارسی").exclude(name="تابناک- تست")
+        country_list = Country.objects.filter(language="فارسی").exclude(name="تابناک- تست")
         for country in country_list:
             index_name = standardIndexName(country, FullProfileAnalysis.__name__)
             index_name_list.append(index_name)
 
-        index_name =  index_name_list
+        index_name = index_name_list
     else:
 
         country_obj = Country.objects.get(id=country_id)
@@ -3573,7 +3554,6 @@ def GetSentimentTrend_ChartData(request, country_id, category_id, subject_id, fr
 
                              )
 
-  
     total_hits = response['hits']['total']['value']
 
     aggregations = response['aggregations']
@@ -3586,24 +3566,24 @@ def GetSentimentTrend_ChartData(request, country_id, category_id, subject_id, fr
         doc_count = bucket['doc_count']
         if date not in date_sentiment_dict:
             date_sentiment_dict[date] = {
-                "احساس بسیار مثبت":0,
-                "احساس بسیار منفی":0,
-                "احساس مثبت":0,
-                "احساس منفی":0,
-                "بدون ابراز احساسات":0,
-                "احساس خنثی یا ترکیبی از مثبت و منفی":0
+                "احساس بسیار مثبت": 0,
+                "احساس بسیار منفی": 0,
+                "احساس مثبت": 0,
+                "احساس منفی": 0,
+                "بدون ابراز احساسات": 0,
+                "احساس خنثی یا ترکیبی از مثبت و منفی": 0
             }
         else:
             date_sentiment_dict[date][sentiment] = doc_count
-    
+
     date_sentiment_chart_data = []
-    for date,value in date_sentiment_dict.items():
+    for date, value in date_sentiment_dict.items():
         date_sentiment_chart_data.append([date,
-                                        value['احساس بسیار منفی'],
-                                        value['احساس منفی'],
-                                        value['احساس مثبت'],
-                                        value['احساس بسیار مثبت']]
-                                        )
+                                          value['احساس بسیار منفی'],
+                                          value['احساس منفی'],
+                                          value['احساس مثبت'],
+                                          value['احساس بسیار مثبت']]
+                                         )
 
     if total_hits == 10000:
         total_hits = client.count(body={
@@ -3624,12 +3604,9 @@ def GetSentimentTrend_ChartData(request, country_id, category_id, subject_id, fr
         'date_sentiment_chart_data': date_sentiment_chart_data})
 
 
-
-
 def filter_doc_actor_fields(res_query, level_id, subject_id, type_id, approval_reference_id,
                             from_year, to_year, from_advisory_opinion_count, from_interpretation_rules_count,
                             revoked_type_id, organization_type_id):
-
     # ---------------------------------------------------------
     if subject_id != 0:
         subject_name = Subject.objects.get(id=subject_id).name
@@ -3991,12 +3968,8 @@ def GetActorsChartData_ES_2(request, country_id, level_id, subject_id, type_id, 
                          })
 
 
-
-
-
 def filter_doc_fields_COLUMN(res_query, category_name, subject_name,
                              from_year, to_year):
-
     # ---------------------------------------------------------
     if category_name != "همه":
         level_query = {
@@ -4041,8 +4014,7 @@ def filter_doc_fields_COLUMN(res_query, category_name, subject_name,
 def SearchDocuments_Column_ES(request, country_name, category_name, subject_name,
                               from_year, to_year
                               , place, text, search_type, curr_page):
-
-    country_id = Country.objects.get(name = country_name).id if country_name != 'همه' else 0
+    country_id = Country.objects.get(name=country_name).id if country_name != 'همه' else 0
     index_name = None
     res_query = {
         "bool": {}
@@ -4064,12 +4036,12 @@ def SearchDocuments_Column_ES(request, country_name, category_name, subject_name
 
     if country_id == 0:
         index_name_list = []
-        country_list = Country.objects.filter(language = "فارسی").exclude(name="تابناک- تست")
+        country_list = Country.objects.filter(language="فارسی").exclude(name="تابناک- تست")
         for country in country_list:
             index_name = standardIndexName(country, Document.__name__)
             index_name_list.append(index_name)
 
-        index_name =  index_name_list
+        index_name = index_name_list
     else:
 
         country_obj = Country.objects.get(id=country_id)
@@ -4079,7 +4051,7 @@ def SearchDocuments_Column_ES(request, country_name, category_name, subject_name
 
     response = client.search(index=index_name,
                              _source_includes=['document_id', 'document_name', 'document_date',
-                                               'subject_name','source_id','source_folder','source_name',
+                                               'subject_name', 'source_id', 'source_folder', 'source_name',
                                                "category_name", 'raw_file_name'],
                              request_timeout=40,
                              query=res_query,
@@ -4522,7 +4494,7 @@ def GetUserComments(request, user_id, hashtag_id):
         follow = UserFollow.objects.get(follower__username=username, following__id=user_id)
         if follow.accepted:
             comments = DocumentComment.objects.filter(is_accept=1, show_info=True, user__id=user_id,
-                                                       hash_tags__id=hashtag_id)
+                                                      hash_tags__id=hashtag_id)
 
     for c in comments:
         agreed_count = DocumentCommentVote.objects.filter(document_comment=c.id, agreed=True).count()
@@ -4563,8 +4535,6 @@ def self(request):
     return JsonResponse({"name": user.first_name + ' ' + user.last_name + ' '})
 
 
-
-
 def GetSubjectsByCountryId(request, country_id):
     documents_subjects_list = Subject.objects.all().order_by("id")
 
@@ -4588,6 +4558,7 @@ def GetDocumentsByCountryId_Modal(request, country_id=None, start_index=None, en
         data = data[start_index: end_index]
 
     return JsonResponse({'documentsList': data, 'document_count': doc_count})
+
 
 def GetGeneralDefinition2(request, document_id):
     result = []
@@ -4727,6 +4698,7 @@ def GetBM25Similarity(request, document_id):
 
     return JsonResponse({'docs': sim_docs})
 
+
 def GetDocumentsSimilarity(request, document_id, ):
     sim_docs = []
 
@@ -4784,8 +4756,11 @@ def GetDocumentsSimilarity(request, document_id, ):
         sim_docs.sort(key=return_score, reverse=True)
     return JsonResponse({'docs': sim_docs[:20]})
 
+
 def return_score(item):
     return item["BM25_score"]
+
+
 def similarityDetail(request, main_document_id, selected_document_id, selected_country_name):
     country_obj = Document.objects.get(id=main_document_id).country_id
     base_index_name = standardIndexName(country_obj, Document.__name__)
@@ -4891,6 +4866,7 @@ def similarityDetail(request, main_document_id, selected_document_id, selected_c
 
     return JsonResponse({"similarity_result": result, "main_doc_result": new_result})
 
+
 def GetDocActorParagraphs_Column_Modal(request, document_id, actor_name, role_name):
     actor_paragraphs = {}
     result_paragraphs = DocumentActor.objects.filter(
@@ -4943,8 +4919,6 @@ def GetDocActorParagraphs_Column_Modal(request, document_id, actor_name, role_na
         }
 
     return JsonResponse({"actor_paragraphs": actor_paragraphs})
-
-
 
 
 def GetDocumentContent(request, document_id):
@@ -5029,7 +5003,6 @@ def GetDocumentSubjectContent(request, document_id, version_id):
     return JsonResponse({'document_paragraphs': document_paragraphs})
 
 
-
 def CreateDocumentComment(request, document, comment, username, comment_show_info, time):
     user = User.objects.filter(username=username).first()
     doc = Document.objects.filter(id=document).first()
@@ -5037,7 +5010,7 @@ def CreateDocumentComment(request, document, comment, username, comment_show_inf
     if comment_show_info == 'true':
         show_info = True
     comment = DocumentComment.objects.create(document=doc, comment=comment, user=user, show_info=show_info,
-                                              time=str(jdatetime.strftime(jdatetime.now(), "%H:%M:%S %Y-%m-%d")))
+                                             time=str(jdatetime.strftime(jdatetime.now(), "%H:%M:%S %Y-%m-%d")))
 
     return JsonResponse({"comment_id": comment.id})
 
@@ -5290,7 +5263,6 @@ def BoostingSearchKnowledgeGraph_ES(request, country_id, field_name, field_value
             index_name = "bbc_full_document"
             result_field = ['document_id', 'document_name', 'attachment.content']
 
-
     res_query = {"bool": {
         "filter": [
             {
@@ -5385,6 +5357,7 @@ def BoostingSearchKnowledgeGraph_ES(request, country_id, field_name, field_value
         "result": result
     }
     return JsonResponse(response_dict)
+
 
 def GetActorsByDocumentIdActorType(document_id, actor_type_name):
     actor_dict = {}
@@ -5825,7 +5798,7 @@ def Get_Topic_TagCloud_ChartData(request, country_id, topic_id):
 
 def GetClusteringGraphData(request, country_id, algorithm_name, algorithm_vector_type, cluster_size, ngram_type):
     algorithm = ClusteringAlgorithm.objects.get(name=algorithm_name, input_vector_type=algorithm_vector_type,
-                                               cluster_count=cluster_size, ngram_type=ngram_type)
+                                                cluster_count=cluster_size, ngram_type=ngram_type)
 
     try:
 
@@ -5839,7 +5812,7 @@ def GetClusteringGraphData(request, country_id, algorithm_name, algorithm_vector
 
 def GetClusterKeywordGraphData(request, country_id, algorithm_name, algorithm_vector_type, cluster_size, ngram_type):
     algorithm = ClusteringAlgorithm.objects.get(name=algorithm_name, input_vector_type=algorithm_vector_type,
-                                               cluster_count=cluster_size, ngram_type=ngram_type)
+                                                cluster_count=cluster_size, ngram_type=ngram_type)
 
     try:
         ClusteringGraphData_Object = ClusteringGraphData.objects.get(country_id=country_id, algorithm=algorithm)
@@ -5923,6 +5896,12 @@ def rahbari_document_get_full_profile_analysis(request, country_id, document_id)
 
     # ---------------------- Get Chart Data -------------------------
     res_agg = {
+        "rahbari-sentiment-agg": {
+            "terms": {
+                "field": "sentiment.keyword",
+                "size": bucket_size
+            }
+        },
         "rahbari-classification-subject-agg":
             {
                 "terms": {
@@ -5932,25 +5911,54 @@ def rahbari_document_get_full_profile_analysis(request, country_id, document_id)
             },
         "rahbari-person-agg":
             {
-                "terms": {
-                    "field": "persons.keyword",
+                "multi_terms": {
+                    "terms": [{
+                        "field": "persons.keyword",
+
+                    }, {
+                        "field": "sentiment.keyword"
+                    }],
                     "size": 10000
                 }
             },
         "rahbari-location-agg":
             {
-                "terms": {
-                    "field": "locations.keyword",
-                    "size": bucket_size
+                "multi_terms": {
+                    "terms": [{
+                         "field": "locations.keyword",
+
+                    }, {
+                        "field": "sentiment.keyword"
+                    }],
+                    "size": 10000
                 }
             },
         "rahbari-organization-agg":
             {
-                "terms": {
-                    "field": "organizations.keyword",
-                    "size": bucket_size
+                "multi_terms": {
+                    "terms": [{
+                        "field": "organizations.keyword",
+
+                    }, {
+                        "field": "sentiment.keyword"
+                    }],
+                    "size": 10000
                 }
-            }
+            },
+        # "rahbari-location-agg":
+        #     {
+        #         "terms": {
+        #             "field": "locations.keyword",
+        #             "size": bucket_size
+        #         }
+        #     },
+        # "rahbari-organization-agg":
+        #     {
+        #         "terms": {
+        #             "field": "organizations.keyword",
+        #             "size": bucket_size
+        #         }
+        #     }
     }
 
     response = client.search(index=index_name,
@@ -6068,6 +6076,15 @@ def rahbari_document_name_chart_column(request, document_id, name, field_name, c
         }
     }
 
+    aggregation_query = {
+        "rahbari-sentiment-agg": {
+            "terms": {
+                "field": "sentiment.keyword",
+                "size": bucket_size
+            }
+        }
+    }
+
     country_obj = Document.objects.get(id=document_id).country_id
     index_name = standardIndexName(country_obj, FullProfileAnalysis.__name__)
 
@@ -6077,9 +6094,11 @@ def rahbari_document_name_chart_column(request, document_id, name, field_name, c
     from_value = (curr_page - 1) * result_size
     response = client.search(index=index_name,
                              _source_includes=['attachment.content', 'document_name', 'paragraph_id', 'document_id',
+                                               'sentiment',
                                                load_object],
                              request_timeout=40,
                              query=res_query,
+                             aggregations=aggregation_query,
                              from_=from_value,
                              size=result_size,
                              )
@@ -6094,6 +6113,7 @@ def rahbari_document_name_chart_column(request, document_id, name, field_name, c
 
     return JsonResponse({
         "result": result,
+        "aggregations": response['aggregations'],
         'total_hits': total_hits,
         "curr_page": curr_page,
     })
@@ -6611,7 +6631,6 @@ def getUserLogs_ES(request, user_id, time_start, time_end, curr_page, page_size)
     )
 
 
-
 def getTableUserLogs_ES(request, user_id, time_start, time_end):
     res_query = get_user_log_query(user_id, time_start, time_end)
     detail_query = {
@@ -6684,6 +6703,7 @@ def userlogs_to_index(request, id, language):
     IngestUserLogToElastic.apply(folder_name, file, machine_user_name)
     return redirect('zip')
 
+
 def GetSimilarParagraphs_ByParagraphID(request, paragraph_id):
     similar_paragraphs = []
     para_obj = DocumentParagraphs.objects.get(id=paragraph_id)
@@ -6730,31 +6750,30 @@ def GetSimilarParagraphs_ByParagraphID(request, paragraph_id):
 
 
 def GetSemanticSimilarParagraphs_ByParagraphID(request, paragraph_id):
-
     # get paragraph vector
     vector_query = {
-        'term':{
-            'paragraph_id':paragraph_id
+        'term': {
+            'paragraph_id': paragraph_id
         }
     }
     country_obj = DocumentParagraphs.objects.get(id=paragraph_id).document_id.country_id
     index_name = standardIndexName(country_obj, DocumentParagraphs.__name__ + "_vectors")
 
     response = client.search(index=index_name,
-                            _source_includes=['wikitriplet_vector'],
-                            request_timeout=40,
-                            query=vector_query
-                            )
+                             _source_includes=['wikitriplet_vector'],
+                             request_timeout=40,
+                             query=vector_query
+                             )
 
     para_vector = list(response['hits']['hits'][0]['_source']['wikitriplet_vector'])
     # create knn query
     knn_qeury = {
         "script_score": {
-            "query" : {
-                "bool":{
-                    "must_not":{
-                        "term":{
-                            "paragraph_id":paragraph_id
+            "query": {
+                "bool": {
+                    "must_not": {
+                        "term": {
+                            "paragraph_id": paragraph_id
                         }
                     }
                 }
@@ -6762,7 +6781,7 @@ def GetSemanticSimilarParagraphs_ByParagraphID(request, paragraph_id):
             "script": {
                 "source": "cosineSimilarity(params.query_vector, 'wikitriplet_vector') + 1.0",
                 "params": {
-                "query_vector": para_vector
+                    "query_vector": para_vector
                 }
             }
         }
@@ -6770,12 +6789,11 @@ def GetSemanticSimilarParagraphs_ByParagraphID(request, paragraph_id):
 
     # search and get result
     response = client.search(index=index_name,
-                            _source_includes=['document_id', 'document_name', 'attachment.content'],
-                            request_timeout=40,
-                            size = 10,
-                            query=knn_qeury
-                            )
-
+                             _source_includes=['document_id', 'document_name', 'attachment.content'],
+                             request_timeout=40,
+                             size=10,
+                             query=knn_qeury
+                             )
 
     similar_paragraphs = response['hits']['hits']
 
@@ -6895,4 +6913,3 @@ def AILDASubjectChartTopicGetInformationExport(request, topic_id, subject_name, 
     file_dataframe.to_excel(file_path, index=False)
 
     return JsonResponse({"file_name": file_name})
-
