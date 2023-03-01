@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="fa">
+    <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <link rel="stylesheet" type="text/css" href="../../../static/library/bootstrap.min-4.5.2.css">
+        <script src="../../../static/js/jquery_351/jquery.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="../../../static/library/bootstrap.min-5.1.2npm.css">
+
+        <link rel="stylesheet" href="../../../static/library/fontawesome-5.10.0.all.css"
+             />
+        <link rel="stylesheet" href="../../../static/library/font-awesome.min-4.7.0.css">
+
+        <!-- commented for dromdown menu hover bug -->
+        <!-- <link href="../../static/library/bootstrap-theme.min-3.3.6.css" rel="stylesheet"> -->
+        <script src="../../../static/library/bootstrap-5.1.2.bundle.min.js"></script>
+
+
+        <!-- apexcharts -->
+        <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+
+        <link rel="stylesheet" href="../../../static/styles/judge.css">
+
+        <!--BS Icons -->
+        <link rel="stylesheet" href="../../../static/library/bootstrap-icons-1.3.0.css">
+
+        <script src="../../../static/library/g6.min-4.3.11.js"></script>
+
+        <link href="../../../static/styles/footable/footable.bootstrap.min.css" rel="stylesheet">
+
+        <!-- Footable  -->
+        <script src="../../../static/js/footable/demo-rows.js"></script>
+        <script src="../../../static/js/footable/ie10-viewport-bug-workaround.js"></script>
+        <script src="../../../static/js/footable/footable.js"></script>
+        <link href="../../../static/styles/footable/footable.bootstrap.min.css" rel="stylesheet">
+        <link href="../../../static/styles/footable/docs.css" rel="stylesheet">
+        <link href="../../../static/styles/footable/FooTable.Glyphicons.css" rel="stylesheet">
+        <link href="../../../static/styles/footable/FooTable.FontAwesome.css" rel="stylesheet">
+
+
+        <!-- Intro Js -->
+        <script src="../../../static/library/intro.min-4.3.0.js"></script>
+        <link rel="stylesheet" type="text/css" href="../../../static/library/introjs.min-4.3.0.css">
+        <link rel="stylesheet" type="text/css" href="../../../static/library/introjs-rtl.min-4.3.0.css">
+
+        <script src="../../../static/library/notyf.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="../../../static/library/notyf.min-npm.css">
+
+        <link rel="stylesheet" href="../../../static/styles/index2.css">
+        <link rel="stylesheet" href="../../../static/styles/information_chart.css">
+        <link rel="stylesheet" href="../../../static/styles/user_guide_tour.css">
+
+        <meta charset="UTF-8">
+
+        <title> داشبورد قضات</title>
+        {% include "doc/base_templates/title_icon.html" %}
+
+        <script>
+            $(document).ready(function () {
+                $('#SepecificDropdown').addClass('active'); // header buttons
+                $('#judge_behavior_analysis').addClass('active');
+                $('select#language').on('change', function (e) {
+                    let selected_language = this.value;
+                    let current_url = window.location.href;
+                    if (selected_language === 'England') {
+                        let page_name = current_url.split('/')[3]
+                        let requested_url = current_url.replace(page_name, 'en')
+                        window.location = requested_url;
+                    } else if (selected_language === 'Russia') {
+                        let page_name = current_url.split('/')[3]
+                        let requested_url = current_url.replace(page_name, 'ru')
+                        window.location = requested_url;
+                    }
+                });
+            });
+        </script>
+    </head>
+
+    <body>
+        <!-- Menu -->
+        <nav dir="rtl" class="navbar nav_menu navbar-expand-lg fixed-top p-0 mt-0">
+            {% include "doc/base_templates/header.html" %}
+        </nav>
+
+        <div class="container">
+
+            <div class="text-right" style="margin-top: 100px; direction: rtl">
+              <ul class="nav nav-pills" id="pills-tab" role="tablist">
+                  <li class="nav-item float-right" role="presentation">
+                      <button class="nav-link active" data-bs-toggle="pill" data-bs-target="#resource_profile_pane"
+                        type="button" role="tab" aria-controls="resource_profile_pane" aria-selected="false">پروفایل جامع منابع</button>
+                  </li>
+              </ul>
+            </div>
+
+            <div class="tab-content float-right bg-white px-1" style="position: relative; width: 100%">
+                <div class="tab-pane fade float-right w-100  show active" id="resource_profile_pane" role="tabpanel"
+                    aria-labelledby="resource_profile_pane">
+                    <div class="row flex-row-reverse judge" id="profile_container" style="margin-top: 20px; justify-content: center">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Scrollbar -->
+        <button id="scroll_btn" class="p-0" title="بالای صفحه" onclick="topFunction()">
+            <i class="far fa-caret-square-up"></i>
+        </button>
+    </body>
+
+    <!-- Blocking UI  -->
+    <script src="../../../static/js/blockUI.js"></script>
+    <script src="../../../static/js/blockUI_handler.js"></script>
+    <link rel="stylesheet" href="../../../static/styles/loader.css">
+    <!-- save log user -->
+    <script>
+        async function UserLog(form_data){
+                if (getCookie("username") !== "") {
+                    const user_name = getCookie("username")
+                    let page_url = window.location.pathname
+                    const user_ip = "127.0.0.0"
+
+                    page_url = page_url.slice(0, -1);
+                    if(page_url==="")
+                    {
+                        page_url = "/0";
+                    }
+
+
+                    let link_request = 'http://' + location.host + "/UserLogSaved/" + user_name + page_url + "/"+ user_ip + "/";
+
+                    $.ajax({
+                        url: link_request,
+                        data: form_data,
+                        type: 'POST',
+                        contentType: false,
+                        processData: false,
+                        async: true,
+
+
+                    }).done(function (res) {
+                        console.log("done")
+
+                    }).fail(function (res) {
+                        console.log("fail")
+                    });
+
+                }
+            }
+    </script>
+    <script>
+      init()
+
+      SOURCE_IMAGE_TAG = {
+        "تابناک": "../../../static/icons/logo/tabnak.jfif",
+        "خبر آنلاین": "../../../static/icons/logo/khabar-online.png",
+        "عصر ایران": "../../../static/icons/logo/asriran.jfif",
+        "ایسنا": "../../../static/icons/logo/isna.jfif",
+        "BBC": "../../../static/icons/logo/BBC.png",
+      }
+
+      async function init() {
+          startFullPageBlockUI();
+          await initProfiles();
+          stopFullPageBlockUI("پروفایل منابع")
+          
+      }
+
+      async function initProfiles() {
+        const request_link = "http://" + window.location.host + "/GetResourceInformation/";
+        let response = await fetch(request_link).then(response => response.json());
+        const resource_information = response["resource_information"]
+        LoadProfile(resource_information)
+
+      }
+
+      function LoadProfile(resource_information) {
+        let i = 0;
+        let tag = ""
+        for (const row of resource_information)
+        {
+            const country_id = row["country_id"]
+            const country_name = row["country_name"]
+            const doc_count = row["doc_count"]
+            const max_date = row["max_date"]
+            const min_date = row["min_date"]
+            const logo_path = SOURCE_IMAGE_TAG[country_name]
+
+            let html_tag = `<div class="card text-right col-3 m-2 judge-card">
+                  <div class="card-header align-center" style="background-color: #e2eefa">
+                    <img src="${logo_path}" class="rounded-circle" width="60px" height="60px"
+                      alt="Avatar" style="object-fit:fill"/>
+                    <p class="judge-name" style="margin-top: 8px; font-size: 20px">${country_name}</p>
+                  </div>
+                  <div class="card-body">
+                    <h5 class="card-title">تعداد اخبار: ${doc_count}</h5>
+                    <hr>
+                    <h5 class="card-title">:تاریخ اولین خبر<p> </p> ${min_date}</h5>
+                    <h5 class="card-title">:تاریخ آخرین خبر<p> </p> ${max_date}</h5>
+                    <br>
+                    <div class="text-left"><a href="${min_date}" class="btn" style="background-color: #e2eefa">پروفایل</a></div>
+                  </div>
+              </div>`
+
+            tag += html_tag
+        }
+
+        document.getElementById("profile_container").innerHTML = tag
+      }
+
+    </script>
+  
+
+    <!-- <script src="../../static/library/notyf.min.js"></script> -->
+    <!-- BS Tooltips handler -->
+    <script src="../../static/js/tooltip_handler.js"></script>
+
+    <!-- Intro Js -->
+    <script src="../../static/js/information/information_tour.js">
+    </script>
+    <script src="../../static/js/signout_function.js"></script>
+    <script src="../../static/js/logincheck.js"></script>
+    <script src="../../static/js/scroll_button_handler.js"></script>
+
+    <!-- zip file  -->
+    <script src="../../static/js/zipDownload/jszip.min.js"></script>
+    <script src="../../static/js/zipDownload/FileSaver.min.js"></script>
+
+    <!-- graph  g6.antv -->
+    <script src="../../static/library/g6.min-4.3.11.js"></script>
+
+
+</html>

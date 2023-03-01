@@ -411,6 +411,10 @@ def sentiment_analysis_panel(request):
     return render(request, 'doc/main_templates/paragraph_profile.html')
 
 
+def resource_profile(request):
+    return render(request, 'doc/main_templates/resource_profile.html')
+
+
 def upload_zip_file(request):
     # documents = ZipFile.objects.filter(uploader=request.user)
     query_set1 = Country.objects.filter()
@@ -6585,3 +6589,21 @@ def AILDASubjectChartTopicGetInformationExport(request, topic_id, subject_name, 
 
     return JsonResponse({"file_name": file_name})
 
+def GetResourceInformation(request):
+    document_object = Document.objects.all().values("country_id_id", "country_id__name").annotate(
+        doc_count=Count("id"),
+        min_date=Min("date"),
+        max_date=Max("date"),
+    )
+    result = []
+    for row in document_object:
+        res = {
+            "country_id": row["country_id_id"],
+            "country_name": row["country_id__name"],
+            "doc_count": row["doc_count"],
+            "min_date": row["min_date"],
+            "max_date": row["max_date"],
+        }
+        result.append(res)
+
+    return JsonResponse({"resource_information": result})

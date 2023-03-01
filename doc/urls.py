@@ -374,4 +374,9 @@ urlpatterns = [
         "AILDASubjectChartTopicGetInformationExport/<int:topic_id>/<str:subject_name>/<int:curr_page>/<int:result_size>/",
         views.AILDASubjectChartTopicGetInformationExport, name='AILDASubjectChartTopicGetInformationExport'),
 
+    path('resource_profile/', views.resource_profile, name='resource_profile'),
+    path('GetResourceInformation/', views.GetResourceInformation, name='GetResourceInformation'),
+
+
+
 ]
