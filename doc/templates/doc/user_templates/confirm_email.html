@@ -21,7 +21,7 @@
                     <form id="confirm-email" class="shadow p-4 bg-white" method="POST" include-form-tracking>
                         <div class="mb-3 text-center">
                         <img width="150px" style=""
-                             src="../../../static/icons/logo/logo-blue_text2.png" alt="" />
+                             src="../../static/image/logo.svg" alt="" />
                         </div>
                         {% if url_is_valid == False %}لینک تایید ایمیل اشتباه است و یا از زمان انقضای آن گذشته است{% endif %}
                         {% if url_is_valid == True %}
@@ -36,9 +36,11 @@
                             </div>
                             <div class="mb-3" id="messages"></div>
                             <div class="mb-3 d-grid gap-2 col-6 mx-auto">
-                                <button class="btn btn-primary" type="submit">تایید کد</button>
+                                <button class="btn btn-primary" id="sub" type="submit">تایید کد</button>
                             </div>
                         {% endif %}
+                        <p class="mb-0" id="resend"><a href="/resend-email/"  class="float-start  text-decoration-none">ارسال مجدد کد تایید</a></p>
+                        <p class="mb-0" id="login" style="display: none"><a href="/login/"  class="float-start  text-decoration-none">ورود</a></p>
                     </form>
                 </div>
             </div>
@@ -123,15 +125,20 @@
                 response = await response.json();
 
                 if (response.status == "OK") {
-                    messages.innerText = "ثبت‌نام شما با موفقیت انجام شد. تایید شما توسط ادمین، درحال بررسی است."
+                    messages.innerText = "ثبت‌نام شما با موفقیت انجام شد. تایید شما توسط ادمین، بررسی خواهد شد. نتیجه‌ی بررسی ادمین، در ایمیل، برای شما ارسال می‌شود."
+                    sub.style.display = "none";
+                    confirmEmail.style.display = "none";
+                    resend.style.display = "none";
+                    login.style.display = "block";
+                    messages.style.color = "green";
                     messages.classList.remove("text-danger")
-                    messages.classList.add("text-primary")
+                    messages.classList.add("text-center")
                 } else {
                     throw new Error("Invalid data")
                 }
             } catch(e) {
                 messages.innerText = "خطایی رخ داد! لطفا مجدد تلاش کنید"
-                messages.classList.remove("text-primary")
+                messages.classList.remove("text-center")
                 messages.classList.add("text-danger")
             }
         }

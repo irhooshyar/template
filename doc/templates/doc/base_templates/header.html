@@ -116,7 +116,7 @@
                         یادداشت‌های شخصی </a>
                 </li>
             </ul>
-        </li>
+            </li>
 
         </ul>
 
@@ -137,7 +137,6 @@
                 <a class="nav-link" href="#" id="AdminDropdown" role="button" data-bs-toggle="dropdown"
                    data-bs-toggle="tooltip" data-bs-placement="bottom" title="پنل ادمین" aria-expanded="false">
                     <i class="fas fa-user-cog" style="font-size: 15px; text-align: center; margin-top:5px" ;></i>
-
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="AdminDropdown">
                     <li><a id="manage_users_tab" class="dropdown-item text-right" href="{% url 'manage_users_tab' %}"
@@ -171,6 +170,10 @@
                     <li><a id="super_admin_user_log" class="dropdown-item text-right"
                            href="{% url 'super_admin_user_log' %}" style="display: none;">
                         لاگ کاربران</a>
+                    </li>
+                    <li><a id="resource_profile_tab" class="dropdown-item text-right" href="{% url 'resource_profile' %}"
+                           style="display: none;">
+                        داشبورد آماری منابع</a>
                     </li>
                 </ul>
             </li>
