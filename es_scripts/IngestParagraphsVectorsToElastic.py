@@ -20,7 +20,7 @@ from elasticsearch import helpers
 from collections import deque
 from scripts.Persian.Preprocessing import standardIndexName
 import json
-
+import after_response
 # ---------------------------------------------------------------------------------
 
 class ParagraphVectorIndex(ES_Index):
@@ -61,7 +61,7 @@ class ParagraphVectorIndex(ES_Index):
             yield new_paragraph
 
 
-
+@after_response.enable
 def apply(folder, Country,is_for_ref):
     settings = {}
     mappings = {}
@@ -116,7 +116,10 @@ def get_paragraphs_list(Country):
     paragraph_list = DocumentParagraphs.objects.filter(document_id__country_id__id = Country.id)
 
     paragraph_dict = {}
+    i = 0
     for para_obj in paragraph_list:
+        print("a", i/paragraph_list.__len__())
+        i+=1
         para_res_obj = {
             "para_id":para_obj.id,
             "para_text":para_obj.text,
@@ -126,8 +129,7 @@ def get_paragraphs_list(Country):
         }
         paragraph_dict[para_obj.id] = para_res_obj
 
-    
-    vectorFile = str(Path(config.PERSIAN_PATH, 'vector_result.json'))
+    vectorFile = r"asre_iran_vector_result.json"
     file = open(vectorFile)
     file_data = json.load(file)
 
@@ -138,6 +140,7 @@ def get_paragraphs_list(Country):
             paragraph_dict[para_id]["vector_value"] = para_vector
             result_paragraphs_list.append(paragraph_dict[para_id])
             ctr += 1
+            print("b", ctr/file_data.keys().__len__())
         except:
             print('Paragraph id not existed!')
 
