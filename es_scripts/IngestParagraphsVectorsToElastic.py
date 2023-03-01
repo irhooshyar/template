@@ -130,8 +130,8 @@ def get_paragraphs_list(Country):
         paragraph_dict[para_obj.id] = para_res_obj
 
     vectorFile = str(Path(config.PERSIAN_PATH, "weights", "tabnak_vector_result.json"))
-    file = open(vectorFile)
-    file_data = json.load(file)
+    file = open(vectorFile).read()
+    file_data = json.loads(file)
 
     ctr = 0
     for para_id,para_vector in file_data.items():
