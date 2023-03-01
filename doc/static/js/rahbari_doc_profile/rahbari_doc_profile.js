@@ -705,28 +705,29 @@ async function Search_Document_ByName() {
   let response = await fetch(request_link).then((response) => response.json());
   let documentsList = response["result"];
   let document_count = response["total_hits"];
-
+  console.log("documentsList===========")
+  console.log(documentsList)
   document.getElementById("all_doc_count").innerText =
     document_count.toString();
 
   const result_documentsList = [];
   for (const doc of documentsList) {
     let id = doc["_id"];
-    let approval_reference = doc["_source"]["approval_reference_name"];
-    let approval_date = doc["_source"]["approval_date"];
+    let category_name = doc["_source"]["category_name"];
+    let document_date = doc["_source"]["document_date"];
     let subject = doc["_source"]["subject_name"];
-    let document_name = doc["_source"]["name"];
+    let document_name = doc["_source"]["document_name"];
     let tag =
       '<button type="button" class="btn modal_btn" data-bs-toggle="modal" onclick="SelectDocumentFunction(' +
       id +
       ')">انتخاب</button>';
     const row = {
-      id: id,
-      document_name: document_name,
-      subject: subject,
-      approval_reference: approval_reference,
-      approval_date: approval_date,
-      tag: tag,
+      "id": id,
+      "document_name": document_name,
+      "subject": subject,
+      "category": category_name,
+      "date": document_date,
+      "tag": tag,
     };
     result_documentsList.push(row);
   }

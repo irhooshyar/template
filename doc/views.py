@@ -2096,13 +2096,13 @@ def exact_search_text(res_query, place, text, ALL_FIELDS):
         if text_list.__len__() == 1:
             title_query = {
                 "match_phrase": {
-                    "name": text
+                    "document_name": text
                 }
             }
         else:
             title_query = {
                 "terms": {
-                    "name.keyword": text_list
+                    "document_name.keyword": text_list
                 }
             }
 
@@ -2170,7 +2170,7 @@ def exact_search_text(res_query, place, text, ALL_FIELDS):
                 "should": [
                     {
                         "match_phrase": {
-                            "name": text
+                            "document_name": text
                         }
                     },
                     {
@@ -2195,7 +2195,7 @@ def boolean_search_text(res_query, place, text, operator, ALL_FIELDS):
     if place == 'عنوان':
         title_query = {
             "match": {
-                "name": {
+                "document_name": {
                     "query": text,
                     "operator": operator
                 }
@@ -2269,7 +2269,7 @@ def boolean_search_text(res_query, place, text, operator, ALL_FIELDS):
                 "should": [
                     {
                         "match": {
-                            "name": {
+                            "document_name": {
                                 "query": text,
                                 "operator": operator
                             }
@@ -3491,7 +3491,9 @@ def SearchDocument_ES(request, country_id, category_id, subject_id, from_year, t
                              )
     max_score = response['hits']['hits'][0]['_score'] if total_hits > 0 else 1
     max_score = max_score if max_score > 0 else 1
-
+    print(index_name)
+    print(res_query)
+    print(result)
     return JsonResponse({
         "result": result,
         'total_hits': total_hits,
