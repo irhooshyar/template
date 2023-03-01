@@ -699,7 +699,7 @@
                 }
 
                 // const detail_function = `DetailFunction('${es_id}', '${name}', '${mode}', '${where}', '${index - 1}')`;
-                const detail_function = `DetailFunction2('${id}','${name}','${mode}', '${where}','${text}')`;
+                const detail_function = `DetailFunction2('${id}','${mode}', '${where}','${text}')`;
                 const detail = '<button type="button" class="btn modal_btn" data-bs-toggle="modal" ' + button_disable + ' onclick="' + detail_function + '" data-bs-target="#myModal">جزئیات</button>'
 
                 const document_link = 'http://' + location.host + "/information/?id=" + id
@@ -2228,7 +2228,7 @@
 
 
 
-        async function DetailFunction2(doc_id, doc_name, search_type, where, text) {
+        async function DetailFunction2(doc_id, search_type, where, text) {
             startFullPageBlockUI();
 
             document.getElementById("DetailText").innerHTML = ""
@@ -2238,6 +2238,8 @@
             let response = await fetch(request_link).then(response => response.json());
             paragraph_list = response["result"]
 
+            doc_name = paragraph_list[0]['_source']['document_name']
+            
             const link = 'http://' + location.host + "/information/?id=" + doc_id
             let title_tag = "<a  target='blank' href='" + link + "'>" + doc_name + "</a>"
             document.getElementById("ModalHeader").innerHTML = title_tag
