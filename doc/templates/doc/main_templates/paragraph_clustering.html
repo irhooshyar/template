@@ -1636,9 +1636,7 @@
     }
 
 
-    async function save_user_label(src_topic_id) {
-        topic_id = src_topic_id.replace('*',', ')
-
+    async function save_user_label(topic_id) {
         username = getCookie("username");
         label = $("#" + topic_id).val();
 

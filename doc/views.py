@@ -2417,7 +2417,8 @@ def save_lda_topic_label(request, topic_id, username, label):
 
 def save_topic_label(request, topic_id, username, label):
     result_response = ""
-
+    topic_id = topic_id.replace('*',', ')
+    
     user = User.objects.get(username=username)
     topic = ClusterTopic.objects.get(id=topic_id)
 
