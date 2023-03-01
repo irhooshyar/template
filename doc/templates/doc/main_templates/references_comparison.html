@@ -29,7 +29,7 @@
     </script>-->
 
 
-    <title>مقایسه دو سند</title>
+    <title>مقایسه دو خبر</title>
     {% include "doc/base_templates/title_icon.html" %}
 </head>
 
@@ -71,7 +71,7 @@
 
         <h5 class="comparison_header">
             <label class="text-right float-right"><i class="header_icon bi bi-intersect"></i>
-                مقایسه اسناد :</label>
+                مقایسه اخبار :</label>
         </h5>
 
         <ul class="float-right list-group">
@@ -116,7 +116,7 @@
                 <h6 class="header mt-4  text-white d-block w-100 pt-2 px-2 float-right">
                     <label class="text-right float-right">
                         <i class="header_icon bi bi-pin-angle-fill p-1"></i>
-                        واژه‌های مشترک در دو سند
+                        واژه‌های مشترک در دو خبر
                         <span id="common_terms_count" title="تعداد واژه‌های مشترک"
                             class="badge bg-transparent border p-2 mr-2"></span>
 
@@ -134,7 +134,7 @@
                 <h6 class="header mt-4  text-white d-block w-100 pt-2 px-2 float-right">
                     <label class="text-right float-right">
                         <i class="header_icon bi bi-pin-angle-fill p-1"></i>
-                        کلیدواژه‌های مشترک در دو سند
+                        کلیدواژه‌های مشترک در دو خبر
                         <span id="common_keywords_count" title="تعداد کلیدواژه‌های مشترک"
                             class="badge bg-transparent border p-2 mr-2"></span>
 
@@ -224,8 +224,8 @@
             document.getElementById("doc2Name").innerHTML = "<a href='" + link2 + "'>" + document2_name + "</a>";
 
             /* References tables Header Update */
-            document.getElementById("references_header_doc1").innerHTML = '<i class="header_icon bi bi-pin-angle-fill p-1"></i>' + "ارجاع توسط سند: " + document1_name;
-            document.getElementById("references_header_doc2").innerHTML = '<i class="header_icon bi bi-pin-angle-fill p-1"></i>' + "ارجاع توسط سند: " + document2_name;
+            document.getElementById("references_header_doc1").innerHTML = '<i class="header_icon bi bi-pin-angle-fill p-1"></i>' + "ارجاع توسط خبر: " + document1_name;
+            document.getElementById("references_header_doc2").innerHTML = '<i class="header_icon bi bi-pin-angle-fill p-1"></i>' + "ارجاع توسط خبر: " + document2_name;
 
 
             /* References Between 2 Doc */
@@ -267,7 +267,7 @@
                 document.getElementById("common_terms_content").innerText = CommonWords_Text;
                 document.getElementById("common_terms_count").innerText = CommonWords.length;
             } else {
-                document.getElementById("common_terms_content").innerText = "هیچ کلیدواژه مشترکی بین دو سند پیدا نشد.";
+                document.getElementById("common_terms_content").innerText = "هیچ کلیدواژه مشترکی بین دو خبر پیدا نشد.";
                 document.getElementById("common_terms_count").innerText = 0;
             }
 
@@ -276,7 +276,7 @@
                 document.getElementById("common_keywords_content").innerText = CommonKeyWords_Text;
                 document.getElementById("common_keywords_count").innerText = CommonKeyWords.length;
             } else {
-                document.getElementById("common_keywords_content").innerText = "هیچ کلیدواژه مشترکی بین دو سند پیدا نشد.";
+                document.getElementById("common_keywords_content").innerText = "هیچ کلیدواژه مشترکی بین دو خبر پیدا نشد.";
                 document.getElementById("common_keywords_count").innerText = 0;
             }
             */

@@ -197,13 +197,13 @@
                 <li class="nav-item float-right" role="presentation">
                     <button id="without_subject" class="nav-link" data-bs-toggle="pill"
                         data-bs-target="#doc_without_subject_pane" type="button" role="tab"
-                        aria-controls="doc_without_subject_pane" aria-selected="false">احکام بدون موضوع</button>
+                        aria-controls="doc_without_subject_pane" aria-selected="false">پاراگراف‌ها بدون موضوع</button>
                 </li>
 
                 <li class="nav-item float-right" role="presentation">
                     <button id="different_subject" class="nav-link" data-bs-toggle="pill"
                         data-bs-target="#doc_different_subject_pane" type="button" role="tab"
-                        aria-controls="doc_different_subject_pane" aria-selected="false">احکام با موضوع متفاوت</button>
+                        aria-controls="doc_different_subject_pane" aria-selected="false">پاراگراف‌ها با موضوع متفاوت</button>
                 </li>
 
 
@@ -597,7 +597,7 @@
                 <div dir="ltr" class="modal-footer">
 
                     <button id="ExportExcel2" disabled class="btn btn-outline-secondary"><i class="fa fa-download"></i>
-                        خروجی اکسل احکام
+                        خروجی اکسل پاراگراف‌ها
                     </button>
                 </div>
             </div>
@@ -684,7 +684,7 @@
 
                     <button id="ExportExcel_2" class="btn blue-button" disabled>
                         <i class="fa fa-download"></i>
-                        دانلود اسناد
+                        دانلود اخبار
                     </button>
                     <button id="ExportExcel_2" class="btn green-button"><i class="fa fa-download"></i> خروجی
                         اکسل
@@ -733,7 +733,7 @@
     TABLE_INFO = []
     const COLUMNS = {
         "cloud": "ابر واژگان",
-        "detail": "مشاهده احکام",
+        "detail": "مشاهده پاراگراف‌ها",
         "entropy": "آنتروپی",
         "subject": "موضوع غالب (براساس کلیدواژگان)"
     }
@@ -849,7 +849,7 @@
 
         await showWithoutSubjectTable(documents_without_subject);
         await showDifferenceSubjectTable(documents_difference_subject);
-        stopBlockUI('DifferentSubjectTableId', 'احکام با موضوع متفاوت');
+        stopBlockUI('DifferentSubjectTableId', 'پاراگراف‌ها با موضوع متفاوت');
 
 
 
@@ -969,7 +969,7 @@
                     }
                 }, {
                     "name": "paragraph_count",
-                    "title": "تعداد احکام",
+                    "title": "تعداد پاراگراف‌ها",
                     "style": {
                         "width": "5%"
                     }
@@ -1061,7 +1061,7 @@
         let index = 1;
         let document_result_table = [];
 
-        document.getElementById("DocumentCount").innerText = all_para_count + " حکم با درجه تعلق بالای 50 درصد (سخت‌گیرانه) یافت شد.";
+        document.getElementById("DocumentCount").innerText = all_para_count + " پاراگراف با درجه تعلق بالای 50 درصد (سخت‌گیرانه) یافت شد.";
 
         for (let doc of lda_topics) {
             const detail_function = "DetailFunction(" + doc['id'] + ")";
@@ -1134,7 +1134,7 @@
             }
         }, {
             "name": "paragraph_count",
-            "title": "تعداد احکام",
+            "title": "تعداد پاراگراف‌ها",
             "style": {
                 "width": "5%"
             }
@@ -1146,7 +1146,7 @@
             }
         }, {
             "name": "detail",
-            "title": "مشاهده احکام",
+            "title": "مشاهده پاراگراف‌ها",
             "style": {
                 "width": "10%"
             }
@@ -1164,7 +1164,7 @@
             }
         }, {
             "name": "subject_chart",
-            "title": "نمودار توزیع احکام",
+            "title": "نمودار توزیع پاراگراف‌ها",
             "style": {
                 "width": "5%"
             }
@@ -1324,7 +1324,7 @@
                 }
             }, {
                 "name": "para_text",
-                "title": "متن حکم",
+                "title": "متن پاراگراف",
                 "style": {
                     "width": "30%"
                 }
@@ -1339,7 +1339,7 @@
         let document_result = [];
 
 
-        // document.getElementById("DocumentCount").innerText = " 500حکم یافت شد.";
+        // document.getElementById("DocumentCount").innerText = " 500پاراگراف یافت شد.";
 
 
         for (let doc of doc_sub) {
@@ -1354,7 +1354,7 @@
 
             paragraph_link = 'http://' + location.host + "/sentiment_analysis/?id=" + doc['paragraph_id'];
 
-            paragraph_tag = "<a class='' title = 'پروفایل حکم' target='blank' href='" + paragraph_link + "'>" + doc['paragraph_text'] + "</a>"
+            paragraph_tag = "<a class='' title = 'پروفایل پاراگراف' target='blank' href='" + paragraph_link + "'>" + doc['paragraph_text'] + "</a>"
 
 
             const row = { "index": index, "doc_name": doc_name, "name": paragraph_tag, "subject": doc['document_subject'], "pre_subject": doc['document_predict_subject'] }
@@ -1398,7 +1398,7 @@
                 }
             }, {
                 "name": "name",
-                "title": "متن حکم",
+                "title": "متن پاراگراف",
                 "style": {
                     "width": "35%"
                 }
@@ -1410,7 +1410,7 @@
                 }
             }, {
                 "name": "pre_subject",
-                "title": "موضوع غالب خوشه حکم (پیشنهادی)",
+                "title": "موضوع غالب خوشه پاراگراف (پیشنهادی)",
                 "style": {
                     "width": "10%"
                 }
@@ -1431,7 +1431,7 @@
         let response = await fetch(request_link).then(response => response.json());
         /*  Show detail Result */
         await showDetailsModal(response['topic_paragraphs'], response['keywords']);
-        stopFullPageBlockUI('جزئیات احکام')
+        stopFullPageBlockUI('جزئیات پاراگراف‌ها')
     }
 
     async function showDetailsModal(paragraphs_list, topic_words) {
@@ -1523,19 +1523,19 @@
                 }
             }, {
                 "name": "paragraph_text",
-                "title": "متن حکم",
+                "title": "متن پاراگراف",
                 "style": {
                     "width": "35%"
                 }
             }, {
                 "name": "subject_name",
-                "title": "موضوع حکم براساس کلیدواژه (روش دستی)",
+                "title": "موضوع پاراگراف براساس کلیدواژه (روش دستی)",
                 "style": {
                     "width": "20%"
                 }
             }, {
                 "name": "score",
-                "title": "امتیاز حکم",
+                "title": "امتیاز پاراگراف",
                 "style": {
                     "width": "10%"
                 }
@@ -1591,7 +1591,7 @@
     }
 
     async function SubjectChartFunction(topic_id) {
-        document.getElementById("CloudHeader").innerHTML = "نمودار توزیع احکام"
+        document.getElementById("CloudHeader").innerHTML = "نمودار توزیع پاراگراف‌ها"
         document.getElementById("DetailText").innerHTML = ""
 
         let request_link = 'http://' + location.host + "/AILDASubjectChartTopic/" + topic_id + "/";
@@ -1630,7 +1630,7 @@
             data,
             sortKeys,
             xAxisTitle: "موضوع خبر",
-            title: "تعداد احکام: " + paragraph_count + '\n' + 'موضوع غالب (براساس کلیدواژگان): ' + dominant_subject_name + "\n" + 'آنتروپی: ' + correlation_score + "\n",
+            title: "تعداد پاراگراف‌ها: " + paragraph_count + '\n' + 'موضوع غالب (براساس کلیدواژگان): ' + dominant_subject_name + "\n" + 'آنتروپی: ' + correlation_score + "\n",
             yAxisTitle: "تعداد خبر",
             onClick: (event, data) => {
                 const click_tag = event.domTarget.tag;
@@ -1653,7 +1653,7 @@
 
 
         // set modal header
-        modal_header = "احکام دارای موضوع " + subject
+        modal_header = "پاراگراف‌ها دارای موضوع " + subject
         document.getElementById("ChartModalHeader_2").innerHTML = modal_header
         // define request link without curr_page & search_result_size
 
@@ -1682,7 +1682,7 @@
             "body_id": "ChartModalBodyText_2",
             "modal_load_more_btn_id": "LoadMoreDocuments_2",
             "result_size_container_id": "DocsCount_2",
-            "result_size_message": "حکم",
+            "result_size_message": "پاراگراف",
             "list_type": "ordered",
             "custom_body_function": null,
             "body_parameters": null
