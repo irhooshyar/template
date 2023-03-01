@@ -560,13 +560,13 @@ def apply(folder_name, Country):
                                         '>' + 'مشاهده' + '</button>'
 
 
-            edited_cluster_id = cluster_id.replace(',','*')
+            # edited_cluster_id = cluster_id.replace(',','*')
             row = {
                 "id": index, "cluster_name": cluster_name,
                 "user_label":
                 "<div>" +
                 "<input id ='" + cluster_id + "' class='form-control p-1 text-center d-block w-100' value = 'بدون برچسب' type= 'text'/>" + 
-                "<button onclick=save_user_label('" + edited_cluster_id + "') class = 'btn btn-outline-success mt-1 p-0 d-block w-100'>ذخیره</button>" +
+                "<button onclick=save_user_label(" + "'" + cluster_id + "'" + ") class='btn btn-outline-success mt-1 p-0 d-block w-100'>ذخیره</button>" +
                 "</div>",
 
                  "word_list": cluster_word_list, "cluster_size": cluster_size,
