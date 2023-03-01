@@ -7,10 +7,10 @@ function showTour(){
     showProgress: false,
     steps: [{
         element: document.querySelector('#start'),
-        intro: "در این پنل با انتخاب کشور و موضوع سند اسناد مرتبط با موضوع موردنظر ارائه و تحلیل اولیه می‌شود."
+        intro: "در این پنل با انتخاب کشور و موضوع خبر اسناد مرتبط با موضوع موردنظر ارائه و تحلیل اولیه می‌شود."
     }, {
         element: document.querySelector('#country'),
-        intro: "مجموعه سند مورد نظر خود را از این قسمت انتخاب نمایید."
+        intro: "مجموعه خبر مورد نظر خود را از این قسمت انتخاب نمایید."
     }, {
         element: document.querySelector('.multi-select-container'),
         intro: "موضوع مورد نظر خود را انتخاب نمایید."

@@ -116,7 +116,7 @@
                 <!-- Country Input -->
                 <div class="col-md-6  pt-3 col-12 col-lg-2 bg-light" dir="rtl">
                     <label for="country" class=" text-right bg-light float-right" style="direction: rtl;;">مجموعه
-                        سند:</label>
+                        خبر:</label>
                     <select dir="rtl" id="country" name="country"
                         class="form-select text-right float-right searchable-select" style="direction: rtl;"
                         onchange="CountryChanged()">
@@ -379,13 +379,13 @@
                             <button id="AndDocResultData_tab" class="nav-link" data-bs-toggle="pill"
                                 data-bs-target="#AndDocResultData_pane" type="button" role="tab"
                                 aria-controls="AndDocResultData_pane" aria-selected="false">نتایج جستجو AND
-                                (سند)</button>
+                                (خبر)</button>
                         </li>
                         <li class="nav-item float-right" role="presentation">
                             <button id="ANDDocChartData_tab" class="nav-link" data-bs-toggle="pill"
                                 data-bs-target="#ANDDocChartData_pane" type="button" role="tab"
                                 aria-controls="ANDDocChartData_pane" aria-selected="false">اطلاعات نموداری AND
-                                (سند)</button>
+                                (خبر)</button>
                         </li>
                     </ul>
 
@@ -1188,8 +1188,8 @@
             let y_label = "تعداد پاراگراف‌ها"
             let result_message = "پاراگراف"
             if (search_type.includes("DOC")) {
-                y_label = "تعداد اسناد"
-                result_message = "سند"
+                y_label = "تعداد اخبار"
+                result_message = "خبر"
             }
 
 

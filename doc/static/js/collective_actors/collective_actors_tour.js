@@ -10,7 +10,7 @@ function showTour(){
         intro: "در این پنل با انتخاب کشور و نوع کنشگر اطلاعاتی درمورد کنشگران در پایین نمایش داده می‌شود."
     }, {
         element: document.querySelector('#country'),
-        intro: "مجموعه سند مورد نظر خود را از این قسمت انتخاب نمایید."
+        intro: "مجموعه خبر مورد نظر خود را از این قسمت انتخاب نمایید."
     }, {
         // element: document.querySelector('.multi-select-container'),
         element: document.querySelector('#CollectiveActorSelect'),

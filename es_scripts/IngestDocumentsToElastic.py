@@ -19,6 +19,7 @@ import time
 from elasticsearch import helpers
 from collections import deque
 from scripts.Persian.Preprocessing import standardIndexName
+from persiantools.jdatetime import JalaliDate
 
 
 # ---------------------------------------------------------------------------------
@@ -52,7 +53,28 @@ class DocumentIndex(ES_Index):
             doc_date = doc['date'] if doc['date'] != None else 'نامشخص'
             doc_time = doc['time'] if doc['time'] != None else 'نامشخص'
             doc_hour =  int(doc_time.split(':')[0].strip()) if doc_time != 'نامشخص' else 0
+            
+            document_jalili_date = {}
+            
+            if doc_date!= "نامشخص":
+                year = int(doc_date.split('/')[0])  
+                month = int(doc_date.split('/')[1])  
+                day = int(doc_date.split('/')[2])  
 
+                document_jalili_date = {
+                    "year":doc_year,
+                    "month":{
+                        "name":JalaliDate.to_jalali(year, month, day).strftime('%B',locale = 'fa'),
+                        "number": month
+                    },
+                    "day":{
+                        "name":JalaliDate.to_jalali(year, month, day).strftime('%A',locale = 'fa'),
+                        "number": day
+                    },
+                    "hour":doc_hour
+                    }
+                
+                print(document_jalili_date)
             if doc_file_name in files_dict:
                 base64_file = files_dict[doc_file_name]
 
@@ -65,6 +87,8 @@ class DocumentIndex(ES_Index):
                     "document_year": doc_year,
                     "document_time": doc_time,
                     "document_hour":doc_hour,
+
+                    "document_jalili_date":document_jalili_date,
                     "raw_file_name": doc_file_name,
                     "category_name": doc_category,
                     "source_name": doc_source,

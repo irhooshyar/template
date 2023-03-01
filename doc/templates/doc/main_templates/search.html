@@ -264,6 +264,18 @@
                         aria-controls="bar_chart_info_pane" aria-selected="false">داشبورد آماری</button>
                 </li>
 
+                <li class="nav-item float-right" role="presentation">
+                    <button id="trend_chart_info_tab" class="nav-link" data-bs-toggle="pill"
+                        data-bs-target="#trend_chart_info_pane" type="button" role="tab"
+                        aria-controls="trend_chart_info_pane" aria-selected="false">تحلیل روند</button>
+                </li>
+
+
+                <li class="nav-item float-right" role="presentation">
+                    <button id="sentiment_chart_info_tab" class="nav-link" data-bs-toggle="pill"
+                        data-bs-target="#sentiment_chart_info_pane" type="button" role="tab"
+                        aria-controls="sentiment_chart_info_pane" aria-selected="false">تحلیل احساسات</button>
+                </li>
                 <!-- Result Count -->
                 <p id="SearchResultLable" class="text-left float-left text-secondary pl-2"></p>
 
@@ -349,14 +361,39 @@
                         <div id="source_name_container" chart-height="350px" class="half">
                         </div>
 
-                        <div id="year_container" chart-height="350px" class="half"></div>
-
-                        <div id="hour_container" chart-height="350px" class="half"></div>
-
                         <div id="category_container" chart-height="1150px" class="full">
                         </div>
 
 
+                    </div>
+                </div>
+
+
+                <!-- Trend chart Info Pane -->
+                <div dir="rtl" style="min-height: 200px;" class="tab-pane fade float-right w-100"
+                    id="trend_chart_info_pane" role="tabpanel" aria-labelledby="trend_chart_info_tab">
+
+                    <div class="row mt-4 w-100 flex-row-reverse justify-content-around mx-0 px-0">
+                        <div id="date_container" chart-height="350px" class="full"></div>
+                        <div id="year_container" chart-height="350px" class="half"></div>
+                        <div id="month_container" chart-height="350px" class="half"></div>
+                        <div id="day_container" chart-height="350px" class="half"></div>
+                        <div id="hour_container" chart-height="350px" class="half"></div>
+
+
+                        <div id="category_container" chart-height="1500px" class="full">
+                        </div>
+
+                    </div>
+                </div>
+
+
+                <!-- Sentiment chart Info Pane -->
+                <div dir="rtl" style="min-height: 200px;" class="tab-pane fade float-right w-100"
+                    id="sentiment_chart_info_pane" role="tabpanel" aria-labelledby="sentiment_chart_info_tab">
+
+                    <div class="row mt-4 w-100 flex-row-reverse justify-content-around mx-0 px-0">
+                        <div id="sentiment_trend_container" chart-height="350px" class="full"></div>
                     </div>
                 </div>
 
@@ -423,10 +460,10 @@
                     <input type="number" id="ColumnModalPaginationInput" min="1" max="1" value="1"
                         class="form-select text-right float-right d-none">
 
-                    <button id="DownloadDocuments" class="btn btn-primary"><i class="fa fa-download"></i> دانلود
+                    <button id="DownloadDocuments" class="btn blue-button"><i class="fa fa-download"></i> دانلود
                         اخبار</button>
 
-                    <button id="ExportExcel2" class="btn btn-primary"><i class="fa fa-download"></i> خروجی اکسل
+                    <button id="ExportExcel2" class="btn green-button"><i class="fa fa-download"></i> خروجی اکسل
                     </button>
                 </div>
 
@@ -578,7 +615,9 @@
 
         async function init() {
             container_id_list = ['SearchResultLable', 'SearchTable', 'subject_container',
-                'year_container', 'hour_container', 'source_name_container', 'category_container']
+                'year_container', 'hour_container',
+                'source_name_container', 'category_container',
+                'month_container', 'date_container', 'day_container']
             clearPrevResults(container_id_list)
 
             const country_id = document.getElementById("country").value
@@ -660,7 +699,7 @@
                 }
 
                 // const detail_function = `DetailFunction('${es_id}', '${name}', '${mode}', '${where}', '${index - 1}')`;
-                const detail_function = `DetailFunction2('${id}','${name}','${mode}', '${where}','${text}')`;
+                const detail_function = `DetailFunction2('${id}','${mode}', '${where}','${text}')`;
                 const detail = '<button type="button" class="btn modal_btn" data-bs-toggle="modal" ' + button_disable + ' onclick="' + detail_function + '" data-bs-target="#myModal">جزئیات</button>'
 
                 const document_link = 'http://' + location.host + "/information/?id=" + id
@@ -751,7 +790,7 @@
                     "sorting": {
                         "enabled": true
                     },
-                    "empty": "سندی یافت نشد.",
+                    "empty": "خبری یافت نشد.",
                     "columns": columns,
                     "rows": TABLE_INFO
                 });
@@ -767,8 +806,6 @@
             startBlockUI('SearchTable');
 
 
-            const from_advisory_opinion_count = 0
-            const from_interpretation_rules_count = 0
             request_link = 'http://' + location.host + "/SearchDocument_ES/" + country_id + "/" + category_id + "/" + subject_id + "/" + from_year + "/" + to_year + "/"
                 + place + "/" + text + "/" + search_type + "/" +
                 curr_page + "/"
@@ -792,6 +829,24 @@
                 country_id, category_id,
                 subject_id, from_year, to_year
                 , place, text, search_type);
+
+            GetSentimentTrendChart(country_id, category_id, subject_id,
+                from_year, to_year, place, text, search_type, curr_page)
+        }
+
+        async function GetSentimentTrendChart(country_id, category_id, subject_id,
+            from_year, to_year, place, text, search_type, curr_page) {
+
+            request_link = 'http://' + location.host + "/GetSentimentTrend_ChartData/" + country_id + "/" + category_id + "/" + subject_id + "/" + from_year + "/" + to_year + "/"
+                + place + "/" + text + "/" + search_type + "/" +
+                curr_page + "/"
+
+
+            let response = await fetch(request_link).then(response => response.json());
+
+            date_sentiment_chart_data = response['date_sentiment_chart_data']
+            console.log(date_sentiment_chart_data)
+            showChart(date_sentiment_chart_data, "sentiment_trend_container", [], true, "تاریخ خبر", "توزیع احساسات براساس تاریخ خبر")
         }
 
         async function update_table_pagination_input(curr_page, total_hits) {
@@ -849,17 +904,23 @@
 
             subject_data = ES_Aggregations['subject-agg']['buckets']
             category_data = ES_Aggregations['category-agg']['buckets']
+            jalili_date_data = ES_Aggregations['date-agg']['buckets']
             year_data = ES_Aggregations['year-agg']['buckets']
+            month_data = ES_Aggregations['month-agg']['buckets']
+            day_data = ES_Aggregations['day-agg']['buckets']
             hour_data = ES_Aggregations['hour-agg']['buckets']
+            date_data = ES_Aggregations['date-agg']['buckets']
             source_name_data = ES_Aggregations['source-name-agg']['buckets']
-
 
             /* Show Chart  */
 
             showChartData(subject_data, "subject_container", documents_information_result, false, "موضوع خبر", "توزیع موضوعی اخبار")
             showChartData(category_data, "category_container", documents_information_result, false, "دسته خبر", "توزیع اخبار براساس دسته اخبار")
             showChartData(year_data, "year_container", documents_information_result, true, "سال خبر", "توزیع اخبار براساس سال خبر")
+            showChartData(month_data, "month_container", documents_information_result, true, "ماه خبر", "توزیع اخبار براساس ماه خبر")
+            showChartData(day_data, "day_container", documents_information_result, true, "روز خبر", "توزیع اخبار براساس روز خبر")
             showChartData(hour_data, "hour_container", documents_information_result, true, "ساعت خبر", "توزیع اخبار براساس ساعت خبر")
+            showChartData(date_data, "date_container", documents_information_result, true, "تاریخ خبر", "توزیع اخبار براساس تاریخ خبر")
             showChartData(source_name_data, "source_name_container", documents_information_result, true, "مرجع خبر", "توزیع اخبار براساس مرجع خبر")
 
             stopBlockUI('bar_chart_info_pane', 'داشبورد آماری');
@@ -1029,38 +1090,6 @@
         }
 
 
-        async function showReferencesGraph_v2(country_id, level_id, subject_id, type_id, approval_reference_id,
-            from_year, to_year, revoked_type_id, place, text, search_type, curr_page) {
-
-
-            let request_link = '';
-            //notyf.dismissAll();
-
-            const from_advisory_opinion_count = 0
-            const from_interpretation_rules_count = 0
-            request_link = 'http://' + location.host + "/Get_Documents_RefGraph_ES/" + country_id + "/" + level_id + "/" + subject_id + "/" + type_id + "/" +
-                approval_reference_id + "/" + from_year + "/" + to_year + "/" + from_advisory_opinion_count + "/" + from_interpretation_rules_count + "/" +
-                revoked_type_id + "/" + place + "/" + text + "/" + search_type + "/" +
-                curr_page + "/"
-
-
-            let response = await fetch(request_link).then(response => response.json());
-
-            Nodes_data = response["Nodes_data"];
-            Edges_data = response["Edges_data"];
-
-            container = document.getElementById("references_graph_container");
-            const width = 0.88 * window.innerWidth
-            const height = container.scrollHeight || 500;
-
-            let Graph_Object = new MyGraph("references_graph_container", Nodes_data, Edges_data, {}, {}, width, height, "circular", "references_ChangeLayout", true,
-                "Yellow", "references_DegreeSlider", "references_WeightSlider", 1, 1, "references_selected_node_table", "references_selected_edge_table",
-                "references_SelectNeighbourImg", "references_ShowHideImg", "تعداد ارجاع", references_node_dbl_click, references_edge_dbl_click,
-                "references_SearchBox", "references_SearchBtn")
-
-            await Graph_Object.show()
-        }
-
         function references_node_dbl_click(node_data) {
             window.open('http://' + location.host + "/information?id=" + node_data["id"]);
 
@@ -1107,6 +1136,10 @@
                 xAxisTitle,
                 title,
                 yAxisTitle: "تعداد خبر",
+                sortPersianMonth: (container === "month_container"),
+                sortPersianDate: (container === "date_container" ||
+                    container === "sentiment_trend_container"),
+
                 onClick: async function (event, data) {
                     const click_tag = event.domTarget.tag;
                     const index = click_tag["index"]
@@ -1124,25 +1157,35 @@
             };
 
             if (container === "subject_container" ||
-                container === "source_name_container") {
-                options.onClick = async function (event, data) {
-                    const click_tag = event.domTarget.tag;
-                    const index = click_tag["index"]
-                    const text = data[index][0];
-                    const best_result_count = documents_information_result.length
+                container === "source_name_container" ||
+                container === "day_container") {
 
-                    let filtered_result = []
-                    let header = ""
-                    let save_file_name = document.getElementById("SearchBox").value;
 
-                    await GetClickedColumnDocuments(container, text)
+                if (container === "subject_container" ||
+                    container === "source_name_container") {
 
-                    $("#ChartModalBtn").click();
+                    options.onClick = async function (event, data) {
+                        const click_tag = event.domTarget.tag;
+                        const index = click_tag["index"]
+                        const text = data[index][0];
+                        const best_result_count = documents_information_result.length
+
+                        let filtered_result = []
+                        let header = ""
+                        let save_file_name = document.getElementById("SearchBox").value;
+
+                        await GetClickedColumnDocuments(container, text)
+
+                        $("#ChartModalBtn").click();
+                    }
+
                 }
 
                 newDoughnutChart(container, options);
             }
-            else if (container === "hour_container") {
+            else if (container === "hour_container" ||
+                container === "month_container" ||
+                container === "date_container") {
 
                 options.onClick = async function (event, data) {
                     const click_tag_index = event.domTarget.tag;
@@ -1162,6 +1205,81 @@
                 }
 
                 newLineChart(container, options)
+            } else if (container === "sentiment_trend_container") {
+                options.yAxisTitle = 'تعداد پاراگراف'
+                options.series_data = [
+                    {   
+                        "map":{x:0,value:1},
+                        "name":"احساس بسیار منفی",
+                        "normal": {
+                            "stroke_color": "#D31820",
+                            "stroke_thickness": 2
+                        },
+                        "hovered": {
+                            "stroke_color": "#D31820",
+                            "stroke_thickness": 4
+                        },
+                        "selected": {
+                            "stroke_color": "#D31820",
+                            "stroke_thickness": 6
+                        },
+                    },
+                
+                    {   
+                        "map":{x:0,value:2},
+                        "name":"احساس منفی",
+                        "normal": {
+                            "stroke_color": "#E68383",
+                            "stroke_thickness": 2
+                        },
+                        "hovered": {
+                            "stroke_color": "#E68383",
+                            "stroke_thickness": 4
+                        },
+                        "selected": {
+                            "stroke_color": "#E68383",
+                            "stroke_thickness": 6,
+                        },
+                    }
+                    ,
+                    {   
+                        "map":{x:0,value:3},
+                        "name":"احساس مثبت",
+                        "normal": {
+                            "stroke_color": "#96F826",
+                            "stroke_thickness": 2
+                        },
+                        "hovered": {
+                            "stroke_color": "#96F826",
+                            "stroke_thickness": 4
+                        },
+                        "selected": {
+                            "stroke_color": "#96F826",
+                            "stroke_thickness": 6
+                        },
+                    }
+              
+                    ,
+                    {   
+                        "map":{x:0,value:4},
+                        "name":"احساس بسیار مثبت",
+                        "normal": {
+                            "stroke_color": "#0C750B",
+                            "stroke_thickness": 2
+                        },
+                        "hovered": {
+                            "stroke_color": "#0C750B",
+                            "stroke_thickness": 4,
+
+                        },
+                        "selected": {
+                            "stroke_color": "#0C750B",
+                            "stroke_thickness": 6
+                        },
+                    }
+              
+                ]
+                newMultipleLineChart(container, options)
             }
             else {
                 newBarChart(container, options)
@@ -2110,7 +2228,7 @@
 
 
 
-        async function DetailFunction2(doc_id, doc_name, search_type, where, text) {
+        async function DetailFunction2(doc_id, search_type, where, text) {
             startFullPageBlockUI();
 
             document.getElementById("DetailText").innerHTML = ""
@@ -2120,6 +2238,8 @@
             let response = await fetch(request_link).then(response => response.json());
             paragraph_list = response["result"]
 
+            doc_name = paragraph_list[0]['_source']['document_name']
+            
             const link = 'http://' + location.host + "/information/?id=" + doc_id
             let title_tag = "<a  target='blank' href='" + link + "'>" + doc_name + "</a>"
             document.getElementById("ModalHeader").innerHTML = title_tag
@@ -2135,7 +2255,7 @@
 
                 paragraph_link = 'http://' + location.host + "/sentiment_analysis/?id=" + paragraph_id;
 
-                paragraph_tag = "<a class='' title = 'پروفایل حکم' target='blank' href='" + paragraph_link + "'>" + paragraph + "</a>"
+                paragraph_tag = "<a class='' title = 'پروفایل پاراگراف' target='blank' href='" + paragraph_link + "'>" + paragraph + "</a>"
 
                 // profile_tag = paragraph
 

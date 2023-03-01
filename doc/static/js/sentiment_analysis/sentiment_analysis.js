@@ -129,7 +129,7 @@ async function getSimilarParagraphs(paragraph_id) {
     const doc_link =
       "http://" + location.host + "/information/?id=" + document_id;
     const doc_tag =
-      "<a title='پروفایل سند' class='bold text-primary' target='blank' href='" +
+      "<a title='پروفایل خبر' class='bold text-primary' target='blank' href='" +
       doc_link +
       "'>" +
       document_name +
@@ -196,7 +196,7 @@ async function getSemanticSimilarParagraphs(paragraph_id) {
     const doc_link =
       "http://" + location.host + "/information/?id=" + document_id;
     const doc_tag =
-      "<a title='پروفایل سند' class='bold text-primary' target='blank' href='" +
+      "<a title='پروفایل خبر' class='bold text-primary' target='blank' href='" +
       doc_link +
       "'>" +
       document_name +
@@ -255,7 +255,7 @@ async function showKeywordSubjectTab(paragraph_id) {
   const doc_link =
     "http://" + location.host + "/information/?id=" + document_id;
   let doc_tag =
-    "<a style = 'text-decoration:none;' title = 'پروفایل سند' class='bold text-right text-secondary' target='blank' href='" +
+    "<a style = 'text-decoration:none;' title = 'پروفایل خبر' class='bold text-right text-secondary' target='blank' href='" +
     doc_link +
     "'>" +
     document_name +

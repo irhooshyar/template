@@ -187,7 +187,7 @@ function location_table_show_result() {
         "sorting": {
             "enabled": true
         },
-        "empty": "در این سند هیچ موقعیت مکانی یافت نشد.",
+        "empty": "در این خبر هیچ موقعیت مکانی یافت نشد.",
 
         "columns": LocationTableColumns,
         "rows": location_rows

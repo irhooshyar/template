@@ -40,7 +40,7 @@ chart.tooltip().hAlign('center').format("{%value}");
 
 
 var yAxis = chart.yAxis();
-yAxis.title("تعداد سند");
+yAxis.title("تعداد خبر");
 yAxis.title().fontFamily('vazir');
 chart.yAxis().labels().format("{%value}");
 

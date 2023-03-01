@@ -8,11 +8,10 @@ urlpatterns = [
     path('delete/<int:id>/<str:language>/', views.delete_doc, name='delete'),
     path('fullProfileAnalysis/<int:id>/', views.fullProfileAnalysis, name='fullProfileAnalysis'),
 
-
     path('get_task_list/', views.get_task_list, name='get_task_list'),
     path('static_data_import_db/<int:id>/<str:language>/', views.static_data_import_db, name='static_data_import_db'),
     path('update_docs_from_excel/<int:id>/', views.update_docs_from_excel, name='update_docs_from_excel'),
-    
+
     path('search_parameters_to_db/<int:id>/', views.search_parameters_to_db, name='search_parameters_to_db'),
     path('rahbari_search_parameters_to_db/<int:id>/', views.rahbari_search_parameters_to_db,
          name='rahbari_search_parameters_to_db'),
@@ -74,6 +73,9 @@ urlpatterns = [
     path('report_bug/', views.report_bug, name='report_bug'),
     path("delete_user/<int:user_id>/", views.DeleteUser, name='DeleteUser'),
     path('GetBM25Similarity/<int:document_id>/', views.GetBM25Similarity, name='GetBM25Similarity'),
+    path('GetDocumentsSimilarity/<int:document_id>/', views.GetDocumentsSimilarity, name='GetDocumentsSimilarity'),
+    path('similarityDetail/<int:main_document_id>/<int:selected_document_id>/<str:selected_country_name>/',
+         views.similarityDetail, name='similarityDetail'),
     path('GetDocumentById/<int:id>/', views.GetDocumentById, name='GetDocumentById'),
     path('GetDocumentsByCountryId_Modal/<int:country_id>/<int:start_index>/<int:end_index>/',
          views.GetDocumentsByCountryId_Modal, name='GetDocumentsByCountryId_Modal'),
@@ -82,6 +84,13 @@ urlpatterns = [
     path(
         'SearchDocument_ES/<int:country_id>/<int:category_id>/<int:subject_id>/<int:from_year>/<int:to_year>/<str:place>/<str:text>/<str:search_type>/<int:curr_page>/',
         views.SearchDocument_ES, name='SearchDocument_ES'),
+    
+    path(
+        'GetSentimentTrend_ChartData/<int:country_id>/<int:category_id>/<int:subject_id>/<int:from_year>/<int:to_year>/<str:place>/<str:text>/<str:search_type>/<int:curr_page>/',
+        views.GetSentimentTrend_ChartData, name='GetSentimentTrend_ChartData'),
+
+    
+    
     path(
         'SearchDocuments_Column_ES/<str:country_name>/<str:subject_name>/<str:category_name>/<str:from_year>/<str:to_year>/<str:place>/<str:text>/<str:search_type>/<int:curr_page>/',
         views.SearchDocuments_Column_ES, name='SearchDocuments_Column_ES'),
@@ -362,11 +371,12 @@ urlpatterns = [
     path('ingest_userlogs_to_index/<int:id>/<str:language>/', views.userlogs_to_index,
          name='ingest_userlogs_to_index'),
 
-
     path('GetSearchParameters/<int:country_id>/', views.GetSearchParameters, name='GetSearchParameters'),
-    path('GetSimilarParagraphs_ByParagraphID/<int:paragraph_id>/', views.GetSimilarParagraphs_ByParagraphID, name='GetSimilarParagraphs_ByParagraphID'),
+    path('GetSimilarParagraphs_ByParagraphID/<int:paragraph_id>/', views.GetSimilarParagraphs_ByParagraphID,
+         name='GetSimilarParagraphs_ByParagraphID'),
 
-    path('GetSemanticSimilarParagraphs_ByParagraphID/<int:paragraph_id>/', views.GetSemanticSimilarParagraphs_ByParagraphID, name='GetSemanticSimilarParagraphs_ByParagraphID'),
+    path('GetSemanticSimilarParagraphs_ByParagraphID/<int:paragraph_id>/',
+         views.GetSemanticSimilarParagraphs_ByParagraphID, name='GetSemanticSimilarParagraphs_ByParagraphID'),
     path("AILDASubjectChartTopicGetInformation/<int:topic_id>/<str:subject_name>/<int:curr_page>/<int:result_size>/",
          views.AILDASubjectChartTopicGetInformation, name='AILDASubjectChartTopicGetInformation'),
 

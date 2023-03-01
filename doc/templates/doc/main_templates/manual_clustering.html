@@ -308,18 +308,21 @@
 
                 </div>
                 <!-- Modal footer -->
-                <div id="detail_modal_footer" dir="ltr" class="modal-footer">
+                <div id="detail_modal_footer" dir="rtl" class="modal-footer">
 
 
                     <!-- <input type="number" id="ColumnModalPaginationInput" min="1" max="1" value="1"
                         class="form-select text-right float-right d-none"> -->
 
-                    
-
-                    <!-- <button id="ExportExcel2" onclick="TopicParagraphs_Excel()"
-                        class="btn btn-outline-primary float-left"><i class="fa fa-download"></i>
+                    <button id="downloadFile2"
+                        class="btn blue-button float-left" disabled><i class="fa fa-file-archive"></i>
                         خروجی اکسل پاراگراف‌ها
-                    </button> -->
+                    </button>
+
+                    <button id="ExportExcel2"
+                        class="btn green-button float-left"><i class="fa fa-file-excel"></i>
+                        خروجی اکسل پاراگراف‌ها
+                    </button>
                 </div>
 
             </div>
@@ -512,7 +515,7 @@
                 }
             }, {
                 "name": "paragraph_text",
-                "title": "متن حکم",
+                "title": "متن پاراگراف",
                 "style": {
                     "width": "60%"
                 }
@@ -935,7 +938,7 @@
                 "body_id": "paraDetailText",
                 "modal_load_more_btn_id": "LoadMoreDocuments",
                 "result_size_container_id": "DocsCount",
-                "result_size_message": "حکم",
+                "result_size_message": "پاراگراف",
                 "list_type": "ordered",
                 "custom_body_function": null,
                 "body_parameters": null,
@@ -993,9 +996,9 @@
 
 
 
-                // showChartData(country_id, subject_data, "subject_container", documents_information_result, false, "موضوع حکم")
+                // showChartData(country_id, subject_data, "subject_container", documents_information_result, false, "موضوع پاراگراف")
                 showChartData(country_id, cluster_id, document_year_data, "year_container", true, "سال خبر", "توزیع پاراگراف‌ها براساس سال اخبار")
-                showHistogramChart(country_id, cluster_id, subject_data, "subject_container", false, "موضوع خبر", "توزیع پاراگراف‌ها براساس موضوع")
+                showChartData(country_id, cluster_id, subject_data, "subject_container", false, "موضوع خبر", "توزیع پاراگراف‌ها براساس موضوع")
                 showChartData(country_id, cluster_id, category_data, "category_container", false, "دسته خبر", "توزیع پاراگراف‌ها براساس دسته اخبار")
 
             }).fail(function (res) {
@@ -1061,11 +1064,18 @@
                 data,
                 yAxisTitle: "تعداد پاراگراف‌ها",
                 sortKeys,
-                onclick: async function (event, data) {
+                onClick: async function (event, data) {
                     const click_tag = event.domTarget.tag;
                     const index = click_tag["index"]
 
-                    let field_value = data.row(index)[0];
+                    let field_value = ""
+                    if (position == "subject_container") {
+                        field_value = data[index][0];
+                    }
+                    else {
+                        field_value = data.row(index)[0];
+
+                    }
                     let field_name = CHART_FIELD_DICT[position] + ".keyword"
                     let chart_name = CHART_NAME_DICT[position]
 
@@ -1082,7 +1092,11 @@
 
                 }
             }
-            newBarChart(position, options)
+            if(position == "subject_container"){
+                newDoughnutChart(position, options);
+            }else{
+                newBarChart(position, options)
+            }
         }
 
     async function GetClickedColumnParagraphs(country_id, cluster_id, chart_name, field_name, field_value) {
@@ -1129,7 +1143,7 @@
             "body_id": "paraDetailText",
             "modal_load_more_btn_id": "LoadMoreDocuments",
             "result_size_container_id": "DocsCount",
-            "result_size_message": "حکم",
+            "result_size_message": "پاراگراف",
             "list_type": "ordered",
             "custom_body_function": null,
             "body_parameters": null
@@ -1218,7 +1232,7 @@
 
                     paragraph_link = 'http://' + location.host + "/sentiment_analysis/?id=" + paragraph_id;
 
-                    paragraph_tag = "<a class='' title = 'پروفایل حکم' target='blank' href='" + paragraph_link + "'>" + paragraph_text + "</a>"
+                    paragraph_tag = "<a class='' title = 'پروفایل پاراگراف' target='blank' href='" + paragraph_link + "'>" + paragraph_text + "</a>"
 
 
                     const tag = "<li class='mb-3 lh-lg'>" + doc_name + paragraph_tag + "</li>"
@@ -1228,7 +1242,7 @@
 
                 modal_content = "<ol start='" + 1 + "'>" + body_content + "</ol>"
                 document.getElementById("paraDetailText").innerHTML += modal_content
-                document.getElementById("DocsCount").innerHTML = total_hits + ' حکم:'
+                document.getElementById("DocsCount").innerHTML = total_hits + ' پاراگراف:'
 
 
             }).fail(function (res) {

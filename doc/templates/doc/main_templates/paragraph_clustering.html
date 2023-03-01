@@ -211,7 +211,7 @@
                         style="direction: rtl;">
 
                         <option value="(1, 1)">تک- واژه‌ای</option>
-                        <option value="(2, 2)">دو- واژه‌ای</option>
+                        <option disabled value="(2, 2)">دو- واژه‌ای</option>
                         <option disabled value="(2-3)">دو تا سه واژه</option>
                         <option disabled value="(2-4)">دو تا چهار واژه</option>
                     </select>
@@ -361,7 +361,7 @@
 
 
                         <!-- Page select -->
-                        <div class="col-md-6 col-12 col-lg-2 float-left">
+                        <!-- <div class="col-md-6 col-12 col-lg-2 float-left">
 
                             <input type="number" disabled="true" onchange="TablePaginationChanged(event)"
                                 id="TablePaginationInput" min="1" max="1" value="1"
@@ -370,12 +370,12 @@
                         </div>
 
 
-                        <!-- Result Pagination -->
+                        
                         <p id="ResultPagination" class="text-left text-secondary float-left">صفحه:
                             <span id="from_page">1</span>
                             /
                             <span id="total_page">1</span>
-                        </p>
+                        </p> -->
 
                     </div>
                     <!-- Search Result table -->
@@ -770,16 +770,15 @@
 
                 </div>
                 <!-- Modal footer -->
-                <div id="detail_modal_footer" dir="ltr" class="modal-footer">
+                <div id="detail_modal_footer" dir="rtl" class="modal-footer">
 
 
                     <input type="number" id="ColumnModalPaginationInput" min="1" max="1" value="1"
                         class="form-select text-right float-right d-none">
 
 
-
                     <button id="ExportExcel2" onclick="TopicParagraphs_Excel()"
-                        class="btn btn-outline-primary float-left"><i class="fa fa-download"></i>
+                        class="btn green-button float-left"><i class="fa fa-file-excel"></i>
                         خروجی اکسل پاراگراف
                     </button>
                 </div>
@@ -817,14 +816,14 @@
 
                 </div>
                 <!-- Modal footer -->
-                <div id="detail_modal_footer" dir="ltr" class="modal-footer">
+                <div id="detail_modal_footer" dir="rtl" class="modal-footer">
 
 
                     <input type="number" id="anova_word_ColumnModalPaginationInput" min="1" max="1" value="1"
                         class="form-select text-right float-right d-none">
 
-                    <button id="anova_word_ExportExcel2" class="btn btn-outline-primary float-left"><i
-                            class="fa fa-download"></i>
+                    <button id="anova_word_ExportExcel2" class="btn green-button float-left"><i
+                            class="fa fa-file-excel"></i>
                         خروجی اکسل پاراگراف
                     </button>
 
@@ -868,9 +867,9 @@
     TABLE_INFO = []
     const COLUMNS = {
         "anova": "واژگان متمایزکننده (ANOVA)",
-        "entropy": 'آنتروپی',
+        "cluster_entropy": 'آنتروپی',
         "distributions": "تحلیل توزیعی",
-        "frequent_subject": 'موضوع غالب (براساس کلیدواژگان)',
+        "cluster_frequent_keyword_subject": 'موضوع غالب (براساس کلیدواژگان)',
         "cloud": 'ابر واژگان',
         "detail": "پاراگراف مرتبط"
     }
@@ -942,7 +941,8 @@
 
         document.getElementById("document_search").disabled = false;
         await CountryChanged()
-        await ShowResult();
+        // await ShowResult();
+        clearPrevResults(container_id_list);
 
         //user log
         let form_data = new FormData()
@@ -1276,7 +1276,7 @@
             "body_id": "anova_word_DetailText",
             "modal_load_more_btn_id": "anova_word_LoadMoreDocuments",
             "result_size_container_id": "anova_word_DocsCount",
-            "result_size_message": "حکم",
+            "result_size_message": "پاراگراف",
             "list_type": "ordered",
             "custom_body_function": null,
             "body_parameters": null
@@ -1661,7 +1661,7 @@
 
             paragraph_link = 'http://' + location.host + "/sentiment_analysis/?id=" + paragraph_id;
 
-            paragraph_tag = "<a class='' title = 'پروفایل حکم' target='blank' href='" + paragraph_link + "'>" + paragraph + "</a>"
+            paragraph_tag = "<a class='' title = 'پروفایل پاراگراف' target='blank' href='" + paragraph_link + "'>" + paragraph + "</a>"
 
             // profile_tag = paragraph
 
@@ -1762,7 +1762,7 @@
         await update_column_pagination_input(curr_page, total_hits);
 
         max_page = parseInt(document.getElementById("ColumnModalPaginationInput").max)
-        document.getElementById("DocsCount").innerText = total_hits + " حکم:"
+        document.getElementById("DocsCount").innerText = total_hits + " پاراگراف:"
 
 
         show_modal_paragraphs(country_id, topic_id, modal_header, ES_SearchResult, curr_page, max_page)
@@ -1820,7 +1820,7 @@
         /* Show Chart  */
 
 
-        showChartData(country_id, topic_id, subject_data, "subject_container", documents_information_result, false, "موضوع حکم", entropy, cluster_size, 'توزیع موضوعی پاراگراف' + '\n' + "آنتروپی: " + entropy + "\n" + "تعداد پاراگراف: " + cluster_size)
+        showChartData(country_id, topic_id, subject_data, "subject_container", documents_information_result, false, "موضوع پاراگراف", entropy, cluster_size, 'توزیع موضوعی پاراگراف' + '\n' + "آنتروپی: " + entropy + "\n" + "تعداد پاراگراف: " + cluster_size)
         showChartData(country_id, topic_id, document_year_data, "year_container", documents_information_result, true, "سال خبر", entropy, cluster_size, "توزیع پاراگراف براساس سال اخبار")
         showChartData(country_id, topic_id, category_data, "category_container", documents_information_result, false, "دسته خبر", entropy, cluster_size, "توزیع پاراگراف براساس دسته اخبار")
     }
@@ -2056,7 +2056,7 @@
             "body_id": "DetailText",
             "modal_load_more_btn_id": "LoadMoreDocuments",
             "result_size_container_id": "DocsCount",
-            "result_size_message": "حکم",
+            "result_size_message": "پاراگراف",
             "list_type": "ordered",
             "custom_body_function": null,
             "body_parameters": null

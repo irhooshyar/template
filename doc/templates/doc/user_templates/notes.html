@@ -197,7 +197,7 @@
                     </div>
                     <div class="searching">
                         <form class="d-flex col-10">
-                            <input class="form-control ml-5" id="serach_input_document_name" type="search" placeholder="جست‌وجو در نام سند" 
+                            <input class="form-control ml-5" id="serach_input_document_name" type="search" placeholder="جست‌وجو در نام خبر" 
                             aria-label="Search">
                             <!-- class me-4 -->
                             <!-- &nbsp  -->
@@ -226,7 +226,7 @@
                             <i class="far fa-file-excel text-success m-0" style="font-size: 25px;margin: 0px;"></i>
                         </button>
 
-                        <button type="button" data-bs-toggle="tooltip" data-bs-placement="top" title="دانلود اسناد"
+                        <button type="button" data-bs-toggle="tooltip" data-bs-placement="top" title="دانلود اخبار"
                             class="btn float-left p-0 px-1 mt-2" id="DownloadDocumentsBtn" onclick="DownloadDocumentsFunction()">
                             <i class="fas fa-file-archive m-0" style="font-size: 25px;margin: 0px;"></i>
                         </button>
@@ -242,7 +242,7 @@
                                     <thead class="table">
                                         <tr>
                                             <th class="text-center" scope="col">ردیف</th>
-                                            <th class="text-center" scope="col">نام سند</th>
+                                            <th class="text-center" scope="col">نام خبر</th>
                                             <th class="text-center" scope="col">ستاره‌دار</th>
                                             <th class="text-center" scope="col">برچسب</th>
                                             <th class="text-center" scope="col">متن یادداشت </th>
@@ -712,7 +712,7 @@
         async function ExportExlceFunction() {
             var csv = "";
             sep = ","
-            let Csv = "ردیف" + sep + "نام سند" + sep + "برچسب" + sep + "متن یادداشت" + sep + "تاریخ" + "\n";
+            let Csv = "ردیف" + sep + "نام خبر" + sep + "برچسب" + sep + "متن یادداشت" + sep + "تاریخ" + "\n";
             table = document.getElementById("notes_table_body");
             tr = table.getElementsByTagName("tr");
             let i = 1;
@@ -761,7 +761,7 @@
                 }
                 const document_name = i + " " + document.document_name  + extension
                 
-                let value = "نام کاربری :" + getCookie("username") + "\n" + "نام سند:" + document.document_name + "\n" + "تاریخ:" + document.time + "\n" + "متن یادداشت:" + document.note + "\n" ;
+                let value = "نام کاربری :" + getCookie("username") + "\n" + "نام خبر:" + document.document_name + "\n" + "تاریخ:" + document.time + "\n" + "متن یادداشت:" + document.note + "\n" ;
                 zip.file(document_name, value)
                 i += 1;
                 row += 1;
@@ -796,7 +796,7 @@
         }
 
         async function DownloadDocumentsFunction() {
-            const save_file_name = "سند ها"
+            const save_file_name = "خبر ها"
             // DownloadLinkSet --> info
             // generatePDF --> info
             downloadDocs(tableContent, save_file_name)
@@ -837,7 +837,7 @@
                     // see FileSaver.js
                     saveAs(content, save_file_name + ".zip");
                 });
-            stopFullPageBlockUI('دانلود اسناد');
+            stopFullPageBlockUI('دانلود اخبار');
         }
 
         function filterName() {

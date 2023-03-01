@@ -12,7 +12,7 @@ function showTour(){
     },
         {
         element: document.querySelector('#country'),
-        intro: "مجموعه سند مورد نظر خود را از این قسمت انتخاب نمایید."
+        intro: "مجموعه خبر مورد نظر خود را از این قسمت انتخاب نمایید."
     },
         {
         element: document.querySelector('#SearchBox'),
@@ -25,29 +25,29 @@ function showTour(){
         intro: "برای مشاهده نتیجه جستجو روی این دکمه کلیک نمایید."
     }, {
         element: document.querySelector('#LevelSelect'),
-        intro: "برای تعیین سطح سند روی این گزینه کلیک نمایید."
+        intro: "برای تعیین سطح خبر روی این گزینه کلیک نمایید."
     }, {
         element: document.querySelector('#SubjectSelect'),
-        intro: "برای تعیین موضوع سند روی این گزینه کلیک نمایید."
+        intro: "برای تعیین موضوع خبر روی این گزینه کلیک نمایید."
     }, {
         element: document.querySelector('#TypeSelect'),
-        intro: "برای تعیین نوع سند روی این گزینه کلیک نمایید."
+        intro: "برای تعیین نوع خبر روی این گزینه کلیک نمایید."
     }
     , {
         element: document.querySelector('#ApprovalReferences'),
-        intro: "برای تعیین مرجع تصویب سند روی این گزینه کلیک نمایید."
+        intro: "برای تعیین مرجع تصویب خبر روی این گزینه کلیک نمایید."
 
     }, {
         element: document.querySelector('#YearFrom'),
-        intro: "برای تعیین محدوده سال تصویب سند بر روی این گزینه کلیک نمایید."
+        intro: "برای تعیین محدوده سال تصویب خبر بر روی این گزینه کلیک نمایید."
 
         }, {
         element: document.querySelector('#YearTo'),
-        intro: "برای تعیین محدوده سال تصویب سند بر روی این گزینه کلیک نمایید."
+        intro: "برای تعیین محدوده سال تصویب خبر بر روی این گزینه کلیک نمایید."
 
     },  {
         element: document.querySelector('#WhereSelect'),
-        intro: "برای تعیین محل جستجوی سند گزینه‌ای را انتخاب نمایید."
+        intro: "برای تعیین محل جستجوی خبر گزینه‌ای را انتخاب نمایید."
 
     },  {
         element: document.querySelector('#SearchTypeSelect'),

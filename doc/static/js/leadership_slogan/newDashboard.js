@@ -277,7 +277,7 @@ async function click_stack_based_column(key, slogan_year, selected_year, chart_n
         "body_id": "ChartModalBodyText_2",
         "modal_load_more_btn_id": "LoadMoreDocuments_2",
         "result_size_container_id": "DocsCount_2",
-        "result_size_message": "سند",
+        "result_size_message": "خبر",
         "list_type": "ordered",
         "custom_body_function": null,
         "body_parameters": null,

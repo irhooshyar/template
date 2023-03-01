@@ -14,7 +14,7 @@ function showTour() {
         },
         {
           element: document.querySelector("#country"),
-          intro: "مجموعه سند مورد نظر خود را از این قسمت انتخاب نمایید.",
+          intro: "مجموعه خبر مورد نظر خود را از این قسمت انتخاب نمایید.",
         },
         {
           element: document.querySelector('#SearchBox1'),
