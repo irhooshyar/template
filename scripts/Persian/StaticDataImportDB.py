@@ -310,7 +310,7 @@ def Update_ActorsArea():
 
 
 def add_parameter_values(Country, parameter, model_name):
-    value = parameter + "__id"
+    value = parameter + "_id"
     order_by = value + "__name"
 
     documents_list = Document.objects.filter(country_id_id=Country.id).values(value).order_by(order_by).distinct()
