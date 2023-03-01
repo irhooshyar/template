@@ -64,21 +64,8 @@
 
         <script>
             $(document).ready(function () {
-                $('#SepecificDropdown').addClass('active'); // header buttons
-                $('#judge_behavior_analysis').addClass('active');
-                $('select#language').on('change', function (e) {
-                    let selected_language = this.value;
-                    let current_url = window.location.href;
-                    if (selected_language === 'England') {
-                        let page_name = current_url.split('/')[3]
-                        let requested_url = current_url.replace(page_name, 'en')
-                        window.location = requested_url;
-                    } else if (selected_language === 'Russia') {
-                        let page_name = current_url.split('/')[3]
-                        let requested_url = current_url.replace(page_name, 'ru')
-                        window.location = requested_url;
-                    }
-                });
+                $('#AdminDropdown').addClass('active');
+                $('#resource_profile_tab').addClass('active');
             });
         </script>
     </head>

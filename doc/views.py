@@ -412,6 +412,7 @@ def sentiment_analysis_panel(request):
     return render(request, 'doc/main_templates/paragraph_profile.html')
 
 
+@allowed_users('admin_accept_user_comments')
 def resource_profile(request):
     return render(request, 'doc/main_templates/resource_profile.html')
 
