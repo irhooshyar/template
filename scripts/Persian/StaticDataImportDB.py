@@ -310,7 +310,7 @@ def Update_ActorsArea():
 
 
 def add_parameter_values(Country, parameter, model_name):
-    value = parameter + "_id"
+    value = parameter + "__id"
     order_by = value + "__name"
 
     documents_list = Document.objects.filter(country_id_id=Country.id).values(value).order_by(order_by).distinct()
@@ -340,8 +340,8 @@ def Search_Parameters_Insert(Country):
     SearchParameters.objects.filter(country__id=Country.id).delete()
 
     parameters = {
-        "category": Category,
-        "subject": Subject,
+        "category_id": Category,
+        "subject_id": Subject,
     }
 
     for parameter, model_name in parameters.items():
