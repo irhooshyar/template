@@ -6914,6 +6914,7 @@ def GetResourceInformation(request):
             "country_id": row["country_id_id"],
             "country_name": row["country_id__name"],
             "doc_count": row["doc_count"],
+            "paragraph_count": DocumentParagraphs.objects.filter(document_id__country_id__id=row["country_id_id"]).count(),
             "min_date": row["min_date"],
             "max_date": row["max_date"],
         }

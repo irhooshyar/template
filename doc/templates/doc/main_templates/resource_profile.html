@@ -184,23 +184,25 @@
             const doc_count = row["doc_count"]
             const max_date = row["max_date"]
             const min_date = row["min_date"]
+            const paragraph_count = row["paragraph_count"]
             const logo_path = SOURCE_IMAGE_TAG[country_name]
 
-            let html_tag = `<div class="card text-right col-3 m-2 judge-card">
-                  <div class="card-header align-center" style="background-color: #e2eefa">
-                    <img src="${logo_path}" class="rounded-circle" width="60px" height="60px"
-                      alt="Avatar" style="object-fit:fill"/>
-                    <p class="judge-name" style="margin-top: 8px; font-size: 20px">${country_name}</p>
-                  </div>
-                  <div class="card-body">
-                    <h5 class="card-title">تعداد اخبار: ${doc_count}</h5>
-                    <hr>
-                    <h5 class="card-title">:تاریخ اولین خبر<p> </p> ${min_date}</h5>
-                    <h5 class="card-title">:تاریخ آخرین خبر<p> </p> ${max_date}</h5>
-                    <br>
-                    <div class="text-left"><a href="${min_date}" class="btn" style="background-color: #e2eefa">پروفایل</a></div>
-                  </div>
-              </div>`
+            let html_tag = `<div class="card text-right col-3 my-4 mx-3 p-0">
+                              <div class="card-header align-center" style="background-color: #e2eefa; padding: 40px 0px 30px 0px ">
+                                <img src="${logo_path}" class="rounded-circle" width="85px" height="85px"
+                                  alt="Avatar" style="object-fit:fill"/>
+                                <p class="judge-name" style="margin-top: 15px; font-size: 16px">${country_name}</p>
+                              </div>
+                              <div dir="rtl" class="card-body">
+                                <h5 class="card-title" style="text-align: center; font-weight: 600"><span style="color:#000;">تعداد اخبار:</span>&emsp;<span>${doc_count}</span></h5>
+                                <hr>
+                                <h5 class="card-title"><span style="color:#000;">تعداد پاراگراف‌ها :</span>&emsp;<span>${paragraph_count}</span></h5>
+                                <h5 class="card-title"><span style="color:#000;">تاریخ اولین خبر:</span>&emsp;<span>${min_date}</span></h5>
+                                <h5 class="card-title"><span style="color:#000;">تاریخ آخرین خبر:</span>&emsp;<span>${max_date}</span></h5>
+                                <br>
+                                <div class="text-left"><a href="${min_date}" class="btn" style="background-color: #0981ff; color: #fff; font-size: 14px">پروفایل</a></div>
+                              </div>
+                            </div>`
 
             tag += html_tag
         }
