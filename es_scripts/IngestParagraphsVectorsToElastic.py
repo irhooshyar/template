@@ -129,7 +129,7 @@ def get_paragraphs_list(Country):
         }
         paragraph_dict[para_obj.id] = para_res_obj
 
-    vectorFile = str(Path(config.PERSIAN_PATH, "weights", "asre_iran_vector_result.json"))
+    vectorFile = str(Path(config.PERSIAN_PATH, "weights", "khabar_online_vector_result.json"))
     file = open(vectorFile)
     file_data = json.load(file)
 
