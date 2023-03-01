@@ -16,6 +16,7 @@ AllPanels = {
         'persian_name': 'پروفایل اسناد رهبری',
         'sub_panels': {
             'information': 'پروفایل اسناد رهبری',
+            'resource_profile': "داشبورد آماری منابع"
         }
     },
 
