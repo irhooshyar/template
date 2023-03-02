@@ -1943,13 +1943,8 @@ def GetMyUserProfile(request):
     user = User.objects.get(username=username)
     user_expertise = User_Expertise.objects.filter(user_id=user.id)
     expertise = []
-    expertise_ids = []
     for e in user_expertise:
-        if e.experise_id.expertise == "سایر موارد":
-            expertise.append(user.other_expertise)
-        else:
-            expertise.append(e.experise_id.expertise)
-        expertise_ids.append(e.experise_id.id)
+        expertise.append(e.experise_id.expertise)
     expertise = " - ".join(expertise)
 
     if expertise == "":
@@ -2541,7 +2536,7 @@ def signup_user_activation(request, email, code):
         user.save()
         return JsonResponse({"status": "Not OK"})
 
-def SaveUser(request, firstname, lastname,email, phonenumber, role, username, password, ip, expertise, other_expertise):
+def SaveUser(request, firstname, lastname,email, phonenumber, role, username, password, ip, expertise):
     user_username = User.objects.filter(username=username)
     user_email = User.objects.filter(email=email)
     if user_username.count() > 0:
