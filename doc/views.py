@@ -3599,7 +3599,8 @@ def GetSentimentTrend_ChartData(request, country_id, category_id, subject_id, fr
 
     aggregations = response['aggregations']
     date_sentiment_buckets = aggregations['date-sentiment-agg']['buckets']
-
+    print("date_sentiment_buckets==========")
+    print(date_sentiment_buckets)
     date_sentiment_dict = {}
     for bucket in date_sentiment_buckets:
         date = bucket['key'][0]
@@ -3614,6 +3615,7 @@ def GetSentimentTrend_ChartData(request, country_id, category_id, subject_id, fr
                 "بدون ابراز احساسات": 0,
                 "احساس خنثی یا ترکیبی از مثبت و منفی": 0
             }
+            date_sentiment_dict[date][sentiment] = doc_count
         else:
             date_sentiment_dict[date][sentiment] = doc_count
 
@@ -3633,6 +3635,10 @@ def GetSentimentTrend_ChartData(request, country_id, category_id, subject_id, fr
         total_hits = client.count(body={
             "query": res_query
         }, index=index_name, doc_type='_doc')['count']
+
+
+    print("date_sentiment_chart_data==========")
+    print(date_sentiment_chart_data)
 
     response = client.search(index=index_name,
                              request_timeout=40,
