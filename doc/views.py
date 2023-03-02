@@ -4019,7 +4019,26 @@ def GetActorsChartData_ES_2(request, country_id, level_id, subject_id, type_id, 
 
 
 def filter_doc_fields_COLUMN(res_query, category_name, subject_name,
-                             from_year, to_year):
+                             from_year, to_year,sentiment,field_name,field_value):
+    
+    field_value = field_value.replace('-','/')
+    # ---------------------------------------------------------
+    if sentiment != "همه":
+        sentiment_query = {
+            "term": {
+                "sentiment.keyword": sentiment
+            }
+        }
+        res_query['bool']['filter'].append(sentiment_query)
+
+    if field_name != "همه":
+        field_query = {
+            "term": {
+                field_name: field_value
+            }
+        }
+        res_query['bool']['filter'].append(field_query)
+
     # ---------------------------------------------------------
     if category_name != "همه":
         level_query = {
@@ -4062,7 +4081,7 @@ def filter_doc_fields_COLUMN(res_query, category_name, subject_name,
 
 
 def SearchDocuments_Column_ES(request, country_name, category_name, subject_name,
-                              from_year, to_year
+                              from_year, to_year,sentiment,field_name,field_value
                               , place, text, search_type, curr_page):
     country_id = Country.objects.get(name=country_name).id if country_name != 'همه' else 0
     index_name = None
@@ -4074,7 +4093,7 @@ def SearchDocuments_Column_ES(request, country_name, category_name, subject_name
 
     res_query['bool']['filter'] = []
     res_query = filter_doc_fields_COLUMN(res_query, category_name, subject_name,
-                                         from_year, to_year)
+                                         from_year, to_year,sentiment,field_name,field_value)
 
     if text != "empty":
         res_query["bool"]["must"] = []
