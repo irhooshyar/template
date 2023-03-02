@@ -1685,3 +1685,7 @@ content:"!"!important;
   background-color: #aaaaaa59;
   z-index: 50;
 }
+
+.modal-dialog-scrollable .modal-body {
+  overflow-x: inherit;
+}
