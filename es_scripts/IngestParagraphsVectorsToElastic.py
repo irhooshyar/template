@@ -20,7 +20,7 @@ from elasticsearch import helpers
 from collections import deque
 from scripts.Persian.Preprocessing import standardIndexName
 import json
-
+import after_response
 # ---------------------------------------------------------------------------------
 
 class ParagraphVectorIndex(ES_Index):
@@ -36,7 +36,7 @@ class ParagraphVectorIndex(ES_Index):
 
             para_text = para['para_text']
 
-            vector_value = list(para['vector_value']['data'])
+            vector_value = list(para['vector_value'])
 
             text_bytes = bytes(para_text,encoding="utf8")
             base64_bytes = base64.b64encode(text_bytes)
@@ -61,7 +61,7 @@ class ParagraphVectorIndex(ES_Index):
             yield new_paragraph
 
 
-
+@after_response.enable
 def apply(folder, Country,is_for_ref):
     settings = {}
     mappings = {}
@@ -101,7 +101,8 @@ def apply(folder, Country,is_for_ref):
     #     'para_text','vector_value'
     # )
 
-    paragraphs = get_paragraphs_list(Country)
+    # paragraphs = get_paragraphs_list(Country)
+    paragraphs = []
 
     print(len(paragraphs))
     new_index = ParagraphVectorIndex(index_name, settings, mappings)
@@ -116,7 +117,10 @@ def get_paragraphs_list(Country):
     paragraph_list = DocumentParagraphs.objects.filter(document_id__country_id__id = Country.id)
 
     paragraph_dict = {}
+    i = 0
     for para_obj in paragraph_list:
+        print("a", i/paragraph_list.__len__())
+        i+=1
         para_res_obj = {
             "para_id":para_obj.id,
             "para_text":para_obj.text,
@@ -126,10 +130,9 @@ def get_paragraphs_list(Country):
         }
         paragraph_dict[para_obj.id] = para_res_obj
 
-    
-    vectorFile = str(Path(config.PERSIAN_PATH, 'vector_result.json'))
-    file = open(vectorFile)
-    file_data = json.load(file)
+    vectorFile = str(Path(config.PERSIAN_PATH, "weights", "tabnak_vector_result.json"))
+    file = open(vectorFile).read()
+    file_data = json.loads(file)
 
     ctr = 0
     for para_id,para_vector in file_data.items():
@@ -138,6 +141,7 @@ def get_paragraphs_list(Country):
             paragraph_dict[para_id]["vector_value"] = para_vector
             result_paragraphs_list.append(paragraph_dict[para_id])
             ctr += 1
+            print("b", ctr/file_data.keys().__len__())
         except:
             print('Paragraph id not existed!')
 
