@@ -4777,10 +4777,12 @@ def GetDocumentsSimilarity(request, document_id, ):
 
         stopword_list = []
         all_stopwords = get_stopword_list("all_stopwords.txt")
-        rahbari_stopwords = get_stopword_list("all_stopwords.txt")
+        rahbari_stopwords = get_stopword_list("rahbari_stopwords.txt")
+        my_stopwords = get_stopword_list("news_profile_stopwords.txt")
 
         stopword_list.extend(all_stopwords)
         stopword_list.extend(rahbari_stopwords)
+        stopword_list.extend(my_stopwords)
 
         sim_query = {
             "more_like_this": {
@@ -4792,10 +4794,10 @@ def GetDocumentsSimilarity(request, document_id, ):
                         "_id": "{}".format(document_id),
                     }
                 ],
-                "min_term_freq": 10,
+                "min_term_freq": 5,
                 "min_word_length": 2,
                 "max_query_terms": 100000,
-                "minimum_should_match": "50%",
+                "minimum_should_match": "20%",
                 "stop_words": stopword_list
             }
         }
@@ -4852,10 +4854,13 @@ def similarityDetail(request, main_document_id, selected_document_id, selected_c
     }
     stopword_list = []
     all_stopwords = get_stopword_list("all_stopwords.txt")
-    rahbari_stopwords = get_stopword_list("all_stopwords.txt")
+    rahbari_stopwords = get_stopword_list("rahbari_stopwords.txt")
+    my_stopwords = get_stopword_list("news_profile_stopwords.txt")
 
     stopword_list.extend(all_stopwords)
     stopword_list.extend(rahbari_stopwords)
+    stopword_list.extend(my_stopwords)
+
     sim_query = {
         "more_like_this": {
             "analyzer": "persian_custom_analyzer",
