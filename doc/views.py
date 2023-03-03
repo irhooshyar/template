@@ -4130,7 +4130,7 @@ def SearchDocuments_Column_ES(request, country_name, category_name, subject_name
                                           "number_of_fragments": 0
                                           }
                                  }
-                             } if sentiment!="همه" else {}
+                             } if sentiment!="همه" else None
 
                              )
 
