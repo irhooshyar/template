@@ -1682,13 +1682,13 @@
             document.getElementById("ChartModalHeader").innerText = header
             document.getElementById("DocsCount").innerText = total_hits + " خبر:"
 
-            await show_modal_body(result_type, result_documents, position, column_value, curr_page, max_page, RESULT_DOCUMENTS);
+            await show_modal_body(result_type,selected_sentiment, result_documents, position, column_value, curr_page, max_page, RESULT_DOCUMENTS);
 
 
 
         }
 
-        async function show_modal_body(result_type, result_documents, position, column_value, curr_page, max_page, RESULT_DOCUMENTS) {
+        async function show_modal_body(result_type,selected_sentiment, result_documents, position, column_value, curr_page, max_page, RESULT_DOCUMENTS) {
 
 
             let filtered_result_tag = ""
