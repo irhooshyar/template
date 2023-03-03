@@ -464,15 +464,20 @@
             }
         }
 
-      async function GetSentimentTrendChart(country_id, category_id, subject_id,
+        async function GetSentimentTrendChart(country_id, category_id, subject_id,
             from_year, to_year, place, text, search_type, curr_page) {
 
             request_link = 'http://' + location.host + "/GetSentimentTrend_ChartData/" + country_id + "/" + category_id + "/" + subject_id + "/" + from_year + "/" + to_year + "/"
                 + place + "/" + text + "/" + search_type + "/" +
                 curr_page + "/"
+
+
             let response = await fetch(request_link).then(response => response.json());
-            const date_sentiment_chart_data = response['date_sentiment_chart_data']
-            showChart(date_sentiment_chart_data, "sentiment_trend_container", [], true, "تاریخ خبر", "توزیع احساسات براساس تاریخ خبر")
+
+            date_sentiment_chart_data = response['date_sentiment_chart_data']
+            console.log(date_sentiment_chart_data)
+            chart_title = text == "empty" ? "روند احساسات" : "روند احساسات " + " نسبت به عبارت  " + "«" + text + "»"
+            showChart(date_sentiment_chart_data, "sentiment_trend_container", [], true, "تاریخ خبر", chart_title)
         }
 
     </script>
