@@ -355,8 +355,10 @@ function newBarsChart(container_id, options) {
     for (let i = 0; i < options.bars.length; i++) {
         let series = chart.bar(dataSeries[i]);
         chartSeries.push(series);
-        // series.normal().fill(options.bars[i].color, 1);
-        // series.normal().stroke(options.bars[i].color, 1);
+        if (options.bars[i].color) {
+            series.normal().fill(options.bars[i].color, 1);
+            series.normal().stroke(options.bars[i].color, 1);
+        }
         series.name(options.bars[i].name);
         series.rendering().point(roundedBarDrawer);
 

@@ -1,11 +1,21 @@
 let similrity_result = []
+SOURCE_IMAGE_TAG = {
+    "تابناک- تست": '<img width="60px" class="rounded-pill shadow" src="../../../static/icons/logo/tabnak.jfif" alt="تابناک">',
+    "تابناک": '<img width="60px" class="rounded-pill shadow" src="../../../static/icons/logo/tabnak.jfif" alt="تابناک">',
+    "خبر آنلاین": '<img width="60px" class="rounded-pill shadow" src="../../../static/icons/logo/khabar-online.png" alt="خبر آنلاین">',
+    "عصر ایران": '<img width="60px" class="rounded-pill shadow" src="../../../static/icons/logo/asriran.jfif" alt="عصر ایران">',
+    "ایسنا": '<img width="45px" class="rounded-pill shadow" src="../../../static/icons/logo/isna.jfif" alt="ایسنا">'
+}
 similarity_init();
 
 function similarity_init() {
     const menu_columns = {
-        "document_name": 'تیتر خبر',
-        "country_name": 'خبرگزاری',
-        "document_date": 'تاریخ انتشار',
+        "document_name": 'عنوان خبر',
+        "country_name": 'مرجع خبر',
+        "document_date": 'تاریخ خبر',
+        "document_time": 'ساعت خبر',
+        "category_name": 'دسته خبر',
+        "subject_name": 'موضوع خبر',
         "BM25_similarity": 'مشابهت بر اساس BM25',
     }
     append_column(menu_columns, "SimilarityColumnSelect")
@@ -30,7 +40,10 @@ async function BM25Similarity() {
             const curr_document_id = response[i]["document_id"]
             const document_name = response[i]["document_name"]
             const approval_date = response[i]["document_date"]
-            const country_type = response[i]["country_name"]
+            const country_type = SOURCE_IMAGE_TAG[response[i]["country_name"]]
+            const document_time = response[i]["document_time"]
+            const category_name = response[i]["category_name"]
+            const subject_name = response[i]["subject_name"]
             // const subject_name = response[i]["subject_name"] ?? "-"
 
             BM25_similarity = Math.round(response[i]["BM25_score"] * 100) / 100
@@ -42,7 +55,7 @@ async function BM25Similarity() {
             const book_link = 'http://' + location.host + "/document_profile?id=" + curr_document_id
             const name = "<a target='_blank' href=" + book_link + ">" + document_name + "</a>"
 
-            const modal_function = "detailFunction('" + curr_document_id + "','" + document_name + "','" + country_type + "')"
+            const modal_function = "detailFunction('" + curr_document_id + "','" + document_name + "','" + response[i]["country_name"] + "')"
             const detail = '<button type="button" class="btn modal_btn" onclick="' + modal_function + '" data-bs-target="#ab">جزئیات</button>'
 
 
@@ -52,6 +65,9 @@ async function BM25Similarity() {
                 "document_date": approval_date,
                 "BM25_similarity": BM25_similarity,
                 "country_name": country_type,
+                "document_time": document_time,
+                "category_name": category_name,
+                "subject_name": subject_name,
                 // "DFR_similarity": DFR_similarity,
                 // "DFI_similarity": DFI_similarity,
                 // "mean": parseFloat(mean_value.toFixed(2)),
@@ -90,7 +106,7 @@ async function similarity_tableExportExcel() {
 }
 
 function similarity_table_changed() {
-    let selected_columns = ["index", "detail"]
+    let selected_columns = ["index", "document_name", "detail"]
     selected_columns = find_selected_column(selected_columns, "SimilarityColumnSelect")
 
     const similarity_columns = [{
@@ -102,26 +118,42 @@ function similarity_table_changed() {
             "width": "5%"
         }
     }, {
+        "name": "country_name",
+        "title": "مرجع خبر",
+        "style": {
+            "width": "10%"
+        }
+    }, {
         "name": "document_name",
-        "title": "تیتر خبر",
+        "title": "عنوان خبر",
         "style": {
             "width": "30%"
         }
     },
         {
-            "name": "country_name",
-            "title": "خبرگزاری",
+            "name": "subject_name",
+            "title": "موضوع خبر",
+        },
+        {
+            "name": "category_name",
+            "title": "دسته خبر",
+        },
+
+        {
+            "name": "document_date",
+            "title": "تاریخ خبر",
             "style": {
                 "width": "10%"
             }
         },
         {
-            "name": "document_date",
-            "title": "تاریخ انتشار",
+            "name": "document_time",
+            "title": "ساعت خبر",
             "style": {
                 "width": "10%"
             }
-        }, {
+        },
+        {
             "name": "BM25_similarity",
             "title": "مشابهت بر اساس BM25",
             "style": {
@@ -168,10 +200,10 @@ function similarity_table_changed() {
         "paging": {
             "enabled": true,
             strings: {
-                first: '»',
-                prev: '›',
-                next: '‹',
-                last: '«'
+                first: '«',
+                prev: '‹',
+                next: '›',
+                last: '»'
             }
         },
         "filtering": {
