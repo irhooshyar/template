@@ -160,7 +160,6 @@ def get_paragraphs_list(Country):
         except:
             print('Paragraph id not existed!')
 
-    file.close()
     print(f"{ctr}/{len(file_data.keys())} paragraphs found.")
 
     return result_paragraphs_list
