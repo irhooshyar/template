@@ -460,10 +460,10 @@
                     <input type="number" id="ColumnModalPaginationInput" min="1" max="1" value="1"
                         class="form-select text-right float-right d-none">
 
-                    <button id="DownloadDocuments2" class="btn blue-button"><i class="fa fa-file-archive"></i> دانلود
+                    <button id="DownloadDocuments2" disabled="true" class="btn blue-button"><i class="fa fa-file-archive"></i> دانلود
                         اخبار</button>
 
-                    <button id="ExportExcel2" class="btn green-button"><i class="fa fa-file-excel"></i> خروجی اکسل
+                    <button id="ExportExcel2" disabled="false" class="btn green-button"><i class="fa fa-file-excel"></i> خروجی اکسل
                     </button>
                 </div>
 
@@ -1682,6 +1682,13 @@
             document.getElementById("ChartModalHeader").innerText = header
             document.getElementById("DocsCount").innerText = total_hits + (result_type=="documents" ? " خبر:" : " پاراگراف:")
 
+            if (result_type=="paragraphs"){
+                $("#ExportExcel2").attr("disabled","true")
+                $("#DownloadDocuments2").attr("disabled","true")
+            }else {
+                $("#ExportExcel2").attr("disabled","false")
+                $("#DownloadDocuments2").attr("disabled","false")
+            }
             await show_modal_body(result_type,selected_sentiment, result_documents, position, column_value, curr_page, max_page, RESULT_DOCUMENTS);
 
 
