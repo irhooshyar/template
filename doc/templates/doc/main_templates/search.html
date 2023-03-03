@@ -1686,8 +1686,8 @@
                 $("#ExportExcel2").attr("disabled","true")
                 $("#DownloadDocuments2").attr("disabled","true")
             }else {
-                $("#ExportExcel2").attr("disabled","false")
-                $("#DownloadDocuments2").attr("disabled","false")
+                $("#ExportExcel2").removeAttr("disabled")
+                $("#DownloadDocuments2").removeAttr("disabled")
             }
             await show_modal_body(result_type,selected_sentiment, result_documents, position, column_value, curr_page, max_page, RESULT_DOCUMENTS);
 
