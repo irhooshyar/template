@@ -1549,7 +1549,7 @@
 
             } else if (Doc_Field == 'sentiment.keyword') {
 
-                header = "اخبار با احساس «" + selected_sentiment + "»\n در تاریخ :" + column_value
+                header = "اخبار" + selected_sentiment !="بدون ابراز احساسات" ? " با ": " " + "«" + selected_sentiment + "»\n در تاریخ :" + column_value
                 field_value = column_value.replaceAll('/', '-')
                 field_name = "document_date.keyword"
                 console.log("selected_sentiment===============")
