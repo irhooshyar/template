@@ -856,19 +856,19 @@ function newMultipleLineChart(container_id, options) {
     
     current_series = chart.getSeriesAt(i);
 
-  if (series_settings.onClick) {
-    current_series.listen("mouseOver", function () {
-      document.body.style.cursor = "pointer";
-    });
-    current_series.listen("mouseOut", function () {
-      document.body.style.cursor = "auto";
-    });
+  // if (series_settings.onClick) {
+  //   current_series.listen("mouseOver", function () {
+  //     document.body.style.cursor = "pointer";
+  //   });
+  //   current_series.listen("mouseOut", function () {
+  //     document.body.style.cursor = "auto";
+  //   });
 
-    current_series.listen("Click", (e) => {
-      console.log("=*************")
-      series_settings.onClick(e, data);
-    });
-  }
+  //   current_series.listen("Click", (e) => {
+  //     console.log("=*************")
+  //     series_settings.onClick(e, data);
+  //   });
+  // }
 
 
 
