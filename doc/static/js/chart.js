@@ -728,7 +728,6 @@ function newMultipleLineChart(container_id, options) {
 
     current_series.name(series_settings.name);
 
-    console.log(series_settings.normal.stroke_color);
     // configure the visual settings of the second series
     current_series
       .normal()
@@ -757,18 +756,6 @@ function newMultipleLineChart(container_id, options) {
         "round"
       );
 
-    if (current_series.onClick) {
-      current_series.listen("mouseOver", function () {
-        document.body.style.cursor = "pointer";
-      });
-      current_series.listen("mouseOut", function () {
-        document.body.style.cursor = "auto";
-      });
-
-      current_series.listen("Click", (e) => {
-        current_series.onClick(e, data);
-      });
-    }
   }
 
   chart.animation(true);
@@ -863,4 +850,28 @@ function newMultipleLineChart(container_id, options) {
     series.labels().enabled(true);
     series.labels().fontFamily("vazir");
   }
+
+  var seriesIndexes = [];
+  for (var i=0; i < chart.getSeriesCount();i++){
+    
+    current_series = chart.getSeriesAt(i);
+
+  if (series_settings.onClick) {
+    current_series.listen("mouseOver", function () {
+      document.body.style.cursor = "pointer";
+    });
+    current_series.listen("mouseOut", function () {
+      document.body.style.cursor = "auto";
+    });
+
+    current_series.listen("Click", (e) => {
+      console.log("=*************")
+      series_settings.onClick(e, data);
+    });
+  }
+
+
+
+  }
+
 }
