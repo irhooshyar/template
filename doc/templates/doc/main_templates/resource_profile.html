@@ -59,7 +59,7 @@
 
         <meta charset="UTF-8">
 
-        <title> داشبورد آماری منابع داده</title>
+        <title>پروفایل منابع</title>
         {% include "doc/base_templates/title_icon.html" %}
 
         <script>
@@ -190,7 +190,8 @@
             }
       }
 
-      container_id_list = ['subject_container', 'year_container', 'hour_container', 'category_container', 'month_container', 'date_container', 'day_container']
+      container_id_list = ['subject_container', 'year_container', 'hour_container', 'category_container',
+          'month_container', 'date_container', 'day_container', 'sentiment_trend_container']
 
       async function init() {
           startFullPageBlockUI();
@@ -387,8 +388,8 @@
                 options.yAxisTitle = 'تعداد پاراگراف'
                 options.series_data = [
                     {
-                        "map":{x:0,value:1},
-                        "name":"احساس بسیار منفی",
+                        "map": { x: 0, value: 1 },
+                        "name": "احساس بسیار منفی",
                         "normal": {
                             "stroke_color": "#D31820",
                             "stroke_thickness": 2
@@ -401,11 +402,28 @@
                             "stroke_color": "#D31820",
                             "stroke_thickness": 6
                         },
+                        onClick: async function (event, data) {
+                            const click_tag_index = event.domTarget.tag;
+                            console.log(event)
+                            const text = data['mc'][click_tag_index][0];
+                            const best_result_count = documents_information_result.length
+
+                            let filtered_result = []
+                            let header = ""
+                            let save_file_name = document.getElementById("SearchBox").value;
+
+                            await GetClickedColumnDocuments(container, "احساس بسیار منفی", text)
+
+                            $("#ChartModalBtn").click();
+                        }
+
+
+
                     },
 
                     {
-                        "map":{x:0,value:2},
-                        "name":"احساس منفی",
+                        "map": { x: 0, value: 2 },
+                        "name": "احساس منفی",
                         "normal": {
                             "stroke_color": "#E68383",
                             "stroke_thickness": 2
@@ -418,11 +436,32 @@
                             "stroke_color": "#E68383",
                             "stroke_thickness": 6,
                         },
+
+                        onClick: async function (event, data) {
+                            const click_tag_index = event.domTarget.tag;
+                            console.log(data)
+                            console.log(click_tag_index)
+                            const text = data['mc'][click_tag_index][0];
+                            console.log("text")
+                            console.log(text)
+                            const best_result_count = documents_information_result.length
+
+                            let filtered_result = []
+                            let header = ""
+                            let save_file_name = document.getElementById("SearchBox").value;
+
+                            await GetClickedColumnDocuments(container, "احساس منفی", text)
+
+                            $("#ChartModalBtn").click();
+                        }
+
+
+
                     }
                     ,
                     {
-                        "map":{x:0,value:3},
-                        "name":"احساس مثبت",
+                        "map": { x: 0, value: 3 },
+                        "name": "احساس مثبت",
                         "normal": {
                             "stroke_color": "#96F826",
                             "stroke_thickness": 2
@@ -435,12 +474,32 @@
                             "stroke_color": "#96F826",
                             "stroke_thickness": 6
                         },
+                        onClick: async function (event, data) {
+                            const click_tag_index = event.domTarget.tag;
+                            console.log(data)
+                            console.log(click_tag_index)
+                            const text = data['mc'][click_tag_index][0];
+                            console.log("text")
+                            console.log(text)
+                            const best_result_count = documents_information_result.length
+
+                            let filtered_result = []
+                            let header = ""
+                            let save_file_name = document.getElementById("SearchBox").value;
+
+                            await GetClickedColumnDocuments(container, "احساس مثبت", text)
+
+                            $("#ChartModalBtn").click();
+                        }
+
+
+
                     }
 
                     ,
                     {
-                        "map":{x:0,value:4},
-                        "name":"احساس بسیار مثبت",
+                        "map": { x: 0, value: 4 },
+                        "name": "احساس بسیار مثبت",
                         "normal": {
                             "stroke_color": "#0C750B",
                             "stroke_thickness": 2
@@ -454,6 +513,102 @@
                             "stroke_color": "#0C750B",
                             "stroke_thickness": 6
                         },
+
+                        onClick: async function (event, data) {
+                            const click_tag_index = event.domTarget.tag;
+                            console.log(data)
+                            console.log(click_tag_index)
+                            const text = data['mc'][click_tag_index][0];
+                            console.log("text")
+                            console.log(text)
+                            const best_result_count = documents_information_result.length
+
+                            let filtered_result = []
+                            let header = ""
+                            let save_file_name = document.getElementById("SearchBox").value;
+
+                            await GetClickedColumnDocuments(container, "احساس بسیار مثبت", text)
+
+                            $("#ChartModalBtn").click();
+                        }
+
+
+
+                    }
+
+                    ,
+                    {
+                        "map": { x: 0, value: 5 },
+                        "name": "بدون ابراز احساسات",
+                        "normal": {
+                            "stroke_color": "#B8A948",
+                            "stroke_thickness": 2
+                        },
+                        "hovered": {
+                            "stroke_color": "#B8A948",
+                            "stroke_thickness": 4,
+
+                        },
+                        "selected": {
+                            "stroke_color": "#B8A948",
+                            "stroke_thickness": 6
+                        },
+                        onClick: async function (event, data) {
+                            const click_tag_index = event.domTarget.tag;
+                            console.log(data)
+                            console.log(click_tag_index)
+                            const text = data['mc'][click_tag_index][0];
+                            console.log("text")
+                            console.log(text)
+                            const best_result_count = documents_information_result.length
+
+                            let filtered_result = []
+                            let header = ""
+                            let save_file_name = document.getElementById("SearchBox").value;
+
+                            await GetClickedColumnDocuments(container, "بدون ابراز احساسات", text)
+
+                            $("#ChartModalBtn").click();
+                        }
+
+
+                    }
+
+                    ,
+                    {
+                        "map": { x: 0, value: 6 },
+                        "name": "احساس خنثی یا ترکیبی از مثبت و منفی",
+                        "normal": {
+                            "stroke_color": "#000000",
+                            "stroke_thickness": 2
+                        },
+                        "hovered": {
+                            "stroke_color": "#000000",
+                            "stroke_thickness": 4,
+
+                        },
+                        "selected": {
+                            "stroke_color": "#000000",
+                            "stroke_thickness": 6
+                        },
+                        onClick: async function (event, data) {
+                            const click_tag_index = event.domTarget.tag;
+                            console.log(data)
+                            console.log(click_tag_index)
+                            const text = data['mc'][click_tag_index][0];
+                            console.log("text")
+                            console.log(text)
+                            const best_result_count = documents_information_result.length
+
+                            let filtered_result = []
+                            let header = ""
+                            let save_file_name = document.getElementById("SearchBox").value;
+
+                            await GetClickedColumnDocuments(container, "احساس خنثی یا ترکیبی از مثبت و منفی", text)
+
+                            $("#ChartModalBtn").click();
+                        }
+
                     }
 
                 ]
@@ -464,15 +619,22 @@
             }
         }
 
-      async function GetSentimentTrendChart(country_id, category_id, subject_id,
+        async function GetSentimentTrendChart(country_id, category_id, subject_id,
             from_year, to_year, place, text, search_type, curr_page) {
 
             request_link = 'http://' + location.host + "/GetSentimentTrend_ChartData/" + country_id + "/" + category_id + "/" + subject_id + "/" + from_year + "/" + to_year + "/"
                 + place + "/" + text + "/" + search_type + "/" +
                 curr_page + "/"
+
+
             let response = await fetch(request_link).then(response => response.json());
-            const date_sentiment_chart_data = response['date_sentiment_chart_data']
-            showChart(date_sentiment_chart_data, "sentiment_trend_container", [], true, "تاریخ خبر", "توزیع احساسات براساس تاریخ خبر")
+
+            console.log(response)
+
+            date_sentiment_chart_data = response['date_sentiment_chart_data']
+            console.log(date_sentiment_chart_data)
+            chart_title = text == "empty" ? "روند احساسات" : "روند احساسات " + " نسبت به عبارت  " + "«" + text + "»"
+            showChart(date_sentiment_chart_data, "sentiment_trend_container", [], true, "تاریخ خبر", chart_title)
         }
 
     </script>
