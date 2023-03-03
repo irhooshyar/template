@@ -102,8 +102,8 @@ def apply(folder, Country,is_for_ref):
     #     'para_text','vector_value'
     # )
 
-    # paragraphs = get_paragraphs_list(Country)
-    paragraphs = []
+    paragraphs = get_paragraphs_list(Country)
+    # paragraphs = []
 
     print(len(paragraphs))
     new_index = ParagraphVectorIndex(index_name, settings, mappings)
