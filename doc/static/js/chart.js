@@ -755,7 +755,6 @@ function newMultipleLineChart(container_id, options) {
         "10 5",
         "round"
       );
-
   }
 
   chart.animation(true);
@@ -851,27 +850,42 @@ function newMultipleLineChart(container_id, options) {
     series.labels().fontFamily("vazir");
   }
 
-  var seriesIndexes = [];
-  for (var i=0; i < chart.getSeriesCount();i++){
+  chart.getSeriesAt(0).listen("Click", (e) => {
+    options.series_data[0].onClick(e, data);
+  });
+
+  chart.getSeriesAt(1).listen("Click", (e) => {
+    options.series_data[1].onClick(e, data);
+  });
+
+  chart.getSeriesAt(2).listen("Click", (e) => {
+    options.series_data[2].onClick(e, data);
+  });
+
+  chart.getSeriesAt(3).listen("Click", (e) => {
+    options.series_data[3].onClick(e, data);
+  });
+
+  chart.getSeriesAt(4).listen("Click", (e) => {
+    options.series_data[4].onClick(e, data);
+  });
+  chart.getSeriesAt(5).listen("Click", (e) => {
+    options.series_data[5].onClick(e, data);
+  });
+
+  for (var i = 0; i < chart.getSeriesCount(); i++) {
+    chart.getSeriesAt(i).listen("mouseOver", function () {
+        document.body.style.cursor = "pointer";
+      });
+      chart.getSeriesAt(i).listen("mouseOut", function () {
+        document.body.style.cursor = "auto";
+      });
+
+  //     chart.getSeriesAt(i).listen("Click", (e) => {
+  //       options.series_data[i].onClick(e, data);
+  //     });
     
-    current_series = chart.getSeriesAt(i);
-
-  // if (series_settings.onClick) {
-  //   current_series.listen("mouseOver", function () {
-  //     document.body.style.cursor = "pointer";
-  //   });
-  //   current_series.listen("mouseOut", function () {
-  //     document.body.style.cursor = "auto";
-  //   });
-
-  //   current_series.listen("Click", (e) => {
-  //     console.log("=*************")
-  //     series_settings.onClick(e, data);
-  //   });
   // }
 
-
-
   }
-
 }

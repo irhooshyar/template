@@ -4109,15 +4109,28 @@ def SearchDocuments_Column_ES(request, country_name, category_name, subject_name
         index_name = standardIndexName(country_obj, ModelName.__name__)
 
     from_value = (curr_page - 1) * search_result_size
-
+    field_list = ['document_id', 'document_name', 'document_date',
+                'subject_name', 'source_id', 'source_folder', 'source_name',
+                "category_name", 'raw_file_name']
+    
+    if sentiment!="همه":
+        field_list.append("attachment.content")
+        field_list.append("paragraph_id")
     response = client.search(index=index_name,
-                             _source_includes=['document_id', 'document_name', 'document_date',
-                                               'subject_name', 'source_id', 'source_folder', 'source_name',
-                                               "category_name", 'raw_file_name'],
+                             _source_includes=field_list,
                              request_timeout=40,
                              query=res_query,
                              from_=from_value,
-                             size=search_result_size
+                             size=search_result_size,
+                            highlight={
+                                 "order": "score",
+                                 "fields": {
+                                     "attachment.content":
+                                         {"pre_tags": ["<span class='text-primary fw-bold'>"], "post_tags": ["</span>"],
+                                          "number_of_fragments": 0
+                                          }
+                                 }
+                             } if sentiment!="همه" else {}
 
                              )
 
