@@ -1214,6 +1214,46 @@
             } else if (container === "sentiment_trend_container") {
                 options.yAxisTitle = 'تعداد پاراگراف'
                 options.series_data = [
+
+                
+                    {
+                        "map": { x: 0, value: 5 },
+                        "name": "بدون ابراز احساسات",
+                        "normal": {
+                            "stroke_color": "rgba(201, 201, 201, 1)",
+                            "stroke_thickness": 2
+                        },
+                        "hovered": {
+                            "stroke_color": "rgba(201, 201, 201, 1)",
+                            "stroke_thickness": 4,
+
+                        },
+                        "selected": {
+                            "stroke_color": "rgba(201, 201, 201, 1)",
+                            "stroke_thickness": 6
+                        },
+                        onClick: async function (event, data) {
+                            const click_tag_index = event.domTarget.tag;
+                            console.log(data)
+                            console.log(click_tag_index)
+                            const text = data['mc'][click_tag_index][0];
+                            console.log("text")
+                            console.log(text)
+                            const best_result_count = documents_information_result.length
+
+                            let filtered_result = []
+                            let header = ""
+                            let save_file_name = document.getElementById("SearchBox").value;
+
+                            await GetClickedColumnDocuments(container, "بدون ابراز احساسات", text, 'paragraphs')
+
+                            $("#ChartModalBtn").click();
+                        }
+
+
+                    },
+
+
                     {
                         "map": { x: 0, value: 1 },
                         "name": "احساس بسیار منفی",
@@ -1285,6 +1325,46 @@
 
 
                     }
+
+
+                    ,
+                    {
+                        "map": { x: 0, value: 6 },
+                        "name": "احساس خنثی یا ترکیبی از مثبت و منفی",
+                        "normal": {
+                            "stroke_color": "rgba(72, 143, 184, 1)",
+                            "stroke_thickness": 2
+                        },
+                        "hovered": {
+                            "stroke_color": "rgba(72, 143, 184, 1)",
+                            "stroke_thickness": 4,
+
+                        },
+                        "selected": {
+                            "stroke_color": "rgba(72, 143, 184, 1)",
+                            "stroke_thickness": 6
+                        },
+                        onClick: async function (event, data) {
+                            const click_tag_index = event.domTarget.tag;
+                            console.log(data)
+                            console.log(click_tag_index)
+                            const text = data['mc'][click_tag_index][0];
+                            console.log("text")
+                            console.log(text)
+                            const best_result_count = documents_information_result.length
+
+                            let filtered_result = []
+                            let header = ""
+                            let save_file_name = document.getElementById("SearchBox").value;
+
+                            await GetClickedColumnDocuments(container, "احساس خنثی یا ترکیبی از مثبت و منفی", text, 'paragraphs')
+
+                            $("#ChartModalBtn").click();
+                        }
+
+                    }
+
+
                     ,
                     {
                         "map": { x: 0, value: 3 },
@@ -1363,80 +1443,6 @@
 
                     }
 
-                    ,
-                    {
-                        "map": { x: 0, value: 5 },
-                        "name": "بدون ابراز احساسات",
-                        "normal": {
-                            "stroke_color": "rgba(201, 201, 201, 1)",
-                            "stroke_thickness": 2
-                        },
-                        "hovered": {
-                            "stroke_color": "rgba(201, 201, 201, 1)",
-                            "stroke_thickness": 4,
-
-                        },
-                        "selected": {
-                            "stroke_color": "rgba(201, 201, 201, 1)",
-                            "stroke_thickness": 6
-                        },
-                        onClick: async function (event, data) {
-                            const click_tag_index = event.domTarget.tag;
-                            console.log(data)
-                            console.log(click_tag_index)
-                            const text = data['mc'][click_tag_index][0];
-                            console.log("text")
-                            console.log(text)
-                            const best_result_count = documents_information_result.length
-
-                            let filtered_result = []
-                            let header = ""
-                            let save_file_name = document.getElementById("SearchBox").value;
-
-                            await GetClickedColumnDocuments(container, "بدون ابراز احساسات", text, 'paragraphs')
-
-                            $("#ChartModalBtn").click();
-                        }
-
-
-                    }
-
-                    ,
-                    {
-                        "map": { x: 0, value: 6 },
-                        "name": "احساس خنثی یا ترکیبی از مثبت و منفی",
-                        "normal": {
-                            "stroke_color": "rgba(72, 143, 184, 1)",
-                            "stroke_thickness": 2
-                        },
-                        "hovered": {
-                            "stroke_color": "rgba(72, 143, 184, 1)",
-                            "stroke_thickness": 4,
-
-                        },
-                        "selected": {
-                            "stroke_color": "rgba(72, 143, 184, 1)",
-                            "stroke_thickness": 6
-                        },
-                        onClick: async function (event, data) {
-                            const click_tag_index = event.domTarget.tag;
-                            console.log(data)
-                            console.log(click_tag_index)
-                            const text = data['mc'][click_tag_index][0];
-                            console.log("text")
-                            console.log(text)
-                            const best_result_count = documents_information_result.length
-
-                            let filtered_result = []
-                            let header = ""
-                            let save_file_name = document.getElementById("SearchBox").value;
-
-                            await GetClickedColumnDocuments(container, "احساس خنثی یا ترکیبی از مثبت و منفی", text, 'paragraphs')
-
-                            $("#ChartModalBtn").click();
-                        }
-
-                    }
 
                 ]
 
