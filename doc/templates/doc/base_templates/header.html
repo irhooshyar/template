@@ -74,7 +74,6 @@
                 </a>
             </li>
 
-
             <li class="nav-item dropdown" id="AI_analysis">
                 <a class="nav-link dropdown-toggle" href="#" id="AIDropdown" role="button" data-bs-toggle="dropdown"
                     aria-expanded="false">
@@ -103,8 +102,11 @@
                 </ul>
             </li>
 
-            <li><a id="resource_profile_tab" class="dropdown-item text-right" href="{% url 'resource_profile' %}">
-                داشبورد آماری منابع</a>
+            <li class="nav-item" id="resource_profile" style="display: none;">
+                <a class="nav-link" id="resource_profile_tab" role="button"
+                   href="{% url 'resource_profile' %}" aria-expanded="false">
+                    پروفایل اخبار
+                </a>
             </li>
 
             <li class="nav-item dropdown" id="UserProfile_panels">
