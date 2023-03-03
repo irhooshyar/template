@@ -77,7 +77,7 @@ async function init() {
     }
     catch{
       document.getElementById("SemanticSimilarParagraphsContainer").innerHTML =
-      "<span class='text-center text-secondary'> پاراگرافی یافت نشد. </span>";
+      "<span class='text-center text-secondary'>   امکان دریافت اطلاعات وجود ندارد. </span>";
     }
     startBlockUI('summary_text');
     await GetTextSummary(paragraph_text);
