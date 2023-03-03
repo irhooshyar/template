@@ -100,24 +100,19 @@ def apply(folder, Country,is_for_ref):
     #     'para_text','vector_value'
     # )
 
-    # paragraphs = get_paragraphs_list(Country)
-    paragraphs = []
+    paragraphs = get_paragraphs_list(Country)
 
-    print("lllll", len(paragraphs))
     new_index = ParagraphVectorIndex(index_name, settings, mappings)
     new_index.create()
     new_index.bulk_insert_documents(folder, paragraphs, do_parallel=True)
 
 def get_paragraphs_list(Country):
 
-    print("start")
-
     result_paragraphs_list = []
 
     # get country paragraphs
     paragraph_list = DocumentParagraphs.objects.filter(document_id__country_id__id = Country.id)
 
-    print("dddd", paragraph_list.__len__())
 
     paragraph_dict = {}
     i = 0
