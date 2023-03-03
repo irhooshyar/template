@@ -1745,7 +1745,7 @@
                     "http://" + location.host + "/sentiment_analysis/?id=" + paragraph_id;
 
                 const paragraph_tag =
-                    "<a class='mt-2 pr-2 border-right border-5 rounded border-gray' title = 'پروفایل حکم' target='blank' href='" +
+                    "<a class='mt-2 pr-2 border-right border-5 rounded border-gray' style='border-color:" + SENTIMENT_COLORS[selected_sentiment] + "' title = 'پروفایل حکم' target='blank' href='" +
                     paragraph_link +"'>" +
                     text +
                     "</a>";
