@@ -71,8 +71,14 @@ async function init() {
     
     await getSimilarParagraphs(paragraph_id);
     // if (COUNTRY_NAME == "فاوا")
-    await getSemanticSimilarParagraphs(paragraph_id)
+    try{
+      await getSemanticSimilarParagraphs(paragraph_id)
 
+    }
+    catch{
+      document.getElementById("SemanticSimilarParagraphsContainer").innerHTML =
+      "<span class='text-center text-secondary'> پاراگرافی یافت نشد. </span>";
+    }
     startBlockUI('summary_text');
     await GetTextSummary(paragraph_text);
     stopBlockUI('summary_text', 'نتایج جست‌وجو');
