@@ -1680,7 +1680,7 @@
             max_page = parseInt(document.getElementById("ColumnModalPaginationInput").max)
 
             document.getElementById("ChartModalHeader").innerText = header
-            document.getElementById("DocsCount").innerText = total_hits + (result_type=="documents") ? " خبر:" : " پاراگراف:"
+            document.getElementById("DocsCount").innerText = total_hits + (result_type=="documents" ? " خبر:" : " پاراگراف:")
 
             await show_modal_body(result_type,selected_sentiment, result_documents, position, column_value, curr_page, max_page, RESULT_DOCUMENTS);
 
