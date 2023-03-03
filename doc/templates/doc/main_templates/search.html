@@ -1565,10 +1565,10 @@
             } else if (Doc_Field == 'sentiment.keyword') {
 
                 header = "اخبار" + (selected_sentiment !="بدون ابراز احساسات" ? " با ": " ") + "«" + selected_sentiment + "»\n در تاریخ :" + column_value
+                header = "<span style='color:" +SENTIMENT_COLORS[selected_sentiment] + "'>" + header + "</span>"
+                
                 field_value = column_value.replaceAll('/', '-')
                 field_name = "document_date.keyword"
-                console.log("selected_sentiment===============")
-                console.log(selected_sentiment)
                 sentiment = selected_sentiment
                 save_file_name += " (مجموعه خبر {1} و احساس خبر {2})".replace("1", "خبرکاو").replace("2", column_value)
 
@@ -1694,7 +1694,7 @@
             await update_column_pagination_input(curr_page, total_hits);
             max_page = parseInt(document.getElementById("ColumnModalPaginationInput").max)
 
-            document.getElementById("ChartModalHeader").innerText = header
+            document.getElementById("ChartModalHeader").innerHTML = header
             document.getElementById("DocsCount").innerText = total_hits + (result_type=="documents" ? " خبر:" : " پاراگراف:")
 
             if (result_type=="paragraphs"){
