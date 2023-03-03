@@ -526,6 +526,15 @@
         let max_selected_weight;
         let show_hide_state = "show"
 
+        const SENTIMENT_COLORS = {
+            "احساس بسیار مثبت" : "rgba(100, 129, 50, 1)",
+            "احساس مثبت" : "rgba(177, 205, 127, 1)",
+            "احساس بسیار منفی" : "rgba(129, 50, 61, 1)",
+            "احساس منفی" : "rgba(205, 127, 138, 1)",
+            "بدون ابراز احساسات" : "rgba(169, 169, 169, 1)",
+            "احساس خنثی یا ترکیبی از مثبت و منفی" : "rgba(72, 143, 184, 1)",
+        }
+
         SOURCE_IMAGE_TAG = {
             "تابناک- تست": '<img width="60px" class="rounded-pill shadow" src="../../../static/icons/logo/tabnak.jfif" alt="تابناک">',
             "تابناک": '<img width="60px" class="rounded-pill shadow" src="../../../static/icons/logo/tabnak.jfif" alt="تابناک">',
