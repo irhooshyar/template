@@ -1751,7 +1751,7 @@
             document.getElementById("LoadMoreDocuments").onclick = async function () {
 
                 next_page_number = ColumnModalNextPage(curr_page);
-                await load_documents(position, column_value, next_page_number, RESULT_DOCUMENTS,result_type);
+                await load_documents(position,selected_sentiment, column_value, next_page_number, RESULT_DOCUMENTS,result_type);
 
             };
 
