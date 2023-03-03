@@ -21,6 +21,7 @@ from collections import deque
 from scripts.Persian.Preprocessing import standardIndexName
 import json
 import after_response
+import numpy as np
 # ---------------------------------------------------------------------------------
 
 class ParagraphVectorIndex(ES_Index):
@@ -125,13 +126,23 @@ def get_paragraphs_list(Country):
             "para_text":para_obj.text,
             "doc_id":para_obj.document_id.id,
             "doc_name":para_obj.document_id.name,
-            "vector_value":[]
+            "vector_value": []
         }
         paragraph_dict[para_obj.id] = para_res_obj
 
     vectorFile = str(Path(config.PERSIAN_PATH, "weights", "tabnak_vector_result.json"))
-    file = open(vectorFile).read()
-    file_data = json.loads(file)
+    # file = open(vectorFile).read()
+    # file_data = json.loads(file)
+
+    input_file = open(vectorFile).read().replace("[", '"[').replace("]", ']"')
+    cntr = 1
+    file_data = json.loads(input_file)
+    for key, value in file_data.items():
+        print("c", cntr / file_data.keys().__len__())
+        cntr += 1
+        temp1 = value[1:-1].replace(", ", ",").split(",")
+        temp2 = np.array(temp1).astype(float)
+        file_data[key] = temp2
 
     ctr = 0
     for para_id,para_vector in file_data.items():
