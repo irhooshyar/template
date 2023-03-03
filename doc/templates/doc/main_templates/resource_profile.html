@@ -474,6 +474,8 @@
 
             let response = await fetch(request_link).then(response => response.json());
 
+            console.log(response)
+
             date_sentiment_chart_data = response['date_sentiment_chart_data']
             console.log(date_sentiment_chart_data)
             chart_title = text == "empty" ? "روند احساسات" : "روند احساسات " + " نسبت به عبارت  " + "«" + text + "»"
