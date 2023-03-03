@@ -8,8 +8,7 @@ AllPanels = {
             'admin_user_recommendation': 'مشاهده نظرات کاربران',
             'admin_user_report_bug': 'مشاهده گزارشات خطاها',
             'admin_accept_user_comments': 'نظرات تحلیل اسناد',
-            'super_admin_user_log': 'لاگ کاربران',
-            'resource_profile': "داشبورد آماری منابع"
+            'super_admin_user_log': 'لاگ کاربران'
         }
     },
 
@@ -17,6 +16,13 @@ AllPanels = {
         'persian_name': 'پروفایل اسناد رهبری',
         'sub_panels': {
             'information': 'پروفایل اسناد رهبری',
+        }
+    },
+
+    'resource_profile': {
+        'persian_name': 'پروفایل منابع',
+        'sub_panels': {
+            'resource_profile': 'پروفایل منابع',
         }
     },
 
