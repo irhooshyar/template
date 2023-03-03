@@ -1564,8 +1564,8 @@
 
             } else if (Doc_Field == 'sentiment.keyword') {
 
-                header = "اخبار" + (selected_sentiment !="بدون ابراز احساسات" ? " با ": " ") + "«" + selected_sentiment + "»\n در تاریخ :" + column_value
-                header = "<span style='color:" +SENTIMENT_COLORS[selected_sentiment] + "'>" + header + "</span>"
+                header = "اخبار" + (selected_sentiment !="بدون ابراز احساسات" ? " با ": " ") + "<span style='color:" +SENTIMENT_COLORS[selected_sentiment] + "'>" +
+                     "«" + selected_sentiment +  "»</span>\n در تاریخ :" + column_value
                 
                 field_value = column_value.replaceAll('/', '-')
                 field_name = "document_date.keyword"
