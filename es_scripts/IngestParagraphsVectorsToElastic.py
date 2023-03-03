@@ -112,6 +112,8 @@ def apply(folder, Country,is_for_ref):
 
 def get_paragraphs_list(Country):
 
+    print("start")
+
     result_paragraphs_list = []
 
     # get country paragraphs
