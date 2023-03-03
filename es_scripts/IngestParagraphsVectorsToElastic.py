@@ -87,8 +87,6 @@ def apply(folder, Country,is_for_ref):
         mappings = es_config.EN_Paragraphs_Mappings
 
 
-
-
     # Paragraphs_Model = ParagraphVector 
 
     # paragraphs = Paragraphs_Model.objects.filter(
@@ -105,7 +103,7 @@ def apply(folder, Country,is_for_ref):
     # paragraphs = get_paragraphs_list(Country)
     paragraphs = []
 
-    print(len(paragraphs))
+    print("lllll", len(paragraphs))
     new_index = ParagraphVectorIndex(index_name, settings, mappings)
     new_index.create()
     new_index.bulk_insert_documents(folder, paragraphs, do_parallel=True)
