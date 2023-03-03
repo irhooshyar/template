@@ -460,10 +460,10 @@
                     <input type="number" id="ColumnModalPaginationInput" min="1" max="1" value="1"
                         class="form-select text-right float-right d-none">
 
-                    <button id="DownloadDocuments" class="btn blue-button"><i class="fa fa-download"></i> دانلود
+                    <button id="DownloadDocuments2" class="btn blue-button"><i class="fa fa-file-archive"></i> دانلود
                         اخبار</button>
 
-                    <button id="ExportExcel2" class="btn green-button"><i class="fa fa-download"></i> خروجی اکسل
+                    <button id="ExportExcel2" class="btn green-button"><i class="fa fa-file-excel"></i> خروجی اکسل
                     </button>
                 </div>
 
@@ -545,8 +545,12 @@
             "subject_container": "subject_name",
             "category_container": "category_name",
             "year_container": "document_year",
+            "source_name_container": "source_name",
             "hour_container": "document_hour",
-            "source_name_container": "source_name"
+            "sentiment_trend_container": "sentiment.keyword",
+            "date_container": "document_date.keyword",
+            "day_container": "document_jalili_date.day.name.keyword",
+            "month_container": "document_jalili_date.month.name.keyword",
         }
 
         let UserSearchParameters = {
@@ -557,6 +561,11 @@
             category_name: "",
             from_year: "",
             to_year: "",
+            sentiment: "همه",
+            document_date: "همه",
+            document_month: "همه",
+            document_day: "همه",
+            document_hour: "همه",
             place: "",
             text: "",
             search_type: "",
@@ -615,8 +624,8 @@
 
         async function init() {
             container_id_list = ['SearchResultLable', 'SearchTable', 'subject_container',
-                'year_container', 'hour_container','sentiment_trend_container',
-                'source_name_container', 'category_container',"SearchBox",
+                'year_container', 'hour_container', 'sentiment_trend_container',
+                'source_name_container', 'category_container', "SearchBox",
                 'month_container', 'date_container', 'day_container']
             clearPrevResults(container_id_list)
 
@@ -632,11 +641,11 @@
             /****************** Subject List ****************************/
 
             document.getElementById("SubjectSelect").innerHTML = "<option value=" + 0 + " >" + "همه" + "</option>" +
-                response['subject'];
+                response['subject_id'];
 
             /****************** Type List ****************************/
             document.getElementById("CategorySelect").innerHTML = "<option value=" + 0 + " >" + "همه" + "</option>" +
-                response['category'];
+                response['category_id'];
 
             /****************** ApprovalReferences List ****************************/
 
@@ -846,8 +855,8 @@
 
             date_sentiment_chart_data = response['date_sentiment_chart_data']
             console.log(date_sentiment_chart_data)
-            chart_title = text=="empty" ? "روند احساسات":"روند احساسات " + " نسبت به عبارت  " + "«" + text + "»"
-            showChart(date_sentiment_chart_data, "sentiment_trend_container", [], true, "تاریخ خبر",chart_title )
+            chart_title = text == "empty" ? "روند احساسات" : "روند احساسات " + " نسبت به عبارت  " + "«" + text + "»"
+            showChart(date_sentiment_chart_data, "sentiment_trend_container", [], true, "تاریخ خبر", chart_title)
         }
 
         async function update_table_pagination_input(curr_page, total_hits) {
@@ -1161,26 +1170,22 @@
                 container === "source_name_container" ||
                 container === "day_container") {
 
+                options.onClick = async function (event, data) {
+                    const click_tag = event.domTarget.tag;
+                    const index = click_tag["index"]
+                    const text = data[index][0];
+                    const best_result_count = documents_information_result.length
 
-                if (container === "subject_container" ||
-                    container === "source_name_container") {
+                    let filtered_result = []
+                    let header = ""
+                    let save_file_name = document.getElementById("SearchBox").value;
 
-                    options.onClick = async function (event, data) {
-                        const click_tag = event.domTarget.tag;
-                        const index = click_tag["index"]
-                        const text = data[index][0];
-                        const best_result_count = documents_information_result.length
+                    await GetClickedColumnDocuments(container, text)
 
-                        let filtered_result = []
-                        let header = ""
-                        let save_file_name = document.getElementById("SearchBox").value;
-
-                        await GetClickedColumnDocuments(container, text)
-
-                        $("#ChartModalBtn").click();
-                    }
-
+                    $("#ChartModalBtn").click();
                 }
+
+
 
                 newDoughnutChart(container, options);
             }
@@ -1200,18 +1205,18 @@
                     let header = ""
                     let save_file_name = document.getElementById("SearchBox").value;
 
-                    // await GetClickedColumnDocuments(container, text)
+                    await GetClickedColumnDocuments(container, text)
 
-                    // $("#ChartModalBtn").click();
+                    $("#ChartModalBtn").click();
                 }
 
                 newLineChart(container, options)
             } else if (container === "sentiment_trend_container") {
                 options.yAxisTitle = 'تعداد پاراگراف'
                 options.series_data = [
-                    {   
-                        "map":{x:0,value:1},
-                        "name":"احساس بسیار منفی",
+                    {
+                        "map": { x: 0, value: 1 },
+                        "name": "احساس بسیار منفی",
                         "normal": {
                             "stroke_color": "#D31820",
                             "stroke_thickness": 2
@@ -1225,10 +1230,10 @@
                             "stroke_thickness": 6
                         },
                     },
-                
-                    {   
-                        "map":{x:0,value:2},
-                        "name":"احساس منفی",
+
+                    {
+                        "map": { x: 0, value: 2 },
+                        "name": "احساس منفی",
                         "normal": {
                             "stroke_color": "#E68383",
                             "stroke_thickness": 2
@@ -1243,9 +1248,9 @@
                         },
                     }
                     ,
-                    {   
-                        "map":{x:0,value:3},
-                        "name":"احساس مثبت",
+                    {
+                        "map": { x: 0, value: 3 },
+                        "name": "احساس مثبت",
                         "normal": {
                             "stroke_color": "#96F826",
                             "stroke_thickness": 2
@@ -1259,11 +1264,11 @@
                             "stroke_thickness": 6
                         },
                     }
-              
+
                     ,
-                    {   
-                        "map":{x:0,value:4},
-                        "name":"احساس بسیار مثبت",
+                    {
+                        "map": { x: 0, value: 4 },
+                        "name": "احساس بسیار مثبت",
                         "normal": {
                             "stroke_color": "#0C750B",
                             "stroke_thickness": 2
@@ -1278,11 +1283,11 @@
                             "stroke_thickness": 6
                         },
                     }
-                    
+
                     ,
-                    {   
-                        "map":{x:0,value:5},
-                        "name":"بدون ابراز احساسات",
+                    {
+                        "map": { x: 0, value: 5 },
+                        "name": "بدون ابراز احساسات",
                         "normal": {
                             "stroke_color": "#B8A948",
                             "stroke_thickness": 2
@@ -1297,11 +1302,11 @@
                             "stroke_thickness": 6
                         },
                     }
-                    
+
                     ,
-                    {   
-                        "map":{x:0,value:6},
-                        "name":"احساس خنثی یا ترکیبی از مثبت و منفی",
+                    {
+                        "map": { x: 0, value: 6 },
+                        "name": "احساس خنثی یا ترکیبی از مثبت و منفی",
                         "normal": {
                             "stroke_color": "#000000",
                             "stroke_thickness": 2
@@ -1316,9 +1321,13 @@
                             "stroke_thickness": 6
                         },
                     }
-                     
+
                 ]
+
+
                 newMultipleLineChart(container, options)
+
+
             }
             else {
                 newBarChart(container, options)
@@ -1409,6 +1418,9 @@
             category_name = UserSearchParameters.category_name
             from_year = UserSearchParameters.from_year
             to_year = UserSearchParameters.to_year
+            sentiment = UserSearchParameters.sentiment
+            field_name = "همه"
+            field_value = "همه"
 
             header = ""
             let save_file_name = document.getElementById("SearchBox").value;
@@ -1419,7 +1431,46 @@
                 subject_name = column_value
                 save_file_name += " (مجموعه خبر {1} و موضوع {2})".replace("1", "خبرکاو").replace("2", column_value)
 
-            } else if (Doc_Field == 'source_name') {
+            } else if (Doc_Field == 'sentiment.keyword') {
+
+                header = "احساس خبر: " + column_value
+                sentiment = column_value
+                save_file_name += " (مجموعه خبر {1} و احساس خبر {2})".replace("1", "خبرکاو").replace("2", column_value)
+
+            }
+            else if (Doc_Field == 'document_date.keyword') {
+
+                header = "تاریخ خبر: " + column_value
+                field_value = column_value.replaceAll('/', '-')
+                field_name = Doc_Field
+                save_file_name += " (مجموعه خبر {1} و تاریخ خبر {2})".replace("1", "خبرکاو").replace("2", column_value)
+
+            }
+            else if (Doc_Field == 'document_jalili_date.month.name.keyword') {
+
+                header = "ماه خبر: " + column_value
+                field_value = column_value
+                field_name = Doc_Field
+                save_file_name += " (مجموعه خبر {1} و ماه خبر {2})".replace("1", "خبرکاو").replace("2", column_value)
+
+            } else if (Doc_Field == 'document_jalili_date.day.name.keyword') {
+
+                header = "روز خبر: " + column_value
+                field_value = column_value
+                field_name = Doc_Field
+                save_file_name += " (مجموعه خبر {1} و روز خبر {2})".replace("1", "خبرکاو").replace("2", column_value)
+
+            }
+            else if (Doc_Field == 'document_hour') {
+
+                header = "ساعت خبر: " + column_value
+                field_value = column_value
+                field_name = Doc_Field
+                save_file_name += " (مجموعه خبر {1} و ساعت خبر {2})".replace("1", "خبرکاو").replace("2", column_value)
+
+            }
+
+            else if (Doc_Field == 'source_name') {
 
                 header = "مرجع خبر: " + column_value
                 source_name = column_value
@@ -1459,6 +1510,9 @@
                 + category_name + "/"
                 + from_year + "/"
                 + to_year + "/"
+                + sentiment + "/"
+                + field_name + "/"
+                + field_value + "/"
                 + UserSearchParameters.place + "/"
                 + UserSearchParameters.text + "/"
                 + UserSearchParameters.search_type + "/"
@@ -1473,7 +1527,7 @@
 
 
             /* download file creation */
-            document.getElementById("DownloadDocuments").onclick = function () {
+            document.getElementById("DownloadDocuments2").onclick = function () {
                 downloadFiles(RESULT_DOCUMENTS, save_file_name);
             };
 
@@ -2278,7 +2332,7 @@
             paragraph_list = response["result"]
 
             doc_name = paragraph_list[0]['_source']['document_name']
-            
+
             const link = 'http://' + location.host + "/information/?id=" + doc_id
             let title_tag = "<a  target='blank' href='" + link + "'>" + doc_name + "</a>"
             document.getElementById("ModalHeader").innerHTML = title_tag

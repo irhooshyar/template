@@ -93,7 +93,7 @@ urlpatterns = [
     
     
     path(
-        'SearchDocuments_Column_ES/<str:country_name>/<str:subject_name>/<str:category_name>/<str:from_year>/<str:to_year>/<str:place>/<str:text>/<str:search_type>/<int:curr_page>/',
+        'SearchDocuments_Column_ES/<str:country_name>/<str:subject_name>/<str:category_name>/<str:from_year>/<str:to_year>/<str:sentiment>/<str:field_name>/<str:field_value>/<str:place>/<str:text>/<str:search_type>/<int:curr_page>/',
         views.SearchDocuments_Column_ES, name='SearchDocuments_Column_ES'),
 
     path(
@@ -119,7 +119,7 @@ urlpatterns = [
     path('GetDocumentSubjectContent/<int:document_id>/<int:version_id>/', views.GetDocumentSubjectContent,
          name='GetDocumentSubjectContent'),
     path(
-        'SaveUser/<str:firstname>/<str:lastname>/<str:email>/<str:phonenumber>/<int:role>/<str:username>/<str:password>/<str:ip>/<str:expertise>/<str:other_expertise>/',
+        'SaveUser/<str:firstname>/<str:lastname>/<str:email>/<str:phonenumber>/<int:role>/<str:username>/<str:password>/<str:ip>/<str:expertise>/',
         views.SaveUser, name='SaveUser'),
     path('CheckUserLogin/<str:username>/<str:password>/<str:ip>/', views.CheckUserLogin, name='CheckUserLogin'),
     path('changeUserState/<int:user_id>/<str:state>/', views.changeUserState, name='changeUserState'),

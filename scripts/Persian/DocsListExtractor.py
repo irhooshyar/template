@@ -132,8 +132,9 @@ def Docs_List_Extractor(docs_list, Country, dataframe_dictionary, Result_Create_
             doc_obj = Document(name=document_name, file_name=file, country_id=Country)
             Create_List.append(doc_obj)
         else:
-            doc_obj = Document(name=file, file_name=file, country_id=Country)
-            Create_List.append(doc_obj)
+            pass
+            # doc_obj = Document(name=file, file_name=file, country_id=Country)
+            # Create_List.append(doc_obj)
 
     Result_Create_List[thread_number] = Create_List
 

@@ -1933,13 +1933,8 @@ def GetMyUserProfile(request):
     user = User.objects.get(username=username)
     user_expertise = User_Expertise.objects.filter(user_id=user.id)
     expertise = []
-    expertise_ids = []
     for e in user_expertise:
-        if e.experise_id.expertise == "سایر موارد":
-            expertise.append(user.other_expertise)
-        else:
-            expertise.append(e.experise_id.expertise)
-        expertise_ids.append(e.experise_id.id)
+        expertise.append(e.experise_id.expertise)
     expertise = " - ".join(expertise)
 
     if expertise == "":
@@ -2534,8 +2529,9 @@ def signup_user_activation(request, email, code):
         user.save()
         return JsonResponse({"status": "Not OK"})
 
-def SaveUser(request, firstname, lastname, email, phonenumber, role, username, password, ip, expertise,
-             other_expertise):
+
+def SaveUser(request, firstname, lastname,email, phonenumber, role, username, password, ip, expertise):
+
     user_username = User.objects.filter(username=username)
     user_email = User.objects.filter(email=email)
     if user_username.count() > 0:
@@ -3599,7 +3595,8 @@ def GetSentimentTrend_ChartData(request, country_id, category_id, subject_id, fr
 
     aggregations = response['aggregations']
     date_sentiment_buckets = aggregations['date-sentiment-agg']['buckets']
-
+    print("date_sentiment_buckets==========")
+    print(date_sentiment_buckets)
     date_sentiment_dict = {}
     for bucket in date_sentiment_buckets:
         date = bucket['key'][0]
@@ -3614,6 +3611,7 @@ def GetSentimentTrend_ChartData(request, country_id, category_id, subject_id, fr
                 "بدون ابراز احساسات": 0,
                 "احساس خنثی یا ترکیبی از مثبت و منفی": 0
             }
+            date_sentiment_dict[date][sentiment] = doc_count
         else:
             date_sentiment_dict[date][sentiment] = doc_count
 
@@ -3633,6 +3631,10 @@ def GetSentimentTrend_ChartData(request, country_id, category_id, subject_id, fr
         total_hits = client.count(body={
             "query": res_query
         }, index=index_name, doc_type='_doc')['count']
+
+
+    print("date_sentiment_chart_data==========")
+    print(date_sentiment_chart_data)
 
     response = client.search(index=index_name,
                              request_timeout=40,
@@ -4013,7 +4015,26 @@ def GetActorsChartData_ES_2(request, country_id, level_id, subject_id, type_id, 
 
 
 def filter_doc_fields_COLUMN(res_query, category_name, subject_name,
-                             from_year, to_year):
+                             from_year, to_year,sentiment,field_name,field_value):
+    
+    field_value = field_value.replace('-','/')
+    # ---------------------------------------------------------
+    if sentiment != "همه":
+        sentiment_query = {
+            "term": {
+                "sentiment.keyword": sentiment
+            }
+        }
+        res_query['bool']['filter'].append(sentiment_query)
+
+    if field_name != "همه":
+        field_query = {
+            "term": {
+                field_name: field_value
+            }
+        }
+        res_query['bool']['filter'].append(field_query)
+
     # ---------------------------------------------------------
     if category_name != "همه":
         level_query = {
@@ -4056,7 +4077,7 @@ def filter_doc_fields_COLUMN(res_query, category_name, subject_name,
 
 
 def SearchDocuments_Column_ES(request, country_name, category_name, subject_name,
-                              from_year, to_year
+                              from_year, to_year,sentiment,field_name,field_value
                               , place, text, search_type, curr_page):
     country_id = Country.objects.get(name=country_name).id if country_name != 'همه' else 0
     index_name = None
@@ -4068,7 +4089,7 @@ def SearchDocuments_Column_ES(request, country_name, category_name, subject_name
 
     res_query['bool']['filter'] = []
     res_query = filter_doc_fields_COLUMN(res_query, category_name, subject_name,
-                                         from_year, to_year)
+                                         from_year, to_year,sentiment,field_name,field_value)
 
     if text != "empty":
         res_query["bool"]["must"] = []
