@@ -66,6 +66,7 @@
                 </a>
             </li>
 
+
             <li class="nav-item">
                 <a class="nav-link" id="rahbari_search" data-bs-toggle="tooltip" data-bs-placement="bottom"
                    href="{% url 'search' %}" style="display: none;">
@@ -73,50 +74,58 @@
                 </a>
             </li>
 
-
             <li class="nav-item dropdown" id="AI_analysis">
-            <a class="nav-link dropdown-toggle" href="#" id="AIDropdown" role="button" data-bs-toggle="dropdown"
-                aria-expanded="false">
-                تحلیل هوشمند
-            </a>
-            <ul class="dropdown-menu" aria-labelledby="GraphDropdown">
-                <li>
-                    <a id="AI_topics" class="dropdown-item text-right" href="{% url 'AI_topics' %}">
-                        دسته‌بندی موضوعی (LDA)
-                    </a>
-                </li>
-                <li>
-                    <a id="paragraph_clustering" class="dropdown-item text-right"
-                        href="{% url 'paragrraph_clustering' %}">خوشه‌بندی پاراگراف‌ها</a>
-                </li>
+                <a class="nav-link dropdown-toggle" href="#" id="AIDropdown" role="button" data-bs-toggle="dropdown"
+                    aria-expanded="false">
+                    تحلیل هوشمند
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="GraphDropdown">
+                    <li>
+                        <a id="AI_topics" class="dropdown-item text-right" href="{% url 'AI_topics' %}">
+                            دسته‌بندی موضوعی (LDA)
+                        </a>
+                    </li>
+                    <li>
+                        <a id="paragraph_clustering" class="dropdown-item text-right"
+                            href="{% url 'paragrraph_clustering' %}">خوشه‌بندی پاراگراف‌ها</a>
+                    </li>
 
-                <li>
-                    <a id="ManualClustering" class="dropdown-item text-right"
-                        href="{% url 'ManualClustering' %}">خوشه‌بندی
-                        سفارشی</a>
-                </li>
-                <li>
-                    <a id="knowledgeGraph" class="dropdown-item text-right" href="{% url 'knowledgeGraph' %}">گراف
-                        دانش</a>
-                </li>
-            </ul>
-        </li>
+                    <li>
+                        <a id="ManualClustering" class="dropdown-item text-right"
+                            href="{% url 'ManualClustering' %}">خوشه‌بندی
+                            سفارشی</a>
+                    </li>
+                    <li>
+                        <a id="knowledgeGraph" class="dropdown-item text-right" href="{% url 'knowledgeGraph' %}">گراف
+                            دانش</a>
+                    </li>
+                </ul>
+            </li>
+
+            <li class="nav-item" id="resource_profile" style="display: none;">
+                <a class="nav-link" id="resource_profile_tab" role="button"
+                   href="{% url 'resource_profile' %}" aria-expanded="false">
+                    پروفایل منابع
+                </a>
+            </li>
 
             <li class="nav-item dropdown" id="UserProfile_panels">
-            <a class="nav-link dropdown-toggle" href="#" id="UserProfileDropdown" role="button"
-                data-bs-toggle="dropdown" aria-expanded="false">
-                تعاملات و یادداشت‌ها
-            </a>
-            <ul class="dropdown-menu" aria-labelledby="UserProfileDropdown">
-                <li><a id="following_document_comments" class="dropdown-item text-right"
-                        href="{% url 'following_document_comments' %}">
-                        نظرات تحلیلی دنبال‌شوندگان</a>
-                </li>
-                <li><a id="notes" class="dropdown-item text-right" href="{% url 'notes' %}">
-                        یادداشت‌های شخصی </a>
-                </li>
-            </ul>
+                <a class="nav-link dropdown-toggle" href="#" id="UserProfileDropdown" role="button"
+                    data-bs-toggle="dropdown" aria-expanded="false">
+                    تعاملات و یادداشت‌ها
+                </a>
+                <ul class="dropdown-menu" aria-labelledby="UserProfileDropdown">
+                    <li><a id="following_document_comments" class="dropdown-item text-right"
+                            href="{% url 'following_document_comments' %}">
+                            نظرات تحلیلی دنبال‌شوندگان</a>
+                    </li>
+                    <li><a id="notes" class="dropdown-item text-right" href="{% url 'notes' %}">
+                            یادداشت‌های شخصی </a>
+                    </li>
+                </ul>
             </li>
+
+
 
         </ul>
 
@@ -170,9 +179,6 @@
                     <li><a id="super_admin_user_log" class="dropdown-item text-right"
                            href="{% url 'super_admin_user_log' %}" style="display: none;">
                         لاگ کاربران</a>
-                    </li>
-                    <li><a id="resource_profile_tab" class="dropdown-item text-right" href="{% url 'resource_profile' %}">
-                        داشبورد آماری منابع</a>
                     </li>
                 </ul>
             </li>
