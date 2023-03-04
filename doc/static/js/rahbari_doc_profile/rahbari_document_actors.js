@@ -11,7 +11,7 @@ async function find_rahbari_document_actors(document_id) {
 
 function actor_init() {
     const menu_columns = {
-        "all_repetition": 'تعداد احکام حاوی نام',
+        "all_repetition": 'تعداد پاراگراف حاوی نام',
         "actor_name": 'نام کنشگر',
     }
     append_column(menu_columns, "ActorColumnSelect")
@@ -92,7 +92,7 @@ function actor_table_show_result() {
         },
         {
             "name": "all_repetition",
-            "title": "تعداد احکام حاوی نام",
+            "title": "تعداد پاراگراف‌ها حاوی نام",
             "type": "number",
             "style": {
                 "width": "30%"
