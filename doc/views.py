@@ -4134,7 +4134,10 @@ def SearchDocuments_Column_ES(request, country_name, category_name, subject_name
                                      "attachment.content":
                                          {"pre_tags": ["<span class='text-primary fw-bold'>"], "post_tags": ["</span>"],
                                           "number_of_fragments": 0
-                                          }
+                                          },
+                                        "document_name":{"pre_tags": ["<span class='text-primary fw-bold'>"], "post_tags": ["</span>"],
+                                          "number_of_fragments": 0
+                                          },
                                  }
                              } if sentiment!="همه" else None
 
