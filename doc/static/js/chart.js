@@ -883,3 +883,52 @@ function newMultipleLineChart(container_id, options) {
     });
   } catch {}
 }
+
+function newRadarChart(container_id, options) {
+  const { chartContainerId, chartDownloadId } = newChartContainer(
+    container_id,
+    options
+  );
+
+  let data = options.data;
+
+  // create a chart
+  chart = anychart.radar();
+  document.getElementById(chartDownloadId).onclick = () => {
+    chart.saveAsPng(2000, 1000, 1, options.title);
+  };
+  chart.animation(true).padding([10, 60, 10, 0]);
+
+
+  // create the first series (line) and set the data
+  var series = chart.line(data);
+
+  series.normal().stroke("4 rgba(72, 143, 184, 1)");
+  series.hovered().stroke("4 rgba(72, 143, 184, 1)");
+  series.selected().stroke("4 rgba(72, 143, 184, 1)");
+
+  // set the container id
+  chart.container(chartContainerId);
+  // initiate drawing the chart
+
+  // chart.xScale().mode('continuous');
+  chart.yScale().ticks().allowFractional(false);
+
+  // x axix labels font setting
+  var xAxisLabels = chart.xAxis().labels();
+  xAxisLabels.fontFamily("vazir");
+  xAxisLabels.fontWeight(600);
+
+  // y axix labels font setting
+  var yAxisLabels = chart.yAxis().labels();
+  yAxisLabels.fontFamily("vazir");
+
+  chart.tooltip().title().fontFamily("vazir");
+  chart.tooltip().fontFamily("vazir");
+  chart.tooltip().hAlign("center").format("{%value}%");
+
+  chart.yGrid().palette(["gray 0.05", "gray 0.1"]);
+  chart.background().fill("#ffffff");
+  chart.palette(palette);
+  chart.draw();
+}
