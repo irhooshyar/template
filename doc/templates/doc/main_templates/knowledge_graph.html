@@ -956,7 +956,7 @@
             const height = container.scrollHeight || 500;
 
             ShowedGraphObject = new MyGraph("show_knowledge__graph_container", Nodes_data, Edges_data, { "EN_name": "نام انگلیسی", "weight": "وزن" }, {},
-                width, height, "force", "show_knowledge__ChangeLayout", true,
+                width, height, "dagre", "show_knowledge__ChangeLayout", true,
                 "Yellow", "", "", 1, 1, "show_knowledge__selected_node_table", "show_knowledge__selected_edge_table",
                 "show_knowledge__SelectNeighbourImg", "show_knowledge__ShowHideImg", "شباهت", KnowledgeGraphNodeDblClick, "",
                 "show_knowledge__SearchBox", "show_knowledge__SearchBtn")
@@ -1134,14 +1134,8 @@
                 }
             }
 
-            if (filed_name === "subject_name.keyword")
-            {
-                newDoughnutChart(position, options);
-            }
-            else
-            {
-                newBarChart(position, options)
-            }
+            newBarChart(position, options)
+
         }
 
         async function delete_selected_graph() {
