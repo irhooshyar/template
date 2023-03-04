@@ -160,16 +160,16 @@
 
 
 
-        <li class="nav-item" role="presentation">
+        <!-- <li class="nav-item" role="presentation">
             <button id="subject_keyword_tab" class="nav-link active" data-bs-toggle="pill"
                     data-bs-target="#subject_keyword_pane" type="button" role="tab" aria-controls="subject_keyword_pane"
                     aria-selected="true"> موضوع براساس کلیدواژگان
             </button>
-        </li>
+        </li> -->
 
 
         <li class="nav-item" role="presentation">
-            <button id="classification_result_tab" class="nav-link" data-bs-toggle="pill"
+            <button id="classification_result_tab" class="nav-link active" data-bs-toggle="pill"
                     data-bs-target="#classification" type="button" role="tab" aria-controls="classification"
                     aria-selected="true">نمودار موضوعی
             </button>
@@ -230,7 +230,7 @@
             </div>
         </div>
 
-        <div id="subject_keyword_pane" class="tab-pane bg-white w-100 fade show active" role="tabpanel"
+        <div id="subject_keyword_pane" class="tab-pane bg-white w-100 fade" role="tabpanel"
              aria-labelledby="subject_keyword_tab">
             <div dir="rtl" class="text-right pt-4" id="subjectContentHeader">
 
@@ -240,7 +240,7 @@
             </div>
         </div>
 
-        <div id="sentiment_analyser" class="tab-pane w-100 fade show" role="tabpanel"
+        <div id="sentiment_analyser" class="tab-pane w-100 fade" role="tabpanel"
              aria-labelledby="sentiment_result_tab">
 
             <div id="sentiment_tab_container" class="sentiment_tab_container">
@@ -253,7 +253,7 @@
 
         </div>
 
-        <div id="classification" class="tab-pane w-100 fade show" role="tabpanel"
+        <div id="classification" class="tab-pane w-100 fade show active" role="tabpanel"
              aria-labelledby="classification_result_tab">
             <h6 id="classification_box_title" class="subject_distribution pr-2 w-100 mt-4 text-center float-right">
             </h6>
@@ -265,14 +265,14 @@
             </div>
         </div>
         
-        <div id="tag_analyser" class="tab-pane w-100 fade show" role="tabpanel"
+        <div id="tag_analyser" class="tab-pane w-100 fade" role="tabpanel"
              aria-labelledby="tag_result_tab">
             <div class="tag-text-wrapper">
                 <p class="label-p tag-text" dir="rtl" id="result_text"></p>
             </div>
         </div>
 
-        <div id="summary_pane" class="tab-pane w-100 fade show" role="tabpanel"
+        <div id="summary_pane" class="tab-pane w-100 fade" role="tabpanel"
              aria-labelledby="summary_tab">
             <div class="tag-text-wrapper">
                 <p class="label-p tag-text" style="min-height: 200px;" dir="rtl" id="summary_text">

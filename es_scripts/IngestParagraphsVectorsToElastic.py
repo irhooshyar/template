@@ -21,6 +21,7 @@ from collections import deque
 from scripts.Persian.Preprocessing import standardIndexName
 import json
 import after_response
+import numpy as np
 # ---------------------------------------------------------------------------------
 
 class ParagraphVectorIndex(ES_Index):
@@ -101,8 +102,8 @@ def apply(folder, Country,is_for_ref):
     #     'para_text','vector_value'
     # )
 
-    # paragraphs = get_paragraphs_list(Country)
-    paragraphs = []
+    paragraphs = get_paragraphs_list(Country)
+    # paragraphs = []
 
     print(len(paragraphs))
     new_index = ParagraphVectorIndex(index_name, settings, mappings)
@@ -126,7 +127,7 @@ def get_paragraphs_list(Country):
             "para_text":para_obj.text,
             "doc_id":para_obj.document_id.id,
             "doc_name":para_obj.document_id.name,
-            "vector_value":[]
+            "vector_value": []
         }
         paragraph_dict[para_obj.id] = para_res_obj
 
@@ -145,7 +146,6 @@ def get_paragraphs_list(Country):
         except:
             print('Paragraph id not existed!')
 
-    file.close()
     print(f"{ctr}/{len(file_data.keys())} paragraphs found.")
 
     return result_paragraphs_list

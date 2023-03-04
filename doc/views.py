@@ -3510,9 +3510,7 @@ def SearchDocument_ES(request, country_id, category_id, subject_id, from_year, t
                              )
     max_score = response['hits']['hits'][0]['_score'] if total_hits > 0 else 1
     max_score = max_score if max_score > 0 else 1
-    print(index_name)
-    print(res_query)
-    print(result)
+
     return JsonResponse({
         "result": result,
         'total_hits': total_hits,
@@ -3595,8 +3593,7 @@ def GetSentimentTrend_ChartData(request, country_id, category_id, subject_id, fr
 
     aggregations = response['aggregations']
     date_sentiment_buckets = aggregations['date-sentiment-agg']['buckets']
-    print("date_sentiment_buckets==========")
-    print(date_sentiment_buckets)
+
     date_sentiment_dict = {}
     for bucket in date_sentiment_buckets:
         date = bucket['key'][0]
@@ -3633,8 +3630,6 @@ def GetSentimentTrend_ChartData(request, country_id, category_id, subject_id, fr
         }, index=index_name, doc_type='_doc')['count']
 
 
-    print("date_sentiment_chart_data==========")
-    print(date_sentiment_chart_data)
 
     response = client.search(index=index_name,
                              request_timeout=40,
@@ -4099,29 +4094,43 @@ def SearchDocuments_Column_ES(request, country_name, category_name, subject_name
         else:
             res_query = boolean_search_text(res_query, place, text, search_type, ALL_FIELDS)
 
+    ModelName = Document if sentiment=="همه" else FullProfileAnalysis
     if country_id == 0:
         index_name_list = []
         country_list = Country.objects.filter(language="فارسی").exclude(name="تابناک- تست")
         for country in country_list:
-            index_name = standardIndexName(country, Document.__name__)
+            index_name = standardIndexName(country, ModelName.__name__)
             index_name_list.append(index_name)
 
         index_name = index_name_list
     else:
 
         country_obj = Country.objects.get(id=country_id)
-        index_name = standardIndexName(country_obj, Document.__name__)
+        index_name = standardIndexName(country_obj, ModelName.__name__)
 
     from_value = (curr_page - 1) * search_result_size
-
+    field_list = ['document_id', 'document_name', 'document_date',
+                'subject_name', 'source_id', 'source_folder', 'source_name',
+                "category_name", 'raw_file_name']
+    
+    if sentiment!="همه":
+        field_list.append("attachment.content")
+        field_list.append("paragraph_id")
     response = client.search(index=index_name,
-                             _source_includes=['document_id', 'document_name', 'document_date',
-                                               'subject_name', 'source_id', 'source_folder', 'source_name',
-                                               "category_name", 'raw_file_name'],
+                             _source_includes=field_list,
                              request_timeout=40,
                              query=res_query,
                              from_=from_value,
-                             size=search_result_size
+                             size=search_result_size,
+                            highlight={
+                                 "order": "score",
+                                 "fields": {
+                                     "attachment.content":
+                                         {"pre_tags": ["<span class='text-primary fw-bold'>"], "post_tags": ["</span>"],
+                                          "number_of_fragments": 0
+                                          }
+                                 }
+                             } if sentiment!="همه" else None
 
                              )
 

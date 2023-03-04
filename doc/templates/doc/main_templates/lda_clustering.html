@@ -738,7 +738,7 @@
         "cloud": "ابر واژگان",
         "detail": "مشاهده پاراگراف‌ها",
         "entropy": "آنتروپی",
-        "subject": "موضوع غالب (براساس کلیدواژگان)"
+        "subject": "موضوع غالب (براساس مدل‌های عمیق)"
     }
     initSearchableSelects();
     append_column(COLUMNS);
@@ -984,7 +984,7 @@
                     }
                 }, {
                     "name": "subject",
-                    "title": "موضوع غالب (براساس کلیدواژگان)",
+                    "title": "موضوع غالب (براساس مدل‌های عمیق)",
                     "style": {
                         "width": "10%"
                     }
@@ -1163,7 +1163,7 @@
             }
         }, {
             "name": "subject",
-            "title": "موضوع غالب (براساس کلیدواژگان)",
+            "title": "موضوع غالب (براساس مدل‌های عمیق)",
             "style": {
                 "width": "10%"
             }
@@ -1635,7 +1635,7 @@
             data,
             sortKeys,
             xAxisTitle: "موضوع خبر",
-            title: "تعداد پاراگراف‌ها: " + paragraph_count + '\n' + 'موضوع غالب (براساس کلیدواژگان): ' + dominant_subject_name + "\n" + 'آنتروپی: ' + correlation_score + "\n",
+            title: "تعداد پاراگراف‌ها: " + paragraph_count + '\n' + 'موضوع غالب (براساس مدل‌های عمیق): ' + dominant_subject_name + "\n" + 'آنتروپی: ' + correlation_score + "\n",
             yAxisTitle: "تعداد خبر",
             onClick: (event, data) => {
                 const click_tag = event.domTarget.tag;
@@ -1785,7 +1785,7 @@
         sep = ","
 
 
-        let Csv = "ردیف" + sep + "موضوع" + sep + "آنتروپی" + sep + "موضوع غالب (براساس کلیدواژگان)" + "\n"
+        let Csv = "ردیف" + sep + "موضوع" + sep + "آنتروپی" + sep + "موضوع غالب (براساس مدل‌های عمیق)" + "\n"
         let index = 1
         for (const topic of topic_response) {
             let temp = '';

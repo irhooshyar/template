@@ -460,10 +460,10 @@
                     <input type="number" id="ColumnModalPaginationInput" min="1" max="1" value="1"
                         class="form-select text-right float-right d-none">
 
-                    <button id="DownloadDocuments" class="btn blue-button"><i class="fa fa-download"></i> دانلود
+                    <button id="DownloadDocuments2" disabled="false" class="btn blue-button"><i class="fa fa-file-archive"></i> دانلود
                         اخبار</button>
 
-                    <button id="ExportExcel2" class="btn green-button"><i class="fa fa-download"></i> خروجی اکسل
+                    <button id="ExportExcel2" disabled="false" class="btn green-button"><i class="fa fa-file-excel"></i> خروجی اکسل
                     </button>
                 </div>
 
@@ -525,6 +525,15 @@
         let min_selected_weight;
         let max_selected_weight;
         let show_hide_state = "show"
+
+        const SENTIMENT_COLORS = {
+            "احساس بسیار مثبت" : "rgba(100, 129, 50, 1)",
+            "احساس مثبت" : "rgba(177, 205, 127, 1)",
+            "احساس بسیار منفی" : "rgba(129, 50, 61, 1)",
+            "احساس منفی" : "rgba(205, 127, 138, 1)",
+            "بدون ابراز احساسات" : "rgba(169, 169, 169, 1)",
+            "احساس خنثی یا ترکیبی از مثبت و منفی" : "rgba(72, 143, 184, 1)",
+        }
 
         SOURCE_IMAGE_TAG = {
             "تابناک- تست": '<img width="60px" class="rounded-pill shadow" src="../../../static/icons/logo/tabnak.jfif" alt="تابناک">',
@@ -1090,7 +1099,7 @@
                     let header = ""
                     let save_file_name = document.getElementById("SearchBox").value;
 
-                    await GetClickedColumnDocuments(container, text)
+                    await GetClickedColumnDocuments(container, "همه", text)
 
                     $("#ChartModalBtn").click();
                 }
@@ -1130,7 +1139,7 @@
                     let header = ""
                     let save_file_name = document.getElementById("SearchBox").value;
 
-                    await GetClickedColumnDocuments(container, text)
+                    await GetClickedColumnDocuments(container, "همه", text)
 
                     $("#ChartModalBtn").click();
                 }
@@ -1160,7 +1169,7 @@
                     let header = ""
                     let save_file_name = document.getElementById("SearchBox").value;
 
-                    await GetClickedColumnDocuments(container, text)
+                    await GetClickedColumnDocuments(container, "همه", text)
 
                     $("#ChartModalBtn").click();
                 }
@@ -1180,7 +1189,7 @@
                     let header = ""
                     let save_file_name = document.getElementById("SearchBox").value;
 
-                    await GetClickedColumnDocuments(container, text)
+                    await GetClickedColumnDocuments(container, "همه", text)
 
                     $("#ChartModalBtn").click();
                 }
@@ -1205,7 +1214,7 @@
                     let header = ""
                     let save_file_name = document.getElementById("SearchBox").value;
 
-                    await GetClickedColumnDocuments(container, text)
+                    await GetClickedColumnDocuments(container, "همه", text)
 
                     $("#ChartModalBtn").click();
                 }
@@ -1214,55 +1223,193 @@
             } else if (container === "sentiment_trend_container") {
                 options.yAxisTitle = 'تعداد پاراگراف'
                 options.series_data = [
+
+                
+                    {
+                        "map": { x: 0, value: 5 },
+                        "name": "بدون ابراز احساسات",
+                        "normal": {
+                            "stroke_color": "rgba(169, 169, 169, 1)",
+                            "stroke_thickness": 2
+                        },
+                        "hovered": {
+                            "stroke_color": "rgba(169, 169, 169, 1)",
+                            "stroke_thickness": 4,
+
+                        },
+                        "selected": {
+                            "stroke_color": "rgba(169, 169, 169, 1)",
+                            "stroke_thickness": 6
+                        },
+                        onClick: async function (event, data) {
+                            const click_tag_index = event.domTarget.tag;
+                            console.log(data)
+                            console.log(click_tag_index)
+                            const text = data['mc'][click_tag_index][0];
+                            console.log("text")
+                            console.log(text)
+                            const best_result_count = documents_information_result.length
+
+                            let filtered_result = []
+                            let header = ""
+                            let save_file_name = document.getElementById("SearchBox").value;
+
+                            await GetClickedColumnDocuments(container, "بدون ابراز احساسات", text, 'paragraphs')
+
+                            $("#ChartModalBtn").click();
+                        }
+
+
+                    },
+
+
                     {
                         "map": { x: 0, value: 1 },
                         "name": "احساس بسیار منفی",
                         "normal": {
-                            "stroke_color": "#D31820",
+                            "stroke_color": "rgba(129, 50, 61, 1)",
                             "stroke_thickness": 2
                         },
                         "hovered": {
-                            "stroke_color": "#D31820",
+                            "stroke_color": "rgba(129, 50, 61, 1)",
                             "stroke_thickness": 4
                         },
                         "selected": {
-                            "stroke_color": "#D31820",
+                            "stroke_color": "rgba(129, 50, 61, 1)",
                             "stroke_thickness": 6
                         },
+                        onClick: async function (event, data) {
+                            const click_tag_index = event.domTarget.tag;
+                            console.log(event)
+                            const text = data['mc'][click_tag_index][0];
+                            const best_result_count = documents_information_result.length
+
+                            let filtered_result = []
+                            let header = ""
+                            let save_file_name = document.getElementById("SearchBox").value;
+
+                            await GetClickedColumnDocuments(container, "احساس بسیار منفی", text, 'paragraphs')
+
+                            $("#ChartModalBtn").click();
+                        }
+
+
+
                     },
 
                     {
                         "map": { x: 0, value: 2 },
                         "name": "احساس منفی",
                         "normal": {
-                            "stroke_color": "#E68383",
+                            "stroke_color": "rgba(205, 127, 138, 1)",
                             "stroke_thickness": 2
                         },
                         "hovered": {
-                            "stroke_color": "#E68383",
+                            "stroke_color": "rgba(205, 127, 138, 1)",
                             "stroke_thickness": 4
                         },
                         "selected": {
-                            "stroke_color": "#E68383",
+                            "stroke_color": "rgba(205, 127, 138, 1)",
                             "stroke_thickness": 6,
                         },
+
+                        onClick: async function (event, data) {
+                            const click_tag_index = event.domTarget.tag;
+                            console.log(data)
+                            console.log(click_tag_index)
+                            const text = data['mc'][click_tag_index][0];
+                            console.log("text")
+                            console.log(text)
+                            const best_result_count = documents_information_result.length
+
+                            let filtered_result = []
+                            let header = ""
+                            let save_file_name = document.getElementById("SearchBox").value;
+
+                            await GetClickedColumnDocuments(container, "احساس منفی", text, 'paragraphs')
+
+                            $("#ChartModalBtn").click();
+                        }
+
+
+
                     }
+
+
+                    ,
+                    {
+                        "map": { x: 0, value: 6 },
+                        "name": "احساس خنثی یا ترکیبی از مثبت و منفی",
+                        "normal": {
+                            "stroke_color": "rgba(72, 143, 184, 1)",
+                            "stroke_thickness": 2
+                        },
+                        "hovered": {
+                            "stroke_color": "rgba(72, 143, 184, 1)",
+                            "stroke_thickness": 4,
+
+                        },
+                        "selected": {
+                            "stroke_color": "rgba(72, 143, 184, 1)",
+                            "stroke_thickness": 6
+                        },
+                        onClick: async function (event, data) {
+                            const click_tag_index = event.domTarget.tag;
+                            console.log(data)
+                            console.log(click_tag_index)
+                            const text = data['mc'][click_tag_index][0];
+                            console.log("text")
+                            console.log(text)
+                            const best_result_count = documents_information_result.length
+
+                            let filtered_result = []
+                            let header = ""
+                            let save_file_name = document.getElementById("SearchBox").value;
+
+                            await GetClickedColumnDocuments(container, "احساس خنثی یا ترکیبی از مثبت و منفی", text, 'paragraphs')
+
+                            $("#ChartModalBtn").click();
+                        }
+
+                    }
+
+
                     ,
                     {
                         "map": { x: 0, value: 3 },
                         "name": "احساس مثبت",
                         "normal": {
-                            "stroke_color": "#96F826",
+                            "stroke_color": "rgba(177, 205, 127, 1)",
                             "stroke_thickness": 2
                         },
                         "hovered": {
-                            "stroke_color": "#96F826",
+                            "stroke_color": "rgba(177, 205, 127, 1)",
                             "stroke_thickness": 4
                         },
                         "selected": {
-                            "stroke_color": "#96F826",
+                            "stroke_color": "rgba(177, 205, 127, 1)",
                             "stroke_thickness": 6
                         },
+                        onClick: async function (event, data) {
+                            const click_tag_index = event.domTarget.tag;
+                            console.log(data)
+                            console.log(click_tag_index)
+                            const text = data['mc'][click_tag_index][0];
+                            console.log("text")
+                            console.log(text)
+                            const best_result_count = documents_information_result.length
+
+                            let filtered_result = []
+                            let header = ""
+                            let save_file_name = document.getElementById("SearchBox").value;
+
+                            await GetClickedColumnDocuments(container, "احساس مثبت", text, 'paragraphs')
+
+                            $("#ChartModalBtn").click();
+                        }
+
+
+
                     }
 
                     ,
@@ -1270,57 +1417,41 @@
                         "map": { x: 0, value: 4 },
                         "name": "احساس بسیار مثبت",
                         "normal": {
-                            "stroke_color": "#0C750B",
+                            "stroke_color": "rgba(100, 129, 50, 1)",
                             "stroke_thickness": 2
                         },
                         "hovered": {
-                            "stroke_color": "#0C750B",
+                            "stroke_color": "rgba(100, 129, 50, 1)",
                             "stroke_thickness": 4,
 
                         },
                         "selected": {
-                            "stroke_color": "#0C750B",
+                            "stroke_color": "rgba(100, 129, 50, 1)",
                             "stroke_thickness": 6
                         },
+
+                        onClick: async function (event, data) {
+                            const click_tag_index = event.domTarget.tag;
+                            console.log(data)
+                            console.log(click_tag_index)
+                            const text = data['mc'][click_tag_index][0];
+                            console.log("text")
+                            console.log(text)
+                            const best_result_count = documents_information_result.length
+
+                            let filtered_result = []
+                            let header = ""
+                            let save_file_name = document.getElementById("SearchBox").value;
+
+                            await GetClickedColumnDocuments(container, "احساس بسیار مثبت", text, 'paragraphs')
+
+                            $("#ChartModalBtn").click();
+                        }
+
+
+
                     }
 
-                    ,
-                    {
-                        "map": { x: 0, value: 5 },
-                        "name": "بدون ابراز احساسات",
-                        "normal": {
-                            "stroke_color": "#B8A948",
-                            "stroke_thickness": 2
-                        },
-                        "hovered": {
-                            "stroke_color": "#B8A948",
-                            "stroke_thickness": 4,
-
-                        },
-                        "selected": {
-                            "stroke_color": "#B8A948",
-                            "stroke_thickness": 6
-                        },
-                    }
-
-                    ,
-                    {
-                        "map": { x: 0, value: 6 },
-                        "name": "احساس خنثی یا ترکیبی از مثبت و منفی",
-                        "normal": {
-                            "stroke_color": "#000000",
-                            "stroke_thickness": 2
-                        },
-                        "hovered": {
-                            "stroke_color": "#000000",
-                            "stroke_thickness": 4,
-
-                        },
-                        "selected": {
-                            "stroke_color": "#000000",
-                            "stroke_thickness": 6
-                        },
-                    }
 
                 ]
 
@@ -1398,18 +1529,18 @@
             }
         }
 
-        async function GetClickedColumnDocuments(position, column_value) {
+        async function GetClickedColumnDocuments(position, selected_sentiment, column_value, result_type = "documents") {
             startFullPageBlockUI();
             document.getElementById("ChartModalBodyText").innerHTML = ""
             RESULT_DOCUMENTS = []
-            await load_documents(position, column_value, 1, RESULT_DOCUMENTS)
+            await load_documents(position, selected_sentiment, column_value, 1, RESULT_DOCUMENTS, result_type)
 
             stopFullPageBlockUI('کلیک روی نمودار');
         }
 
         // ---------------------------------------------------------------------
 
-        async function load_documents(position, column_value, next_page_number, RESULT_DOCUMENTS) {
+        async function load_documents(position, selected_sentiment, column_value, next_page_number, RESULT_DOCUMENTS, result_type) {
 
             Doc_Field = CHART_FIELD_DICT[position]
 
@@ -1418,7 +1549,7 @@
             category_name = UserSearchParameters.category_name
             from_year = UserSearchParameters.from_year
             to_year = UserSearchParameters.to_year
-            sentiment = UserSearchParameters.sentiment
+            sentiment = "همه"
             field_name = "همه"
             field_value = "همه"
 
@@ -1433,8 +1564,12 @@
 
             } else if (Doc_Field == 'sentiment.keyword') {
 
-                header = "احساس خبر: " + column_value
-                sentiment = column_value
+                header = "اخبار" + (selected_sentiment !="بدون ابراز احساسات" ? " با ": " ") + "<span style='color:" +SENTIMENT_COLORS[selected_sentiment] + "'>" +
+                     "«" + selected_sentiment +  "»</span>\n در تاریخ :" + column_value
+                
+                field_value = column_value.replaceAll('/', '-')
+                field_name = "document_date.keyword"
+                sentiment = selected_sentiment
                 save_file_name += " (مجموعه خبر {1} و احساس خبر {2})".replace("1", "خبرکاو").replace("2", column_value)
 
             }
@@ -1527,7 +1662,7 @@
 
 
             /* download file creation */
-            document.getElementById("DownloadDocuments").onclick = function () {
+            document.getElementById("DownloadDocuments2").onclick = function () {
                 downloadFiles(RESULT_DOCUMENTS, save_file_name);
             };
 
@@ -1559,26 +1694,68 @@
             await update_column_pagination_input(curr_page, total_hits);
             max_page = parseInt(document.getElementById("ColumnModalPaginationInput").max)
 
-            document.getElementById("ChartModalHeader").innerText = header
-            document.getElementById("DocsCount").innerText = total_hits + " خبر:"
+            document.getElementById("ChartModalHeader").innerHTML = header
+            document.getElementById("DocsCount").innerText = total_hits + (result_type=="documents" ? " خبر:" : " پاراگراف:")
 
-            await show_modal_documents(result_documents, position, column_value, curr_page, max_page, RESULT_DOCUMENTS);
+            if (result_type=="paragraphs"){
+                $("#ExportExcel2").attr("disabled","true")
+                $("#DownloadDocuments2").attr("disabled","true")
+            }else {
+                $("#ExportExcel2").removeAttr("disabled")
+                $("#DownloadDocuments2").removeAttr("disabled")
+            }
+            await show_modal_body(result_type,selected_sentiment, result_documents, position, column_value, curr_page, max_page, RESULT_DOCUMENTS);
 
 
 
         }
 
-        async function show_modal_documents(result_documents, position, column_value, curr_page, max_page, RESULT_DOCUMENTS) {
+        async function show_modal_body(result_type,selected_sentiment, result_documents, position, column_value, curr_page, max_page, RESULT_DOCUMENTS) {
 
 
             let filtered_result_tag = ""
             let list_of_docId = ""
 
-            for (const doc of result_documents) {
+            if (result_type=="documents"){
+                for (const doc of result_documents) {
                 const link = 'http://' + location.host + "/information/?id=" + doc["_source"]["document_id"]
-                let tag = "<li class='mt-3' id=" + doc["_source"]["document_id"] + "><a target='blank' href='" + link + "'>" + doc["_source"]["document_name"] + "</a></li>"
+                doc_tag = "<a target='blank' href='" + link + "'>" + doc["_source"]["document_name"] + "</a>"
+                let tag = "<li class='mt-3'" + doc_tag  + "</li>"
                 filtered_result_tag += tag
                 list_of_docId += doc["document_id"] + "_"
+            }
+
+
+            }
+
+            else {
+                for (const doc of result_documents) {
+                const link = 'http://' + location.host + "/information/?id=" + doc["_source"]["document_id"]
+                doc_tag = "<a target='blank' href='" + link + "'>" + doc["_source"]["document_name"] + "</a>"
+
+                const paragraph_id = doc["_source"]["paragraph_id"];
+                text = ""
+                try {
+                    text = doc["highlight"]["attachment.content"][0]
+                } catch (error) {
+                    text = doc["_source"]["attachment"]["content"]
+                }
+
+                const paragraph_link =
+                    "http://" + location.host + "/sentiment_analysis/?id=" + paragraph_id;
+
+                const paragraph_tag =
+                    "<a class='mt-2 pr-2 border-5 rounded' style='border-right: 2px solid " + SENTIMENT_COLORS[selected_sentiment] + "' title = 'پروفایل حکم' target='blank' href='" +
+                    paragraph_link +"'>" +
+                    text +
+                    "</a>";
+
+                let tag = "<li class='mt-3'>" + doc_tag + paragraph_tag + "</li>"
+                filtered_result_tag += tag
+                list_of_docId += doc["document_id"] + "_"
+            }
+
+
             }
 
             index = (curr_page - 1) * SEARCH_RESULT_SIZE + 1;
@@ -1593,10 +1770,10 @@
             }
 
             /* LoadMoreDocuments */
-            document.getElementById("LoadMoreDocuments").onclick = function () {
+            document.getElementById("LoadMoreDocuments").onclick = async function () {
 
                 next_page_number = ColumnModalNextPage(curr_page);
-                load_documents(position, column_value, next_page_number, RESULT_DOCUMENTS);
+                await load_documents(position,selected_sentiment, column_value, next_page_number, RESULT_DOCUMENTS,result_type);
 
             };
 
@@ -2712,6 +2889,8 @@
         return next_page_number;
 
     }
+
+
 
 
 </script>
