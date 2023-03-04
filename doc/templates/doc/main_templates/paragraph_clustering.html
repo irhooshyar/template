@@ -2252,13 +2252,13 @@
 
         // set the chart title
         chart.title("خوشه :شماره " + cluster_name.replaceAll('C', ''));
-        chart.title().fontFamily("vazir").textDirection('rtl');
+        chart.title().fontFamily("vazir").textDirection('ltr');
         // chart.tooltip().format("{%yPercentOfTotal}% ({%value})\n\n{%custom_field}");
-        chart.tooltip().fontFamily('vazir').textDirection('rtl');
+        chart.tooltip().fontFamily('vazir').textDirection('ltr');
 
         // tooltip title font setting
         var title = chart.tooltip().title();
-        title.fontFamily("vazir").textDirection('rtl');
+        title.fontFamily("vazir").textDirection('ltr');
 
         // configure angles
         chart.angles([0]);
@@ -2266,7 +2266,7 @@
         // set the container id
         chart.container(container);
         // chart.tooltip().format("{امتیاز: %yPercentOfTotal}% \n({%value})");
-        chart.tooltip().format("امتیاز: {%yPercentOfTotal}%");
+        chart.tooltip().format("امتیاز: %{%yPercentOfTotal}");
 
         // initiate drawing the chart
         chart.draw();
