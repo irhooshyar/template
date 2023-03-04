@@ -7021,6 +7021,8 @@ def GetResourceInformation(request):
         doc_count=Count("id"),
         min_date=Min("date"),
         max_date=Max("date"),
+        min_time=Min("time"),
+        max_time=Max("time"),
     )
     result = []
     for row in document_object:
@@ -7031,6 +7033,8 @@ def GetResourceInformation(request):
             "paragraph_count": DocumentParagraphs.objects.filter(document_id__country_id__id=row["country_id_id"]).count(),
             "min_date": row["min_date"],
             "max_date": row["max_date"],
+            "min_time": row["min_time"],
+            "max_time": row["max_time"],
         }
         result.append(res)
 
