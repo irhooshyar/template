@@ -217,6 +217,8 @@
             const doc_count = row["doc_count"]
             const max_date = row["max_date"]
             const min_date = row["min_date"]
+            const max_time = row["max_time"]
+            const min_time = row["min_time"]
             const paragraph_count = row["paragraph_count"]
             const logo_path = SOURCE_IMAGE_TAG[country_name]
 
@@ -230,15 +232,12 @@
                                 <h5 class="card-title" style="text-align: center; font-weight: 600"><span style="color:#000;">تعداد اخبار:</span>&emsp;<span>${doc_count}</span></h5>
                                 <hr>
                                 <h5 class="card-title"><span style="color:#000;">تعداد پاراگراف‌ها :</span>&emsp;<span>${paragraph_count}</span></h5>
-                                <h5 class="card-title"><span style="color:#000;">تاریخ اولین خبر:</span>&emsp;<span>${min_date}</span></h5>
-                                <h5 class="card-title"><span style="color:#000;">تاریخ آخرین خبر:</span>&emsp;<span>${max_date}</span></h5>
+                                <h5 class="card-title"><span style="color:#000;">اولین خبر:</span>&emsp;<span>${min_date}&emsp;${min_time}</span></h5>
+                                <h5 class="card-title"><span style="color:#000;">آخرین خبر:</span>&emsp;<span>${max_date}&emsp;${max_time}</span></h5>
                                 <br>
-                                <div class="text-left" onclick="showProfile(${country_id}, '${country_name}')">
-                                    <a  class="btn" data-bs-toggle="modal"
-                                        data-bs-target="#profile_modal" style="background-color: #0981ff;
-                                        color: #fff; font-size: 14px">پروفایل
-                                    </a>
-                                </div>
+                                <button type="button" id="document_search" onclick="showProfile(${country_id}, '${country_name}')" class="btn d-flex float-left mr-4">
+                                  پروفایل
+                                </button>
                               </div>
                             </div>`
 
