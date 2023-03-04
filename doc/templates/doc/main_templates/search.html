@@ -874,7 +874,7 @@
             let country_name = $("#country option:selected").text();
             source_text = (country_id==0) ? " در تمامی مجموعه اخبار" : " در مجموعه اخبار " +  "«" + country_name + "»"
 
-            chart_title = text == "empty" ? "روند احساسات" : "روند احساسات " + " نسبت به عبارت  " + "«" + text + "»"
+            chart_title = (text == "empty" ? " روند احساسات" : " روند احساسات " + " نسبت به عبارت  " + "«" + text + "»" + "</br></br>")  + source_text 
             
 
             radar_chat_title = (text == "empty" ? "توزیع احساسات" : "توزیع احساسات" + " نسبت به عبارت  " + "«" + text + "»" + "</br></br>")  + source_text 
