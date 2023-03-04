@@ -870,11 +870,14 @@
             date_sentiment_chart_data = response['date_sentiment_chart_data']
             radar_sentiment_chart_data = response['radar_sentiment_chart_data']
             console.log(date_sentiment_chart_data)
-            chart_title = text == "empty" ? "روند احساسات" : "روند احساسات " + " نسبت به عبارت  " + "«" + text + "»"
-            
+
             let country_name = $("#country option:selected").text();
             source_text = (country_id==0) ? "در تمامی مجموعه خبرها" : "در مجموعه خبری " + country_name
-            radar_chat_title = text == "empty" ? "توزیع احساسات پاراگراف‌ها" : "توزیع احساسات پاراگراف‌ها " + " نسبت به عبارت  " + "«" + text + "»" + "\n" + source_text
+
+            chart_title = text == "empty" ? "روند احساسات" : "روند احساسات " + " نسبت به عبارت  " + "«" + text + "»"  + "</br>" + "«" + source_text + "»"
+            
+
+            radar_chat_title = text == "empty" ? "توزیع احساسات پاراگراف‌ها" : "توزیع احساسات پاراگراف‌ها " + " نسبت به عبارت  " + "«" + text + "»" + "</br>" + "«" + source_text + "»"
             
             showChart(date_sentiment_chart_data, "sentiment_trend_container", [], true, "تاریخ خبر", chart_title)
             showChart(radar_sentiment_chart_data, "sentiment_radar_container", [], true, "احساس خبر", radar_chat_title)
