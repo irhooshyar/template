@@ -334,7 +334,6 @@ function newBarsChart(container_id, options) {
     container_id,
     options
   );
-
   let data = options.data;
   data = anychart.data.set(data);
   const dataSeries = [];
@@ -342,14 +341,12 @@ function newBarsChart(container_id, options) {
     let serie = data.mapAs({ x: 0, value: i + 1 });
     dataSeries.push(serie);
   }
-
   let chart = anychart.bar();
   document.getElementById(chartDownloadId).onclick = () => {
     chart.saveAsPng(2000, 1000, 1, options.title);
   };
   chart.container(chartContainerId);
   chart.palette(palette);
-
   // create a column series and set the data
   const chartSeries = [];
   for (let i = 0; i < options.bars.length; i++) {
@@ -357,49 +354,28 @@ function newBarsChart(container_id, options) {
     chartSeries.push(series);
     // series.normal().fill(options.bars[i].color, 1);
     // series.normal().stroke(options.bars[i].color, 1);
+    if (options.bars[i].color) {
+      series.normal().fill(options.bars[i].color, 1);
+      series.normal().stroke(options.bars[i].color, 1);
+    }
     series.name(options.bars[i].name);
     series.rendering().point(roundedBarDrawer);
 
-
-    let chart = anychart.bar();
-    document.getElementById(chartDownloadId).onclick = () => {
-        chart.saveAsPng(2000, 1000, 1, options.title);
-    };
-    chart.container(chartContainerId);
-    chart.palette(palette);
-
-    // create a column series and set the data
-    const chartSeries = [];
-    for (let i = 0; i < options.bars.length; i++) {
-        let series = chart.bar(dataSeries[i]);
-        chartSeries.push(series);
-        if (options.bars[i].color) {
-            series.normal().fill(options.bars[i].color, 1);
-            series.normal().stroke(options.bars[i].color, 1);
-        }
-        series.name(options.bars[i].name);
-        series.rendering().point(roundedBarDrawer);
-
-        if (options.bars[i].onClick) {
-            series.listen("mouseOver", function () {
-                document.body.style.cursor = "pointer";
-            });
-            series.listen("mouseOut", function () {
-                document.body.style.cursor = "auto";
-            });
-
-            series.listen("Click", (e) => {
-                options.bars[i].onClick(e, data);
-            });
-        }
-
+    if (options.bars[i].onClick) {
+      series.listen("mouseOver", function () {
+        document.body.style.cursor = "pointer";
+      });
+      series.listen("mouseOut", function () {
+        document.body.style.cursor = "auto";
+      });
+      series.listen("Click", (e) => {
+        options.bars[i].onClick(e, data);
+      });
     }
   }
   chart.animation(true);
   // .padding([10, 40, 5, 20])
-
   chart.background().fill("#ffffff");
-
   // x axix labels font setting
   var xAxisLabels = chart.xAxis().labels();
   xAxisLabels.fontFamily("vazir");
@@ -410,10 +386,8 @@ function newBarsChart(container_id, options) {
   xAxisLabels.wordBreak("keep-all");
   xAxisLabels.textOverflow("...");
   xAxisLabels.fontColor("#6C757D");
-
   var yAxisLabels = chart.yAxis().labels();
   yAxisLabels.fontFamily("vazir");
-
   // Not allow labels overlapping
   let xAxis = chart.xAxis();
   xAxis.overlapMode("noOverlap");
@@ -421,61 +395,48 @@ function newBarsChart(container_id, options) {
   xAxis.title(options.xAxisTitle);
   xAxis.title().fontFamily("vazir");
   xAxis.title().fontWeight("bold");
-
   var yAxis = chart.yAxis();
   yAxis.title(options.yAxisTitle);
   yAxis.title().fontFamily("vazir");
   yAxis.title().fontWeight("bold");
   yAxis.title().height(40);
-
   // tooltip content font setting
   var tooltip = chart.tooltip();
   tooltip.fontFamily("vazir");
   tooltip.hAlign("center");
-
   // tooltip title font setting
   var title = chart.tooltip().title();
   title.fontFamily("vazir");
   title.hAlign("center");
-
   // chart.tooltip().hAlign("center")
-
   chart.yAxis().labels().format("{%value}");
-
   const max = options.data.reduce(
     (max, [_, curr]) => (max > curr ? max : curr),
     10
   );
   chart.yGrid(true);
-
   chart.xGrid(true);
   chart.xGrid().fill("#EFEFEF99");
-
   chart.yScale().minimum(0);
   /* enable the value stacking mode
-      on the default primary value scale*/
+    on the default primary value scale*/
   chart.yScale().stackMode("value");
   chart
     .yScale()
     .ticks()
     .interval(Math.ceil(max / 10))
     .allowFractional(false);
-
   // enable the legend
   chart.legend(true);
-
   var legend = chart.legend();
   legend.fontFamily("vazir");
-
   // set position mode
   legend.positionMode("outside");
   // set the position of the legend
   legend.position("top");
   // set the alignment of the legend
   legend.align("center");
-
   legend.itemsLayout("horizontalExpandable");
-
   if (options.remove_u200) {
     for (let i = 0; i < data["mc"].length; i++) {
       for (let j = 0; j < data["mc"][i].length; j++) {
@@ -872,7 +833,6 @@ function newMultipleLineChart(container_id, options) {
     series.labels().fontFamily("vazir");
   }
 
-
   for (var i = 0; i < chart.getSeriesCount(); i++) {
     chart.getSeriesAt(i).listen("mouseOver", function () {
       document.body.style.cursor = "pointer";
@@ -922,6 +882,4 @@ function newMultipleLineChart(container_id, options) {
       options.series_data[5].onClick(e, data);
     });
   } catch {}
-
-
 }
