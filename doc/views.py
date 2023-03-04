@@ -3492,7 +3492,7 @@ def SearchDocument_ES(request, country_id, category_id, subject_id, from_year, t
                              size=search_result_size,
                             sort=[
                                  {"document_date.keyword": {"order": "desc"}},
-                                 {"document_time": {"order": "desc"}},
+                                 {"document_time.keyword": {"order": "desc"}},
                                 #  {"document_jalili_date.year": {"order": "desc"}},
                                 #  {"document_jalili_date.month.number": {"order": "desc"}},
                                 #  {"document_jalili_date.day.number": {"order": "desc"}},
