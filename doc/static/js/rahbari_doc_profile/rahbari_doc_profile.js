@@ -286,7 +286,7 @@ async function ShowDocumentSubject() {
 async function generatePDF() {
     startBlockUI();
 
-    const approval_reference = "مقام معظم رهبری";
+    const approval_reference = $("#country option:selected").text();
     const approval_date = document.getElementById("document_date").innerText;
 
     const document_id = document.getElementById("document").value;
@@ -312,7 +312,7 @@ async function generatePDF() {
         "<div8 class='d-flex'> <span> تاریخ تصویب  </span> <span>&nbsp;</span> <span> : </span> <span> " +
         approval_date +
         " </span> </div8> " +
-        "<div9 class='d-flex'> <span> مرجع تصویب </span> <span>&nbsp;</span> <span> : </span> <span> " +
+        "<div9 class='d-flex'> <span> مرجع خبر </span> <span>&nbsp;</span> <span> : </span> <span> " +
         approval_reference +
         " </span> </div9> </div7>" +
         "<div7 class='d-flex' style='justify-content: space-between;width: 100%'> " +
