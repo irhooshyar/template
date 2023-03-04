@@ -871,7 +871,7 @@
             radar_sentiment_chart_data = response['radar_sentiment_chart_data']
             console.log(date_sentiment_chart_data)
             chart_title = text == "empty" ? "روند احساسات" : "روند احساسات " + " نسبت به عبارت  " + "«" + text + "»"
-            radar_chat_title = text == "empty" ? "توزیع احساسات" : "توزیع احساسات " + " نسبت به عبارت  " + "«" + text + "»"
+            radar_chat_title = text == "empty" ? "توزیع احساسات پاراگرف‌ها" : "توزیع احساسات پاراگراف‌ها " + " نسبت به عبارت  " + "«" + text + "»"
             
             showChart(date_sentiment_chart_data, "sentiment_trend_container", [], true, "تاریخ خبر", chart_title)
             showChart(radar_sentiment_chart_data, "sentiment_radar_container", [], true, "احساس خبر", radar_chat_title)
