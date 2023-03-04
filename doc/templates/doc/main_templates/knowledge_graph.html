@@ -237,7 +237,7 @@
                             <h6 id="edge_table_label_id" class="table_header text-center  p-2  mb-0" style="display: none">
                                 یال های انتخاب شده
                             </h6>
-                            <table onchange="tableChanged()" id="show_knowledge__selected_edge_table" class="table table-striped PopUpTable"
+                            <table id="show_knowledge__selected_edge_table" class="table table-striped PopUpTable"
                                 style="width: 95%;margin: auto;">
 
                             </table>
@@ -1385,6 +1385,10 @@
 
     async function change_graph_select() {
         document.getElementById("show_knowledge__graph_container").innerHTML = ""
+        document.getElementById("node_table_label_id").style.display = "none"
+        document.getElementById("edge_table_label_id").style.display = "none"
+        $('#show_knowledge__selected_node_table').empty();
+        $('#show_knowledge__selected_edge_table').empty();
     }
 </script>
 
