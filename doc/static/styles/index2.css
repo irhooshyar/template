@@ -1290,6 +1290,16 @@ table .footable {
 }
 
 
+table .footable.no-row-number{
+  counter-reset: none;
+  border-collapse: collapse;
+}
+
+.footable.no-row-number tbody tr:not(.footable-empty) td:first-child:before{
+  counter-increment: none;
+  content:none;
+} 
+
 .swal-title {
   font-size: 25px !important;
 }
