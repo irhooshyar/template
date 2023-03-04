@@ -1483,7 +1483,13 @@ FA_Mappings = {
             "type": "integer"
         },
         "document_time": {
-            "type": "text"
+            "type": "text",
+            "fields": {
+                "keyword": {
+                    "type": "keyword",
+                    "ignore_above": 256
+                }
+            }
         },
 
         "document_hour": {
