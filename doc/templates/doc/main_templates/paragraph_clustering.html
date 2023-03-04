@@ -1609,6 +1609,8 @@
         document.getElementById("ModalHeader").innerHTML = ""
         $("#detail_modal_footer #close_btn").hide();
         $("#detail_modal_footer #ExportExcel2").show();
+        $("#detail_modal_footer #downloadFile2").show();
+        
 
         $('#ExportExcel2').attr("onclick", "TopicParagraphs_Excel('" + topic_id + "')")
 
@@ -1913,6 +1915,8 @@
                     $("#detailModal").modal("show")
                     $("#detail_modal_footer #close_btn").show();
                     $("#detail_modal_footer #ExportExcel2").hide();
+                    $("#detail_modal_footer #downloadFile2").hide();
+
                 }
         };
 
@@ -1952,6 +1956,8 @@
                 $("#detailModal").modal("show")
                 $("#detail_modal_footer #close_btn").show();
                 $("#detail_modal_footer #ExportExcel2").hide();
+                $("#detail_modal_footer #downloadFile2").hide();
+
             }
         };
 
@@ -2006,6 +2012,8 @@
                 $("#detailModal").modal("show")
                 $("#detail_modal_footer #close_btn").show();
                 $("#detail_modal_footer #ExportExcel2").hide();
+                $("#detail_modal_footer #downloadFile2").hide();
+
             }
         };
 
@@ -2176,6 +2184,8 @@
         document.getElementById("topic_keywords_container").innerHTML = ""
         $("#detail_modal_footer #close_btn").show();
         $("#detail_modal_footer #ExportExcel2").hide();
+        $("#detail_modal_footer #downloadFile2").hide();
+
 
         let request_link = 'http://' + location.host + "/Get_Topic_Anova_ChartData/" + country_id + "/"
             + cluster_id + "/";
@@ -2203,6 +2213,8 @@
 
         $("#detail_modal_footer #close_btn").show();
         $("#detail_modal_footer #ExportExcel2").hide();
+        $("#detail_modal_footer #downloadFile2").hide();
+
 
         startFullPageBlockUI()
 
@@ -2345,6 +2357,8 @@
             $('#DetailText').addClass('h-100');
             $("#detail_modal_footer #close_btn").show();
             $("#detail_modal_footer #ExportExcel2").hide();
+            $("#detail_modal_footer #downloadFile2").hide();
+
 
             let request_link = 'http://' + location.host + "/GetKeywordClustersData/" + country_id + "/" + algorithm_name + "/" + vector_type + "/" + cluster_size + "/" + node_date["id"] + "/";
             let response = await fetch(request_link).then(response => response.json());
