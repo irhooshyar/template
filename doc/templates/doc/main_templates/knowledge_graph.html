@@ -1133,7 +1133,15 @@
 
                 }
             }
-            newBarChart(position, options)
+
+            if (filed_name === "subject_name.keyword")
+            {
+                newDoughnutChart(position, options);
+            }
+            else
+            {
+                newBarChart(position, options)
+            }
         }
 
         async function delete_selected_graph() {
