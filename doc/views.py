@@ -2774,7 +2774,7 @@ def changeUserState(request, user_id, state):
         ثبت‌نام شما با موفقیت انجام شده است. تایید شما توسط ادمین انجام شد. هم‌اکنون، می‌توانید وارد سامانه شوید.
         """
         template += f'http://virtualjuristic.datakaveh.com:7090/login/'
-        
+
         send_mail(subject='تایید عملیات ثبت‌نام', message=template, from_email=settings.EMAIL_HOST_USER,recipient_list=[accepted_user.email])
 
 
@@ -4011,7 +4011,7 @@ def GetActorsChartData_ES_2(request, country_id, level_id, subject_id, type_id, 
 
 def filter_doc_fields_COLUMN(res_query, category_name, subject_name,
                              from_year, to_year,sentiment,field_name,field_value):
-    
+
     field_value = field_value.replace('-','/')
     # ---------------------------------------------------------
     if sentiment != "همه":
@@ -4786,10 +4786,12 @@ def GetDocumentsSimilarity(request, document_id, ):
 
         stopword_list = []
         all_stopwords = get_stopword_list("all_stopwords.txt")
-        rahbari_stopwords = get_stopword_list("all_stopwords.txt")
+        rahbari_stopwords = get_stopword_list("rahbari_stopwords.txt")
+        my_stopwords = get_stopword_list("news_profile_stopwords.txt")
 
         stopword_list.extend(all_stopwords)
         stopword_list.extend(rahbari_stopwords)
+        stopword_list.extend(my_stopwords)
 
         sim_query = {
             "more_like_this": {
@@ -4801,20 +4803,25 @@ def GetDocumentsSimilarity(request, document_id, ):
                         "_id": "{}".format(document_id),
                     }
                 ],
-                "min_term_freq": 10,
+                "min_term_freq": 5,
                 "min_word_length": 2,
                 "max_query_terms": 100000,
-                "minimum_should_match": "50%",
+                "minimum_should_match": "20%",
                 "stop_words": stopword_list
             }
         }
 
         response = client.search(index=index_name,
-                                 _source_includes=['document_id', 'document_name', 'document_date'],
+                                 _source_includes=['document_id', 'document_name', 'document_date', 'document_time',
+                                                   'category_name','subject_name', 'source_name'],
                                  request_timeout=40,
                                  query=sim_query,
                                  size=100
                                  )
+        # 'document_id', 'document_name', 'document_date',
+        # 'subject_name', 'category_name', 'document_year',
+        # 'raw_file_name', 'source_id', 'source_folder',
+        # 'source_name', 'document_time'
 
         result = response['hits']['hits']
 
@@ -4822,8 +4829,11 @@ def GetDocumentsSimilarity(request, document_id, ):
             newItem = {"document_id": item["_source"]["document_id"],
                        "document_name": item["_source"]["document_name"],
                        "document_date": item["_source"]["document_date"],
+                       "document_time": item["_source"]["document_time"],
+                       "category_name": item["_source"]["category_name"],
+                       "subject_name": item["_source"]["subject_name"],
                        "BM25_score": item["_score"],
-                       "country_name": country_obj.name
+                       "country_name": item["_source"]["source_name"]
                        }
             sim_docs.append(newItem)
 
@@ -4861,10 +4871,13 @@ def similarityDetail(request, main_document_id, selected_document_id, selected_c
     }
     stopword_list = []
     all_stopwords = get_stopword_list("all_stopwords.txt")
-    rahbari_stopwords = get_stopword_list("all_stopwords.txt")
+    rahbari_stopwords = get_stopword_list("rahbari_stopwords.txt")
+    my_stopwords = get_stopword_list("news_profile_stopwords.txt")
 
     stopword_list.extend(all_stopwords)
     stopword_list.extend(rahbari_stopwords)
+    stopword_list.extend(my_stopwords)
+
     sim_query = {
         "more_like_this": {
             "analyzer": "persian_custom_analyzer",
@@ -5949,10 +5962,16 @@ def GetDetailDocumentById(request, country_id, document_id):
     if document.subject_name is not None:
         subject = document.subject_name
 
+    hour = "نامشخص"
+    if document.time is not None:
+        hour = document.time
+
     return JsonResponse({
         "result": result,
         "subject": subject,
+        "hour": hour,
         "date": date,
+        "source": country_obj.name,
         "category": category,
         'total_hits': total_hits,
     })

@@ -360,17 +360,39 @@ function newBarsChart(container_id, options) {
     series.name(options.bars[i].name);
     series.rendering().point(roundedBarDrawer);
 
-    if (options.bars[i].onClick) {
-      series.listen("mouseOver", function () {
-        document.body.style.cursor = "pointer";
-      });
-      series.listen("mouseOut", function () {
-        document.body.style.cursor = "auto";
-      });
 
-      series.listen("Click", (e) => {
-        options.bars[i].onClick(e, data);
-      });
+    let chart = anychart.bar();
+    document.getElementById(chartDownloadId).onclick = () => {
+        chart.saveAsPng(2000, 1000, 1, options.title);
+    };
+    chart.container(chartContainerId);
+    chart.palette(palette);
+
+    // create a column series and set the data
+    const chartSeries = [];
+    for (let i = 0; i < options.bars.length; i++) {
+        let series = chart.bar(dataSeries[i]);
+        chartSeries.push(series);
+        if (options.bars[i].color) {
+            series.normal().fill(options.bars[i].color, 1);
+            series.normal().stroke(options.bars[i].color, 1);
+        }
+        series.name(options.bars[i].name);
+        series.rendering().point(roundedBarDrawer);
+
+        if (options.bars[i].onClick) {
+            series.listen("mouseOver", function () {
+                document.body.style.cursor = "pointer";
+            });
+            series.listen("mouseOut", function () {
+                document.body.style.cursor = "auto";
+            });
+
+            series.listen("Click", (e) => {
+                options.bars[i].onClick(e, data);
+            });
+        }
+
     }
   }
   chart.animation(true);

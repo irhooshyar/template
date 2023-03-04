@@ -173,14 +173,18 @@
             <table class="table table-light">
                 <thead class="table" style="background: #1e56a0;">
                 <tr>
+                    <th class="text-center" scope="col">مرجع خبر</th>
                     <th class="text-center" scope="col">تاریخ خبر</th>
+                    <th class="text-center" scope="col">ساعت خبر</th>
                     <th class="text-center" scope="col">موضوع خبر</th>
                     <th class="text-center" scope="col">دسته خبر</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr>
+                    <td class="text-center" id="document_source">-</td>
                     <td class="text-center" id="document_date">-</td>
+                    <td class="text-center" id="document_hour">-</td>
                     <td class="text-center" id="document_subject">-</td>
                     <td class="text-center" id="document_category">-</td>
                 </tr>
@@ -259,13 +263,13 @@
                 <div id="sentiment_container" class="half">
                 </div>
 
-                <div id="location_container" class="full">
+                <div id="location_container" class="full" chart-height="420px">
                 </div>
 
-                <div id="organization_container" class="full">
+                <div id="organization_container" class="half" chart-height="490px">
                 </div>
 
-                <div id="person_container" class="full">
+                <div id="person_container" class="half" chart-height="490px">
                 </div>
             </div>
         </div>
@@ -315,7 +319,8 @@
                 </div>
 
                 <button class="btn float-left p-0 px-1" id="actor_ExportExcel" data-bs-toggle="tooltip"
-                        data-bs-placement="top" title="خروجی اکسل" onclick="similarity_tableExportExcel()" type="button">
+                        data-bs-placement="top" title="خروجی اکسل" onclick="similarity_tableExportExcel()"
+                        type="button">
                     <i class="far fa-file-excel text-success m-0" style="font-size: 25px;margin: 0px;"></i>
                 </button>
             </div>
@@ -696,7 +701,10 @@
                     <input type="number" id="ColumnModalPaginationInput_2" min="1" max="1" value="1"
                            class="form-select text-right float-right d-none">
 
-
+                    <button id="ExportExcel_2" class="btn blue-button" disabled>
+                        <i class="fa fa-download"></i>
+                        دانلود اسناد
+                    </button>
                     <button id="ExportExcel2" class="btn green-button"><i class="fa fa-file-excel"></i> خروجی اکسل
                     </button>
                 </div>

@@ -131,7 +131,7 @@ async function click_classification_chart(document_id, text, chart_name) {
         "body_id": "ChartModalBodyText_2",
         "modal_load_more_btn_id": "LoadMoreDocuments_2",
         "result_size_container_id": "DocsCount_2",
-        "result_size_message": "حکم",
+        "result_size_message": "پاراگراف",
         "list_type": "ordered",
         "custom_body_function": null,
         "body_parameters": null
@@ -266,26 +266,32 @@ function showStackBasedChart(data, container, xAxisTitle, title) {
         bars: [
             {
                 name: "احساس بسیار مثبت",
+                color:"#648132",
                 onClick
             },
             {
                 name: "احساس مثبت",
+                color: "#b1cd7f",
                 onClick
             },
             {
                 name: "احساس خنثی یا ترکیبی از مثبت و منفی",
+                color: "#488fb8",
                 onClick
             },
             {
                 name: "احساس منفی",
+                color:"#cd7f8a",
                 onClick
             },
             {
                 name: "احساس بسیار منفی",
+                color:"#81323d",
                 onClick
             },
             {
                 name: "بدون ابراز احساسات",
+                color:"#a9a9a9",
                 onClick
             }
         ]
