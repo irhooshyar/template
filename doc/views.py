@@ -3489,7 +3489,13 @@ def SearchDocument_ES(request, country_id, category_id, subject_id, from_year, t
                              query=res_query,
                              aggregations=res_agg,
                              from_=from_value,
-                             size=search_result_size
+                             size=search_result_size,
+                            sort=[
+                                 {"document_jalili_date.year": {"order": "desc"}},
+                                 {"document_jalili_date.month.number": {"order": "desc"}},
+                                 {"document_jalili_date.day.number": {"order": "desc"}},
+                                 {"document_jalili_date.hour": {"order": "desc"}},
+                             ]
 
                              )
 
@@ -4128,7 +4134,10 @@ def SearchDocuments_Column_ES(request, country_name, category_name, subject_name
                                      "attachment.content":
                                          {"pre_tags": ["<span class='text-primary fw-bold'>"], "post_tags": ["</span>"],
                                           "number_of_fragments": 0
-                                          }
+                                          },
+                                        "document_name":{"pre_tags": ["<span class='text-primary fw-bold'>"], "post_tags": ["</span>"],
+                                          "number_of_fragments": 0
+                                          },
                                  }
                              } if sentiment!="همه" else None
 

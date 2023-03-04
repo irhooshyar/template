@@ -1731,7 +1731,14 @@
             else {
                 for (const doc of result_documents) {
                 const link = 'http://' + location.host + "/information/?id=" + doc["_source"]["document_id"]
-                doc_tag = "<a target='blank' href='" + link + "'>" + doc["_source"]["document_name"] + "</a>"
+                doc_name = ""
+                try {
+                    doc_name = doc["highlight"]["document_name"][0]
+                } catch (error) {
+                    doc_name = doc["_source"]["document_name"]
+                }
+                
+                doc_tag = "<a target='blank' href='" + link + "'>" + doc_name + "</a>"
 
                 const paragraph_id = doc["_source"]["paragraph_id"];
                 text = ""
