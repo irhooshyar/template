@@ -1608,6 +1608,7 @@
         document.getElementById("ModalHeader").innerHTML = ""
         $("#detail_modal_footer #close_btn").hide();
         $("#detail_modal_footer #ExportExcel2").show();
+        $("#detail_modal_footer #ExportExcel2").removeAttr("disabled");
         $("#detail_modal_footer #downloadFile2").show();
         
 
@@ -2014,6 +2015,7 @@
                 container === 'category_container' ||
                 container === 'year_container'){
                 $("#detail_modal_footer #ExportExcel2").show();
+                $("#detail_modal_footer #ExportExcel2").attr("disabled","true");
                 $("#detail_modal_footer #downloadFile2").show();
                 }else {
                     $("#detail_modal_footer #ExportExcel2").hide();
