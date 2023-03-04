@@ -872,12 +872,12 @@
             console.log(date_sentiment_chart_data)
 
             let country_name = $("#country option:selected").text();
-            source_text = (country_id==0) ? "در تمامی مجموعه خبرها" : "در مجموعه خبری " + country_name
+            source_text = (country_id==0) ? "در تمامی مجموعه خبرها" : "در مجموعه خبری " +  "«" + country_name + "»"
 
             chart_title = text == "empty" ? "روند احساسات" : "روند احساسات " + " نسبت به عبارت  " + "«" + text + "»"
             
 
-            radar_chat_title = text == "empty" ? "توزیع احساسات" : "توزیع احساسات" + " نسبت به عبارت  " + "«" + text + "»" + "</br></br>" + "«" + source_text + "»"
+            radar_chat_title = text == "empty" ? "توزیع احساسات" : "توزیع احساسات" + " نسبت به عبارت  " + "«" + text + "»" + "</br></br>"  + source_text 
             
             showChart(date_sentiment_chart_data, "sentiment_trend_container", [], true, "تاریخ خبر", chart_title)
             showChart(radar_sentiment_chart_data, "sentiment_radar_container", [], true, "احساس خبر", radar_chat_title)
