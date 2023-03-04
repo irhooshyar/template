@@ -565,7 +565,7 @@ def apply(folder_name, Country):
                 "id": index, "cluster_name": cluster_name,
                 "user_label":
                 "<div>" +
-                "<input id ='" + edited_cluster_id + "' class='form-control p-1 text-center d-block w-100' value = 'بدون برچسب' type= 'text'/>" + 
+                "<input id ='" + edited_cluster_id + "' class='form-control p-1 text-center d-block w-100' placeholder = 'بدون برچسب' type= 'text'/>" + 
                 "<button onclick=save_user_label(" + "'" + str(edited_cluster_id) + "'" + ") class='btn btn-outline-success mt-1 p-0 d-block w-100'>ذخیره</button>" +
                 "</div>",
 

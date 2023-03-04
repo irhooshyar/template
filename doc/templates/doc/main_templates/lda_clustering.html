@@ -1238,7 +1238,7 @@
 
             let response = await fetch(request_link).then(response => response.json());
             result_response = response["result_response"];
-            notyf.success(result_response);
+            notyf.success("برچسب برای خوشه ذخیره شد.");
 
         } else {
             notyf.error("!برچسبی وارد نشده‌است");
