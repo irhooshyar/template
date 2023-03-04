@@ -1007,11 +1007,11 @@ def AIGetLDATopic(request, country_id, number_of_topic, username):
     for record in temp:
         record_id = record.id
         sorted_word_list = [k for k, v in sorted(record.words.items(), reverse=True, key=lambda item: float(item[1]))]
-        user_label_value = user_label_dict[record_id] if record_id in user_label_dict else 'بدون برچسب'
+        user_label_value = user_label_dict[record_id] if record_id in user_label_dict else ''
 
         user_label_input = "<div>" + \
                            "<input id ='" + str(
-            record_id) + "' class='form-control p-1 text-center d-block w-100' value ='" + user_label_value + "' type= 'text'/>" + \
+            record_id) + "' class='form-control p-1 text-center d-block w-100' value ='" + user_label_value + "'  placeholder='بدون برچسب' type= 'text'/>" + \
                            "<button onclick=save_user_labelLDA('" + str(
             record_id) + "') class = 'btn btn-outline-success mt-1 p-0 d-block w-100'>ذخیره</button>" + \
                            "</div>"
@@ -1890,11 +1890,11 @@ def GetKeywordLDAData(request, country_id, cluster_size, username, keyword):
             record_id = record.id
             sorted_word_list = [k for k, v in
                                 sorted(record.words.items(), reverse=True, key=lambda item: float(item[1]))]
-            user_label_value = user_label_dict[record_id] if record_id in user_label_dict else 'بدون برچسب'
+            user_label_value = user_label_dict[record_id] if record_id in user_label_dict else ''
 
             user_label_input = "<div>" + \
                                "<input id ='" + str(
-                record_id) + "' class='form-control p-1 text-center d-block w-100' value ='" + user_label_value + "' type= 'text'/>" + \
+                record_id) + "' class='form-control p-1 text-center d-block w-100' value ='" + user_label_value + "' placeholder='بدون برچسب'  type= 'text'/>" + \
                                "<button onclick=save_user_label('" + str(
                 record_id) + "') class = 'btn btn-outline-success mt-1 p-0 d-block w-100'>ذخیره</button>" + \
                                "</div>"
