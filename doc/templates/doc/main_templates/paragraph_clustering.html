@@ -274,17 +274,17 @@
                 </li>
 
 
-                <li class="nav-item float-right" role="presentation">
+                <!-- <li class="nav-item float-right" role="presentation">
                     <button id="centroids_graph_tab" class="nav-link" data-bs-toggle="pill"
                         data-bs-target="#centroids_graph_pane" type="button" role="tab"
                         aria-controls="centroids_graph_pane" aria-selected="false">گراف مراکز خوشه‌ها</button>
-                </li>
+                </li> -->
 
-                <li class="nav-item float-right" role="presentation">
+                <!-- <li class="nav-item float-right" role="presentation">
                     <button id="clustersKeywords_graph_tab" class="nav-link" data-bs-toggle="pill"
                         data-bs-target="#clustersKeywords_graph_pane" type="button" role="tab"
                         aria-controls="clustersKeywords_graph_pane" aria-selected="false">گراف خوشه کلیدواژه</button>
-                </li>
+                </li> -->
 
 
                 <li class="nav-item float-right" role="presentation">
@@ -734,7 +734,6 @@
                 <!-- Modal footer -->
                 <div class="modal-footer">
 
-
                 </div>
 
             </div>
@@ -775,7 +774,8 @@
 
                     <input type="number" id="ColumnModalPaginationInput" min="1" max="1" value="1"
                         class="form-select text-right float-right d-none">
-
+                        <button id="downloadFile2" disabled class="btn blue-button"><i class="fa fa-file-archive"></i> دانلود پاراگراف‌ها
+                        </button>
 
                     <button id="ExportExcel2" onclick="TopicParagraphs_Excel()"
                         class="btn green-button float-left"><i class="fa fa-file-excel"></i>
@@ -821,6 +821,10 @@
 
                     <input type="number" id="anova_word_ColumnModalPaginationInput" min="1" max="1" value="1"
                         class="form-select text-right float-right d-none">
+
+
+                        <button id="anova_downloadFile2" disabled class="btn blue-button"><i class="fa fa-file-archive"></i> دانلود پاراگراف‌ها
+                        </button>
 
                     <button id="anova_word_ExportExcel2" class="btn green-button float-left"><i
                             class="fa fa-file-excel"></i>
@@ -1604,6 +1608,9 @@
         document.getElementById("ModalHeader").innerHTML = ""
         $("#detail_modal_footer #close_btn").hide();
         $("#detail_modal_footer #ExportExcel2").show();
+        $("#detail_modal_footer #ExportExcel2").removeAttr("disabled");
+        $("#detail_modal_footer #downloadFile2").show();
+        
 
         $('#ExportExcel2').attr("onclick", "TopicParagraphs_Excel('" + topic_id + "')")
 
@@ -1908,6 +1915,8 @@
                     $("#detailModal").modal("show")
                     $("#detail_modal_footer #close_btn").show();
                     $("#detail_modal_footer #ExportExcel2").hide();
+                    $("#detail_modal_footer #downloadFile2").hide();
+
                 }
         };
 
@@ -1947,6 +1956,8 @@
                 $("#detailModal").modal("show")
                 $("#detail_modal_footer #close_btn").show();
                 $("#detail_modal_footer #ExportExcel2").hide();
+                $("#detail_modal_footer #downloadFile2").hide();
+
             }
         };
 
@@ -2000,7 +2011,18 @@
 
                 $("#detailModal").modal("show")
                 $("#detail_modal_footer #close_btn").show();
-                $("#detail_modal_footer #ExportExcel2").hide();
+                if (container === 'subject_container' ||
+                container === 'category_container' ||
+                container === 'year_container'){
+                $("#detail_modal_footer #ExportExcel2").show();
+                $("#detail_modal_footer #ExportExcel2").attr("disabled","true");
+                $("#detail_modal_footer #downloadFile2").show();
+                }else {
+                    $("#detail_modal_footer #ExportExcel2").hide();
+                $("#detail_modal_footer #downloadFile2").hide();
+                }
+
+
             }
         };
 
@@ -2171,6 +2193,8 @@
         document.getElementById("topic_keywords_container").innerHTML = ""
         $("#detail_modal_footer #close_btn").show();
         $("#detail_modal_footer #ExportExcel2").hide();
+        $("#detail_modal_footer #downloadFile2").hide();
+
 
         let request_link = 'http://' + location.host + "/Get_Topic_Anova_ChartData/" + country_id + "/"
             + cluster_id + "/";
@@ -2198,6 +2222,8 @@
 
         $("#detail_modal_footer #close_btn").show();
         $("#detail_modal_footer #ExportExcel2").hide();
+        $("#detail_modal_footer #downloadFile2").hide();
+
 
         startFullPageBlockUI()
 
@@ -2340,6 +2366,8 @@
             $('#DetailText').addClass('h-100');
             $("#detail_modal_footer #close_btn").show();
             $("#detail_modal_footer #ExportExcel2").hide();
+            $("#detail_modal_footer #downloadFile2").hide();
+
 
             let request_link = 'http://' + location.host + "/GetKeywordClustersData/" + country_id + "/" + algorithm_name + "/" + vector_type + "/" + cluster_size + "/" + node_date["id"] + "/";
             let response = await fetch(request_link).then(response => response.json());

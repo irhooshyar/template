@@ -28,7 +28,7 @@
     <script src="../../../static/library/anychart-8.10.0-pie.min.js"></script>
     <script src="../../../static/library/anychart-8.10.0-exports.min.js"></script>
     <script src="../../../static/library/anychart-8.10.0-cartesian.min.js"></script>
-
+    <script src="../../static/library/anychart-8.10.0-radar.min.js"></script>
 
     <!-- Multi Select  -->
     <link rel="stylesheet" type="text/css" href="../../../static/styles/multiselect/multiselect-style.css">
@@ -394,7 +394,11 @@
 
                     <div class="row mt-4 w-100 flex-row-reverse justify-content-around mx-0 px-0">
                         <div id="sentiment_trend_container" chart-height="350px" class="full"></div>
+                        <div id="sentiment_radar_container"
+                        chart-height="350px" class="full"></div>
                     </div>
+
+                    
                 </div>
 
 
@@ -546,7 +550,8 @@
         const COLUMNS = {
             "subject_name": 'موضوع خبر',
             "category_name": 'دسته خبر',
-            "document_date": 'تاریخ خبر',
+            "date": 'تاریخ خبر',
+            "time": 'ساعت خبر',
             "source_name": "مرجع خبر"
         }
 
@@ -633,7 +638,7 @@
 
         async function init() {
             container_id_list = ['SearchResultLable', 'SearchTable', 'subject_container',
-                'year_container', 'hour_container', 'sentiment_trend_container',
+                'year_container', 'hour_container', 'sentiment_trend_container','sentiment_radar_container',
                 'source_name_container', 'category_container', "SearchBox",
                 'month_container', 'date_container', 'day_container']
             clearPrevResults(container_id_list)
@@ -863,9 +868,19 @@
             let response = await fetch(request_link).then(response => response.json());
 
             date_sentiment_chart_data = response['date_sentiment_chart_data']
+            radar_sentiment_chart_data = response['radar_sentiment_chart_data']
             console.log(date_sentiment_chart_data)
-            chart_title = text == "empty" ? "روند احساسات" : "روند احساسات " + " نسبت به عبارت  " + "«" + text + "»"
+
+            let country_name = $("#country option:selected").text();
+            source_text = (country_id==0) ? " در «تمامی مجموعه اخبار»" : " در مجموعه اخبار " +  "«" + country_name + "»"
+
+            chart_title = (text == "empty" ? " روند احساسات" : " روند احساسات " + " نسبت به عبارت  " + "«" + text + "»" + "</br></br>")  + source_text 
+            
+
+            radar_chat_title = (text == "empty" ? "توزیع احساسات" : "توزیع احساسات" + " نسبت به عبارت  " + "«" + text + "»" + "</br></br>")  + source_text 
+            
             showChart(date_sentiment_chart_data, "sentiment_trend_container", [], true, "تاریخ خبر", chart_title)
+            showChart(radar_sentiment_chart_data, "sentiment_radar_container", [], true, "احساس خبر", radar_chat_title)
         }
 
         async function update_table_pagination_input(curr_page, total_hits) {
@@ -1459,6 +1474,8 @@
                 newMultipleLineChart(container, options)
 
 
+            }else if (container === "sentiment_radar_container"){
+                newRadarChart(container, options)
             }
             else {
                 newBarChart(container, options)
@@ -1720,7 +1737,7 @@
                 for (const doc of result_documents) {
                 const link = 'http://' + location.host + "/information/?id=" + doc["_source"]["document_id"]
                 doc_tag = "<a target='blank' href='" + link + "'>" + doc["_source"]["document_name"] + "</a>"
-                let tag = "<li class='mt-3'" + doc_tag  + "</li>"
+                let tag = "<li class='mt-3'>" + doc_tag  + "</li>"
                 filtered_result_tag += tag
                 list_of_docId += doc["document_id"] + "_"
             }

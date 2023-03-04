@@ -3565,7 +3565,12 @@ def GetSentimentTrend_ChartData(request, country_id, category_id, subject_id, fr
             }
 
         },
-
+        "sentiment-agg":{
+            "terms": {
+                    "field": "sentiment.keyword",
+                    "size": bucket_size
+            }
+        }
     }
 
     from_value = (curr_page - 1) * search_result_size
@@ -3628,13 +3633,26 @@ def GetSentimentTrend_ChartData(request, country_id, category_id, subject_id, fr
                                         ]
                                         )
 
+
+
     if total_hits == 10000:
         total_hits = client.count(body={
             "query": res_query
         }, index=index_name, doc_type='_doc')['count']
 
+    radar_sentiment_chart_data = []
+    sentiment_buckets = aggregations['sentiment-agg']['buckets']
+    
+    for bucket in sentiment_buckets:
+        key = bucket['key']
+        if key != "----":
+            doc_count = bucket['doc_count']
+            sentiment_percentage = round((doc_count / total_hits) * 100, 2) if total_hits != 0 else 0
 
-
+            point_data = {'x': key, 'value': sentiment_percentage}
+            radar_sentiment_chart_data.append(point_data)
+            print(radar_sentiment_chart_data)
+            
     response = client.search(index=index_name,
                              request_timeout=40,
                              query=res_query
@@ -3646,6 +3664,7 @@ def GetSentimentTrend_ChartData(request, country_id, category_id, subject_id, fr
         'total_hits': total_hits,
         'max_score': max_score,
         "curr_page": curr_page,
+        "radar_sentiment_chart_data":radar_sentiment_chart_data,
         'date_sentiment_chart_data': date_sentiment_chart_data})
 
 
