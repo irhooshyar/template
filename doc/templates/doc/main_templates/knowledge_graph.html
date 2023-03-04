@@ -149,7 +149,6 @@
         <ul id="original_tabs" class="nav nav-pills mt-5 mx-auto  pr-3 pr-sm-0  float-right  d-block" id="graph_tab"
             role="tablist">
 
-
             <li class="nav-item float-right" role="presentation">
                 <button id="show_knowledge__graph_tab" class="nav-link active" data-bs-toggle="pill"
                     data-bs-target="#show_knowledge__graph_pane" type="button" role="tab"
@@ -225,7 +224,7 @@
 
                     <div dir="rtl" style="display: flex; margin-bottom: 50px;">
                         <div class="col-md-6 px-0 col-12 col-lg-5 pt-1">
-                            <h6 class="table_header text-center  p-2  mb-0">
+                            <h6 id="node_table_label_id" class="table_header text-center  p-2  mb-0" style="display: none">
                                 گره های انتخاب شده
                             </h6>
                             <table id="show_knowledge__selected_node_table" class="table table-striped PopUpTable"
@@ -235,7 +234,7 @@
                         </div>
 
                         <div class="col-md-6 px-0 col-12 col-lg-7 pt-1">
-                            <h6 class="table_header text-center  p-2  mb-0">
+                            <h6 id="edge_table_label_id" class="table_header text-center  p-2  mb-0" style="display: none">
                                 یال های انتخاب شده
                             </h6>
                             <table id="show_knowledge__selected_edge_table" class="table table-striped PopUpTable"
@@ -335,7 +334,7 @@
                     <h5 id="paraModalHeader" class="modal-title">جزئیات</h5>
                     <div class="d-flex" style="width: 75%">
                         <label for="language_select" class=" text-right pl-3 pt-3" style="direction: rtl;">
-                            زبان:</label>
+                            مجموعه خبر:</label>
                         <select dir="rtl" id="language_select" name="language_select"
                             class="col-4 form-select text-right searchable-select" style="direction: rtl;">
                             <option value="IRI">ایران</option>
@@ -354,35 +353,35 @@
                     <ul id="result_modal_tabs" style="border-bottom: 1px solid var(--header_color);"
                         class="nav nav-pills mx-auto w-100 pr-3 pr-sm-0 float-right  d-block" role="tablist">
                         <li class="nav-item float-right" role="presentation">
-                            <button id="OrResultData_tab" class="nav-link active" data-bs-toggle="pill"
+                            <button id="OrResultData_tab" class="nav-link active p-2" data-bs-toggle="pill"
                                 data-bs-target="#OrResultData_pane" type="button" role="tab"
                                 aria-controls="OrResultData_pane" aria-selected="false">نتایج جستجو OR</button>
                         </li>
                         <li class="nav-item float-right" role="presentation">
-                            <button id="ORChartData_tab" class="nav-link" data-bs-toggle="pill"
+                            <button id="ORChartData_tab" class="nav-link p-2" data-bs-toggle="pill"
                                 data-bs-target="#ORChartData_pane" type="button" role="tab"
                                 aria-controls="ORChartData_pane" aria-selected="false">اطلاعات نموداری OR</button>
                         </li>
                         <li class="nav-item float-right" role="presentation">
-                            <button id="AndResultData_tab" class="nav-link" data-bs-toggle="pill"
+                            <button id="AndResultData_tab" class="nav-link p-2" data-bs-toggle="pill"
                                 data-bs-target="#AndResultData_pane" type="button" role="tab"
                                 aria-controls="AndResultData_pane" aria-selected="false">نتایج جستجو AND
                                 (پاراگراف)</button>
                         </li>
                         <li class="nav-item float-right" role="presentation">
-                            <button id="ANDChartData_tab" class="nav-link" data-bs-toggle="pill"
+                            <button id="ANDChartData_tab" class="nav-link p-2" data-bs-toggle="pill"
                                 data-bs-target="#ANDChartData_pane" type="button" role="tab"
                                 aria-controls="ANDChartData_pane" aria-selected="false">اطلاعات نموداری AND
                                 (پاراگراف)</button>
                         </li>
                         <li class="nav-item float-right" role="presentation">
-                            <button id="AndDocResultData_tab" class="nav-link" data-bs-toggle="pill"
+                            <button id="AndDocResultData_tab" class="nav-link p-2" data-bs-toggle="pill"
                                 data-bs-target="#AndDocResultData_pane" type="button" role="tab"
                                 aria-controls="AndDocResultData_pane" aria-selected="false">نتایج جستجو AND
                                 (خبر)</button>
                         </li>
                         <li class="nav-item float-right" role="presentation">
-                            <button id="ANDDocChartData_tab" class="nav-link" data-bs-toggle="pill"
+                            <button id="ANDDocChartData_tab" class="nav-link p-2" data-bs-toggle="pill"
                                 data-bs-target="#ANDDocChartData_pane" type="button" role="tab"
                                 aria-controls="ANDDocChartData_pane" aria-selected="false">اطلاعات نموداری AND
                                 (خبر)</button>
@@ -943,6 +942,8 @@
         }
 
         async function ShowGraph() {
+
+
             const Knowledge_graph_id = document.getElementById("graph_select").value
             const request_link = 'http://' + location.host + "/GetKnowledgeGraphData/" + Knowledge_graph_id + "/"
             let response = await fetch(request_link).then(response => response.json());
@@ -954,12 +955,16 @@
             const width = 0.88 * window.innerWidth
             const height = container.scrollHeight || 500;
 
-            ShowedGraphObject = new MyGraph("show_knowledge__graph_container", Nodes_data, Edges_data, { "EN_name": "نام انگلیسی", "weight": "وزن" }, {}, width, height, "dagre", "show_knowledge__ChangeLayout", true,
+            ShowedGraphObject = new MyGraph("show_knowledge__graph_container", Nodes_data, Edges_data, { "EN_name": "نام انگلیسی", "weight": "وزن" }, {},
+                width, height, "force", "show_knowledge__ChangeLayout", true,
                 "Yellow", "", "", 1, 1, "show_knowledge__selected_node_table", "show_knowledge__selected_edge_table",
                 "show_knowledge__SelectNeighbourImg", "show_knowledge__ShowHideImg", "شباهت", KnowledgeGraphNodeDblClick, "",
                 "show_knowledge__SearchBox", "show_knowledge__SearchBtn")
 
             await ShowedGraphObject.show()
+
+            document.getElementById("node_table_label_id").style.display = "block"
+            document.getElementById("edge_table_label_id").style.display = "block"
 
             //user log
             let form_data = new FormData()
@@ -1128,7 +1133,15 @@
 
                 }
             }
-            newBarChart(position, options)
+
+            if (filed_name === "subject_name.keyword")
+            {
+                newDoughnutChart(position, options);
+            }
+            else
+            {
+                newBarChart(position, options)
+            }
         }
 
         async function delete_selected_graph() {
@@ -1323,8 +1336,7 @@
 <!-- Intro Js -->
 <script src="../../../static/js/tour.js"></script>
 
-{#
-<script src="../../static/js/UserLogSave.js"></script>#}
+<script src="../../static/js/UserLogSave.js"></script>
 <script src="../../../static/js/signout_function.js"></script>
 
 <!-- BS Tooltips handler -->
@@ -1373,6 +1385,10 @@
 
     async function change_graph_select() {
         document.getElementById("show_knowledge__graph_container").innerHTML = ""
+        document.getElementById("node_table_label_id").style.display = "none"
+        document.getElementById("edge_table_label_id").style.display = "none"
+        $('#show_knowledge__selected_node_table').empty();
+        $('#show_knowledge__selected_edge_table').empty();
     }
 </script>
 
