@@ -3490,12 +3490,14 @@ def SearchDocument_ES(request, country_id, category_id, subject_id, from_year, t
                              aggregations=res_agg,
                              from_=from_value,
                              size=search_result_size,
-                            # sort=[
-                            #      {"document_jalili_date.year": {"order": "desc"}},
-                            #      {"document_jalili_date.month.number": {"order": "desc"}},
-                            #      {"document_jalili_date.day.number": {"order": "desc"}},
-                            #      {"document_jalili_date.hour": {"order": "desc"}},
-                            #  ]
+                            sort=[
+                                 {"document_date.keyword": {"order": "desc"}},
+                                 {"document_time": {"order": "desc"}},
+                                #  {"document_jalili_date.year": {"order": "desc"}},
+                                #  {"document_jalili_date.month.number": {"order": "desc"}},
+                                #  {"document_jalili_date.day.number": {"order": "desc"}},
+                                #  {"document_jalili_date.hour": {"order": "desc"}},
+                             ]if text == "empty" else None 
 
                              )
 
