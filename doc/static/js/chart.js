@@ -314,6 +314,14 @@ function newDoughnutChart(container_id, options) {
   // set palette to a chart:
   chart.palette(palette);
 
+  if (options.has_color){
+    const newPalette = []
+    for(let i=0; i< options.data.length; i++){
+       newPalette.push(options.data[i][2])
+    }
+
+    chart.palette(newPalette)
+  }
   // initiate drawing the chart
   chart.draw();
 

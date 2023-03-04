@@ -317,10 +317,16 @@ class ColumnInteractivity {
 
     create_segmentation_box() {
         const header = document.getElementById(this.modal_result_size_container_id)
-        const check_box_container = document.createElement('div');
 
-        check_box_container.style.marginBlock = 15 + "px";
-        header.style.display = "grid"
+        const check_box_panel = document.createElement('div')
+
+        const check_box_container = document.createElement('div');
+        const more_btn = document.createElement('a');
+
+        more_btn.innerHTML = "بیشتر <i class=\"bi bi-chevron-down\" style='vertical-align: super'></i>"
+
+        check_box_panel.appendChild(check_box_container)
+        check_box_panel.appendChild(more_btn)
 
         for (let i = 0; i < this.segmentation_parameters.length; i++) {
             let check_box_checked = "checked"
@@ -333,14 +339,41 @@ class ColumnInteractivity {
                 check_box_checked = ""
             }
 
-            child = '<div class="form-check form-check-inline float-right py-2 pb-1">' +
+            child = '<div class="form-check form-check-inline float-right py-2">' +
                 '<input data-model-name="check-box-input" class="form-check-input topic_keyword' + '" id="kw_' + i + '" style="padding:0;"  type="checkbox" value="' + parameter + '" ' + check_box_checked + '>' +
                 '<label class="form-check-label">' + parameter + '</label> ' +
                 '</div>'
 
             check_box_container.innerHTML += child
         }
-        header.insertBefore(check_box_container, header.firstChild)
+        header.insertBefore(check_box_panel, header.firstChild)
+
+        header.style.display = "grid"
+
+        const check_box_panel_style = check_box_panel.style;
+        check_box_panel_style.display = "flex";
+        check_box_panel_style.overflow = "hidden";
+        check_box_panel_style.borderBottom = "1px solid #D6D6D6";
+        check_box_panel_style.paddingBlockEnd = 1 + "rem";
+        check_box_panel_style.marginBlockEnd = 1 + "rem";
+        check_box_panel_style.height = 50 + "px"
+
+        const more_btn_style = more_btn.style
+        more_btn_style.cursor = "pointer"
+        more_btn_style.width = "100px"
+        more_btn_style.textAlign = "center"
+
+        more_btn.addEventListener("click", () => {
+            if (check_box_panel_style.height === "50px") {
+                more_btn.innerHTML = "کمتر <i class=\"bi bi-chevron-up\" style='vertical-align: super'></i>"
+                check_box_panel_style.height = "fit-content"
+            } else {
+                more_btn.innerHTML = "بیشتر <i class=\"bi bi-chevron-down\" style='vertical-align: super'></i>"
+                check_box_panel_style.height = "50px"
+            }
+        })
+
+        more_btn.classList.add("py-1");
 
 
         const check_boxes = document.querySelectorAll("[data-model-name='check-box-input']")
