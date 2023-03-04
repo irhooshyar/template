@@ -732,14 +732,7 @@
                     </div>
                 </div>
                 <!-- Modal footer -->
-                <div id="detail_modal_footer3" dir="rtl"  class="modal-footer">
-                    <button id="downloadFile3" disabled class="btn blue-button"><i class="fa fa-file-archive"></i> دانلود پاراگراف‌ها
-                    </button>
-
-                <button id="ExportExcel3" disabled class="btn green-button float-left"><i
-                        class="fa fa-file-excel"></i>
-                    خروجی اکسل پاراگراف
-                </button>
+                <div class="modal-footer">
 
                 </div>
 
@@ -2017,6 +2010,12 @@
 
                 $("#detailModal").modal("show")
                 $("#detail_modal_footer #close_btn").show();
+                if (container === 'subject_container' ||
+                container === 'category_container' ||
+                container === 'year_container'){
+                $("#detail_modal_footer #ExportExcel2").show();
+                $("#detail_modal_footer #downloadFile2").show();
+                }
                 $("#detail_modal_footer #ExportExcel2").hide();
                 $("#detail_modal_footer #downloadFile2").hide();
 
