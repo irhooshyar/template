@@ -1731,7 +1731,7 @@
                 for (const doc of result_documents) {
                 const link = 'http://' + location.host + "/information/?id=" + doc["_source"]["document_id"]
                 doc_tag = "<a target='blank' href='" + link + "'>" + doc["_source"]["document_name"] + "</a>"
-                let tag = "<li class='mt-3'" + doc_tag  + "</li>"
+                let tag = "<li class='mt-3'>" + doc_tag  + "</li>"
                 filtered_result_tag += tag
                 list_of_docId += doc["document_id"] + "_"
             }
