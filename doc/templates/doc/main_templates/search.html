@@ -1655,7 +1655,7 @@
             }
 
 
-
+            category_name = category_name.replaceAll('/','>').replaceAll('\\','<')
             request_link = 'http://' + location.host + "/SearchDocuments_Column_ES/"
                 + source_name + "/"
                 + subject_name + "/"
