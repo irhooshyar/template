@@ -4106,7 +4106,7 @@ def SearchDocuments_Column_ES(request, country_name, category_name, subject_name
     ALL_FIELDS = False
 
     res_query['bool']['filter'] = []
-    category_name = category_name.replace('/','>').replace('\\','<')
+    category_name = category_name.replace('>','/').replace('<','\\')
     res_query = filter_doc_fields_COLUMN(res_query, category_name, subject_name,
                                          from_year, to_year,sentiment,field_name,field_value)
 
