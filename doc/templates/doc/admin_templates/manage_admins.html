@@ -126,7 +126,7 @@
                     aria-labelledby="search_result_tab">
                     <!-- Search Result table -->
                     <div class="table-responsive search_result_table mt-2">
-                        <table class="table table-striped SearchTable" style="min-height: 200px;" id="SearchTable">
+                        <table class="table table-striped SearchTable no-row-number" style="min-height: 200px;" id="SearchTable">
                         </table>
                     </div>
                 </div>
@@ -241,12 +241,12 @@
 
 
     async function ShowUsers(response) {    
-        let index = 1;
         let user_result = [];
-
+        
         document.getElementById("SearchResultLable").innerText = (response['admins'].length).toString() + " کاربر یافت شد";
         document.getElementById("SearchTable").innerHTML = "";
-
+        
+        let i = 1;
         for (let user of response['admins']) {
             const id = user['id']
             const first_name = user['first_name']
@@ -259,15 +259,15 @@
             const detail_function = "ShowPermissions('" + username + "')";
             const detail = '<button style="background-color:lightblue" type="button" class="btn float-none mr-4" id="report_bug_text" onclick="' + detail_function + '">مشاهده</button>'
 
-            const row = { "index": index, "first_name": first_name, "last_name": last_name, "username": username, "email": email, "phone": phone, "permissions": detail };
+            const row = { idx: i, "first_name": first_name, "last_name": last_name, "username": username, "email": email, "phone": phone, "permissions": detail };
             
             user_result.push(row);
-            index += 1;
+            i++;
         }
+        console.log(user_result)
         columns = [{
-            "name": "index",
+            "name": "idx",
             "title": "ردیف",
-            "breakpoints": "xs sm",
             "type": "number",
             "style": {
                 "width": "5%"
