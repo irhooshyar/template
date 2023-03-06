@@ -113,7 +113,7 @@ def apply(folder, Country):
         document_date=F('document_paragraph__document_id__date'),
         paragraph_text=F('document_paragraph__text'),
         paragraph_id=F('document_paragraph__id'),
-        source_name = F('document_paragraph__document_id__country_name')
+        source_name = F('document_paragraph__document_id__country_id__name')
     ).values('id','source_name', 'document_id', 'document_name', 'paragraph_text', 'paragraph_id', 'sentiment',
              'classification_subject', 'persons', 'locations', 'organizations','document_date')
 
