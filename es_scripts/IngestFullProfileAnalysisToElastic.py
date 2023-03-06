@@ -24,6 +24,7 @@ class FullProfileIndex(ES_Index):
             document_id = record['document_id']
             document_name = record['document_name']
             classification_subject = record['classification_subject']
+            source_name = record['source_name']
             sentiment = record['sentiment']
 
             persons_list = json.loads(str(record['persons']).replace('"',"").replace("'", '"').replace("\\", '\\\\'))
@@ -75,6 +76,7 @@ class FullProfileIndex(ES_Index):
                 "document_labels": document_labels,
                 "category_name": category_name,
                 "subject_name": subject_name,
+                "source_name":source_name,
                 "data": base64_file
             }
 
@@ -110,8 +112,9 @@ def apply(folder, Country):
         document_name=F('document_paragraph__document_id__name'),
         document_date=F('document_paragraph__document_id__date'),
         paragraph_text=F('document_paragraph__text'),
-        paragraph_id=F('document_paragraph__id')
-    ).values('id', 'document_id', 'document_name', 'paragraph_text', 'paragraph_id', 'sentiment',
+        paragraph_id=F('document_paragraph__id'),
+        source_name = F('document_paragraph__document_id__country_name')
+    ).values('id','source_name', 'document_id', 'document_name', 'paragraph_text', 'paragraph_id', 'sentiment',
              'classification_subject', 'persons', 'locations', 'organizations','document_date')
 
     counter = 0
