@@ -288,6 +288,7 @@ async function generatePDF() {
 
     const approval_reference = $("#country option:selected").text();
     const approval_date = document.getElementById("document_date").innerText;
+    const approval_time = document.getElementById("document_hour").innerText;
 
     const document_id = document.getElementById("document").value;
     // disable show button before choosing a document
@@ -309,8 +310,8 @@ async function generatePDF() {
         document_name +
         "</h5> </div6> " +
         "<div7 class='d-flex' style='justify-content: space-between;width: 100%'> " +
-        "<div8 class='d-flex'> <span> تاریخ تصویب  </span> <span>&nbsp;</span> <span> : </span> <span> " +
-        approval_date +
+        "<div8 class='d-flex'> <span> تاریخ و ساعت خبر  </span> <span> : </span> <span>&nbsp;</span> <span> " +
+        approval_time + "<span>&nbsp;&nbsp;</span>" + approval_date +
         " </span> </div8> " +
         "<div9 class='d-flex'> <span> مرجع خبر </span> <span>&nbsp;</span> <span> : </span> <span> " +
         approval_reference +
