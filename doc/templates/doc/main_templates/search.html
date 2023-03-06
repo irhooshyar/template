@@ -869,7 +869,7 @@
 
             date_sentiment_chart_data = response['date_sentiment_chart_data']
             radar_sentiment_chart_data = response['radar_sentiment_chart_data']
-            console.log(date_sentiment_chart_data)
+            console.log(radar_sentiment_chart_data)
 
             let country_name = $("#country option:selected").text();
             source_text = (country_id==0) ? " در «تمامی مجموعه اخبار»" : " در مجموعه اخبار " +  "«" + country_name + "»"
@@ -877,7 +877,7 @@
             chart_title = (text == "empty" ? " روند احساسات" : " روند احساسات " + " نسبت به عبارت  " + "«" + text + "»" + "</br></br>")  + source_text 
             
 
-            radar_chat_title = (text == "empty" ? "توزیع احساسات" : "توزیع احساسات" + " نسبت به عبارت  " + "«" + text + "»" + "</br></br>")  + source_text 
+            radar_chat_title = (text == "empty" ? "توزیع احساسات" : "توزیع احساسات" + " نسبت به عبارت  " + "«" + text + "»" + "</br></br>")  + " در مجموعه اخبار" 
             
             showChart(date_sentiment_chart_data, "sentiment_trend_container", [], true, "تاریخ خبر", chart_title)
             showChart(radar_sentiment_chart_data, "sentiment_radar_container", [], true, "احساس خبر", radar_chat_title)
@@ -1475,6 +1475,40 @@
 
 
             }else if (container === "sentiment_radar_container"){
+
+                options.series_data = [
+
+                    {
+                        "map": { x: 0, value: 1 },
+                        "name": "تابناک",
+                        "marker_type":"circle",
+                        "marker_size":"3",
+
+                    },
+                    {
+                        "map": { x: 0, value: 2 },
+                        "name": "خبر آنلاین",
+                        "marker_type":"circle",
+                        "marker_size":"3",
+        
+                    },
+                    {
+                        "map": { x: 0, value: 3 },
+                        "name": "عصر ایران",
+                        "marker_type":"circle",
+                        "marker_size":"3",
+           
+                    },
+                    {
+                        "map": { x: 0, value: 4 },
+                        "name": "ایسنا",
+                        "marker_type":"circle",
+                        "marker_size":"3",
+
+                    },
+                ]
+
+
                 newRadarChart(container, options)
             }
             else {

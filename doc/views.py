@@ -3565,12 +3565,16 @@ def GetSentimentTrend_ChartData(request, country_id, category_id, subject_id, fr
             }
 
         },
-        "sentiment-agg":{
-            "terms": {
-                    "field": "sentiment.keyword",
-                    "size": bucket_size
+        "source-sentiment-agg":{
+            "multi_terms": {
+                "terms": [{
+                    "field": "sentiment.keyword"
+                },{
+                    "field": "source_name.keyword"
+                }, ],
+                "size": bucket_size
             }
-        }
+ }
     }
 
     from_value = (curr_page - 1) * search_result_size
@@ -3641,17 +3645,46 @@ def GetSentimentTrend_ChartData(request, country_id, category_id, subject_id, fr
         }, index=index_name, doc_type='_doc')['count']
 
     radar_sentiment_chart_data = []
-    sentiment_buckets = aggregations['sentiment-agg']['buckets']
+    sentiment_source_dict = {}
+    sentimentـsource_buckets = aggregations['source-sentiment-agg']['buckets']
     
-    for bucket in sentiment_buckets:
-        key = bucket['key']
-        if key != "----":
-            doc_count = bucket['doc_count']
-            sentiment_percentage = round((doc_count / total_hits) * 100, 2) if total_hits != 0 else 0
+    sum_sentiment_per_source = {
+        "تابناک":0,
+        "خبر آنلاین":0,
+        "عصر ایران":0,
+        "ایسنا":0
+    }
+    for bucket in sentimentـsource_buckets:
+        sentiment = bucket['key'][0]
+        source = bucket['key'][1]
+        doc_count = bucket['doc_count']
+        
+        if sentiment != '----':
 
-            point_data = {'x': key, 'value': sentiment_percentage}
-            radar_sentiment_chart_data.append(point_data)
-            print(radar_sentiment_chart_data)
+            if sentiment not in sentiment_source_dict:
+                sentiment_source_dict[sentiment] = {
+                    "تابناک": 0,
+                    "خبر آنلاین": 0,
+                    "عصر ایران": 0,
+                    "ایسنا": 0
+                }
+                sentiment_source_dict[sentiment][source] = doc_count
+            else:
+                sentiment_source_dict[sentiment][source] = doc_count
+
+            sum_sentiment_per_source[source] +=doc_count
+
+    for sentiment, value in sentiment_source_dict.items():
+        radar_sentiment_chart_data.append([sentiment,
+                                        round(value['تابناک']/sum_sentiment_per_source["تابناک"]*100,2) if sum_sentiment_per_source["تابناک"] != 0 else 0,
+                                        round(value['خبر آنلاین']/sum_sentiment_per_source["خبر آنلاین"]*100,2) if sum_sentiment_per_source["خبر آنلاین"] != 0 else 0,
+                                        round(value['عصر ایران']/sum_sentiment_per_source["عصر ایران"]*100,2) if sum_sentiment_per_source["عصر ایران"] != 0 else 0,
+                                        round(value['ایسنا']/sum_sentiment_per_source["ایسنا"]*100,2) if sum_sentiment_per_source["ایسنا"] != 0 else 0,
+                                        ]
+                                        )
+
+
+
             
     response = client.search(index=index_name,
                              request_timeout=40,
