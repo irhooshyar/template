@@ -66,37 +66,37 @@
                 </a>
             </li>
 
-
-            <li class="nav-item">
-                <a class="nav-link" id="rahbari_search" data-bs-toggle="tooltip" data-bs-placement="bottom"
-                   href="{% url 'search' %}" style="display: none;">
-                    جست‌وجو پیشرفته
+            <li class="nav-item" id="search" style="display: none;">
+                <a class="nav-link" id="search_tab" role="button"
+                   href="{% url 'search' %}" aria-expanded="false">
+                   جست‌وجو پیشرفته
                 </a>
             </li>
 
-            <li class="nav-item dropdown" id="AI_analysis">
+
+            <li class="nav-item dropdown" id="AI_analysis" style="display: none;">
                 <a class="nav-link dropdown-toggle" href="#" id="AIDropdown" role="button" data-bs-toggle="dropdown"
                     aria-expanded="false">
                     تحلیل هوشمند
                 </a>
                 <ul class="dropdown-menu" aria-labelledby="GraphDropdown">
                     <li>
-                        <a id="AI_topics" class="dropdown-item text-right" href="{% url 'AI_topics' %}">
+                        <a id="AI_topics" class="dropdown-item text-right" href="{% url 'AI_topics' %}" style="display: none;">
                             دسته‌بندی موضوعی (LDA)
                         </a>
                     </li>
                     <li>
                         <a id="paragraph_clustering" class="dropdown-item text-right"
-                            href="{% url 'paragrraph_clustering' %}">خوشه‌بندی پاراگراف‌ها</a>
+                            href="{% url 'paragrraph_clustering' %}" style="display: none;">خوشه‌بندی پاراگراف‌ها</a>
                     </li>
 
                     <li>
                         <a id="ManualClustering" class="dropdown-item text-right"
-                            href="{% url 'ManualClustering' %}">خوشه‌بندی
+                            href="{% url 'ManualClustering' %}" style="display: none;">خوشه‌بندی
                             سفارشی</a>
                     </li>
                     <li>
-                        <a id="knowledgeGraph" class="dropdown-item text-right" href="{% url 'knowledgeGraph' %}">گراف
+                        <a id="knowledgeGraph" class="dropdown-item text-right" href="{% url 'knowledgeGraph' %}" style="display: none;">گراف
                             دانش</a>
                     </li>
                 </ul>
@@ -152,22 +152,22 @@
                            style="display: none;">
                         مدیریت کاربران</a>
                     </li>
-                    <li><a id="admin_waiting_user" class="dropdown-item text-right"
+                    {% comment %} <li><a id="admin_waiting_user" class="dropdown-item text-right"
                            href="{% url 'admin_waiting_user' %}" style="display: none;">
                         تایید کاربران</a>
-                    </li>
-                    <li><a id="admin_accepted_user" class="dropdown-item text-right"
+                    </li> {% endcomment %}
+                    {% comment %} <li><a id="admin_accepted_user" class="dropdown-item text-right"
                            href="{% url 'admin_accepted_user' %}" style="display: none;">
                         کاربران تایید شده</a>
-                    </li>
+                    </li> {% endcomment %}
                     <li><a id="admin_upload" class="dropdown-item text-right" href="{% url 'admin_upload' %}"
                            style="display: none;">
                         آپلود فایل</a>
                     </li>
-                    <li><a id="admin_user_recommendation" class="dropdown-item text-right"
+                    {% comment %} <li><a id="admin_user_recommendation" class="dropdown-item text-right"
                            href="{% url 'admin_user_recommendation' %}" style="display: none;">
                         مشاهده نظرات کاربران</a>
-                    </li>
+                    </li> {% endcomment %}
                     <li><a id="admin_user_report_bug" class="dropdown-item text-right"
                            href="{% url 'admin_user_report_bug' %}" style="display: none;">
                         مشاهده گزارشات خطاها</a>
