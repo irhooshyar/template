@@ -1,5 +1,4 @@
 from datetime import datetime
-
 from django.db import models
 from django.db.models.base import Model
 
@@ -724,7 +723,6 @@ class ActorArea(models.Model):
 
     class Meta:
         app_label = 'doc'
-
 
 
 class ActorType(models.Model):
