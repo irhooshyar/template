@@ -338,11 +338,10 @@ class ParagraphLDAScore(models.Model):
 
 class Recommendation(models.Model):
     id = models.AutoField(primary_key=True)
-    first_name = models.CharField(max_length=100)
-    last_name = models.CharField(max_length=100)
-    email = models.CharField(max_length=500)
-    recommendation_text = models.TextField(max_length=100000)
+    user = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
+    recommendation_text = models.TextField(max_length=100000, blank=True, null=True)
     rating_value = models.IntegerField(default=0)
+    submited_at = models.CharField(max_length=256, blank=True, null=True)
 
     class Meta:
         app_label = 'doc'

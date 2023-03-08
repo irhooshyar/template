@@ -314,6 +314,14 @@ function newDoughnutChart(container_id, options) {
   // set palette to a chart:
   chart.palette(palette);
 
+  if (options.has_color) {
+    const newPalette = [];
+    for (let i = 0; i < options.data.length; i++) {
+      newPalette.push(options.data[i][2]);
+    }
+
+    chart.palette(newPalette);
+  }
   // initiate drawing the chart
   chart.draw();
 
@@ -892,6 +900,8 @@ function newRadarChart(container_id, options) {
 
   let data = options.data;
 
+  var dataSet = anychart.data.set(data);
+
   // create a chart
   chart = anychart.radar();
   document.getElementById(chartDownloadId).onclick = () => {
@@ -900,12 +910,43 @@ function newRadarChart(container_id, options) {
   chart.animation(true).padding([10, 60, 10, 0]);
 
 
-  // create the first series (line) and set the data
-  var series = chart.line(data);
+  // create a column series and set the data
+  series_data = options.series_data;
 
-  series.normal().stroke("4 rgba(72, 143, 184, 1)");
-  series.hovered().stroke("4 rgba(72, 143, 184, 1)");
-  series.selected().stroke("4 rgba(72, 143, 184, 1)");
+  for (series_settings of series_data) {
+    var current_series_data = dataSet.mapAs(series_settings.map);
+
+    var current_series = chart.line(current_series_data);
+
+    current_series.name(series_settings.name);
+    current_series.markers().enabled(true).type(series_settings.marker_type).size(series_settings.marker_size);
+    // current_series.normal().stroke(series_settings.normal.stroke_settings);
+
+  }
+
+
+
+
+  
+  // var series = chart.line(data);
+
+  // series.normal().stroke("4 rgba(72, 143, 184, 1)");
+  // series.hovered().stroke("4 rgba(72, 143, 184, 1)");
+  // series.selected().stroke("4 rgba(72, 143, 184, 1)");
+
+  // set chart legend settings
+  chart.legend(true);
+
+  var legend = chart.legend();
+  legend.fontFamily("vazir");
+
+  // set position mode
+  legend.positionMode("outside");
+  // set position and alignement
+  legend.position("top");
+  legend.align("center");
+  legend.itemsLayout("horizontalExpandable");
+  // legend.padding({ top: 2, right: 7, bottom: 105, left: 7 });
 
   // set the container id
   chart.container(chartContainerId);

@@ -2,21 +2,51 @@ MAX_RESULT_WINDOW = 5000
 SEARCH_RESULT_SIZE = 500
 
 function doc_showChart(chart_data, container, tab_name, sortKeys, xAxisTitle, title, yAxisTitle = "تعداد پاراگراف", isPie = false) {
+    const sentiment_words = {
+        "احساس بسیار منفی": "#81323d",
+        "بدون ابراز احساسات": "#a9a9a9",
+        "احساس منفی": "#cd7f8a",
+        "احساس خنثی یا ترکیبی از مثبت و منفی": "#488fb8",
+        "احساس مثبت": "#b1cd7f",
+        "احساس بسیار مثبت": "#648132"
+    }
     let data = []
     for (column of chart_data) {
         key = column["key"]
         // key = column["key"] != 0 ? column["key"] : 'نامشخص'
         value = column["doc_count"]
-
+        const item = [key, value]
         if (key !== "بدون شخص حقیقی" && key !== "بدون موقعیت مکانی" && key !== "بدون ذکر سازمان") {
-            data.push([key, value])
+
+            if (container === "sentiment_container") {
+                item[2] = sentiment_words[key]
+            }
+
+            data.push(item)
         }
     }
+
+    if (container === "sentiment_container") {
+        for (let sentiment in sentiment_words) {
+            let is_exist = false;
+            for (let array_item of data){
+                if (sentiment === array_item[0]) {
+                    is_exist = true;
+                    break
+                }
+            }
+            if(!is_exist){
+                data.push([sentiment, 0, sentiment_words[sentiment]])
+            }
+        }
+    }
+
     const options = {
         data,
         sortKeys,
         xAxisTitle,
         title,
+        has_color: container === "sentiment_container",
         yAxisTitle: yAxisTitle,
         onClick: async function (event, data) {
             const document_id = document.getElementById("document").value
@@ -33,6 +63,7 @@ function doc_showChart(chart_data, container, tab_name, sortKeys, xAxisTitle, ti
             }
         }
     };
+
     if (isPie) {
         newDoughnutChart(container, options)
     } else {
@@ -152,8 +183,8 @@ async function click_classification_chart(document_id, text, chart_name) {
     result = await column_interactivity_obj.load_content();
     console.log(result)
 
-    $('#ChartModalBtn_2').click()
     stopBlockUI('کلیک روی نمودار');
+    $('#ChartModalBtn_2').click()
 
     $('#ExportExcel_2').on('click', async function () {
         await column_interactivity_obj.download_content();
@@ -163,7 +194,7 @@ async function click_classification_chart(document_id, text, chart_name) {
 function stackBasedChartData(data, container, xAxisTitle, title, chooseFirst30 = false, showItemsTable = false) {
     const dataArray = []
 
-    const sentiment_words = ["احساس بسیار منفی", "بدون ابراز احساسات", "احساس منفی", "احساس خنثی یا ترکیبی از مثبت و منفی", "احساس مثبت", "احساس بسیار مثبت"]
+
     const differentValues = []
     for (let info of data) {
         const key = info.key[0]
@@ -266,7 +297,7 @@ function showStackBasedChart(data, container, xAxisTitle, title) {
         bars: [
             {
                 name: "احساس بسیار مثبت",
-                color:"#648132",
+                color: "#648132",
                 onClick
             },
             {
@@ -281,17 +312,17 @@ function showStackBasedChart(data, container, xAxisTitle, title) {
             },
             {
                 name: "احساس منفی",
-                color:"#cd7f8a",
+                color: "#cd7f8a",
                 onClick
             },
             {
                 name: "احساس بسیار منفی",
-                color:"#81323d",
+                color: "#81323d",
                 onClick
             },
             {
                 name: "بدون ابراز احساسات",
-                color:"#a9a9a9",
+                color: "#a9a9a9",
                 onClick
             }
         ]

@@ -831,11 +831,15 @@
 
                     default_modal()
                     document.getElementById("document_search").disabled = false;
+                    console.log(data)
+                    notyf.success(' جزئیات خوشه' +' '+ data['cluster_name'] + " ذخیره شد");
 
                 }).fail(function (res) {
                     console.log("fail")
+                    notyf.error(' جزئیات خوشه' +' '+ data['cluster_name'] + " ذخیره نشد");
                 });
             }
+
         }
 
         async function show_main_table_result() {

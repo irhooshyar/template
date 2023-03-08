@@ -1238,7 +1238,7 @@
 
             let response = await fetch(request_link).then(response => response.json());
             result_response = response["result_response"];
-            notyf.success(result_response);
+            notyf.success("برچسب برای خوشه ذخیره شد.");
 
         } else {
             notyf.error("!برچسبی وارد نشده‌است");
@@ -1577,11 +1577,11 @@
         chart.fontFamily('vazir');
 
         // chart.tooltip().format("{%yPercentOfTotal}% ({%value})\n\n{%custom_field}");
-        chart.tooltip().fontFamily('vazir').textDirection('rtl');
+        chart.tooltip().fontFamily('vazir').textDirection('ltr');
 
         // tooltip title font setting
         var title = chart.tooltip().title();
-        title.fontFamily("vazir").textDirection('rtl');
+        title.fontFamily("vazir").textDirection('ltr');
 
         // configure angles
         chart.angles([0]);
@@ -1589,7 +1589,7 @@
         // set the container id
         chart.container(container);
         // chart.tooltip().format("{درصد نسبی: %yPercentOfTotal}% \n({%value})");
-        chart.tooltip().format("درصد نسبی: {%yPercentOfTotal}%");
+        chart.tooltip().format("درصد نسبی: %{%yPercentOfTotal}");
 
         // initiate drawing the chart
         chart.draw();
