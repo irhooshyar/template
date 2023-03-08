@@ -27,7 +27,7 @@ from abdal import es_config
 def apply(folder_name, Country):
     # reading result
 
-    path = str(Path(config.PERSIAN_PATH, "result_asre_iran_1.txt"))
+    path = str(Path(config.PERSIAN_PATH, "result_khabar_online_1.txt"))
     file = open(path, "r", encoding="utf-8")
     delimiter = "&!&"
     text = file.read()
