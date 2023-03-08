@@ -3720,14 +3720,14 @@ def GetSentimentTrend_ChartData(request, country_id, category_id, subject_id, fr
         index_name_list = []
         country_list = Country.objects.filter(language="فارسی").exclude(name="تابناک- تست")
         for country in country_list:
-            index_name = standardIndexName(country, CubeFullProfileAnalysis.__name__)
+            index_name = standardIndexName(country, FullProfileAnalysis.__name__)
             index_name_list.append(index_name)
 
         index_name = index_name_list
     else:
 
         country_obj = Country.objects.get(id=country_id)
-        index_name = standardIndexName(country_obj, CubeFullProfileAnalysis.__name__)
+        index_name = standardIndexName(country_obj, FullProfileAnalysis.__name__)
 
     response = client.search(index=index_name,
                              _source_includes=[],
@@ -4288,7 +4288,7 @@ def SearchDocuments_Column_ES(request, country_name, category_name, subject_name
         else:
             res_query = boolean_search_text(res_query, place, text, search_type, ALL_FIELDS)
 
-    ModelName = Document if sentiment=="همه" else CubeFullProfileAnalysis
+    ModelName = Document if sentiment=="همه" else FullProfileAnalysis
     if country_id == 0:
         index_name_list = []
         country_list = Country.objects.filter(language="فارسی").exclude(name="تابناک- تست")
@@ -6128,7 +6128,7 @@ def GetKeywordClustersData(request, country_id, algorithm_name, algorithm_vector
 
 def GetDetailDocumentById(request, country_id, document_id):
     country_obj = Country.objects.get(id=country_id)
-    index_name = standardIndexName(country_obj, CubeFullProfileAnalysis.__name__)
+    index_name = standardIndexName(country_obj, FullProfileAnalysis.__name__)
 
     res_query = {
         "term": {
@@ -6182,7 +6182,7 @@ def rahbari_document_get_full_profile_analysis(request, country_id, document_id)
     }
 
     country_obj = Country.objects.get(id=country_id)
-    index_name = standardIndexName(country_obj, CubeFullProfileAnalysis.__name__)
+    index_name = standardIndexName(country_obj, FullProfileAnalysis.__name__)
 
     # ---------------------- Get Chart Data -------------------------
     res_agg = {
@@ -6321,7 +6321,7 @@ def rahbari_document_classification_chart_column(request, document_id, subject, 
     }
 
     country_obj = Document.objects.get(id=document_id).country_id
-    index_name = standardIndexName(country_obj, CubeFullProfileAnalysis.__name__)
+    index_name = standardIndexName(country_obj, FullProfileAnalysis.__name__)
 
     # ---------------------- Get Chart Data -------------------------
     from_value = (curr_page - 1) * result_size
@@ -6376,7 +6376,7 @@ def rahbari_document_name_chart_column(request, document_id, name, field_name, c
     }
 
     country_obj = Document.objects.get(id=document_id).country_id
-    index_name = standardIndexName(country_obj, CubeFullProfileAnalysis.__name__)
+    index_name = standardIndexName(country_obj, FullProfileAnalysis.__name__)
 
     load_object = field_name.split(".")[0]
     load_object = load_object + "_object"
@@ -6428,7 +6428,7 @@ def rahbari_document_actor_chart_column(request, document_id, name, curr_page, r
     }
 
     country_obj = Document.objects.get(id=document_id).country_id
-    index_name = standardIndexName(country_obj, CubeFullProfileAnalysis.__name__)
+    index_name = standardIndexName(country_obj, FullProfileAnalysis.__name__)
 
     # ---------------------- Get Chart Data -------------------------
     from_value = (curr_page - 1) * result_size
@@ -6474,7 +6474,7 @@ def export_rahbari_document_chart_column(request, document_id, text, keyword, cu
     }
 
     country_obj = Document.objects.get(id=document_id).country_id
-    index_name = standardIndexName(country_obj, CubeFullProfileAnalysis.__name__)
+    index_name = standardIndexName(country_obj, FullProfileAnalysis.__name__)
 
     # ---------------------- Get Chart Data -------------------------
     from_value = (curr_page - 1) * result_size

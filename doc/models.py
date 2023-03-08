@@ -683,7 +683,7 @@ class KnowledgeGraphData(models.Model):
     edges = models.JSONField(null=True)
 
 
-class CubeFullProfileAnalysis(models.Model):
+class FullProfileAnalysis(models.Model):
     id = models.AutoField(primary_key=True)
     country = models.ForeignKey(Country, on_delete=models.CASCADE, null=True)
     document_paragraph = models.ForeignKey(DocumentParagraphs, on_delete=models.CASCADE, null=True)

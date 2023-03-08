@@ -1,7 +1,7 @@
 import json
 
 from transformers import AutoTokenizer, AutoModelForTokenClassification, pipeline, MT5Tokenizer, MT5ForConditionalGeneration, AutoModelForSequenceClassification
-from doc.models import CubeFullProfileAnalysis
+from doc.models import FullProfileAnalysis
 from doc.models import DocumentParagraphs
 import after_response
 import math
@@ -50,7 +50,7 @@ def Slice_Dict(docs_dict, n):
 def apply(folder_name, Country):
 
     t = time.time()
-    CubeFullProfileAnalysis.objects.filter(country_id=Country.id).delete()
+    FullProfileAnalysis.objects.filter(country_id=Country.id).delete()
 
     print('paragraphs is going to select')
     selected_paragraphs = DocumentParagraphs.objects.filter(
@@ -89,7 +89,7 @@ def apply(folder_name, Country):
         start_idx = i * batch_size
         end_idx = min(start_idx + batch_size, Result_Create_List.__len__())
         sub_list = Result_Create_List[start_idx:end_idx]
-        CubeFullProfileAnalysis.objects.bulk_create(sub_list)
+        FullProfileAnalysis.objects.bulk_create(sub_list)
 
     print("time ", time.time() - t)
 
@@ -115,10 +115,10 @@ def Extract_Sentiment(Paragraph_Dict, Result_Create_List, thread_number, Country
             sentiment_model_result = text_sentiment_analysis(para_text)
             sentiment_result = process_text_sentiment_model(sentiment_model_result['result'][0])
 
-            obj = CubeFullProfileAnalysis(country=Country, sentiment=sentiment_result,
-                                           classification_subject=classification_result, persons=tagging_result['persons'],
-                                           locations=tagging_result['locations'], organizations=tagging_result['organizations'],
-                                           document_paragraph_id=para_id)
+            obj = FullProfileAnalysis(country=Country, sentiment=sentiment_result,
+                                      classification_subject=classification_result, persons=tagging_result['persons'],
+                                      locations=tagging_result['locations'], organizations=tagging_result['organizations'],
+                                      document_paragraph_id=para_id)
 
 
             # obj = CubeFullProfileAnalysis(country=Country,
