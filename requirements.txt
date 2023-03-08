@@ -51,3 +51,4 @@ pytest-django
 num2fawords
 transformers
 persiantools
+log4python
