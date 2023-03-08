@@ -188,6 +188,7 @@ RECAPTCHA_PUBLIC_KEY = "6Lee_a4kAAAAAFlOeKh1ob2Bh3eJVOrMNq-bM7vr"
 RECAPTCHA_PRIVATE_KEY = "6Lee_a4kAAAAAOCQqhjvvSbr07nIcJDj95zn6Rhx"
 
 
+import logging.config
 
 LOGGING = {
     'version': 1,
@@ -242,5 +243,4 @@ LOGGING = {
     }
 }
 
-import logging.config
-logging.config.dictConfig(...)
+logging.config.dictConfig(LOGGING)
