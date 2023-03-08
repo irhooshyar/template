@@ -53,9 +53,7 @@ from persiantools.jdatetime import JalaliDate
 SERVER_USER_NAME = config.SERVER_USER_NAME
 
 from log4python.Log4python import log
-TestLog = log("LogDemo")
-TestLog.debug("Debug Log")
-TestLog.info("Info Log")
+TestLog = log("HooshyarLog")
 
 # preprocessing function
 
@@ -362,6 +360,9 @@ def index(request):
 
 @allowed_users('information')
 def information(request):
+    TestLog.debug("Debug Log")
+    TestLog.info("Info Log")
+    TestLog.error("Info Log")
     country_list = Country.objects.all()
     country_map = get_country_maps(country_list)
     return render(request, 'doc/main_templates/document_profile.html', {'countries': country_map})
