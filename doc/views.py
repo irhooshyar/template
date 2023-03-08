@@ -52,10 +52,10 @@ from persiantools.jdatetime import JalaliDate
 
 SERVER_USER_NAME = config.SERVER_USER_NAME
 
-import logging
-logging.basicConfig(filename='template.log', filemode='w', format='%(name)s - %(levelname)s - %(message)s')
-logging.warning('This will get logged to a file')
-
+from log4python.Log4python import log
+TestLog = log("LogDemo")
+TestLog.debug("Debug Log")
+TestLog.info("Info Log")
 
 # preprocessing function
 
