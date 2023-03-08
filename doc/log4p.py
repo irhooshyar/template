@@ -21,13 +21,13 @@ config = {
         },
         'LogDemo': {
             'type': "file",
-            'FileName': "LogDemo.log",
+            'FileName': r"logs\error.log",
             'PatternLayout': "[level:%(levelname)\ts-file:%(filename)\ts-lineno:%(lineno)d]\t%(asctime)s\t%(message)s\n"
         },
         'console': {
             'type': "console",
             'target': "console",
-            'PatternLayout': "[%(levelname)s]\t%(asctime)s\t%(message)s"
+            'PatternLayout': "[%(levelname)s]\t%(asctime)s\t%(message)s\n"
         }
     }
 }
