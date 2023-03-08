@@ -1479,9 +1479,11 @@ FA_Mappings = {
                 }
             }
         },
+
         "document_year": {
             "type": "integer"
         },
+
         "document_time": {
             "type": "text",
             "fields": {
@@ -1492,9 +1494,6 @@ FA_Mappings = {
             }
         },
 
-        "document_hour": {
-            "type": "integer"
-        },
 
         "document_id": {
             "type": "integer"
