@@ -104,7 +104,7 @@ def update_doc(request, id, language, ):
     file.save()
 
 
-    StratAutomating.apply.after_response(folder_name, file, "DocProvisionsFullProfileAnalysis", host_url)
+    StratAutomating.apply.after_response(folder_name, file, "DocsCreateDocumentsListCubeData", host_url)
 
     # from scripts.Persian import DocsParagraphVectorExtractor
     # DocsParagraphVectorExtractor.apply(folder_name, file)
