@@ -65,6 +65,8 @@ MIDDLEWARE = [
 
 CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1",
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
     "https://irhooshyar.com"
 ]
 
@@ -106,7 +108,7 @@ DATABASES = {
         'PASSWORD': '123456789',
         'HOST': 'localhost' if os.environ.get('DB_URL') is None else
         os.environ.get('DB_URL'),  # Or an IP Address that your DB is hosted on
-        'PORT': '3306' if os.environ.get('DB_PORT') is None else os.environ.get('DB_PORT'),
+        'PORT': '3333' if os.environ.get('DB_PORT') is None else os.environ.get('DB_PORT'),
         'TEST': {
             "DEPENDENCIES": []
         }
