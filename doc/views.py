@@ -104,10 +104,7 @@ def update_doc(request, id, language, ):
     file.save()
 
 
-    # StratAutomating.apply.after_response(folder_name, file,
-    #                                          "DocsParagraphsClustering",
-    #                                          host_url)  # AdvanceARIMAExtractor_ ActorTimeSeriesPrediction _DocsSubjectExtractor_DocsLevelExtractor_DocsReferencesExtractor_DocsActorsTimeSeriesDataExtractor_DocsCreateDocumentsListCubeData_DocsCreateSubjectCubeData_DocsCreateVotesCubeData_DocsCreateSubjectStatisticsCubeData_DocsCreateTemplatePanelsCubeData_DocsAnalysisLeadershipSlogan_DocsCreatePrinciplesCubeData_DocCreateBusinessAdvisorCubeData_DocsCreateRegularityLifeCycleCubeData_DocsExecutiveParagraphsExtractor_DocsClauseExtractor_DocsGraphCubeData_DocsCreateMandatoryRegulationsCubeData_DocsExecutiveClausesExtractor_DocsCreateActorInformationStackChartCubeData
-    #
+    StratAutomating.apply.after_response(folder_name, file, "DocProvisionsFullProfileAnalysis", host_url)
 
     # from scripts.Persian import DocsParagraphVectorExtractor
     # DocsParagraphVectorExtractor.apply(folder_name, file)
@@ -126,8 +123,8 @@ def update_doc(request, id, language, ):
     # from scripts.Persian import DocProvisionsFullProfileAnalysis
     # DocProvisionsFullProfileAnalysis.apply.after_response(folder_name, file)
 
-    from es_scripts import IngestParagraphsVectorsToElastic
-    IngestParagraphsVectorsToElastic.apply.after_response(folder_name, file, 0)
+    # from es_scripts import IngestParagraphsVectorsToElastic
+    # IngestParagraphsVectorsToElastic.apply.after_response(folder_name, file, 0)
 
     return redirect('zip')
 
