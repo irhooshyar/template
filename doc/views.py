@@ -358,6 +358,8 @@ def index(request):
 
 @allowed_users('information')
 def information(request):
+    import logging
+    logging.error("My Eroor")
     country_list = Country.objects.all()
     country_map = get_country_maps(country_list)
     return render(request, 'doc/main_templates/document_profile.html', {'countries': country_map})
