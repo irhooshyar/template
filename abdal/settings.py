@@ -186,23 +186,3 @@ if not (os.environ.get('EMAIL_HOST') is None):
     
 RECAPTCHA_PUBLIC_KEY = "6Lee_a4kAAAAAFlOeKh1ob2Bh3eJVOrMNq-bM7vr"
 RECAPTCHA_PRIVATE_KEY = "6Lee_a4kAAAAAOCQqhjvvSbr07nIcJDj95zn6Rhx"
-
-
-import logging.config
-
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'formatters': {
-        'verbose': {
-            'format': '{levelname} {asctime} {module} {process:d} {thread:d} {message}',
-            'style': '{',
-        },
-        'simple': {
-            'format': '{levelname} {message}',
-            'style': '{',
-        },
-    }
-}
-
-logging.config.dictConfig(LOGGING)
