@@ -703,6 +703,7 @@ class CubeFullProfileAnalysis(models.Model):
 class ParagraphVectorType(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.TextField(null=True)
+
     class Meta:
         app_label = 'doc'
 
@@ -713,6 +714,7 @@ class ParagraphVector(models.Model):
     paragraph = models.ForeignKey(DocumentParagraphs, on_delete=models.CASCADE, null=True)
     vector_type = models.ForeignKey(ParagraphVectorType, on_delete=models.CASCADE, null=True)
     vector_value = models.JSONField(null=True)
+
     class Meta:
         app_label = 'doc'
 
@@ -720,6 +722,10 @@ class ParagraphVector(models.Model):
 class ActorArea(models.Model):
     id = models.AutoField(primary_key=True)
     name = models.CharField(null=True, max_length=500)
+
+    class Meta:
+        app_label = 'doc'
+
 
 
 class ActorType(models.Model):
@@ -750,20 +756,18 @@ class Actor(models.Model):
 
 
 class DocumentActor(models.Model):
-    Individual = 'منفرد'
-    Plural = 'اشتراکی'
-    CollectiveMember = 'جمعی'
-
+    INDIVIDUAL = 'منفرد'
+    PLURAL = 'اشتراکی'
+    COLLECTIVE_MEMBER = 'جمعی'
     DUTY_TYPE_CHOICES = [
-        (Individual, 'Individual'),
-        (Plural, 'Plural'),
-        (CollectiveMember, 'CollectiveMember'),
+        (INDIVIDUAL, 'Individual'),
+        (PLURAL, 'Plural'),
+        (COLLECTIVE_MEMBER, 'CollectiveMember'),
     ]
-
-    duty_type = models.CharField(
+    DUTY_TYPE = models.CharField(
         null=True, max_length=500,
         choices=DUTY_TYPE_CHOICES,
-        default=Individual)
+        default=INDIVIDUAL)
 
     id = models.AutoField(primary_key=True)
     document_id = models.ForeignKey(Document, null=True, on_delete=models.CASCADE)
