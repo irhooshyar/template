@@ -188,6 +188,3 @@ if not (os.environ.get('EMAIL_HOST') is None):
     
 RECAPTCHA_PUBLIC_KEY = "6Lee_a4kAAAAAFlOeKh1ob2Bh3eJVOrMNq-bM7vr"
 RECAPTCHA_PRIVATE_KEY = "6Lee_a4kAAAAAOCQqhjvvSbr07nIcJDj95zn6Rhx"
-
-
-
