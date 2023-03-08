@@ -4,7 +4,7 @@ from django.db import models
 from django.db.models.base import Model
 
 
-class UserExpertise(models.Model):
+class Expertise(models.Model):
     id = models.AutoField(primary_key=True)
     expertise = models.CharField(null=True, max_length=500)
 
@@ -63,9 +63,9 @@ class MainPanels(models.Model):
         return f'ID: {self.id}, panel_name: {self.panel_persian_name}'
 
 
-class User_Expertise(models.Model):
+class UserExpertise(models.Model):
     id = models.AutoField(primary_key=True)
-    experise_id = models.ForeignKey(UserExpertise, null=True, on_delete=models.CASCADE)
+    experise_id = models.ForeignKey(Expertise, null=True, on_delete=models.CASCADE)
     user_id = models.ForeignKey(User, null=True, on_delete=models.CASCADE)
 
     class Meta:
@@ -198,7 +198,6 @@ class Document(models.Model):
         return f'ID: {self.id}, Name: {self.name}, Country_ID: {self.country_id}'
 
 
-
 class DocumentParagraphs(models.Model):
     id = models.AutoField(primary_key=True)
     document_id = models.ForeignKey(Document, null=True, on_delete=models.CASCADE)
@@ -222,7 +221,7 @@ class DocumentSubject(models.Model):
         app_label = 'doc'
 
     def __str__(self):
-        return f'ID: {self.id}, Document_ID: {self.document_id}, Subject_ID: {self.subject_id}, Measure_ID: {self.measure_id}, Weight: {self.weight}'
+        return f'ID: {self.id}, Document_ID: {self.document_id}, Subject_ID: {self.subject_id}, Weight: {self.weight}'
 
 
 class ParagraphsSubject(models.Model):
@@ -244,7 +243,7 @@ class ParagraphsSubject(models.Model):
     subject3_name = models.CharField(null=True, max_length=500)
 
 
-class CUBE_DocumentJsonList(models.Model):
+class CubeDocumentJsonList(models.Model):
     id = models.AutoField(primary_key=True)
     country_id = models.ForeignKey(Country, null=True, on_delete=models.CASCADE)
     document_id = models.ForeignKey(Document, null=True, on_delete=models.CASCADE)
@@ -291,7 +290,7 @@ class AILDAResults(models.Model):
         return f'ID: {self.id}, country: {self.country}, number_of_topic: {self.number_of_topic}, heatmap_chart_data: {self.heatmap_chart_data}'
 
 
-class AI_Paragraph_Subject_By_LDA(models.Model):
+class AIParagraphSubjectByLDA(models.Model):
     id = models.AutoField(primary_key=True)
     paragraph = models.ForeignKey(DocumentParagraphs, null=True, on_delete=models.CASCADE)
     country = models.ForeignKey(Country, null=True, on_delete=models.CASCADE)
@@ -410,6 +409,7 @@ class DocumentCommentVote(models.Model):
 
     def __str__(self):
         return f'ID: {self.id}'
+
 
 class DocumentNote(models.Model):
     id = models.AutoField(primary_key=True)
@@ -593,7 +593,7 @@ class TopicDiscriminantWords(models.Model):
         return f'ID: {self.id}, Country_ID: {self.country}'
 
 
-class CUBE_Clustering_TableData(models.Model):
+class CubeClusteringTableData(models.Model):
     id = models.AutoField(primary_key=True)
     country = models.ForeignKey(Country, null=True, on_delete=models.CASCADE)
     algorithm = models.ForeignKey(ClusteringAlgorithm, null=True, on_delete=models.CASCADE)
@@ -610,7 +610,6 @@ class CUBE_Clustering_TableData(models.Model):
 
 class ClusteringResults(models.Model):
     id = models.AutoField(primary_key=True)
-
     country = models.ForeignKey(Country, null=True, on_delete=models.CASCADE)
     algorithm = models.ForeignKey(ClusteringAlgorithm, null=True, on_delete=models.CASCADE)
     heatmap_chart_data = models.JSONField(null=True)
@@ -661,7 +660,6 @@ class ParagraphsTopic(models.Model):
 
 class FeatureSelectionResults(models.Model):
     id = models.AutoField(primary_key=True)
-
     country = models.ForeignKey(Country, null=True, on_delete=models.CASCADE)
     c_algorithm = models.ForeignKey(ClusteringAlgorithm, null=True, on_delete=models.CASCADE)
     f_algorithm = models.ForeignKey(FeatureSelectionAlgorithm, null=True, on_delete=models.CASCADE)
@@ -687,7 +685,7 @@ class KnowledgeGraphData(models.Model):
     edges = models.JSONField(null=True)
 
 
-class FullProfileAnalysis(models.Model):
+class CubeFullProfileAnalysis(models.Model):
     id = models.AutoField(primary_key=True)
     country = models.ForeignKey(Country, on_delete=models.CASCADE, null=True)
     document_paragraph = models.ForeignKey(DocumentParagraphs, on_delete=models.CASCADE, null=True)

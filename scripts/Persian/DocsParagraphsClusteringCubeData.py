@@ -8,7 +8,7 @@ from django.db.models import Count
 from doc.models import Document,DocumentParagraphs,\
     ClusterTopic,ParagraphsTopic,ClusteringAlgorithm,ClusteringResults, \
     FeatureSelectionAlgorithm, FeatureSelectionResults,\
-    TopicDiscriminantWords,ParagraphsSubject,CUBE_Clustering_TableData
+    TopicDiscriminantWords,ParagraphsSubject,CubeClusteringTableData
 
 from hazm import sent_tokenize, Normalizer
 from gensim.corpora.dictionary import Dictionary
@@ -456,7 +456,7 @@ def apply(folder_name, Country):
     start_t = time.time()
     print('Create Cube Started ..')
 
-    CUBE_Clustering_TableData.objects.filter(country__id = Country.id).delete()
+    CubeClusteringTableData.objects.filter(country__id = Country.id).delete()
 
 
     create_list = []
@@ -590,7 +590,7 @@ def apply(folder_name, Country):
             "data":dict_table_data
         }
 
-        cube_row_obj =  CUBE_Clustering_TableData(
+        cube_row_obj =  CubeClusteringTableData(
             country = Country,
             algorithm_id = selected_algorithm_id,
             table_data = table_data_json,
@@ -601,7 +601,7 @@ def apply(folder_name, Country):
         create_list.append(cube_row_obj)
 
 
-    CUBE_Clustering_TableData.objects.bulk_create(create_list)
+    CubeClusteringTableData.objects.bulk_create(create_list)
 
     end_t = time.time()
     print('Clusters-Cube created(' + str(end_t - start_t) + ').')

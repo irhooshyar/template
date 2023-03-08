@@ -5,7 +5,7 @@ import base64
 from django.db.models import F
 from es_scripts.ES_Index import ES_Index
 from scripts.Persian.Preprocessing import standardIndexName
-from doc.models import FullProfileAnalysis, Document
+from doc.models import CubeFullProfileAnalysis, Document
 
 
 # ---------------------------------------------------------------------------------
@@ -94,7 +94,7 @@ def apply(folder, Country):
     settings = {}
     mappings = {}
     paragraph_document_fields = {}
-    model_name = FullProfileAnalysis.__name__
+    model_name = CubeFullProfileAnalysis.__name__
 
     index_name = standardIndexName(Country, model_name)
 
@@ -104,7 +104,7 @@ def apply(folder, Country):
         settings = es_config.Paragraphs_Settings_2
         mappings = es_config.FullProfileAnalysis_Mappings
 
-    records = FullProfileAnalysis.objects.filter(
+    records = CubeFullProfileAnalysis.objects.filter(
         country__id=Country.id).annotate(
         document_id=F('document_paragraph__document_id__id'),
         document_name=F('document_paragraph__document_id__name'),

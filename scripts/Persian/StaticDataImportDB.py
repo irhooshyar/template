@@ -4,7 +4,7 @@ import pandas as pd
 from django.db.models import Max, Min, F, IntegerField, QuerySet, Sum, Count, Q
 from openpyxl import load_workbook
 from abdal import config
-from doc.models import ActorArea, CUBE_DocumentJsonList, DocumentActor, Subject
+from doc.models import ActorArea, CubeDocumentJsonList, DocumentActor, Subject
 from doc.models import UserRole
 from doc.models import Document, DocumentParagraphs
 from doc.models import Actor, ActorCategory, ActorType, Category
