@@ -3568,7 +3568,7 @@ def SearchDocument_ES(request, country_id, category_id, subject_id, from_year, t
 
         "year-agg": {
             "terms": {
-                "field": "document_year",
+                "field": "document_jalili_date.year",
                 "size": bucket_size
             }
         },
@@ -3589,7 +3589,7 @@ def SearchDocument_ES(request, country_id, category_id, subject_id, from_year, t
 
         "hour-agg": {
             "terms": {
-                "field": "document_hour",
+                "field": "document_jalili_date.hour",
                 "size": bucket_size
             }
         },

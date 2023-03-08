@@ -86,7 +86,6 @@ class DocumentIndex(ES_Index):
                     "document_date": doc_date,
                     "document_year": doc_year,
                     "document_time": doc_time,
-                    "document_hour":doc_hour,
 
                     "document_jalili_date":document_jalili_date,
                     "raw_file_name": doc_file_name,
