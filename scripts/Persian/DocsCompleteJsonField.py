@@ -1,4 +1,4 @@
-from doc.models import  Document, CUBE_DocumentJsonList, DocumentActor
+from doc.models import  Document, CubeDocumentJsonList, DocumentActor
 from django.db.models import  F
 
 def GetActorsByDocumentIdActorType(document_id, actor_type_name):

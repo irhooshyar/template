@@ -1,5 +1,5 @@
 import operator
-from doc.models import  Document, CUBE_DocumentJsonList
+from doc.models import  Document, CubeDocumentJsonList
 import time
 import threading
 from abdal import config
@@ -21,7 +21,7 @@ def apply(folder_name, Country):
 
     t = time.time()
 
-    CUBE_DocumentJsonList.objects.filter(country_id=Country).delete()
+    CubeDocumentJsonList.objects.filter(country_id=Country).delete()
 
     filesList = Document.objects.filter(country_id=Country).order_by('-date')
 
@@ -46,7 +46,7 @@ def apply(folder_name, Country):
         start_idx = i * batch_size
         end_idx = min(start_idx + batch_size, Result_Create_List.__len__())
         sub_list = Result_Create_List[start_idx:end_idx]
-        CUBE_DocumentJsonList.objects.bulk_create(sub_list)
+        CubeDocumentJsonList.objects.bulk_create(sub_list)
 
     print("time ", time.time() - t)
 
@@ -79,7 +79,7 @@ def ExtractList_CUBE(filesList,  Result_Create_List, thread_number, Country):
 
         json_value = {"id": "", "subject": subject, "document_name": name, "category": category, "date": date, "tag": tag}
 
-        country_doc_json_obj = CUBE_DocumentJsonList(country_id=Country, document_id=doc, json_text=json_value)
+        country_doc_json_obj = CubeDocumentJsonList(country_id=Country, document_id=doc, json_text=json_value)
         Create_List.append(country_doc_json_obj)
 
         i += 1

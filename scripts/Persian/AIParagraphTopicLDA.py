@@ -1,6 +1,6 @@
 import re
 from doc.models import Document, DocumentParagraphs, ParagraphsSubject,UserLDATopicLabel
-from doc.models import AIParagraphLDATopic, AILDAParagraphToTopic, AI_Paragraph_Subject_By_LDA, ParagraphLDAScore, AILDAResults
+from doc.models import AIParagraphLDATopic, AILDAParagraphToTopic, AIParagraphSubjectByLDA, ParagraphLDAScore, AILDAResults
 from hazm import *
 from gensim.corpora.dictionary import Dictionary
 from django.db.models import Max, Min, F, IntegerField, Q
@@ -154,7 +154,7 @@ def apply(folder_name, Country):
     # Empty the database
     AIParagraphLDATopic.objects.filter(country=Country).delete()
     AILDAParagraphToTopic.objects.filter(country=Country).delete()
-    AI_Paragraph_Subject_By_LDA.objects.filter(country=Country).delete()
+    AIParagraphSubjectByLDA.objects.filter(country=Country).delete()
     ParagraphLDAScore.objects.filter(country=Country).delete()
     AILDAResults.objects.filter(country=Country).delete()
     UserLDATopicLabel.objects.filter(topic__country__id = Country.id)
@@ -339,8 +339,8 @@ def apply(folder_name, Country):
 
                 ac = (topic_score * 2) - subject_entropy
                 if p['subject_name'] != pre_subject:
-                    obj = AI_Paragraph_Subject_By_LDA(paragraph_id=p["id"], country=Country, subject=p['subject_name'],
-                                            subject_predict=pre_subject, topic_id=topic_id, Accuracy=ac, number_of_topic=number_of_topic)
+                    obj = AIParagraphSubjectByLDA(paragraph_id=p["id"], country=Country, subject=p['subject_name'],
+                                                  subject_predict=pre_subject, topic_id=topic_id, Accuracy=ac, number_of_topic=number_of_topic)
                     create_list.append(obj)
 
             except Exception as e:
@@ -348,8 +348,8 @@ def apply(folder_name, Country):
                 pass
 
             if batch_size < len(create_list):
-                AI_Paragraph_Subject_By_LDA.objects.bulk_create(create_list)
+                AIParagraphSubjectByLDA.objects.bulk_create(create_list)
                 create_list = []
 
-        AI_Paragraph_Subject_By_LDA.objects.bulk_create(create_list)
+        AIParagraphSubjectByLDA.objects.bulk_create(create_list)
     
