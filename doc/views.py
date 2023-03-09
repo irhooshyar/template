@@ -2905,7 +2905,7 @@ def change_user_status(request, username, status):
         template = f"""
         تایید شما توسط ادمین انجام شد. هم‌اکنون، می‌توانید وارد سامانه شوید.
         """
-        template += f'http://rahnamud.ir:7074/login/'
+        template += f'http://virtualjuristic.datakaveh.com:7090/login/'
         send_mail(subject='تایید عملیات ثبت‌نام', message=template, from_email=settings.EMAIL_HOST_USER,
                    recipient_list=[user.email])
 
