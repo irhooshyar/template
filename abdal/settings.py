@@ -108,7 +108,7 @@ DATABASES = {
         'PASSWORD': '123456789',
         'HOST': 'localhost' if os.environ.get('DB_URL') is None else
         os.environ.get('DB_URL'),  # Or an IP Address that your DB is hosted on
-        'PORT': '3333' if os.environ.get('DB_PORT') is None else os.environ.get('DB_PORT'),
+        'PORT': '3306' if os.environ.get('DB_PORT') is None else os.environ.get('DB_PORT'),
         'TEST': {
             "DEPENDENCIES": []
         }
