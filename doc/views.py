@@ -104,7 +104,7 @@ def update_doc(request, id, language, ):
     file.save()
 
 
-    StratAutomating.apply.after_response(folder_name, file, "DocsCreateDocumentsListCubeData", host_url)
+    # StratAutomating.apply.after_response(folder_name, file, "DocsCreateDocumentsListCubeData", host_url)
 
     # from scripts.Persian import DocsParagraphVectorExtractor
     # DocsParagraphVectorExtractor.apply(folder_name, file)
@@ -123,8 +123,8 @@ def update_doc(request, id, language, ):
     # from scripts.Persian import DocProvisionsFullProfileAnalysis
     # DocProvisionsFullProfileAnalysis.apply.after_response(folder_name, file)
 
-    # from es_scripts import IngestParagraphsVectorsToElastic
-    # IngestParagraphsVectorsToElastic.apply.after_response(folder_name, file, 0)
+    from es_scripts import IngestParagraphsVectorsToElastic
+    IngestParagraphsVectorsToElastic.apply.after_response(folder_name, file, 0)
 
     return redirect('zip')
 
@@ -7040,7 +7040,7 @@ def GetSemanticSimilarParagraphs_ByParagraphID(request, paragraph_id):
     # get paragraph vector
     vector_query = {
         'term': {
-            'paragraph_id': paragraph_id
+            '_id': paragraph_id
         }
     }
     country_obj = DocumentParagraphs.objects.get(id=paragraph_id).document_id.country_id
@@ -7060,7 +7060,7 @@ def GetSemanticSimilarParagraphs_ByParagraphID(request, paragraph_id):
                 "bool": {
                     "must_not": {
                         "term": {
-                            "paragraph_id": paragraph_id
+                            "_id": paragraph_id
                         }
                     }
                 }
@@ -7076,13 +7076,32 @@ def GetSemanticSimilarParagraphs_ByParagraphID(request, paragraph_id):
 
     # search and get result
     response = client.search(index=index_name,
-                             _source_includes=['document_id', 'document_name', 'attachment.content'],
+                             _source_excludes=['document_id', 'document_name',
+                                            'attachment.content','wikitriplet_vector'],
                              request_timeout=40,
                              size=10,
                              query=knn_qeury
                              )
 
+    similar_paragraphs_list = response['hits']['hits']
+
+    # query on DocumentParagraphs index by result ids
+    new_query = {
+            "ids" : {
+            "values" : [para['_id'] for para in similar_paragraphs_list]
+        }
+    }
+    new_index_name = standardIndexName(country_obj, DocumentParagraphs.__name__)
+
+    response = client.search(index=new_index_name,
+                             _source_includes=['document_id', 'document_name', 'attachment.content'],
+                             request_timeout=40,
+                             size=10,
+                             query=new_query
+                             )
+
     similar_paragraphs = response['hits']['hits']
+
 
     return JsonResponse({'similar_paragraphs': similar_paragraphs})
 

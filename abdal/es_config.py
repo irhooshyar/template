@@ -236,6 +236,17 @@ Paragraphs_Mappings = {
 }
 
 
+
+Paragraphs_Vector_Mappings = {
+    "properties": {
+        "wikitriplet_vector": {
+        "type": "dense_vector",
+        "dims": 768
+        },
+    }
+}
+
+
 Paragraphs_Settings_2 = {
     "analysis": {
         "filter": {
