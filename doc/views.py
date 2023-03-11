@@ -7082,6 +7082,10 @@ def GetSemanticSimilarParagraphs_ByParagraphID(request, paragraph_id):
                              )
 
     similar_paragraphs_list = response['hits']['hits']
+    paragraphs_similarity_score_dict = {}
+
+    for para in similar_paragraphs_list:
+        paragraphs_similarity_score_dict[para['_id']] = para['_score']
 
     # query on DocumentParagraphs index by result ids
     new_query = {
@@ -7099,6 +7103,12 @@ def GetSemanticSimilarParagraphs_ByParagraphID(request, paragraph_id):
                              )
 
     similar_paragraphs = response['hits']['hits']
+
+    # update score with similarity score
+    for para in similar_paragraphs:
+        para['_score'] = paragraphs_similarity_score_dict[para['_id']]
+
+
 
 
     return JsonResponse({'similar_paragraphs': similar_paragraphs})
