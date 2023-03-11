@@ -130,7 +130,7 @@ def get_paragraphs_list(Country):
 
     print("paragraph_dict created...")
 
-    vectorFile = str(Path(config.PERSIAN_PATH, "weights", "tabnak_vector_result.json"))
+    vectorFile = str(Path(config.PERSIAN_PATH, "weights", "khabar_online_vector_result.json"))
     file = open(vectorFile).read()
     file_data = json.loads(file)
 
