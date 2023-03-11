@@ -7108,7 +7108,9 @@ def GetSemanticSimilarParagraphs_ByParagraphID(request, paragraph_id):
     for para in similar_paragraphs:
         para['_score'] = paragraphs_similarity_score_dict[para['_id']]
 
-
+    similar_paragraphs = sorted(similar_paragraphs,
+                                 key=lambda para: para['_score'],
+                                 reverse=True) 
 
 
     return JsonResponse({'similar_paragraphs': similar_paragraphs})
