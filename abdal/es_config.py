@@ -1568,7 +1568,7 @@ FA_Mappings = {
                 }
             }
         },
-
+    
 
         "data": {
             "type": "text"
@@ -1595,6 +1595,7 @@ FA_Mappings = {
                         }
                     }
                 },
+                
                 "content_length": {
                     "type": "long"
                 },
