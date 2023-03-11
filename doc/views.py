@@ -2664,28 +2664,26 @@ def SetMyUserProfile(request):
     data = json.loads(request.body)
     firstname = data["firstname"]
     lastname = data["lastname"]
-    email = data["email"]
     phonenumber = data["phonenumber"]
     role = data["role"]
+    expertise_ids = data["expertise"]
 
     username = request.COOKIES.get('username')
     user = User.objects.get(username=username)
-    user_email = User.objects.filter(email=email).exclude(username=username)
     role = UserRole.objects.get(id=role)
 
-    if user_email.count() > 0:
-        return JsonResponse({"status": "duplicated email"})
+    UserExpertise.objects.filter(user_id__id=user.id).delete()
+    for e in expertise_ids:
+        UserExpertise.objects.create(experise_id_id=e, user_id_id=user.id)
+    if "avatar" in data:
+        avatar = data["avatar"]
     else:
-        if "avatar" in data:
-            avatar = data["avatar"]
-        else:
-            avatar = user.avatar
-        User.objects.filter(username=username).update(
-            first_name=firstname,
-            last_name=lastname,
-            email=email,
-            mobile=phonenumber,
-            role=role, avatar=avatar)
+        avatar = user.avatar
+    User.objects.filter(username=username).update(
+        first_name=firstname,
+        last_name=lastname,
+        mobile=phonenumber,
+        role=role, avatar=avatar)
 
     return JsonResponse({"status": "OK"})
 
