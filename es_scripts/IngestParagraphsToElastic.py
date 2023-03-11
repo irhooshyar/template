@@ -151,5 +151,5 @@ def apply(folder, Country,is_for_ref):
         print(f"{index_name} deleted!")
 
     new_index.create()
-    new_index.bulk_insert_documents(folder, paragraphs,do_parallel=True)
+    new_index.bulk_insert_documents(folder, paragraphs)
 

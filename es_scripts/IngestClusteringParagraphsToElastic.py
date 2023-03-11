@@ -38,8 +38,8 @@ def stemming(word):
 # ---------------------------------------------------------------------------------
 
 class ClusteringParagraphIndex(ES_Index):
-    def __init__(self, name, settings,mappings):
-        super().__init__(name, settings,mappings)
+    def __init__(self, name, settings,mappings,attach_doc_file):
+        super().__init__(name, settings,mappings,attach_doc_file)
     
 
     def LocalPreprocessing(self,text):
@@ -139,10 +139,6 @@ class ClusteringParagraphIndex(ES_Index):
             topic_name = row['topic_name']
             score = row['score']
 
-            text_bytes = bytes(paragraph_text,encoding="utf8")
-            base64_bytes = base64.b64encode(text_bytes)
-            base64_text = (str(base64_bytes)[2:-1])
-            base64_file = base64_text
 
             new_para = {
                 "paragraph_id": paragraph_id,
@@ -155,14 +151,15 @@ class ClusteringParagraphIndex(ES_Index):
                 "topic_id": topic_id,
                 "topic_name": topic_name,
                 "score":score,
-                "data": base64_file
+                "attachment":{"content":paragraph_text,"content_length":len(paragraph_text)}
+
+
             }
 
 
             new_paragraph = {
                 "_index": self.name,
                 "_id": row_id,
-                "pipeline":"attachment",
                 "_source":new_para,
             }
             yield new_paragraph
@@ -204,7 +201,7 @@ def apply(folder, Country):
         ES_Index.CLIENT.indices.delete(index=index_name, ignore=[400, 404])
         print(f"{index_name} deleted!")
 
-    new_index = ClusteringParagraphIndex(index_name, settings, mappings)
+    new_index = ClusteringParagraphIndex(index_name, settings, mappings,attach_doc_file=False)
     new_index.create()
-    new_index.bulk_insert_documents(folder, paragraphs,do_parallel=True)
+    new_index.bulk_insert_documents(folder, paragraphs)
 
