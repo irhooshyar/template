@@ -40,6 +40,7 @@ class User(models.Model):
     account_activation_token = models.CharField(null=True, max_length=100)
     account_acctivation_expire_time = models.DateTimeField(default=datetime.utcnow, blank=True)
     email_confirm_code = models.CharField(null=True, max_length=100)
+    reset_password_confirm_code = models.CharField(null=True, max_length=100)
     reset_password_token = models.CharField(null=True, max_length=100)
     reset_password_expire_time = models.DateTimeField(default=datetime.utcnow, blank=True)
     class Meta:

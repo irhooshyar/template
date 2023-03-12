@@ -1317,56 +1317,77 @@ def forgot_password(request):
 
 def forgot_password_by_email(request, email):
     users = User.objects.filter(email=email)
+    user = users[0]
     if len(users) == 0:
+        return JsonResponse({"status": "no user"})
+    elif user.enable == 1 and user.is_active == 0:
+        return JsonResponse({"status": "waiting"})
+    elif user.enable == 1 and user.is_active == -1:
+        return JsonResponse({"status": "refuse"})
+    elif user.enable == 1 and user.is_active == 1:
+        reset_code = CreateEmailCode()
+        user.reset_password_confirm_code = reset_code
+        user.reset_password_expire_time = datetime.datetime.now() + datetime.timedelta(minutes=2)
+        user.save()
+
+        reset_pass_send_email(user, reset_code)
+
         return JsonResponse({"status": "OK"})
 
-    user = users[0]
-    token = get_random_string(length=50)
-    user.reset_password_token = token
-    user.reset_password_expire_time = datetime.datetime.now() + datetime.timedelta(minutes=30)
-    user.save()
+def reset_pass_send_email(user, reset_code):
+    template = f"""
+    لطفا برای بازیابی کلمه عبور، کد تایید  را در کادر "کد تایید" موجود در صفحه، وارد نمایید.
+    کد تایید ایمیل: {reset_code}
 
-    template = """
-    لطفا برای بازیابی کلمه عبور بر روی لینک زیر کلیک کنید.
+    مهلت استفاده‌ی شما از این کد، 15 دقیقه است. بعد از این مهلت زمانی، کد شما منقضی شده و باید بر روی دکمه‌ی ارسال مجدد کد تایید برای دریافت کد جدید، کلیک فرمایید. کد تایید جدید به شما ایمیل خواهد شد.
 
-    در صورتی که قصد بازیابی ندارید این پیام را نادیده بگیرید.
+    -----------------------------------------------------------------------------------------------------------------------------
+    در صورتی که بعد از زدن دکمه‌ی ثبت درخواست فراموشی پنجره‌ را بسته‌اید، یا امکان ورود به صفحه‌ی وارد کردن کد تایید را نداشتید، مجددا وارد صفحه‌ی فراموشی رمز عبور شده و ایمیل خود را وارد نمایید.
+
     """
-    template += f'http://virtualjuristic.datakaveh.com:7090/reset-password/{user.id}/{token}'
-    send_mail(
-        subject='بازیابی کلمه عبور',
-        message=template,
-        from_email=settings.EMAIL_HOST_USER,
-        recipient_list=[user.email])
-
+        
+    send_mail(subject='بازیابی کلمه عبور',message=template,from_email=settings.EMAIL_HOST_USER,recipient_list=[user.email])
+     
+def reset_password_check(request, email):
+    user = User.objects.get(email=email)
+    
+    print(user.reset_password_confirm_code)
+    if user.reset_password_expire_time < timezone.now():
+        reset_code = CreateEmailCode()
+        user.reset_password_confirm_code = reset_code
+        user.reset_password_expire_time = datetime.datetime.now() + datetime.timedelta(minutes=2)
+        user.save()
+        reset_pass_send_email(user, reset_code)
+        print("this")
+    elif user.reset_password_expire_time > timezone.now():
+        reset_code = user.reset_password_confirm_code
+        reset_pass_send_email(user, reset_code)
+        print("that")
     return JsonResponse({"status": "OK"})
 
 
-def reset_password_check(request, user_id, token):
-    url_is_valid = False
-    try:
-        user = User.objects.get(pk=user_id)
-        if (not (
-                user.reset_password_token is None)) and user.reset_password_token == token and user.reset_password_expire_time >= timezone.now():
-            url_is_valid = True
-    except:
-        user_id = ""
 
-    return render(request, 'doc/user_templates/reset_password.html',
-                  {"url_is_valid": url_is_valid, "user_id": user_id, "token": token})
-
-
-def reset_password(request, user_id, token, password):
-    user = User.objects.get(pk=user_id)
-
-    if (not (
-            user.reset_password_token is None)) and user.reset_password_token == token and user.reset_password_expire_time >= timezone.now():
+def reset_password(request, email, code, password):
+    user = User.objects.get(email=email)
+    if (user.reset_password_confirm_code == code and user.reset_password_expire_time > timezone.now()):
         user.password = make_password(password)
-        user.reset_password_token = None
+        
         user.save()
+        
+        template = f"""
+        عملیات بازیابی کلمه‌عبور با موفقیت انجام شد.
+        """
+        send_mail(subject='عملیات ثبت‌نام', message=template, from_email=settings.EMAIL_HOST_USER,
+                  recipient_list=[user.email])
         return JsonResponse({"status": "OK"})
+    elif (user.reset_password_confirm_code == code and user.reset_password_expire_time < timezone.now()):
+        
+        user.save()
+        return JsonResponse({"status": "deactive code"})
 
-    return JsonResponse({"status": "Not OK"})
-
+    else:
+        user.save()
+        return JsonResponse({"status": "Not OK"})
 
 def ChangePassword(request, old_password, new_password):
     username = request.COOKIES.get('username')
@@ -2538,88 +2559,47 @@ def CreateEmailCode():
 
 def confirm_email(user):
     email_code = CreateEmailCode()
-
-    token = get_random_string(length=50)
-    user.account_activation_token = token
-    user.account_acctivation_expire_time = datetime.datetime.now() + datetime.timedelta(days=2)
+    user.account_acctivation_expire_time = datetime.datetime.now() + datetime.timedelta(minutes=2)
     user.email_confirm_code = email_code
     user.save()
 
-    send_email(user, email_code, token)
+    send_email(user, email_code)
 
-def send_email(user, email_code, token):
+def send_email(user, email_code):
     template = f"""
     لطفا برای تایید ثبت نام خود، کد تایید ایمیل را در کادر "کد تایید" موجود در صفحه ثبت‌نام، وارد نمایید.
     کد تایید ایمیل: {email_code}
-    
+
+    مهلت استفاده‌ی شما از این کد، 15 دقیقه است. بعد از این مهلت زمانی، کد شما منقضی شده و باید بر روی دکمه‌ی ارسال مجدد کد تایید برای دریافت کد جدید، کلیک فرمایید. کد تایید جدید به شما ایمیل خواهد شد.
+
     -----------------------------------------------------------------------------------------------------------------------------
-    در صورتی که بعد از زدن دکمه‌ی ثبت‌نام، پنجره‌ی ثبت‌نام را بسته‌اید، از لینک زیر برای وارد کردن کد تایید استفاده نمایید.
-    دقت فرمایید که مهلت استفاده از این کد برای وارد کردن در لینک زیر، "دو روز" است و در صورت منقضی شدن لینک، باید مجددا وارد بخش ثبت‌نام سامانه شوید و برای دریافت کد جدید، روی لینک ارسال مجدد کد تایید، کلیک فرمایید. 
+    در صورتی که بعد از زدن دکمه‌ی ثبت‌نام، پنجره‌ی ثبت‌نام را بسته‌اید، یا امکان ورود به صفحه‌ی وارد کردن کد تایید را نداشتید، مجددا وارد صفحه‌ی ثبت‌نام شده و فرم را پر کنید.
 
     """
 
-    template += f'http://virtualjuristic.datakaveh.com:7090/Confirm-Email/{user.id}/{token}'
     send_mail(subject='کد تایید ایمیل', message=template, from_email=settings.EMAIL_HOST_USER,
               recipient_list=[user.email])
 
 
-def resend_email(request):
-    return render(request, 'doc/user_templates/resend_email.html')
-
-
 def resend_email_code(request, email):
-    users = User.objects.filter(email=email)
-    user = users[0]
+    user = User.objects.get(email=email)
     if user.account_acctivation_expire_time < timezone.now() and user.enable == 0:
+        print("ok")
         confirm_email(user)
     elif user.account_acctivation_expire_time > timezone.now() and user.enable == 0:
-        send_email(user, user.email_confirm_code, user.account_activation_token)
+        print("ok")
+        send_email(user, user.email_confirm_code)
     return JsonResponse({"status": "OK"})
 
-def email_check(request, user_id, token):
-    url_is_valid = False
-    try:
-        user = User.objects.get(pk=user_id)
-        if (not (
-                user.account_activation_token is None)) and user.account_activation_token == token and user.account_acctivation_expire_time >= timezone.now():
-            url_is_valid = True
-    except:
-        user_id = ""
-
-    return render(request, 'doc/user_templates/confirm_email.html',
-                  {"url_is_valid": url_is_valid, "user_id": user_id, "token": token})
-
-
-def user_activation(request, user_id, token, code):
-    user = User.objects.get(pk=user_id)
-
-    if (not (
-            user.account_activation_token is None)) and user.account_activation_token == token and user.account_acctivation_expire_time >= timezone.now():
-        if (user.email_confirm_code == code):
-            user.account_activation_token = None
-            user.enable = 1
-            user.save()
-
-
-            template = f"""
-            ثبت‌نام شما با موفقیت انجام شد. تایید شما توسط ادمین، بررسی خواهد شد. نتیجه‌ی بررسی ادمین، در ایمیل، برای شما ارسال می‌شود.
-            """
-            send_mail(subject='عملیات ثبت‌نام', message=template, from_email=settings.EMAIL_HOST_USER,
-                      recipient_list=[user.email])
-            return JsonResponse({"status": "OK"})
-
-        else:
-            user.save()
-            return JsonResponse({"status": "Not OK"})
-
-    return JsonResponse({"status": "Not OK"})
 
 def signup_user_activation(request, email, code):
     user = User.objects.get(email=email)
-    if (user.email_confirm_code == code):
-        user.account_activation_token = None
+    if (user.email_confirm_code == code and user.account_acctivation_expire_time > timezone.now()):
         user.enable = 1
         user.save()
+
+        print(user.email_confirm_code)
+        print(user.account_acctivation_expire_time)
 
         template = f"""
         ثبت‌نام شما با موفقیت انجام شد. تایید شما توسط ادمین، بررسی خواهد شد. نتیجه‌ی بررسی ادمین، در ایمیل، برای شما ارسال می‌شود.
@@ -2627,32 +2607,90 @@ def signup_user_activation(request, email, code):
         send_mail(subject='عملیات ثبت‌نام', message=template, from_email=settings.EMAIL_HOST_USER,
                   recipient_list=[user.email])
         return JsonResponse({"status": "OK"})
+    elif (user.email_confirm_code == code and user.account_acctivation_expire_time < timezone.now()):
+        print(user.email_confirm_code)
+        print(user.account_acctivation_expire_time)
+        user.save()
+        return JsonResponse({"status": "deactive code"})
 
     else:
+        print(user.email_confirm_code)
+        print(user.account_acctivation_expire_time)
         user.save()
         return JsonResponse({"status": "Not OK"})
 
 
 def SaveUser(request, firstname, lastname,email, phonenumber, role, username, password, ip, expertise):
 
-    user_username = User.objects.filter(username=username)
-    user_email = User.objects.filter(email=email)
-    if user_username.count() > 0:
-        return JsonResponse({"status": "duplicated username"})
-    elif user_email.count() > 0:
-        return JsonResponse({"status": "duplicated email"})
-    else:
-        hashed_pwd = make_password(password)
-        last_login = datetime.datetime.now()
-        user = User.objects.create(first_name=firstname, last_name=lastname, email=email,
-                                role_id=role,
-                                mobile=phonenumber, username=username, password=hashed_pwd, last_login=last_login,
-                                is_super_user=0, is_active=0)
+    user_username_active_0 = User.objects.filter(username=username, enable=1, is_active=0)
+    user_email_active_0 = User.objects.filter(email=email, enable=1, is_active=0)
 
-        for e in expertise.split(','):
-            UserExpertise.objects.create(user_id_id=user.id, experise_id_id=e)
-        SaveUserLog(user.id, ip, "signup")
-        confirm_email(user)
+    user_username_accept = User.objects.filter(username=username, enable=1, is_active=1)
+    user_email_accept = User.objects.filter(email=email, enable=1, is_active=1)
+
+    user_username_refuse = User.objects.filter(username=username, enable=1, is_active=-1)
+    user_email_refuse = User.objects.filter(email=email, enable=1, is_active=-1)
+
+    user_username_enable_0 = User.objects.filter(username=username, enable=0)
+    user_email_enable_0 = User.objects.filter(email=email, enable=0)
+
+    if user_username_active_0.count() > 0 :
+        return JsonResponse({"status": "enabled username"})
+    elif user_email_active_0.count() > 0:
+        return JsonResponse({"status": "enabled email"})
+    if user_username_accept.count() > 0 :
+        return JsonResponse({"status": "accepted username"})
+    elif user_email_accept.count() > 0:
+        return JsonResponse({"status": "accepted email"})
+    if user_username_refuse.count() > 0 :
+        return JsonResponse({"status": "refused username"})
+    elif user_email_refuse.count() > 0:
+        return JsonResponse({"status": "refused email"})
+    else:
+        if user_username_enable_0.count() > 0:
+            user_username_enable_0 = User.objects.get(username=username, enable=0)
+            hashed_pwd = make_password(password)
+            last_login = datetime.datetime.now()
+            user_username_enable_0.first_name = firstname
+            user_username_enable_0.last_name = lastname
+            user_username_enable_0.email = email
+            user_username_enable_0.role_id = role
+            user_username_enable_0.mobile = phonenumber
+            user_username_enable_0.username = username
+            user_username_enable_0.password = hashed_pwd
+            user_username_enable_0.last_login = last_login
+            user_userexpertise = UserExpertise.objects.get(user_id_id=user_username_enable_0.id)
+            for e in expertise.split(','):
+                user_userexpertise.experise_id_id = e
+            send_email(user_username_enable_0, user_username_enable_0.email_confirm_code)
+        elif user_email_enable_0.count() > 0:
+            user_email_enable_0 = User.objects.get(email=email, enable=0)
+            hashed_pwd = make_password(password)
+            last_login = datetime.datetime.now()
+            user_email_enable_0.first_name = firstname
+            user_email_enable_0.last_name = lastname
+            user_email_enable_0.email = email
+            user_email_enable_0.role_id = role
+            user_email_enable_0.mobile = phonenumber
+            user_email_enable_0.username = username
+            user_email_enable_0.password = hashed_pwd
+            user_email_enable_0.last_login = last_login
+            user_userexpertise = UserExpertise.objects.get(user_id_id=user_email_enable_0.id)
+            for e in expertise.split(','):
+                user_userexpertise.experise_id_id = e
+            send_email(user_email_enable_0, user_email_enable_0.email_confirm_code)  
+        else:      
+            hashed_pwd = make_password(password)
+            last_login = datetime.datetime.now()
+            user = User.objects.create(first_name=firstname, last_name=lastname, email=email,
+                                    role_id=role,
+                                    mobile=phonenumber, username=username, password=hashed_pwd, last_login=last_login,
+                                    is_super_user=0, is_active=0)
+
+            for e in expertise.split(','):
+                UserExpertise.objects.create(user_id_id=user.id, experise_id_id=e)
+            SaveUserLog(user.id, ip, "signup")
+            confirm_email(user)
         return JsonResponse({"status": "OK"})
 
 
@@ -2876,7 +2914,8 @@ def changeUserState(request, user_id, state):
         template = f"""
         ثبت‌نام شما با موفقیت انجام شده است. تایید شما توسط ادمین انجام شد. هم‌اکنون، می‌توانید وارد سامانه شوید.
         """
-        template += f'http://virtualjuristic.datakaveh.com:7090/login/'
+        #template += f'http://virtualjuristic.datakaveh.com:7090/login/'
+        template += f'http://127.0.0.1:8000/login/'
 
         send_mail(subject='تایید عملیات ثبت‌نام', message=template, from_email=settings.EMAIL_HOST_USER,recipient_list=[accepted_user.email])
 
@@ -2905,7 +2944,8 @@ def change_user_status(request, username, status):
         template = f"""
         تایید شما توسط ادمین انجام شد. هم‌اکنون، می‌توانید وارد سامانه شوید.
         """
-        template += f'http://virtualjuristic.datakaveh.com:7090/login/'
+        #template += f'http://virtualjuristic.datakaveh.com:7090/login/'
+        template += f'http://127.0.0.1:8000/login/'
         send_mail(subject='تایید عملیات ثبت‌نام', message=template, from_email=settings.EMAIL_HOST_USER,
                    recipient_list=[user.email])
 
