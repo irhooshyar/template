@@ -27,11 +27,12 @@ logger.addHandler(console_handler)
 
 
 def insert_log(message, file_name, line, level):
+    text = f'[{message}] (File: {file_name}, Line:{line})'
     if level in ("debug", "Debug", "DEBUG"):
-        logger.debug(f'{message} (File: {file_name}, Line:{line})')
+        logger.debug(text)
     if level in ("info", "Info", "INFO"):
-        logger.info(f'{message} (File: {file_name}, Line:{line})')
-    if level in ("warning", "Warning", "WARNING"):
-        logger.warning(f'{message} (File: {file_name}, Line:{line})')
+        logger.info(text)
+    if level in (text):
+        logger.warning(text)
     if level in ("error", "Error", "ERROR"):
-        logger.error(f'{message} (File: {file_name}, Line:{line})')
+        logger.error(text)
