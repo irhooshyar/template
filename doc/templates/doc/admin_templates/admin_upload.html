@@ -23,7 +23,9 @@
     <link rel="stylesheet" href="../../../static/library/font-awesome.min-4.7.0.css">
     <link rel="stylesheet" href="../../../static/styles/index2.css">
 
-    <!-- jQuery library -->
+
+    <!-- log js -->
+    <script src="../../../static/js/log_config/log_config.js"></script>
 
     <script src="../../../static/library/bootstrap-5.1.2.bundle.min.js"></script>
 
@@ -188,7 +190,7 @@
             checkboxes.forEach((checkbox) => {
                 values.push(checkbox.value);
             });
-            const tasks_list = values.join("_")
+            const tasks_list = values.join(",")
 
             let form_data = new FormData();
 

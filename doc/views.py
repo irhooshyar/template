@@ -1,8 +1,6 @@
 from jdatetime import datetime as jdatetime
 from django.shortcuts import redirect, get_object_or_404
-import os
 from random import randint
-from hazm import *
 from django.core.mail import send_mail
 from django.utils import timezone
 from django.conf import settings
@@ -14,27 +12,23 @@ from scripts import ZipFileExtractor, StratAutomating
 from abdal import es_config
 import shutil
 import after_response
-from django.db.models import Max, Min, F, IntegerField, Count, Q
-from django.db.models.functions import Substr, Cast, Length
+from django.db.models import Max, Min, F, Count, Q
+from django.db.models.functions import Length
 import datetime
 from django.shortcuts import render
 from django.contrib.auth.hashers import make_password, check_password
 from abdal import config
-from pathlib import Path
 import json
 import math
 from urllib.parse import urlparse
-from itertools import chain, groupby
-from collections import Counter
+from itertools import chain
 import numpy as np
 import pandas as pd
 from .decorators import allowed_users, unathenticated_user, is_login
 from .const import *
-import glob
 from elasticsearch import Elasticsearch
-from sklearn.metrics.pairwise import cosine_similarity
-import string
 from scripts.Persian.Preprocessing import standardIndexName
+from abdal.log_config import *
 
 # ---------- elastic configs -------------------
 es_url = es_config.ES_URL
@@ -52,8 +46,17 @@ from persiantools.jdatetime import JalaliDate
 
 SERVER_USER_NAME = config.SERVER_USER_NAME
 
-
 # preprocessing function
+
+
+def save_log(request):
+    message = request.POST.get('message')
+    file_name = request.POST.get('file_name')
+    line = request.POST.get('line')
+    level = request.POST.get('level')
+    insert_log(message, file_name, line, level)
+    return JsonResponse({"response": "Ok"})
+
 
 @after_response.enable
 def extractor(newdoc, newDoc, tasks_list):

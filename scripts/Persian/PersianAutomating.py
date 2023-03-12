@@ -18,7 +18,7 @@ from es_scripts import IngestDocumentsToElastic, IngestParagraphsToElastic, Inge
 def persian_apply(folder_name, Country, tasks_list, host_url):
     print("start at: ", datetime.now().strftime("%H:%M:%S"))
 
-    tasks_list = tasks_list.split("_")
+    tasks_list = tasks_list.split(",")
 
 
     print("0. ConvertPdfsToTxt")
