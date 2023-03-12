@@ -16,3 +16,7 @@ async function insert_log(message, file_name, line, level){
         async: true,
     })
 }
+
+window.onerror = function(error, url, line) {
+    insert_log(error, url, line, error)
+};
