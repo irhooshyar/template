@@ -99,10 +99,17 @@ class DocumentIndex(ES_Index):
 
                 if self.attach_doc_file:
                     new_doc["data"] = document_content
-                    new_document["pipeline"] = "attachment"
+
+                    new_document = {
+                        "_index": self.name,
+                        "_id": doc_id,
+                        "_source":new_doc,
+                        "pipeline":"attachment"
+                    }
+
                 else:
                     new_doc["attachment"] = {"content":document_content,"content_length":len(document_content)}
-                
+            
                     new_document = {
                         "_index": self.name,
                         "_id": doc_id,
@@ -169,15 +176,24 @@ class EN_DocumentIndex(ES_Index):
 
                 if self.attach_doc_file:
                     new_doc["data"] = document_content
-                    new_document["pipeline"] = "attachment"
+
+                    new_document = {
+                        "_index": self.name,
+                        "_id": doc_id,
+                        "_source":new_doc,
+                        "pipeline":"attachment"
+                    }
+
                 else:
                     new_doc["attachment"] = {"content":document_content,"content_length":len(document_content)}
-                
+            
                     new_document = {
                         "_index": self.name,
                         "_id": doc_id,
                         "_source":new_doc,
                     }
+                    
+                yield new_document
 
 
 
