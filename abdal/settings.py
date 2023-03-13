@@ -175,7 +175,7 @@ EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 465
 EMAIL_USE_SSL = True
 EMAIL_HOST_USER = 'no.reply.irhooshyar@gmail.com'
-EMAIL_HOST_PASSWORD = 'IRhooshyar@2023'
+EMAIL_HOST_PASSWORD = 'jlxzjrmhvjqtfnmy'
 if not (os.environ.get('EMAIL_HOST') is None):
     EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
     EMAIL_HOST = os.environ.get('EMAIL_HOST')
@@ -188,3 +188,5 @@ if not (os.environ.get('EMAIL_HOST') is None):
     
 RECAPTCHA_PUBLIC_KEY = "6Lee_a4kAAAAAFlOeKh1ob2Bh3eJVOrMNq-bM7vr"
 RECAPTCHA_PRIVATE_KEY = "6Lee_a4kAAAAAOCQqhjvvSbr07nIcJDj95zn6Rhx"
+
+
