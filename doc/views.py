@@ -1317,7 +1317,9 @@ def forgot_password(request):
 
 def forgot_password_by_email(request, email):
     users = User.objects.filter(email=email)
-    user = users[0]
+    if len(users) != 0:
+        user = users[0]
+
     if len(users) == 0:
         return JsonResponse({"status": "no user"})
     elif user.enable == 1 and user.is_active == 0:
@@ -1325,12 +1327,7 @@ def forgot_password_by_email(request, email):
     elif user.enable == 1 and user.is_active == -1:
         return JsonResponse({"status": "refuse"})
     elif user.enable == 1 and user.is_active == 1:
-        reset_code = CreateEmailCode()
-        user.reset_password_confirm_code = reset_code
-        user.reset_password_expire_time = datetime.datetime.now() + datetime.timedelta(minutes=2)
-        user.save()
-
-        reset_pass_send_email(user, reset_code)
+        reset_password_check(request, email)
 
         return JsonResponse({"status": "OK"})
 
@@ -1350,19 +1347,15 @@ def reset_pass_send_email(user, reset_code):
      
 def reset_password_check(request, email):
     user = User.objects.get(email=email)
-    
-    print(user.reset_password_confirm_code)
     if user.reset_password_expire_time < timezone.now():
         reset_code = CreateEmailCode()
         user.reset_password_confirm_code = reset_code
-        user.reset_password_expire_time = datetime.datetime.now() + datetime.timedelta(minutes=2)
+        user.reset_password_expire_time = datetime.datetime.now() + datetime.timedelta(minutes=15)
         user.save()
         reset_pass_send_email(user, reset_code)
-        print("this")
     elif user.reset_password_expire_time > timezone.now():
         reset_code = user.reset_password_confirm_code
         reset_pass_send_email(user, reset_code)
-        print("that")
     return JsonResponse({"status": "OK"})
 
 
@@ -2559,7 +2552,7 @@ def CreateEmailCode():
 
 def confirm_email(user):
     email_code = CreateEmailCode()
-    user.account_acctivation_expire_time = datetime.datetime.now() + datetime.timedelta(minutes=2)
+    user.account_acctivation_expire_time = datetime.datetime.now() + datetime.timedelta(minutes=15)
     user.email_confirm_code = email_code
     user.save()
 
@@ -2914,8 +2907,7 @@ def changeUserState(request, user_id, state):
         template = f"""
         ثبت‌نام شما با موفقیت انجام شده است. تایید شما توسط ادمین انجام شد. هم‌اکنون، می‌توانید وارد سامانه شوید.
         """
-        #template += f'http://virtualjuristic.datakaveh.com:7090/login/'
-        template += f'http://127.0.0.1:8000/login/'
+        template += f'http://virtualjuristic.datakaveh.com:7090/login/'
 
         send_mail(subject='تایید عملیات ثبت‌نام', message=template, from_email=settings.EMAIL_HOST_USER,recipient_list=[accepted_user.email])
 
@@ -2944,8 +2936,8 @@ def change_user_status(request, username, status):
         template = f"""
         تایید شما توسط ادمین انجام شد. هم‌اکنون، می‌توانید وارد سامانه شوید.
         """
-        #template += f'http://virtualjuristic.datakaveh.com:7090/login/'
-        template += f'http://127.0.0.1:8000/login/'
+        template += f'http://virtualjuristic.datakaveh.com:7090/login/'
+
         send_mail(subject='تایید عملیات ثبت‌نام', message=template, from_email=settings.EMAIL_HOST_USER,
                    recipient_list=[user.email])
 
