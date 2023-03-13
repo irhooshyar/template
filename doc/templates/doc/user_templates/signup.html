@@ -11,8 +11,19 @@
     <link rel="stylesheet" href="../../../static/library/bootstrap-icons-1.7.1.css">
     <link href="../../../static/styles/login_signup.css" rel="stylesheet">
 
+
+    <!--BS Icons -->
+    <link rel="stylesheet" href="../../static/library/bootstrap-icons-1.3.0.css">
+    <!-- Fontawesome Icons -->
+
+    <link rel="stylesheet" href="../../static/library/fontawesome-5.10.0.all.css"  />
+    <link rel="stylesheet" href="../../static/library/font-awesome.min-4.7.0.css">
+
+    <link rel="stylesheet" href="../../static/styles/index2.css">
+
     <!-- log js -->
     <script src="../../../static/js/log_config/log_config.js"></script>
+
 
      <!-- Multi Select  -->
     <link rel="stylesheet" type="text/css" href="../../../static/styles/multiselect/multiselect-style.css">
@@ -21,6 +32,9 @@
 
     <!--<script type="text/javascript" src="http://l2.io/ip.js?var=myip">
     </script>-->
+
+    <script src="../../static/js/CustomAlert.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script src="../../../static/js/Bita.js"></script>
 
@@ -108,7 +122,7 @@
                             <button class="btn btn-primary" id="sub" type="submit">ثبت نام</button>
                         </div>
 
-                        <p class="text-center mb-3" id="resend"><a href="/resend-email/"  class="text-decoration-none">ارسال مجدد کد تایید</a></p>
+                        <!--<p class="text-center mb-3" id="resend"><a href="/resend-email/"  class="text-decoration-none">ارسال مجدد کد تایید</a></p>-->
                         <div>
                             <hr id="hr">
                             <p class="text-center mb-3" id="prev_login">قبلا ثبت‌نام کرده‌اید؟<a href="{% url 'login' %}">ورود</a></p>
@@ -137,17 +151,18 @@
                                 <button class="btn btn-primary second-btn" id="sub2" type="submit">تایید کد</button>
                             </div>
                         </div>
-                            <p class="mb-3" id="resend2"><a href="/resend-email/"  class="float-start text-decoration-none">ارسال مجدد کد تایید</a></p>
+                            <p class="mb-3" id="resend2"><a href="#" type="click" class="float-start text-decoration-none">ارسال مجدد کد تایید</a></p>
                             <p class="mb-0" id="login" style="display: none"><a href="/login/"  class="float-start  text-decoration-none">ورود</a></p>
                     </div>
                 </form>
 
-
             </div>
         </div>
+        <div id="HooshyarAlert"></div>
     </div>
     <div class="col-md-3"></div>
-
+    
+    
     <script>
         init()
 
@@ -218,17 +233,33 @@
                 const messages = document.getElementById("messages");
                 messages.classList.remove("text-danger", "text-success")
 
-                if (response.status === "duplicated username") {
-                    messages.innerText = "نام کاربری انتخاب شده تکراری است."
-                    messages.classList.add("text-danger")
+                if (response.status === "enabled username") {
+                    alert_text_header = "ثبت‌نام شما با موفقیت انجام شده است."
+                    alert_text_body = "تایید شما توسط ادمین در حال بررسی است. لطفا منتظر تایید بمانید. نتیجه بررسی ادمین، به شما ایمیل خواهد شد."
                 }
-                else if (response.status === "duplicated email") {
-                    messages.innerText = "کاربر با ایمیل وارد شده از قبل در سامانه وجود دارد. کد تایید به شما با موضوع 'کد تایید ایمیل' ایمیل شده است. درصورتی که لینک ارسال شده، منقضی شده است؛ بر روی لینک ارسال مجدد کد تایید کلیک فرمایید."
-                    messages.classList.add("text-danger")
+                else if (response.status === "enabled email") {
+                    alert_text_header = "ثبت‌نام شما با موفقیت انجام شده است."
+                    alert_text_body = "تایید شما توسط ادمین در حال بررسی است. لطفا منتظر تایید بمانید. نتیجه بررسی ادمین، به شما ایمیل خواهد شد."
+                }
+                else if (response.status === "accepted username") {
+                    alert_text_header = "ثبت‌نام شما با موفقیت انجام شده است."
+                    alert_text_body = "تایید شما توسط ادمین انجام شده است. می‌توانید وارد سامانه شوید."
+                }
+                else if (response.status === "accepted email") {
+                    alert_text_header = "ثبت‌نام شما با موفقیت انجام شده است."
+                    alert_text_body = "تایید شما توسط ادمین انجام شده است. می‌توانید وارد سامانه شوید."
+                }
+                else if (response.status === "refused username") {
+                    alert_text_header = "ثبت‌نام شما با موفقیت انجام شده است."
+                    alert_text_body = "متاسفانه تایید شما توسط ادمین رد شده است. در صورت داشتن هر گونه سوال، می‌توانید با پشتیبانی تماس بگیرید."
+                }
+                else if (response.status === "refused email") {
+                    alert_text_header = "ثبت‌نام شما با موفقیت انجام شده است."
+                    alert_text_body = "متاسفانه تایید شما توسط ادمین رد شده است. در صورت داشتن هر گونه سوال، می‌توانید با پشتیبانی تماس بگیرید."
                 }
                 else if (response.status === "OK") {
                     messages2.innerText = "عملیات با موفقیت انجام شد. کد تایید به شما ایمیل شده است."
-                    messages3.innerText = "کد ارسال شده را در اینجا وارد کنید."
+                    messages3.innerText = "کد ارسال شده را در اینجا وارد کنید. در صورت عدم دریافت ایمیل کد تایید، بر روی دکمه‌ی ارسال مجدد کد تایید، کلیک فرمایید."
                     register.style.display = "none";
                     confirmEmailForm.style.display = "block";
                     messages2.style.color = "green";
@@ -236,6 +267,8 @@
                     messages3.style.color = "green";
                     messages3.classList.add("text-center")
                 }
+
+                HooshyarAlertShow(alert_text_header, alert_text_body, 2)
             
             }
         }
@@ -273,15 +306,53 @@
                     messages4.style.color = "green";
                     messages4.classList.remove("text-danger")
                     messages4.classList.add("text-center")
+                } else if (response.status == "deactive code") {
+                    messages4.innerText = "کد وارد شده، منقضی شده است. لطفا بر روی دکمه‌ی ارسال مجدد کد تایید کلیک فرمایید و کد جدید را دریافت کنید. کد جدید به شما ایمیل خواهد شد"
+                    messages4.classList.remove("text-center")
+                    messages4.classList.add("text-danger")
                 } else {
                     throw new Error("Invalid data")
                 }
             } catch(e2) {
-                messages4.innerText = "خطایی رخ داد! لطفا مجدد تلاش کنید"
+                messages4.innerText = "کد تایید، نادرست است."
                 messages4.classList.remove("text-center")
                 messages4.classList.add("text-danger")
             }
 
+        }
+
+        document.querySelectorAll('a[type="click"]').forEach((element) => {
+            element.addEventListener("click", resend);
+        });
+        async function resend(e3) {
+            e3.preventDefault()
+            try {                
+                const link = 'http://' + location.host + "/signup/" + document.getElementById("register").elements.namedItem("email").value;
+                let response = await fetch(link);
+                response = await response.json();
+
+                let alert_text_header = ""
+                let alert_text_body = ""
+                               
+                if (response.status == "OK") {
+                    console.log("ok")
+                    alert_text_header = "کد تایید، مجددا ارسال شده است."
+                    alert_text_body = "لطفا کد ارسال شده را وارد نمایید."
+                    
+                } else {
+                    throw new Error("Invalid data")
+                }
+
+                HooshyarAlertShow(alert_text_header, alert_text_body, 2)
+            } catch(e3) {
+                console.log("not ok")
+                alert_text_header = "خطایی در ارسال مجدد کد، رخ داده است."
+                alert_text_body = "لطفا مجددا بر روی دکمه‌ی ارسال مجدد کد تایید، کلیک فرمایید."
+
+                HooshyarAlertShow(alert_text_header, alert_text_body, 2)
+                
+            }
+            
         }
 
     </script>
