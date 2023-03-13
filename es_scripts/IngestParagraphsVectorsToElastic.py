@@ -25,38 +25,31 @@ import numpy as np
 # ---------------------------------------------------------------------------------
 
 class ParagraphVectorIndex(ES_Index):
-    def __init__(self, name, settings,mappings):
-        super().__init__(name, settings,mappings)
+    def __init__(self, name, settings,mappings,attach_doc_file):
+        super().__init__(name, settings,mappings,attach_doc_file)
     
     def generate_docs(self,files_dict,paragraphs):
 
         for para in paragraphs:
             paragraph_id = para['para_id']
+
             document_id = para['doc_id']
             document_name = para['doc_name']
-
             para_text = para['para_text']
 
             vector_value = list(para['vector_value'])
 
-            text_bytes = bytes(para_text,encoding="utf8")
-            base64_bytes = base64.b64encode(text_bytes)
-            base64_text = (str(base64_bytes)[2:-1])
-            base64_file = base64_text
-
             new_para = {
-                "paragraph_id": paragraph_id,
+                # "paragraph_id": paragraph_id,
                 "wikitriplet_vector":vector_value,
-                "document_id": document_id,
-                "document_name": document_name,
-                "data": base64_file
+                # "document_id": document_id,
+                # "document_name": document_name,
             }
 
 
             new_paragraph = {
                 "_index": self.name,
                 "_id": paragraph_id,
-                "pipeline":"attachment",
                 "_source":new_para,
             }
             yield new_paragraph
@@ -73,14 +66,12 @@ def apply(folder, Country,is_for_ref):
     if is_for_ref == 1:
         index_name = index_name + "_graph"
 
-        print(is_for_ref)
-
     index_name = index_name + "_vectors"    
     country_lang = Country.language
 
     if country_lang in ["فارسی","استاندارد"]:
         settings = es_config.Paragraphs_Settings_2 if is_for_ref == 1 else es_config.Paragraphs_Settings_3
-        mappings = es_config.Paragraphs_Mappings
+        mappings = es_config.Paragraphs_Vector_Mappings
 
     elif country_lang == "انگلیسی":
         settings = es_config.EN_Settings
@@ -105,10 +96,16 @@ def apply(folder, Country,is_for_ref):
     paragraphs = get_paragraphs_list(Country)
     # paragraphs = []
 
+    # If index exists -> delete it.
+    if ES_Index.CLIENT.indices.exists(index=index_name):
+        ES_Index.CLIENT.indices.delete(index=index_name, ignore=[400, 404])
+        print(f"{index_name} deleted!")
+
+
     print(len(paragraphs))
-    new_index = ParagraphVectorIndex(index_name, settings, mappings)
+    new_index = ParagraphVectorIndex(index_name, settings, mappings,attach_doc_file=False)
     new_index.create()
-    new_index.bulk_insert_documents(folder, paragraphs,do_parallel=True)
+    new_index.bulk_insert_documents(folder, paragraphs)
 
 def get_paragraphs_list(Country):
 
@@ -131,7 +128,9 @@ def get_paragraphs_list(Country):
         }
         paragraph_dict[para_obj.id] = para_res_obj
 
-    vectorFile = str(Path(config.PERSIAN_PATH, "weights", "tabnak_vector_result.json"))
+    print("paragraph_dict created...")
+
+    vectorFile = str(Path(config.PERSIAN_PATH, "weights", "asre_iran_vector_result.json"))
     file = open(vectorFile).read()
     file_data = json.loads(file)
 

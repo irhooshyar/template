@@ -1,8 +1,6 @@
 from jdatetime import datetime as jdatetime
 from django.shortcuts import redirect, get_object_or_404
-import os
 from random import randint
-from hazm import *
 from django.core.mail import send_mail
 from django.utils import timezone
 from django.conf import settings
@@ -14,27 +12,23 @@ from scripts import ZipFileExtractor, StratAutomating
 from abdal import es_config
 import shutil
 import after_response
-from django.db.models import Max, Min, F, IntegerField, Count, Q
-from django.db.models.functions import Substr, Cast, Length
+from django.db.models import Max, Min, F, Count, Q
+from django.db.models.functions import Length
 import datetime
 from django.shortcuts import render
 from django.contrib.auth.hashers import make_password, check_password
 from abdal import config
-from pathlib import Path
 import json
 import math
 from urllib.parse import urlparse
-from itertools import chain, groupby
-from collections import Counter
+from itertools import chain
 import numpy as np
 import pandas as pd
 from .decorators import allowed_users, unathenticated_user, is_login
 from .const import *
-import glob
 from elasticsearch import Elasticsearch
-from sklearn.metrics.pairwise import cosine_similarity
-import string
 from scripts.Persian.Preprocessing import standardIndexName
+from abdal.log_config import *
 
 # ---------- elastic configs -------------------
 es_url = es_config.ES_URL
@@ -52,8 +46,17 @@ from persiantools.jdatetime import JalaliDate
 
 SERVER_USER_NAME = config.SERVER_USER_NAME
 
-
 # preprocessing function
+
+
+def save_log(request):
+    message = request.POST.get('message')
+    file_name = request.POST.get('file_name')
+    line = request.POST.get('line')
+    level = request.POST.get('level')
+    insert_log(message, file_name, line, level)
+    return JsonResponse({"response": "Ok"})
+
 
 @after_response.enable
 def extractor(newdoc, newDoc, tasks_list):
@@ -104,7 +107,7 @@ def update_doc(request, id, language, ):
     file.save()
 
 
-    StratAutomating.apply.after_response(folder_name, file, "DocsCreateDocumentsListCubeData", host_url)
+    # StratAutomating.apply.after_response(folder_name, file, "DocsCreateDocumentsListCubeData", host_url)
 
     # from scripts.Persian import DocsParagraphVectorExtractor
     # DocsParagraphVectorExtractor.apply(folder_name, file)
@@ -123,8 +126,8 @@ def update_doc(request, id, language, ):
     # from scripts.Persian import DocProvisionsFullProfileAnalysis
     # DocProvisionsFullProfileAnalysis.apply.after_response(folder_name, file)
 
-    # from es_scripts import IngestParagraphsVectorsToElastic
-    # IngestParagraphsVectorsToElastic.apply.after_response(folder_name, file, 0)
+    from es_scripts import IngestParagraphsVectorsToElastic
+    IngestParagraphsVectorsToElastic.apply.after_response(folder_name, file, 0)
 
     return redirect('zip')
 
@@ -2695,28 +2698,26 @@ def SetMyUserProfile(request):
     data = json.loads(request.body)
     firstname = data["firstname"]
     lastname = data["lastname"]
-    email = data["email"]
     phonenumber = data["phonenumber"]
     role = data["role"]
+    expertise_ids = data["expertise"]
 
     username = request.COOKIES.get('username')
     user = User.objects.get(username=username)
-    user_email = User.objects.filter(email=email).exclude(username=username)
     role = UserRole.objects.get(id=role)
 
-    if user_email.count() > 0:
-        return JsonResponse({"status": "duplicated email"})
+    UserExpertise.objects.filter(user_id__id=user.id).delete()
+    for e in expertise_ids:
+        UserExpertise.objects.create(experise_id_id=e, user_id_id=user.id)
+    if "avatar" in data:
+        avatar = data["avatar"]
     else:
-        if "avatar" in data:
-            avatar = data["avatar"]
-        else:
-            avatar = user.avatar
-        User.objects.filter(username=username).update(
-            first_name=firstname,
-            last_name=lastname,
-            email=email,
-            mobile=phonenumber,
-            role=role, avatar=avatar)
+        avatar = user.avatar
+    User.objects.filter(username=username).update(
+        first_name=firstname,
+        last_name=lastname,
+        mobile=phonenumber,
+        role=role, avatar=avatar)
 
     return JsonResponse({"status": "OK"})
 
@@ -7072,7 +7073,7 @@ def GetSemanticSimilarParagraphs_ByParagraphID(request, paragraph_id):
     # get paragraph vector
     vector_query = {
         'term': {
-            'paragraph_id': paragraph_id
+            '_id': paragraph_id
         }
     }
     country_obj = DocumentParagraphs.objects.get(id=paragraph_id).document_id.country_id
@@ -7092,7 +7093,7 @@ def GetSemanticSimilarParagraphs_ByParagraphID(request, paragraph_id):
                 "bool": {
                     "must_not": {
                         "term": {
-                            "paragraph_id": paragraph_id
+                            "_id": paragraph_id
                         }
                     }
                 }
@@ -7108,13 +7109,44 @@ def GetSemanticSimilarParagraphs_ByParagraphID(request, paragraph_id):
 
     # search and get result
     response = client.search(index=index_name,
-                             _source_includes=['document_id', 'document_name', 'attachment.content'],
+                             _source_excludes=['document_id', 'document_name',
+                                            'attachment.content','wikitriplet_vector'],
                              request_timeout=40,
                              size=10,
                              query=knn_qeury
                              )
 
+    similar_paragraphs_list = response['hits']['hits']
+    paragraphs_similarity_score_dict = {}
+
+    for para in similar_paragraphs_list:
+        paragraphs_similarity_score_dict[para['_id']] = para['_score']
+
+    # query on DocumentParagraphs index by result ids
+    new_query = {
+            "ids" : {
+            "values" : [para['_id'] for para in similar_paragraphs_list]
+        }
+    }
+    new_index_name = standardIndexName(country_obj, DocumentParagraphs.__name__)
+
+    response = client.search(index=new_index_name,
+                             _source_includes=['document_id', 'document_name', 'attachment.content'],
+                             request_timeout=40,
+                             size=10,
+                             query=new_query
+                             )
+
     similar_paragraphs = response['hits']['hits']
+
+    # update score with similarity score
+    for para in similar_paragraphs:
+        para['_score'] = paragraphs_similarity_score_dict[para['_id']]
+
+    similar_paragraphs = sorted(similar_paragraphs,
+                                 key=lambda para: para['_score'],
+                                 reverse=True) 
+
 
     return JsonResponse({'similar_paragraphs': similar_paragraphs})
 

@@ -18,7 +18,7 @@ from elasticsearch import helpers
 from collections import deque
 import textract
 
-def readFiles(path):
+def readFiles(path,attach_doc_file = True):
     result_text = {}
         
 
@@ -32,21 +32,34 @@ def readFiles(path):
             if format.lower() =='docx':
                 text = docx2txt.process(file)
 
-            text_bytes = bytes(text,encoding="utf8")
-            base64_bytes = base64.b64encode(text_bytes)
-            base64_text = (str(base64_bytes)[2:-1])
-            file = str(os.path.basename(file)).split(".")[0]
-            result_text[file] =base64_text
+            
+
+            if attach_doc_file:
+                text_bytes = bytes(text,encoding="utf8")
+                base64_bytes = base64.b64encode(text_bytes)
+                base64_text = (str(base64_bytes)[2:-1])
+                file = str(os.path.basename(file)).split(".")[0]
+                result_text[file] =base64_text
+            else:
+                file = str(os.path.basename(file)).split(".")[0]
+                result_text[file] =text
         except:
             print(f'{file} can not read')
 
     all_files = glob.glob(path + "//*.txt")
     for file in all_files:
-        text_bytes = open(file, "rb").read()
-        base64_bytes = base64.b64encode(text_bytes)
-        base64_text = (str(base64_bytes)[2:-1])
-        file = str(os.path.basename(file)).split(".")[0]
-        result_text[file] =base64_text
+        
+
+        if attach_doc_file:
+            text_bytes = open(file, "rb").read()
+            base64_bytes = base64.b64encode(text_bytes)
+            base64_text = (str(base64_bytes)[2:-1])
+            file = str(os.path.basename(file)).split(".")[0]
+            result_text[file] =base64_text
+        else:
+            text = open(file, encoding="utf8").read()
+            file = str(os.path.basename(file)).split(".")[0]
+            result_text[file] =text
 
     return result_text
 
@@ -55,10 +68,11 @@ class ES_Index():
     ES_URL = es_config.ES_URL
     CLIENT = Elasticsearch(ES_URL, timeout=40)
 
-    def __init__(self, name, settings,mappings):
+    def __init__(self, name, settings,mappings,attach_doc_file = True):
         self.name = name
         self.settings = settings
         self.mappings = mappings
+        self.attach_doc_file = attach_doc_file
 
 
     def create(self):
@@ -82,14 +96,14 @@ class ES_Index():
         pass
 
 
-    def bulk_insert_documents(self, folder_name,documents, do_parallel=False):
+    def bulk_insert_documents(self, folder_name,documents, do_parallel=True):
         print('Insert_Documents started ...')
         start_t = time.time()
 
         generate_docs_method = self.generate_docs
 
         dataPath = str(Path(config.DATA_PATH, folder_name))
-        files_dict = readFiles(dataPath)
+        files_dict = readFiles(dataPath,self.attach_doc_file)
 
         if do_parallel:
 

@@ -25,8 +25,8 @@ from persiantools.jdatetime import JalaliDate
 # ---------------------------------------------------------------------------------
 
 class DocumentIndex(ES_Index):
-    def __init__(self, name, settings,mappings):
-        super().__init__(name, settings,mappings)
+    def __init__(self, name, settings,mappings,attach_doc_file):
+        super().__init__(name, settings,mappings,attach_doc_file)
     
     def generate_docs(self, files_dict, documents):
 
@@ -74,9 +74,8 @@ class DocumentIndex(ES_Index):
                     "hour":doc_hour
                     }
                 
-                print(document_jalili_date)
             if doc_file_name in files_dict:
-                base64_file = files_dict[doc_file_name]
+                document_content = files_dict[doc_file_name]
 
                 new_doc = {
                     "source_id":source_id,
@@ -93,23 +92,37 @@ class DocumentIndex(ES_Index):
                     "source_name": doc_source,
                     "subject_name": doc_subject,
                     "subject_weight": doc_subject_weight,  
-                    "data": base64_file
+
                 }
 
+                new_document = {}
 
-                new_document = {
-                    "_index": self.name,
-                    "_id": doc_id,
-                    "pipeline":"attachment",
-                    "_source":new_doc,
-                }
+                if self.attach_doc_file:
+                    new_doc["data"] = document_content
+
+                    new_document = {
+                        "_index": self.name,
+                        "_id": doc_id,
+                        "_source":new_doc,
+                        "pipeline":"attachment"
+                    }
+
+                else:
+                    new_doc["attachment"] = {"content":document_content,"content_length":len(document_content)}
+            
+                    new_document = {
+                        "_index": self.name,
+                        "_id": doc_id,
+                        "_source":new_doc,
+                    }
+
                 yield new_document
 
 
 
 class EN_DocumentIndex(ES_Index):
-    def __init__(self, name, settings,mappings):
-        super().__init__(name, settings,mappings)
+    def __init__(self, name, settings,mappings,attach_doc_file):
+        super().__init__(name, settings,mappings,attach_doc_file)
     
     def generate_docs(self, files_dict, documents):
 
@@ -140,7 +153,7 @@ class EN_DocumentIndex(ES_Index):
             doc_hour =  int(doc_time.split(':')[0].strip()) if doc_time != 'unknown' else 0
 
             if doc_file_name in files_dict:
-                base64_file = files_dict[doc_file_name]
+                document_content = files_dict[doc_file_name]
 
                 new_doc = {
                     "source_id":source_id,
@@ -156,16 +169,30 @@ class EN_DocumentIndex(ES_Index):
                     "source_name": doc_source,
                     "subject_name": doc_subject,
                     "subject_weight": doc_subject_weight,  
-                    "data": base64_file
                 }
 
 
-                new_document = {
-                    "_index": self.name,
-                    "_id": doc_id,
-                    "pipeline":"attachment",
-                    "_source":new_doc,
-                }
+                new_document = {}
+
+                if self.attach_doc_file:
+                    new_doc["data"] = document_content
+
+                    new_document = {
+                        "_index": self.name,
+                        "_id": doc_id,
+                        "_source":new_doc,
+                        "pipeline":"attachment"
+                    }
+
+                else:
+                    new_doc["attachment"] = {"content":document_content,"content_length":len(document_content)}
+            
+                    new_document = {
+                        "_index": self.name,
+                        "_id": doc_id,
+                        "_source":new_doc,
+                    }
+                    
                 yield new_document
 
 
@@ -186,7 +213,7 @@ def apply(folder, Country):
     if country_lang == "انگلیسی":
         settings = es_config.EN_Settings
         mappings = es_config.EN_Mappings
-        new_index = EN_DocumentIndex(index_name, settings, mappings)
+        new_index = EN_DocumentIndex(index_name, settings, mappings,attach_doc_file = False)
         documents = Document.objects.filter(country_id__id=Country.id).annotate(
             source_id = F('country_id__id'),
             source_folder = F('country_id__file'),
@@ -195,7 +222,7 @@ def apply(folder, Country):
     else:
         settings = es_config.FA_Settings
         mappings = es_config.FA_Mappings
-        new_index = DocumentIndex(index_name, settings, mappings)
+        new_index = DocumentIndex(index_name, settings, mappings,attach_doc_file = False)
 
         documents = Document.objects.filter(country_id__id=Country.id).annotate(
             year=Cast(Substr('date', 1, 4), IntegerField()),
@@ -210,5 +237,5 @@ def apply(folder, Country):
         print(f"{index_name} deleted!")
 
     new_index.create()
-    new_index.bulk_insert_documents(folder,documents,do_parallel=True)
+    new_index.bulk_insert_documents(folder,documents)
 
