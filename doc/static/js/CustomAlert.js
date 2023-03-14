@@ -11,22 +11,20 @@ function HooshyarAlertShow(alert_header_text, alert_body_text, icon_type) {
 
   alert_body_text = alert_body_text || '';
   const html_value = `<div class="alert" tabindex="-1" role="dialog" aria-labelledby="HooshyaralertHeader" aria-hidden="true">
-    <div class="alert-header" style="text-align: center; justify-content: center" >
+    <div class="alert-header">
       
       <button type="button" class="closeset" aria-label="Close" style="color: #4F4F4F;" onClick=HooshyarAlertClose()>
         <i class="fa fa-remove" ></i>
       </button>
+  
+      <h5 class="alert-title"  style="text-align: center; justify-content: center" >
+        ${alert_header_text}
+      </h5>
 
-      <div class="d-flex" style="flex-direction: row-reverse;">
-          
-          <h5 class="alert-title">
-            ${alert_header_text}
-          </h5>
-
-          <div class="icon-parent" style="background: ${icon_parent_color}">
-              <i class="icon-child fa fa-exclamation" style="background: ${icon_color}"></i>
-          </div>
+      <div class="icon-parent" style="background: ${icon_parent_color}">
+        <i class="icon-child fa fa-exclamation" style="background: ${icon_color}"></i>
       </div>
+      
 
     </div>
     <div class="alert-body" id="alertBody" style="text-align: center; justify-content: center">
