@@ -28,7 +28,7 @@ from .decorators import allowed_users, unathenticated_user, is_login
 from .const import *
 from elasticsearch import Elasticsearch
 from scripts.Persian.Preprocessing import standardIndexName
-from abdal.log_config import *
+#from abdal.log_config import *
 
 # ---------- elastic configs -------------------
 es_url = es_config.ES_URL
@@ -1356,7 +1356,7 @@ def reset_password_check(request, email):
         user.reset_password_expire_time = datetime.datetime.now() + datetime.timedelta(minutes=15)
         user.save()
         reset_pass_send_email(user, reset_code)
-    elif user.reset_password_expire_time > timezone.now():
+    elif user.reset_password_expire_time >= timezone.now():
         reset_code = user.reset_password_confirm_code
         reset_pass_send_email(user, reset_code)
     return JsonResponse({"status": "OK"})
@@ -1365,7 +1365,7 @@ def reset_password_check(request, email):
 
 def reset_password(request, email, code, password):
     user = User.objects.get(email=email)
-    if (user.reset_password_confirm_code == code and user.reset_password_expire_time > timezone.now()):
+    if (user.reset_password_confirm_code == code and user.reset_password_expire_time >= timezone.now()):
         user.password = make_password(password)
         
         user.save()
@@ -2580,22 +2580,17 @@ def send_email(user, email_code):
 def resend_email_code(request, email):
     user = User.objects.get(email=email)
     if user.account_acctivation_expire_time < timezone.now() and user.enable == 0:
-        print("ok")
         confirm_email(user)
-    elif user.account_acctivation_expire_time > timezone.now() and user.enable == 0:
-        print("ok")
+    elif user.account_acctivation_expire_time >= timezone.now() and user.enable == 0:
         send_email(user, user.email_confirm_code)
     return JsonResponse({"status": "OK"})
 
 
 def signup_user_activation(request, email, code):
     user = User.objects.get(email=email)
-    if (user.email_confirm_code == code and user.account_acctivation_expire_time > timezone.now()):
+    if (user.email_confirm_code == code and user.account_acctivation_expire_time >= timezone.now()):
         user.enable = 1
         user.save()
-
-        print(user.email_confirm_code)
-        print(user.account_acctivation_expire_time)
 
         template = f"""
         ثبت‌نام شما با موفقیت انجام شد. تایید شما توسط ادمین، بررسی خواهد شد. نتیجه‌ی بررسی ادمین، در ایمیل، برای شما ارسال می‌شود.
@@ -2604,8 +2599,6 @@ def signup_user_activation(request, email, code):
                   recipient_list=[user.email])
         return JsonResponse({"status": "OK"})
     elif (user.email_confirm_code == code and user.account_acctivation_expire_time < timezone.now()):
-        print(user.email_confirm_code)
-        print(user.account_acctivation_expire_time)
         user.save()
         return JsonResponse({"status": "deactive code"})
 
@@ -2909,7 +2902,7 @@ def changeUserState(request, user_id, state):
         ثبت‌نام شما با موفقیت انجام شده است. تایید شما توسط ادمین انجام شد. هم‌اکنون، می‌توانید وارد سامانه شوید.
         """
         template += f'http://virtualjuristic.datakaveh.com:7090/login/'
-
+        
         send_mail(subject='تایید عملیات ثبت‌نام', message=template, from_email=settings.EMAIL_HOST_USER,recipient_list=[accepted_user.email])
 
 

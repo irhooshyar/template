@@ -33,7 +33,7 @@
     <!--<script type="text/javascript" src="http://l2.io/ip.js?var=myip">
     </script>-->
 
-    <script src="../../static/js/CustomAlert.js"></script>
+    <script type="text/javascript" src="../../static/js/CustomAlert.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <script src="../../../static/js/Bita.js"></script>
@@ -71,7 +71,7 @@
                             <label for="email">ایمیل <span style="color: red">*</span>:</label>
                             <input type="email" class="form-control" id="email" name="email" required include-content-tracking
                                 placeholder="example@example.com">
-                            <span class="text-danger">لطفا یک ایمیل معتبر وارد نمایید تا در فرآیند دسترسی به حساب خود دچار مشکل نشوید</span>
+                            <span class="text-danger">لطفا یک ایمیل معتبر وارد نمایید تا در فرآیند دسترسی به حساب خود دچار مشکل نشوید.</span>
 
                         </div>
 
@@ -99,7 +99,8 @@
 
                         <div class="mb-3" id="div_password">
                             <label for="password">رمز عبور <span style="color: red">*</span>:</label>
-                            <input type="password" class="form-control" id="password" required placeholder="Password">
+                            <input type="password" class="form-control" id="password" pattern="(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{6,}" required placeholder="Password">
+                            <span class="text-danger">رمز عبور شما باید حداقل شامل 6 کاراکتر و همچنین حداقل شامل یک عدد، یک حرف کوچک و یک حرف بزرگ باشد.</span>
                         </div>
 
                         <div class="mb-3" id="div_confirmPassword">
@@ -108,7 +109,7 @@
                                 placeholder="Confirm Password">
                         </div>
                         <div class="mb-2" id="messages"><span style="color: red">فیلدهای ستاره‌دار (*) اجباری
-                                هستند</span></div>
+                                هستند.</span></div>
                         <div class="mb-3" id="messages"></div>
                         
                         <div id="site_recapcha" dir="ltr" class="mb-3" style="display: flex; justify-content: center;">
@@ -152,7 +153,9 @@
                             </div>
                         </div>
                             <p class="mb-3" id="resend2"><a href="#" type="click" class="float-start text-decoration-none">ارسال مجدد کد تایید</a></p>
-                            <p class="mb-0" id="login" style="display: none"><a href="/login/"  class="float-start  text-decoration-none">ورود</a></p>
+                            <div class="mb-3 d-grid gap-2 col-6 mx-auto second" style="justify-content: center;">
+                                <button class="btn btn-primary second-btn" type="submit" onclick="location.href='/login'" id="login" style="display: none;">ورود</button>
+                            </div>
                     </div>
                 </form>
 
@@ -236,30 +239,36 @@
                 if (response.status === "enabled username") {
                     alert_text_header = "ثبت‌نام شما با موفقیت انجام شده است."
                     alert_text_body = "تایید شما توسط ادمین در حال بررسی است. لطفا منتظر تایید بمانید. نتیجه بررسی ادمین، به شما ایمیل خواهد شد."
+                    HooshyarAlertShow(alert_text_header, alert_text_body, 2)
                 }
                 else if (response.status === "enabled email") {
                     alert_text_header = "ثبت‌نام شما با موفقیت انجام شده است."
                     alert_text_body = "تایید شما توسط ادمین در حال بررسی است. لطفا منتظر تایید بمانید. نتیجه بررسی ادمین، به شما ایمیل خواهد شد."
+                    HooshyarAlertShow(alert_text_header, alert_text_body, 2)
                 }
                 else if (response.status === "accepted username") {
                     alert_text_header = "ثبت‌نام شما با موفقیت انجام شده است."
-                    alert_text_body = "تایید شما توسط ادمین انجام شده است. می‌توانید وارد سامانه شوید."
+                    alert_text_body = "ثبت‌نام شما توسط ادمین تایید شده است. از طریق دکمه‌ی زیر، وارد سامانه شوید."
+                    HooshyarAlertShow(alert_text_header, alert_text_body, 2)
                 }
                 else if (response.status === "accepted email") {
                     alert_text_header = "ثبت‌نام شما با موفقیت انجام شده است."
-                    alert_text_body = "تایید شما توسط ادمین انجام شده است. می‌توانید وارد سامانه شوید."
+                    alert_text_body = "ثبت‌نام شما توسط ادمین تایید شده است. از طریق دکمه‌ی زیر، وارد سامانه شوید."
+                    HooshyarAlertShow(alert_text_header, alert_text_body, 2)
                 }
                 else if (response.status === "refused username") {
                     alert_text_header = "ثبت‌نام شما با موفقیت انجام شده است."
-                    alert_text_body = "متاسفانه تایید شما توسط ادمین رد شده است. در صورت داشتن هر گونه سوال، می‌توانید با پشتیبانی تماس بگیرید."
+                    alert_text_body = "متاسفانه تایید شما توسط ادمین رد شده است. با پشتیبانی از طریق ایمیل زیر، در تماس باشید."
+                    HooshyarAlertShow(alert_text_header, alert_text_body, 2)
                 }
                 else if (response.status === "refused email") {
                     alert_text_header = "ثبت‌نام شما با موفقیت انجام شده است."
-                    alert_text_body = "متاسفانه تایید شما توسط ادمین رد شده است. در صورت داشتن هر گونه سوال، می‌توانید با پشتیبانی تماس بگیرید."
+                    alert_text_body = "متاسفانه تایید شما توسط ادمین رد شده است. با پشتیبانی از طریق ایمیل زیر، در تماس باشید."
+                    HooshyarAlertShow(alert_text_header, alert_text_body, 2)
                 }
                 else if (response.status === "OK") {
                     messages2.innerText = "عملیات با موفقیت انجام شد. کد تایید به شما ایمیل شده است."
-                    messages3.innerText = "کد ارسال شده را در اینجا وارد کنید. در صورت عدم دریافت ایمیل کد تایید، بر روی دکمه‌ی ارسال مجدد کد تایید، کلیک فرمایید."
+                    messages3.innerText = "کد ارسال شده را در اینجا وارد کنید. در صورت عدم دریافت ایمیل، بر روی دکمه‌ی ارسال مجدد کد تایید، کلیک فرمایید."
                     register.style.display = "none";
                     confirmEmailForm.style.display = "block";
                     messages2.style.color = "green";
@@ -268,7 +277,7 @@
                     messages3.classList.add("text-center")
                 }
 
-                HooshyarAlertShow(alert_text_header, alert_text_body, 2)
+                
             
             }
         }
@@ -276,9 +285,34 @@
         window.onload = function () {
             var password = document.getElementById("password");
             var confirmPassword = document.getElementById("confirmPassword");
+            password.onkeyup = function() {
+                password.setCustomValidity("");
+                // Validate lowercase letters
+                var lowerCaseLetters = /[a-z]/g;
+                if(!password.value.match(lowerCaseLetters)) {
+                    password.setCustomValidity("رمز عبور شما باید شامل حداقل یک حرف کوچک باشد.");
+                }
+
+                // Validate capital letters
+                var upperCaseLetters = /[A-Z]/g;
+                if(!password.value.match(upperCaseLetters)) {
+                    password.setCustomValidity("رمز عبور شما باید شامل حداقل یک حرف بزرگ باشد.");
+                }
+
+                // Validate numbers
+                var numbers = /[0-9]/g;
+                if(!password.value.match(numbers)) {
+                    password.setCustomValidity("رمز عبور شما باید شامل حداقل یک عدد باشد.");
+                }
+
+                // Validate length
+                if(password.value.length < 6) {
+                    password.setCustomValidity("رمز عبور شما باید شامل حداقل شامل 6 کاراکتر باشد.");
+                }
+            }
+
             password.onchange = ConfirmPassword;
             confirmPassword.onkeyup = ConfirmPassword;
-
             function ConfirmPassword() {
                 confirmPassword.setCustomValidity("");
                 if (password.value !== confirmPassword.value) {
