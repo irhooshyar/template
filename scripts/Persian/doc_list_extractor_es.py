@@ -1,13 +1,28 @@
-from pydoc import doc
+
+from elasticsearch import Elasticsearch
 from abdal import config
-from pathlib import Path
-from scripts.Persian import Preprocessing
-from doc.models import Document
+from abdal import es_config
+import base64
+import csv
+from doc.models import Document, DocumentParagraphs
+from django.db.models.functions import Substr, Cast
+from django.db.models import Max, Min, F, IntegerField, Q
 import pandas as pd
-import math
-from itertools import chain
+from pathlib import Path
+import glob
+import os
+import docx2txt
 import time
-import threading
+from es_scripts.ES_Index import ES_Index
+from es_scripts.ES_Index import readFiles
+import time
+from elasticsearch import helpers
+from collections import deque
+from scripts.Persian.Preprocessing import standardIndexName
+from persiantools.jdatetime import JalaliDate
+from scripts.Persian import Preprocessing
+from dateutil import parser
+
 
 def standardFileName(name):
     name = name.replace(".", "")
@@ -70,71 +85,302 @@ def DataFrame2Dict(df, key_field, values_field):
 
     return result_dict
 
-def apply(folder_name, Country):
-    t = time.time()
 
-    # excelFile = str(Path(config.PERSIAN_PATH, 'DoticFull_with_limited_title.xlsx'))
-    excelFile = str(Path(config.PERSIAN_PATH, 'tabnak-data.xlsx'))
+
+# ---------------------------------------------------------------------------------
+
+class DocumentIndex(ES_Index):
+    def __init__(self, name, settings,mappings,attach_doc_file):
+        super().__init__(name, settings,mappings,attach_doc_file)
+    
+    def generate_docs(self, files_dict, documents):
+
+        for doc in documents:
+
+            doc_id = int(doc['id'])
+            source_id = int(doc['source_id'])
+            source_folder = doc['source_folder'].split("/")[-1].split(".")[0]
+
+            doc_name = doc['name']
+
+            doc_file_name = ""
+
+            if 'file_name' in doc and doc['file_name'] != None:
+                doc_file_name = doc['file_name']
+            else:
+                doc_file_name = doc_name
+
+            doc_subject = doc['subject_name'] if doc['subject_name'] != None else 'نامشخص'
+            doc_subject_weight = doc['subject_weight'] if doc['subject_weight'] != None else 'نامشخص'
+            doc_category = doc['category_name'] if doc['category_name'] != None else 'نامشخص'
+            doc_source = doc['source_name']
+            doc_year = doc['year'] if doc['year'] != None else 0
+            doc_date = doc['date'] if doc['date'] != None else 'نامشخص'
+            doc_time = doc['time'] if doc['time'] != None else 'نامشخص'
+            doc_hour =  int(doc_time.split(':')[0].strip()) if doc_time != 'نامشخص' else 0
+            
+            document_jalili_date = {}
+            
+            if doc_date!= "نامشخص":
+                year = int(doc_date.split('/')[0])  
+                month = int(doc_date.split('/')[1])  
+                day = int(doc_date.split('/')[2])  
+
+                document_jalili_date = {
+                    "year":doc_year,
+                    "month":{
+                        "name":JalaliDate(year, month, day,locale = 'fa').strftime('%B',locale = 'fa'),
+                        "number": month
+                    },
+                    "day":{
+                        "name":JalaliDate(year, month, day,locale = 'fa').strftime('%A',locale = 'fa'),
+                        "number": day
+                    },
+                    "hour":doc_hour
+                    }
+                
+            if doc_file_name in files_dict:
+                document_content = files_dict[doc_file_name]
+
+                new_doc = {
+                    "source_id":source_id,
+                    "source_folder":source_folder,
+                    "source_name": doc_source,
+
+
+                    "document_id": doc_id,
+                    "document_name": doc_name,
+                    "document_date": doc_date,
+                    "document_year": doc_year,
+                    "document_time": doc_time,
+
+                    "document_jalili_date":document_jalili_date,
+                    "raw_file_name": doc_file_name,
+                    "category_name": doc_category,
+                    "subject_name": doc_subject,
+                    "subject_weight": doc_subject_weight,  
+
+                }
+
+                new_document = {}
+
+                if self.attach_doc_file:
+                    new_doc["data"] = document_content
+
+                    new_document = {
+                        "_index": self.name,
+                        "_id": doc_id,
+                        "_source":new_doc,
+                        "pipeline":"attachment"
+                    }
+
+                else:
+                    new_doc["attachment"] = {"content":document_content,"content_length":len(document_content)}
+            
+                    new_document = {
+                        "_index": self.name,
+                        "_id": doc_id,
+                        "_source":new_doc,
+                    }
+
+                yield new_document
+
+
+
+class EN_DocumentIndex(ES_Index):
+    def __init__(self, name, settings,mappings,attach_doc_file):
+        super().__init__(name, settings,mappings,attach_doc_file)
+    
+    def generate_docs(self, files_dict, documents):
+
+        for doc in documents:
+
+            doc_id = int(doc['id'])
+            source_id = int(doc['source_id'])
+            source_folder = doc['source_folder'].split("/")[-1].split(".")[0]
+
+            doc_name = doc['name']
+
+            doc_file_name = ""
+
+            if 'file_name' in doc and doc['file_name'] != None:
+                doc_file_name = doc['file_name']
+            else:
+                doc_file_name = doc_name
+
+            doc_subject = doc['subject_name'] if doc['subject_name'] != None else 'unknown'
+            doc_subject_weight = doc['subject_weight'] if doc['subject_weight'] != None else 'unknown'
+            doc_category = doc['category_name'] if doc['category_name'] != None else 'unknown'
+            doc_source = doc['source_name']
+            
+            doc_date = doc['date'] if doc['date'] != None else 'unknown'
+            doc_year = int(doc_date.split(' ')[2]) if doc_date != "unknown" and len(doc_date.split(' ')) == 3 else 2023
+
+            doc_time = doc['time'] if doc['time'] != None else 'unknown'
+            doc_hour =  int(doc_time.split(':')[0].strip()) if doc_time != 'unknown' else 0
+
+            if doc_file_name in files_dict:
+                document_content = files_dict[doc_file_name]
+
+                new_doc = {
+                    "source_id":source_id,
+                    "source_folder":source_folder,
+                    "source_name": doc_source,
+
+                    "document_id": doc_id,
+                    "document_name": doc_name,
+                    "document_date": doc_date,
+                    "document_year": doc_year,
+                    "document_time": doc_time,
+                    "document_hour":doc_hour,
+                    "raw_file_name": doc_file_name,
+                    "category_name": doc_category,
+                    "subject_name": doc_subject,
+                    "subject_weight": doc_subject_weight,  
+                }
+
+
+                new_document = {}
+
+                if self.attach_doc_file:
+                    new_doc["data"] = document_content
+
+                    new_document = {
+                        "_index": self.name,
+                        "_id": doc_id,
+                        "_source":new_doc,
+                        "pipeline":"attachment"
+                    }
+
+                else:
+                    new_doc["attachment"] = {"content":document_content,"content_length":len(document_content)}
+            
+                    new_document = {
+                        "_index": self.name,
+                        "_id": doc_id,
+                        "_source":new_doc,
+                    }
+                    
+                yield new_document
+
+
+
+def CheckDate(date):
+    try:
+        format = '%Y-%m-%d'
+        parser.parse(date)
+        return date
+    except ValueError:
+        return None
+
+
+def extractTime(date_time,Country):
+    time = None
+
+    if Country.name == 'تابناک':
+        time = date_time.split('-')[1].strip()
+    elif Country.name == 'خبر آنلاین':
+        time = date_time.split(" ")[1].strip()
+    elif Country.name == 'عصر ایران':
+        time = date_time.strip()
+    elif Country.name == 'ایسنا':
+        time = date_time.split(' ')[3].strip() 
+
+    elif Country.name == 'BBC':
+        time = date_time.split(' ')[0].strip() 
+
+    return time
+
+
+
+def apply(folder, Country):
+    settings = {}
+    mappings = {}
+    model_name = Document.__name__
+    index_name = standardIndexName(Country,model_name)
+
+    new_index = None
+
+    country_lang = Country.language
+    documents = []
+
+    excelFile = str(Path(config.PERSIAN_PATH, config.COUNTRY_EXCEL_FILE_DICT[Country.name]))
+    
     df = pd.read_excel(excelFile)
     df['title'] = df['title'].apply(lambda x: standardFileName(x))
+    df['date_time'] = df['date_time'].apply(lambda x: extractTime(x,Country))
 
-    dataframe_dictionary = DataFrame2Dict(df, "id", ["title"])
+    dataframe_dictionary = {}
+    if country_lang == "فارسی":
+        dataframe_dictionary = DataFrame2Dict(df, "id", ["title","category", "date","date_time"])
+    elif country_lang == "انگلیسی":
+        dataframe_dictionary = DataFrame2Dict(df, "title", ["id","category", "date","date_time"])
 
-    dataPath = str(Path(config.DATA_PATH, folder_name))
+
+    dataPath = str(Path(config.DATA_PATH, folder))
     all_files = Preprocessing.readFiles(dataPath, readContent=False)
     all_files = list(set(all_files.keys()))
 
-    Thread_Count = config.Thread_Count
-    Result_Create_List = [None] * Thread_Count
-    Sliced_Files = Slice_List(all_files, Thread_Count)
+    print(f"{len(all_files)} files found!")
 
-    thread_obj = []
-    thread_number = 0
-    for S in Sliced_Files:
-        thread = threading.Thread(target=Docs_List_Extractor, args=(S, Country, dataframe_dictionary, Result_Create_List, thread_number,))
-        thread_obj.append(thread)
-        thread_number += 1
-        thread.start()
-    for thread in thread_obj:
-        thread.join()
-
-    Result_Create_List = list(chain.from_iterable(Result_Create_List))
-    batch_size = 5000
-    slice_count = math.ceil(Result_Create_List.__len__() / batch_size)
-    for i in range(slice_count):
-        start_idx = i * batch_size
-        end_idx = min(start_idx + batch_size, Result_Create_List.__len__())
-        sub_list = Result_Create_List[start_idx:end_idx]
-        Document.objects.bulk_create(sub_list)
-
-    print("time ", time.time() - t)
-
-def Slice_List(docs_list, n):
-    result_list = []
-
-    step = math.ceil(docs_list.__len__() / n)
-    for i in range(n):
-        start_idx = i * step
-        end_idx = min(start_idx + step, docs_list.__len__())
-        result_list.append(docs_list[start_idx:end_idx])
-
-    return result_list
-
-def Docs_List_Extractor(docs_list, Country, dataframe_dictionary, Result_Create_List, thread_number):
-
-    Create_List = []
     idx = 0
-    for file in docs_list:
+    for file in all_files:
         idx += 1
         file = str(file)
-        if file in dataframe_dictionary:
-            document_name = dataframe_dictionary[file]['title']
-            doc_obj = Document(name=document_name, file_name=file, country_id=Country)
-            Create_List.append(doc_obj)
-        else:
-            pass
-            # doc_obj = Document(name=file, file_name=file, country_id=Country)
-            # Create_List.append(doc_obj)
 
-    Result_Create_List[thread_number] = Create_List
+        if file in dataframe_dictionary:
+            document_id = file if country_lang == "فارسی" else dataframe_dictionary[file]['id']
+            document_name = dataframe_dictionary[file]['title'] if country_lang == "فارسی" else file
+
+            date = CheckDate(str(dataframe_dictionary[file]['date']))
+
+            year = None
+            if country_lang == "فارسی":
+                year = int(date.split('/')[0]) if date != None else 0
+    
+
+            category_name = str(dataframe_dictionary[file]['category'])
+            time = str(dataframe_dictionary[file]['date_time'])
+
+            category_name = category_name.replace("»", "-")
+            category_name = category_name.replace("صفحه نخست-", "")
+
+            if category_name == "nan":
+                category_name = None
+
+
+            doc_obj = {
+                "id":document_id,
+                "name":document_name,
+                "source_id":Country.id,
+                "source_folder":Country.file.name,
+                "source_name":Country.name,
+                "file_name":file,
+                "date":date,
+                "time":time,
+                "year":year,
+                "category_name":category_name,
+                "subject_name":None,
+                "subject_weight":None,
+
+                }
+            documents.append(doc_obj)
+
+
+    if country_lang == "فارسی":
+        settings = es_config.FA_Settings
+        mappings = es_config.FA_Mappings
+        new_index = DocumentIndex(index_name, settings, mappings,attach_doc_file = False)
+    elif country_lang == "انگلیسی":
+        settings = es_config.EN_Settings
+        mappings = es_config.EN_Mappings
+        new_index = EN_DocumentIndex(index_name, settings, mappings,attach_doc_file = False)
+       
+    # If index exists -> delete it.
+    if ES_Index.CLIENT.indices.exists(index=index_name):
+        ES_Index.CLIENT.indices.delete(index=index_name, ignore=[400, 404])
+        print(f"{index_name} deleted!")
+
+    new_index.create()
+    new_index.bulk_insert_documents(folder,documents)
 

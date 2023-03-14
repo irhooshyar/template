@@ -690,16 +690,27 @@ def regulators_static_import_db(request, id):
 
 
 def ingest_documents_to_index(request, id, language):
+    # file = get_object_or_404(Country, id=id)
+
+    # from es_scripts import IngestDocumentsToElastic
+
+    # my_file = file.file.path
+    # my_file = str(os.path.basename(my_file))
+    # dot_index = my_file.rfind('.')
+    # folder_name = my_file[:dot_index]
+
+    # IngestDocumentsToElastic.apply(folder_name, file)
+    # ---------------------------------
     file = get_object_or_404(Country, id=id)
 
-    from es_scripts import IngestDocumentsToElastic
+    from scripts.Persian import doc_list_extractor_es
 
     my_file = file.file.path
     my_file = str(os.path.basename(my_file))
     dot_index = my_file.rfind('.')
     folder_name = my_file[:dot_index]
 
-    IngestDocumentsToElastic.apply(folder_name, file)
+    doc_list_extractor_es.apply(folder_name, file)
     return redirect('zip')
 
 
