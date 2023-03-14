@@ -19,6 +19,14 @@ ZIPS_PATH = Path(BASE_PATH, 'media_cdn', "zips")
 PERSIAN_PATH = Path(BASE_PATH, 'text_files', "Persian")
 ENGLISH_PATH = Path(BASE_PATH, 'text_files', "English")
 
+COUNTRY_EXCEL_FILE_DICT = {
+    "BBC":"bbc-data.xlsx",
+    "تابناک":"tabnak-data.xlsx",
+    "ایسنا":"isna-data.xlsx",
+    "خبر آنلاین":"khabaronline-data.xlsx",
+    "عصر ایران":"asriran-data.xlsx",
+}
+
 BATCH_SIZE = 1000
 
 
